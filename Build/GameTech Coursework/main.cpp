@@ -4,7 +4,7 @@
 #include <nclgl\NCLDebug.h>
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
-
+#include "EmptyScene.h"
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
