@@ -33,14 +33,54 @@ public:
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
-		this->AddGameObject(CommonUtils::BuildCuboidObject("asdf",
-			Vector3(-20.0f, 0.f, 20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
-			Vector3(0.5f, 0.5f, 0.5f),				//Half dimensions
-			true,									//Has Physics Object
-			0.0f,									//Infinite Mass
-			true,									//Has Collision Shape
-			true,									//Dragable by the user
-			CommonUtils::GenColor(0.45f, 0.5f)));	//Color
+		this->AddGameObject(CommonUtils::BuildCuboidObject("NorthWall",
+			Vector3(0.0f, 18.5f, -20.0f),	
+			Vector3(20.f, 20.f, 0.5f),				
+			true,									
+			0.0f,									
+			true,									
+			false,									
+			CommonUtils::GenColor(0.45f, 0.1f)));	
+
+		this->AddGameObject(CommonUtils::BuildCuboidObject("SouthWall",
+			Vector3(0.0f, 18.5f, 20.0f),	
+			Vector3(20.f, 20.f, 0.5f),				
+			true,									
+			0.0f,									
+			true,									
+			false,									
+			CommonUtils::GenColor(0.45f, 0.1f)));	
+
+		
+		this->AddGameObject(CommonUtils::BuildCuboidObject("EastWall",
+			Vector3(20.0f, 18.5f, 0.0f),	
+			Vector3(0.5f, 20.f, 20.f),				
+			true,									
+			0.0f,									
+			true,									
+			false,									
+			CommonUtils::GenColor(0.45f, 0.1f)));
+
+		this->AddGameObject(CommonUtils::BuildCuboidObject("WestWall",
+			Vector3(-20.0f, 18.5f, 0.0f),	
+			Vector3(0.5f, 20.f, 20.f),				
+			true,									
+			0.0f,									
+			true,									
+			false,									
+			CommonUtils::GenColor(0.45f, 0.1f)));	
+
+		this->AddGameObject(CommonUtils::BuildCuboidObject(
+			"Ceiling",
+			Vector3(0.0f, 38.5f, 0.0f),
+			Vector3(20.0f, 1.0f, 20.0f),
+			false,
+			0.0f,
+			false,
+			false,
+			CommonUtils::GenColor(0.45f, 0.1f)));
+
+
 	}
 
 
