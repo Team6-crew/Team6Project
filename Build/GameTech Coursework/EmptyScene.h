@@ -44,7 +44,7 @@ public:
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"pickup",
 			Vector3(10.0f, 1.f, 0.0f),
-			Vector3(1.0f, 1.0f, 1.0f),
+			Vector3(0.6f, 0.2f, 0.2f),
 			true,
 			0.0f,
 			true,
@@ -68,9 +68,9 @@ public:
 		Scene::OnUpdateScene(dt);
 
 		GameObject *pickup = FindGameObject("pickup");
-		rotation += 0.1f;
+		rotation = 0.1f;
 		if(pickup)
-		(*pickup->Render()->GetChildIteratorStart())->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0)));
+		(*pickup->Render()->GetChildIteratorStart())->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
 		player1->move();
 

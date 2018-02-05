@@ -16,6 +16,8 @@ public:
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
 
+	
+
 private:
 
 	GameObject* ball;
