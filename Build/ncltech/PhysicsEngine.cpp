@@ -1,4 +1,5 @@
 #include "PhysicsEngine.h"
+
 #include "GameObject.h"
 #include "CollisionDetectionSAT.h"
 #include <nclgl\NCLDebug.h>
@@ -6,6 +7,8 @@
 #include <set>
 #include <omp.h>
 #include <algorithm>
+#include <ncltech\Scene.h>
+#include "Tags.h"
 
 OcTree* PhysicsEngine::octree = NULL;
 void PhysicsEngine::SetDefaults()
@@ -234,6 +237,17 @@ void PhysicsEngine::BroadPhaseCollisions()
 						CollisionPair cp;
 						cp.pObjectA = pnodeA;
 						cp.pObjectB = pnodeB;
+						if (pnodeA->GetParent()->HasTag(Tags::TPlayer) && pnodeB->GetParent()->HasTag(Tags::TPickup)) {
+							Scene* sc = pnodeB->GetParent()->GetScene();
+							sc->RemoveGameObject(pnodeB->GetParent());
+							continue;
+						
+						}
+						else if (pnodeA->GetParent()->HasTag(Tags::TPickup) && pnodeB->GetParent()->HasTag(Tags::TPlayer)) {
+							Scene* sc = pnodeA->GetParent()->GetScene();
+							sc->RemoveGameObject(pnodeA->GetParent());
+							continue;
+						}
 						broadphaseColPairs.push_back(cp);
 					}
 				}

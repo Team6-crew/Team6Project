@@ -21,6 +21,7 @@ position/orientation each frame.
 #include "PhysicsNode.h"
 #include <vector>
 #include <functional>
+#include "Tags.h"
 
 
 class Scene;
@@ -35,13 +36,16 @@ public:
 	GameObject(const std::string& name = "")
 		: friendlyName(name)
 		, renderNode(NULL)
-		, physicsNode(NULL) {}
+		, physicsNode(NULL)
+	    , tag(Default){
+	}
 
 	GameObject(const std::string& name, RenderNode* renderNde, PhysicsNode* physicsNde = NULL)
 		: friendlyName(name)
 		, renderNode(renderNde)
 		, physicsNode(physicsNde)
-	{
+		, tag(Default)
+	{  
 		RegisterPhysicsToRenderTransformCallback();
 	}
 
@@ -64,6 +68,8 @@ public:
 	inline const std::string& GetName()		{ return friendlyName; }
 	inline const Scene* GetScene() const	{ return scene; }
 	inline		 Scene* GetScene()			{ return scene; }
+	inline bool	 HasTag(Tags t)				{ return t == tag; }
+	void SetTag(Tags t)						{ tag = t; }
 
 
 	//<---------- PHYSICS ------------>
@@ -99,7 +105,7 @@ public:
 		if (renderNode != node)
 		{
 			if (scene && renderNode) GraphicsPipeline::Instance()->RemoveRenderNode(node);
-
+			
 			renderNode = node;
 			RegisterPhysicsToRenderTransformCallback();
 
@@ -142,6 +148,7 @@ public:
 protected:
 	//Scene  
 	std::string					friendlyName;
+	Tags						tag;
 	Scene*						scene;
 
 	//Components
