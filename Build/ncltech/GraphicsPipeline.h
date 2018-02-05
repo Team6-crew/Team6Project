@@ -82,11 +82,11 @@ public:
 	//Set all defaults
 	// - Called each time a scene is swapped in/reset, so should reset camera position etc
 	void InitializeDefaults();
-
+	
 	//Add/Remove Render objects to renderable object lists
 	void AddRenderNode(RenderNode* node);
 	void RemoveRenderNode(RenderNode* node);
-
+	
 
 
 
@@ -94,7 +94,7 @@ public:
 	// - Naming convention from oglrenderer
 	virtual void UpdateScene(float dt) override;
 	virtual void RenderScene() override;
-
+	
 
 
 	//Utils
@@ -113,6 +113,7 @@ public:
 	inline Vector3& GetLightDirection() { return lightDirection; }
 	inline float& GetSpecularFactor() { return specularFactor; }
 	inline GLuint& GetShadowTex() { return shadowTex; }
+	void drawtex(const std::string &text, const Vector3 &position, const float size = 10.0f, const bool perspective = false);
 
 protected:
 	GraphicsPipeline();
@@ -126,6 +127,7 @@ protected:
 	void RecursiveAddToRenderLists(RenderNode* node);
 	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNode*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
+	
 
 protected:
 	Matrix4 projViewMatrix;
