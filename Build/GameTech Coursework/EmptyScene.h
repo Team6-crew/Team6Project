@@ -2,6 +2,7 @@
 
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
+#include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
@@ -10,6 +11,8 @@
 class EmptyScene : public Scene
 {
 public:
+	
+	Player* player1;
 	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
 	{
@@ -17,6 +20,7 @@ public:
 
 	virtual ~EmptyScene()
 	{
+		delete player1;
 	}
 
 	WorldPartition *wsp;
@@ -26,97 +30,24 @@ public:
 		Scene::OnInitializeScene();
 		wsp = new WorldPartition(new AABB(Vector3(0, 20, 0), 20) , 2);
 
+		
+		player1 = new Player();
 		//Who doesn't love finding some common ground?
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",
 			Vector3(0.0f, -1.5f, 0.0f),
 			Vector3(20.0f, 1.0f, 20.0f),
-			false,
+			true,
 			0.0f,
-			false,
+			true,
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
-		//this->AddGameObject(CommonUtils::BuildCuboidObject("NorthWall",
-		//	Vector3(0.0f, 18.5f, -20.0f),	
-		//	Vector3(20.f, 20.f, 0.5f),				
-		//	true,									
-		//	0.0f,									
-		//	true,									
-		//	false,									
-		//	CommonUtils::GenColor(0.45f, 0.1f)));	
+		//Add player to scene
+		this->AddGameObject(player1->getBall());	
+		this->AddGameObject(player1->getBody());	
+		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
-		//this->AddGameObject(CommonUtils::BuildCuboidObject("SouthWall",
-		//	Vector3(0.0f, 18.5f, 20.0f),	
-		//	Vector3(20.f, 20.f, 0.5f),				
-		//	true,									
-		//	0.0f,									
-		//	true,									
-		//	false,									
-		//	CommonUtils::GenColor(0.45f, 0.1f)));	
-
-		//
-		//this->AddGameObject(CommonUtils::BuildCuboidObject("EastWall",
-		//	Vector3(20.0f, 18.5f, 0.0f),	
-		//	Vector3(0.5f, 20.f, 20.f),				
-		//	true,									
-		//	0.0f,									
-		//	true,									
-		//	false,									
-		//	CommonUtils::GenColor(0.45f, 0.1f)));
-
-		//this->AddGameObject(CommonUtils::BuildCuboidObject("WestWall",
-		//	Vector3(-20.0f, 18.5f, 0.0f),	
-		//	Vector3(0.5f, 20.f, 20.f),				
-		//	true,									
-		//	0.0f,									
-		//	true,									
-		//	false,									
-		//	CommonUtils::GenColor(0.45f, 0.1f)));	
-
-		//this->AddGameObject(CommonUtils::BuildCuboidObject(
-		//	"Ceiling",
-		//	Vector3(0.0f, 38.5f, 0.0f),
-		//	Vector3(20.0f, 1.0f, 20.0f),
-		//	true,
-		//	0.0f,
-		//	false,
-		//	false,
-		//	CommonUtils::GenColor(0.45f, 0.1f)));
-
-
-		//test objects
-		this->AddGameObject(CommonUtils::BuildCuboidObject(
-			"test",
-			Vector3(10.0f, 5.5f, 0.0f),
-			Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			0.0f,
-			true,
-			false,
-			CommonUtils::GenColor(0.45f, 0.1f)));
-
-		this->AddGameObject(CommonUtils::BuildCuboidObject(
-			"test2",
-			Vector3(15.0f, 5.5f, 10.0f),
-			Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			0.0f,
-			true,
-			false,
-			CommonUtils::GenColor(0.45f, 0.1f)));
-
-		this->AddGameObject(CommonUtils::BuildCuboidObject(
-			"test3",
-			Vector3(-10.0f, 5.5f, 0.0f),
-			Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			0.0f,
-			true,
-			false,
-			CommonUtils::GenColor(0.45f, 0.1f)));
-
-		//add all worlds objects to partition
 		wsp->insert(m_vpObjects);
 
 	}
@@ -125,6 +56,8 @@ public:
 	virtual void OnUpdateScene(float dt) override
 	{
 		Scene::OnUpdateScene(dt);
-		//wsp->debugDraw();
+		
+		player1->move();
+
 	}
 };
