@@ -40,13 +40,13 @@ public:
 	//causes massive lag when drawing with high number of partitions so try to avoid using
 	void debugDraw();
 
-	static void enable() { isActive = true; }
+	void enable() { isActive = true; }
 
-	static void disable() { isActive = false; }
+	void disable() { isActive = false; }
 
-	static void toggle() { isActive = !isActive; }
+	void toggle() { isActive = !isActive; }
 
-	static bool isEnabled() { return isActive; }
+	bool isEnabled() { return isActive; }
 
 	//returns a vector of pointers to physics objects that the given physics object could possibly be colliding with.
 	std::vector<PhysicsNode*> getPossibleCollisions(PhysicsNode* node);
@@ -58,12 +58,12 @@ public:
 
 private:
 
-	static bool isActive;
+	bool isActive = true;
 
 	void subdivide(vector<Partition>& leaves);
 
 	std::vector<Partition> leaves;
 
-
+	std::vector<PhysicsNode*> movingObjects;
 };
 

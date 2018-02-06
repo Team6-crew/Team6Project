@@ -23,13 +23,12 @@ public:
 		delete player1;
 	}
 
-	WorldPartition *wsp;
+	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		wsp = new WorldPartition(new AABB(Vector3(0, 20, 0), 20) , 2);
-
+	
 		
 		player1 = new Player();
 		//Who doesn't love finding some common ground?
@@ -43,13 +42,16 @@ public:
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
+		
 		//Add player to scene
 		this->AddGameObject(player1->getBall());	
 		this->AddGameObject(player1->getBody());	
 		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
-		wsp->insert(m_vpObjects);
+		/*wsp->insert(m_vpObjects);
 
+		vector<PhysicsNode*> possibleCol = wsp->getPossibleCollisions(player1->getBall()->Physics());*/
+		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
 
 
