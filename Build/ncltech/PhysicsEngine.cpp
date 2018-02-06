@@ -8,6 +8,8 @@
 #include <omp.h>
 #include <algorithm>
 #include <ncltech\Scene.h>
+#include <GameTech Coursework\EmptyScene.h>
+#include <ncltech/Pickup.h>
 #include "Tags.h"
 
 OcTree* PhysicsEngine::octree = NULL;
@@ -238,14 +240,18 @@ void PhysicsEngine::BroadPhaseCollisions()
 						cp.pObjectA = pnodeA;
 						cp.pObjectB = pnodeB;
 						if (pnodeA->GetParent()->HasTag(Tags::TPlayer) && pnodeB->GetParent()->HasTag(Tags::TPickup)) {
-							Scene* sc = pnodeB->GetParent()->GetScene();
-							sc->RemoveGameObject(pnodeB->GetParent());
+							Pickup* p = (Pickup*)pnodeB->GetParent();
+							Player* pl = (Player*)pnodeA->GetParent();
+							p->effect(pl);
+							delete p;
 							continue;
 						
 						}
 						else if (pnodeA->GetParent()->HasTag(Tags::TPickup) && pnodeB->GetParent()->HasTag(Tags::TPlayer)) {
-							Scene* sc = pnodeA->GetParent()->GetScene();
-							sc->RemoveGameObject(pnodeA->GetParent());
+							Pickup* p = (Pickup*)pnodeA->GetParent();
+							Player* pl = (Player*)pnodeB->GetParent();
+							p->effect(pl);
+							delete p;
 							continue;
 						}
 						broadphaseColPairs.push_back(cp);

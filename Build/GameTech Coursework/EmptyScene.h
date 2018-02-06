@@ -5,12 +5,14 @@
 #include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
 #include <ncltech\Tags.h>
+#include <ncltech\SpeedPickup.h>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
 public:
-	
+	Player* getPlayer() { return player1; }
+
 	Player* player1;
 	float rotation = 0.0f;
 	EmptyScene(const std::string& friendly_name) 
@@ -29,7 +31,31 @@ public:
 		OcTree *space = new OcTree(new AABB(Vector3(0, 20, 0), 20));
 
 		
-		player1 = new Player();
+		/*player1 = new Player("player",
+			Vector3(0.0f, 1.f, 0.0f),
+			1.0f,
+			true,
+			1.0f,
+			true,
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		player1->SetPhysics(player1->Physics());*/
+
+		player1 = new Player("player",
+			Vector3(0.0f, 1.f, 0.0f),
+			1.0f,
+			true,
+			1.0f,
+			true,
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		player1->SetPhysics(player1->Physics());
+
+		//Add player to scene
+		this->AddGameObject(player1);
+		//Also add body which is used for camera manipulation
+		this->AddGameObject(player1->getBody());
+
+		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 		//Who doesn't love finding some common ground?
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",
@@ -41,7 +67,7 @@ public:
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
-		this->AddGameObject(CommonUtils::BuildCuboidObject(
+		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"pickup",
 			Vector3(10.0f, 1.f, 0.0f),
 			Vector3(0.6f, 0.2f, 0.2f),
@@ -49,15 +75,18 @@ public:
 			0.0f,
 			true,
 			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));*/
+		SpeedPickup* pickup = new SpeedPickup("pickup",
+			Vector3(10.0f, 1.f, 0.0f),
+			0.5f,
+			true,
+			1.0f,
+			true,
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup->SetPhysics(pickup->Physics());
+		this->AddGameObject(pickup);
 
-		//Add player to scene
-		this->AddGameObject(player1->getBall());	
-		this->AddGameObject(player1->getBody());
-		
-		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
-		GameObject *pickup = FindGameObject("pickup");
-		pickup->SetTag(Tags::TPickup);
+
 	
 		
 	}

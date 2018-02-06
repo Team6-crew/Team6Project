@@ -1,10 +1,17 @@
 #pragma once
 #include <ncltech\CommonUtils.h>
+#include <ncltech\GameObject.h>
 
-class Player
+class Player : public GameObject
 {
 public:
-	Player();
+	Player(const std::string& name,
+		const Vector3& pos,
+		float radius,
+		bool physics_enabled,
+		float inverse_mass,
+		bool collidable,
+		const Vector4& color);
 	~Player();
 
 	GameObject* getBody() { return body; }
@@ -15,6 +22,8 @@ public:
 
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
+
+
 
 	
 
