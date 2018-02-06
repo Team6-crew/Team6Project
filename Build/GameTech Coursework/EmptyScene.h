@@ -119,14 +119,12 @@ public:
 		//add all worlds objects to partition
 		wsp->insert(m_vpObjects);
 
-		vector<PhysicsNode*> possibleCollisions = wsp->getPossibleCollisions(this->FindGameObject("test")->physicsNode);
-
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
 		Scene::OnUpdateScene(dt);
-		wsp->debugDraw();
+		//wsp->debugDraw();
 	}
 };
