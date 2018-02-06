@@ -48,9 +48,7 @@ public:
 		this->AddGameObject(player1->getBody());	
 		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
-		/*wsp->insert(m_vpObjects);
-
-		vector<PhysicsNode*> possibleCol = wsp->getPossibleCollisions(player1->getBall()->Physics());*/
+		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
 
