@@ -141,6 +141,8 @@ void PhysicsEngine::UpdatePhysics()
 		OcTree::populateLeaves(octree);
 		BroadPhaseCollisionsOcTree();
 	}
+	//TODO else if world partition enabled, cant add until moving objects added
+	//vector<PhysicsNode*> possibleCollisions = wsp->getPossibleCollisions(this->FindGameObject("object that is moving")->physicsNode);
 	else {
 		BroadPhaseCollisions();
 	}

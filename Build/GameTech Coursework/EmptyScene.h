@@ -4,6 +4,8 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
+#include <ncltech\WorldPartition.h>
+#include <algorithm>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -21,10 +23,12 @@ public:
 		delete player1;
 	}
 
+	WorldPartition *wsp;
+
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		OcTree *space = new OcTree(new AABB(Vector3(0, 20, 0), 20));
+		wsp = new WorldPartition(new AABB(Vector3(0, 20, 0), 20) , 2);
 
 		
 		player1 = new Player();
@@ -44,7 +48,8 @@ public:
 		this->AddGameObject(player1->getBody());	
 		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
-		
+		wsp->insert(m_vpObjects);
+
 	}
 
 
