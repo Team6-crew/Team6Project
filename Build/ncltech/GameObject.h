@@ -65,7 +65,7 @@ public:
 	inline const Scene* GetScene() const	{ return scene; }
 	inline		 Scene* GetScene()			{ return scene; }
 
-
+	
 	//<---------- PHYSICS ------------>
 	inline bool  HasPhysics() const					{ return (physicsNode != NULL); }
 	inline const PhysicsNode*	Physics() const		{ return physicsNode; }
@@ -135,10 +135,15 @@ public:
 		}
 	}
 
+	void setDynamic(bool isDynamic) {
+		physicsNode->setDynamic(isDynamic);
+	}
 
 public:
 	PhysicsNode * physicsNode;
 
+	
+	
 protected:
 	//Scene  
 	std::string					friendlyName;
@@ -146,5 +151,5 @@ protected:
 
 	//Components
 	RenderNode*					renderNode;
-	
+
 };
