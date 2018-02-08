@@ -162,8 +162,21 @@ public:
 		if (onUpdateCallback) onUpdateCallback(worldTransform);
 	}
 	
+	void setDynamic(bool isDynamic) {
+		dynamic = isDynamic;
+	}
+
+	bool getDynamic() {
+		return dynamic;
+	}
 
 protected:
+
+
+	//if the object is dynamic or not
+	bool dynamic = false;
+
+
 	float colRadius;
 	bool soft;
 
@@ -197,5 +210,6 @@ protected:
 	//<--------MATERIAL-------------->
 	float				elasticity;		///Value from 0-1 definiing how much the object bounces off other objects
 	float				friction;		///Value from 0-1 defining how much the object can slide off other objects
+
 
 };

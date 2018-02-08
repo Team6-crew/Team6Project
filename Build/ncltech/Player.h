@@ -4,7 +4,7 @@
 class Player
 {
 public:
-	Player();
+	Player() ;
 	~Player();
 
 	GameObject* getBody() { return body; }
