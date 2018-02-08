@@ -10,6 +10,7 @@ public:
 	GameObject* getBody() { return body; }
 	GameObject* getBall() { return ball; }
 
+
 	void move();
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right);
 
@@ -20,6 +21,8 @@ private:
 
 	GameObject* ball;
 	GameObject* body;
+	GameObject* cube;
+
 	RenderNode* camera_transform;
 	Camera* camera;
 

@@ -58,6 +58,7 @@ public:
 		//Add player to scene
 		this->AddGameObject(player1->getBall());	
 		this->AddGameObject(player1->getBody());	
+		
 		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
 		//add world part

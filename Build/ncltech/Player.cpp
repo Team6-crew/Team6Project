@@ -15,6 +15,7 @@ Player::Player()
 		CommonUtils::GenColor(0.45f, 0.5f));
 
 	ball->setDynamic(true);
+	
 
 	body = CommonUtils::BuildCuboidObject("body",
 		Vector3(0.0f, 2.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
@@ -86,6 +87,8 @@ void Player::move() {
 		rotation = -0.5f;
 		camera->SetYaw(yaw + rotation);
 	}
+
+
 
 	bodyRenderNode->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
 
