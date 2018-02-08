@@ -126,7 +126,8 @@ void Player::move() {
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
-	{
+	{   
+		forward.y = -forward.y;
 		physicsNode->SetForce(forward * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))

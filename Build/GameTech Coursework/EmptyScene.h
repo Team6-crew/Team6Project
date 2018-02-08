@@ -60,7 +60,7 @@ public:
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",
 			Vector3(0.0f, -1.5f, 0.0f),
-			Vector3(20.0f, 1.0f, 20.0f),
+			Vector3(40.0f, 1.0f, 40.0f),
 			true,
 			0.0f,
 			true,
