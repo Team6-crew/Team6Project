@@ -70,11 +70,10 @@ class Shader;
 class OGLRenderer	{
 public:
 	friend class Window;
+	friend class GraphicsPipeline;
 	OGLRenderer(Window &parent);
 	virtual ~OGLRenderer(void);
 
-	virtual void	RenderScene()		= 0;
-	virtual void	UpdateScene(float msec);
 	void			SwapBuffers();
 
 	bool			HasInitialised() const;	

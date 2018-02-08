@@ -4,9 +4,9 @@
 #include <nclgl\NCLDebug.h>
 #include <algorithm>
 
+
 GraphicsPipeline::GraphicsPipeline()
-	: OGLRenderer(Window::GetWindow())
-	, camera(new Camera())
+	: camera(new Camera())
 	, isVsyncEnabled(false)
 	, screenTexWidth(0)
 	, screenTexHeight(0)
@@ -19,6 +19,49 @@ GraphicsPipeline::GraphicsPipeline()
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, shadowTex(NULL)
+{
+	renderer = new OGLRenderer(Window::GetWindow());
+
+	LoadShaders();
+	NCLDebug::_LoadShaders();
+
+	fullscreenQuad = Mesh::GenerateQuad();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_CLAMP);
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glEnable(GL_FRAMEBUFFER_SRGB);
+	glDepthFunc(GL_LEQUAL);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+	sceneBoundingRadius = 30.f; ///Approx based on scene contents
+
+	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
+	camera->SetYaw(0.f);
+	camera->SetPitch(-20.f);
+	InitializeDefaults();
+	Resize(renderer->width, renderer->height);
+}
+
+
+GraphicsPipeline::GraphicsPipeline(OGLRenderer &render)
+	: camera(new Camera())
+	, isVsyncEnabled(false)
+	, screenTexWidth(0)
+	, screenTexHeight(0)
+	, screenFBO(NULL)
+	, screenTexColor(NULL)
+	, screenTexDepth(NULL)
+	, shaderPresentToWindow(NULL)
+	, shaderShadow(NULL)
+	, shaderForwardLighting(NULL)
+	, fullscreenQuad(NULL)
+	, shadowFBO(NULL)
+	, shadowTex(NULL)
+	, renderer(&render)
 {
 	
 
@@ -42,9 +85,8 @@ GraphicsPipeline::GraphicsPipeline()
 	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
 	camera->SetYaw(0.f);
 	camera->SetPitch(-20.f);
-
 	InitializeDefaults();
-	Resize(width, height);
+	Resize(renderer->width, renderer->height);
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -215,12 +257,12 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->HandleMouse(dt);
 
 	camera->HandleKeyboard(dt);
-	viewMatrix = camera->BuildViewMatrix();
-	projViewMatrix = projMatrix * viewMatrix;
+	renderer->viewMatrix = camera->BuildViewMatrix();
+	projViewMatrix = renderer->projMatrix * renderer->viewMatrix;
 
 	NCLDebug::_SetDebugDrawData(
-		projMatrix,
-		viewMatrix,
+		renderer->projMatrix,
+		renderer->viewMatrix,
 		camera->GetPosition());
 }
 
@@ -307,7 +349,7 @@ void GraphicsPipeline::RenderScene()
 
 	//Downsample and present to screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, renderer->width, renderer->height);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		float superSamples = (float)(numSuperSamples);
@@ -324,7 +366,7 @@ void GraphicsPipeline::RenderScene()
 		NCLDebug::_ClearDebugLists();
 	
 
-	OGLRenderer::SwapBuffers();
+		renderer->SwapBuffers();
 }
 
 void GraphicsPipeline::Resize(int x, int y)
@@ -339,10 +381,10 @@ void GraphicsPipeline::Resize(int x, int y)
 	UpdateAssets(x, y);
 
 	//Update 'width', 'height' vars
-	OGLRenderer::Resize(x, y);
+	renderer->Resize(x, y);
 
 	//Update our projection matrix
-	projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, (float)x / (float)y, PROJ_FOV);
+	renderer->projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, (float)x / (float)y, PROJ_FOV);
 }
 
 void GraphicsPipeline::BuildAndSortRenderLists()
@@ -432,12 +474,12 @@ void GraphicsPipeline::BuildShadowTransforms()
 	//Fixed size shadow area (just moves with camera) 
 	shadowViewMtx = Matrix4::BuildViewMatrix(Vector3(0.0f, 0.0f, 0.0f), -lightDirection, Vector3(0, 1, 0));
 
-	Matrix4 invCamProjView = Matrix4::Inverse(projMatrix * viewMatrix);
+	Matrix4 invCamProjView = Matrix4::Inverse(renderer->projMatrix * renderer->viewMatrix);
 
 	auto compute_depth = [&](float x)
 	{
 		float proj_start = -(proj_range * x + PROJ_NEAR);
-		return (proj_start*projMatrix[10] + projMatrix[14]) / (proj_start*projMatrix[11]);
+		return (proj_start*renderer->projMatrix[10] + renderer->projMatrix[14]) / (proj_start*renderer->projMatrix[11]);
 	};
 
 	const float divisor = (SHADOWMAP_NUM*SHADOWMAP_NUM) - 1.f;

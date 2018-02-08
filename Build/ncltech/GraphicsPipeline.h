@@ -74,7 +74,7 @@
 typedef std::pair<RenderNode*, float> TransparentPair;
 
 
-class GraphicsPipeline : public TSingleton<GraphicsPipeline>, OGLRenderer
+class GraphicsPipeline : public TSingleton<GraphicsPipeline>
 {
 	friend class TSingleton<GraphicsPipeline>;
 
@@ -92,8 +92,8 @@ public:
 
 	//Called by main game loop
 	// - Naming convention from oglrenderer
-	virtual void UpdateScene(float dt) override;
-	virtual void RenderScene() override;
+	void UpdateScene(float dt);
+	void RenderScene();
 
 
 
@@ -102,8 +102,8 @@ public:
 	inline bool GetVsyncEnabled() const { return isVsyncEnabled; }
 	inline void SetVsyncEnabled(bool enabled) { wglSwapIntervalEXT((isVsyncEnabled = enabled) ? 1 : 0); }
 
-	inline Matrix4& GetProjMtx() { return projMatrix; }
-	inline Matrix4& GetViewMtx() { return viewMatrix; }
+	inline Matrix4& GetProjMtx() { return renderer->projMatrix; }
+	inline Matrix4& GetViewMtx() { return renderer->viewMatrix; }
 
 	inline Matrix4& GetShadowViewMtx() { return shadowViewMtx; }
 	inline Matrix4* GetShadowProjMatrices() { return shadowProj; }
@@ -116,9 +116,10 @@ public:
 
 protected:
 	GraphicsPipeline();
+	GraphicsPipeline(OGLRenderer &renderer);
 	virtual ~GraphicsPipeline();
 
-	virtual void Resize(int x, int y) override; //Called by window when it is resized
+	void Resize(int x, int y); //Called by window when it is resized
 
 	void LoadShaders();
 	void UpdateAssets(int width, int height);
@@ -128,6 +129,10 @@ protected:
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
 
 protected:
+
+	OGLRenderer* renderer = nullptr;
+
+
 	Matrix4 projViewMatrix;
 
 	//Render FBO
