@@ -73,7 +73,7 @@
 
 typedef std::pair<RenderNode*, float> TransparentPair;
 
-
+//Test push
 class GraphicsPipeline : public TSingleton<GraphicsPipeline>
 {
 	friend class TSingleton<GraphicsPipeline>;
