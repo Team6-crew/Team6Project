@@ -43,6 +43,18 @@ public:
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
 		
+
+		//Who doesn't love finding some common ground?
+		this->AddGameObject(CommonUtils::BuildCuboidObject(
+			"test",
+			Vector3(5.0f, 1.5f, 0.0f),
+			Vector3(2.0f, 1.0f, 2.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
+
 		//Add player to scene
 		this->AddGameObject(player1->getBall());	
 		this->AddGameObject(player1->getBody());	

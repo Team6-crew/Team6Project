@@ -25,7 +25,7 @@ PhysicsEngine::PhysicsEngine()
 	isPaused = false;  
 	debugDrawFlags = DEBUGDRAW_FLAGS_MANIFOLD | DEBUGDRAW_FLAGS_CONSTRAINT;
 	octree = new OcTree(new AABB(Vector3(0, worldSize, 0), worldSize));
-	worldPartition = new WorldPartition(new AABB(Vector3(0, worldSize, 0), worldSize), 2);
+	worldPartition = new WorldPartition(new AABB(Vector3(0, worldSize, 0), worldSize), 4);
 	SetDefaults();
 }
 
@@ -146,7 +146,6 @@ void PhysicsEngine::UpdatePhysics()
 	}
 	//creates collision pairs when using world partitioning
 	else if (worldPartition->isEnabled()) {
-		worldPartition->debugDraw();
 		broadphaseColPairs.clear();
 		for (int i = 0; i < physicsNodes.size(); i++) {
 			PhysicsNode *pnodeA, *pnodeB;
