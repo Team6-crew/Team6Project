@@ -38,6 +38,7 @@ Player::Player(const std::string& name,
 		pnode->SetPosition(pos);
 		pnode->SetInverseMass(inverse_mass);
 		pnode->SetColRadius(radius);
+		pnode->SetElasticity(0.2f);
 
 		if (!collidable)
 		{
@@ -68,7 +69,7 @@ Player::Player(const std::string& name,
 			std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 	);
 
-	ball->setDynamic(true);
+	setDynamic(true);
 
 	body = CommonUtils::BuildCuboidObject("body",
 		Vector3(0.0f, 2.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
@@ -94,11 +95,12 @@ Player::~Player()
 
 }
 
-void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right) {
+void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump) {
 	move_up = up;
 	move_down = down;
 	move_left = left;
 	move_right = right;
+	move_jump = jump;
 }
 
 void Player::move() {
@@ -106,6 +108,7 @@ void Player::move() {
 	
 	Vector3 ball_pos = physicsNode->GetPosition();
 	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
+	Vector3 jump(0, 20, 0);
 
 	RenderNode* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
@@ -142,6 +145,15 @@ void Player::move() {
 		camera->SetYaw(yaw + rotation);
 	}
 
+	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
+	{  
+		if (canjump == true) {
+			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
+			canjump = false;
+		}
+		
+	}
+
 	bodyRenderNode->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
 
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
@@ -154,6 +166,10 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		pickup->effect(this);
 		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
 		return false;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TGround))
+	{ 
+		canjump = true;
 	}
 	return true;
 };

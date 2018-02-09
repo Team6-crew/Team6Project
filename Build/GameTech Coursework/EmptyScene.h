@@ -61,9 +61,9 @@ public:
 		//Also add body which is used for camera manipulation
 		this->AddGameObject(player1->getBody());
 
-		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
+		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
 		//Who doesn't love finding some common ground?
-		this->AddGameObject(CommonUtils::BuildCuboidObject(
+		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			Vector3(0.0f, -1.5f, 0.0f),
 			Vector3(40.0f, 1.0f, 40.0f),
@@ -71,8 +71,10 @@ public:
 			0.0f,
 			true,
 			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 
+		this->AddGameObject(ground);
+		ground->SetTag(Tags::TGround);
 
 		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"pickup",
@@ -87,7 +89,7 @@ public:
 			Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
 			true,
-			1.0f,
+			0.0f,
 			true,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());

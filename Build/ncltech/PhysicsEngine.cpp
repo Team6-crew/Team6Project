@@ -12,6 +12,8 @@
 #include <ncltech/Pickup.h>
 #include "Tags.h"
 
+#define WORLD_PARTITION_SIZE 40 
+
 OcTree* PhysicsEngine::octree = NULL;
 WorldPartition* PhysicsEngine::worldPartition = NULL;
 
@@ -30,7 +32,7 @@ PhysicsEngine::PhysicsEngine()
 	isPaused = false;  
 	debugDrawFlags = DEBUGDRAW_FLAGS_MANIFOLD | DEBUGDRAW_FLAGS_CONSTRAINT;
 	octree = new OcTree(new AABB(Vector3(0, 20, 0), 20));
-	worldPartition = new WorldPartition(new AABB(Vector3(0, 20, 0), 20), 2);
+	worldPartition = new WorldPartition(new AABB(Vector3(0, 20, 0), WORLD_PARTITION_SIZE), 2);
 	SetDefaults();
 }
 
@@ -117,7 +119,16 @@ void PhysicsEngine::Update(float deltaTime)
 
 
 void PhysicsEngine::UpdatePhysics()
-{
+{   
+
+	//Objects to be deleted before this frame's collision check starts
+	//This is because we cannot delete the pickup object in player collision callback, 
+	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
+	for (int i = 0; i < objectsToDelete.size(); i++) {
+		delete objectsToDelete[i];
+	}
+	objectsToDelete.clear();
+
 	for (Manifold* m : manifolds)
 	{
 		delete m;
@@ -245,13 +256,7 @@ bool PhysicsEngine::SphereSphereInterface(PhysicsNode* obj1, PhysicsNode* obj2, 
 void PhysicsEngine::BroadPhaseCollisions()
 {
 	broadphaseColPairs.clear();
-	//Objects to be deleted before this frame's collision check starts
-	//This is because we cannot delete the pickup object in player collision callback, 
-	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
-	for (int i = 0; i < objectsToDelete.size(); i++) {
-		delete objectsToDelete[i];
-	}
-	objectsToDelete.clear();
+
 
 	PhysicsNode *pnodeA, *pnodeB;
 	//	The broadphase needs to build a list of all potentially colliding objects in the world,
