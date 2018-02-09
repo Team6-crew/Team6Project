@@ -7,6 +7,7 @@ class Pickup;
 class Player : public GameObject
 {
 public:
+
 	Player(const std::string& name,
 		const Vector3& pos,
 		float radius,
@@ -14,6 +15,7 @@ public:
 		float inverse_mass,
 		bool collidable,
 		const Vector4& color);
+
 	~Player();
 
 	GameObject* getBody() { return body; }

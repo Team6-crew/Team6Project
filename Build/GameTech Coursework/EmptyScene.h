@@ -4,8 +4,13 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
+
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
+
+#include <ncltech\WorldPartition.h>
+#include <algorithm>
+
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -25,11 +30,12 @@ public:
 		delete player1;
 	}
 
+	//WorldPartition *wsp;
+
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		OcTree *space = new OcTree(new AABB(Vector3(0, 20, 0), 20));
-
+	
 		
 		/*player1 = new Player("player",
 			Vector3(0.0f, 1.f, 0.0f),
@@ -67,6 +73,7 @@ public:
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
+
 		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"pickup",
 			Vector3(10.0f, 1.f, 0.0f),
@@ -86,9 +93,8 @@ public:
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
-
-	
-		
+		//add world part
+		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
 
 

@@ -45,6 +45,7 @@ Description:
 #include <vector>
 #include <mutex>
 #include "OcTree.h"
+#include "WorldPartition.h"
 
 
 //Number of jacobi iterations to apply in order to
@@ -117,6 +118,8 @@ public:
 
 	static inline OcTree* GetOcTree()  { return octree; }
 
+	static inline WorldPartition* GetWorldPartition() { return worldPartition; }
+
 	void PrintPerformanceTimers(const Vector4& color)
 	{
 		perfUpdate.PrintOutputToStatusEntry(color,		"    Integration :");
@@ -154,6 +157,7 @@ protected:
 
 	
 	static OcTree* octree;
+	static WorldPartition* worldPartition;
 
 	std::vector<CollisionPair>  broadphaseColPairs;
 

@@ -49,6 +49,8 @@ typedef std::function<void(float dt)> SceneUpdateCallback;
 //    Usually this will be a "this" pointer refering to the class that setup the callback
 typedef std::unordered_map<void*, SceneUpdateCallback> SceneUpdateMap;
 
+
+
 class Scene
 {
 public:
@@ -170,6 +172,9 @@ public:
 				it++;
 		}
 	}
+
+	
+
 protected:
 	// Delete all contained Objects
 	//    - This is the default action upon firing OnCleanupScene()
@@ -188,4 +193,5 @@ protected:
 	std::string					m_SceneName;
 	std::vector<GameObject*>	m_vpObjects;
 	SceneUpdateMap				m_UpdateCallbacks;
+
 };

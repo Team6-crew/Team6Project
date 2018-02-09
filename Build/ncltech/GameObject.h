@@ -71,7 +71,7 @@ public:
 	inline bool	 HasTag(Tags t)				{ return t == tag; }
 	void SetTag(Tags t)						{ tag = t; }
 
-
+	
 	//<---------- PHYSICS ------------>
 	inline bool  HasPhysics() const					{ return (physicsNode != NULL); }
 	inline const PhysicsNode*	Physics() const		{ return physicsNode; }
@@ -141,10 +141,15 @@ public:
 		}
 	}
 
+	void setDynamic(bool isDynamic) {
+		physicsNode->setDynamic(isDynamic);
+	}
 
 public:
-	
+	PhysicsNode * physicsNode;
 
+	
+	
 protected:
 	//Scene  
 	std::string					friendlyName;
@@ -153,5 +158,5 @@ protected:
 
 	//Components
 	RenderNode*					renderNode;
-	PhysicsNode*				physicsNode;
+
 };
