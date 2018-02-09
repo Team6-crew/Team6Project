@@ -55,6 +55,8 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	renderNode = rnode;
 	physicsNode = pnode;
 
+	
+
 	RegisterPhysicsToRenderTransformCallback();
 }
 

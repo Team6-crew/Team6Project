@@ -1,7 +1,9 @@
 #pragma once
 #include <ncltech\CommonUtils.h>
 #include <ncltech\GameObject.h>
+#include <ncltech\Pickup.h>
 
+class Pickup;
 class Player : public GameObject
 {
 public:
@@ -15,7 +17,7 @@ public:
 	~Player();
 
 	GameObject* getBody() { return body; }
-	GameObject* getBall() { return ball; }
+
 
 	void move();
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right);
@@ -23,13 +25,12 @@ public:
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
 
-
+	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
 
 	
 
 private:
 
-	GameObject* ball;
 	GameObject* body;
 	RenderNode* camera_transform;
 	Camera* camera;

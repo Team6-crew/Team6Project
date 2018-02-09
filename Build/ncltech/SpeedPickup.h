@@ -15,5 +15,7 @@ public:
 	~SpeedPickup();
 	
 	virtual void effect(Player* player);
+	
+
 };
 

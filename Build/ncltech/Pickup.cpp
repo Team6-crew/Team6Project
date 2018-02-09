@@ -5,6 +5,7 @@
 Pickup::Pickup()
 {
 	tag = Tags::TPickup;
+	
 }
 
 

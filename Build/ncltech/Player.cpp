@@ -19,16 +19,6 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
-	//ball = CommonUtils::BuildSphereObject("ball",
-	//	Vector3(0.0f, 1.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
-	//	1.0f,				//Half dimensions
-	//	true,									//Has Physics Object
-	//	1.0f,									//Mass
-	//	true,									//Has Collision Shape
-	//	true,									//Dragable by the user
-	//	CommonUtils::GenColor(0.45f, 0.5f));
-
-	//ball->SetTag(Tags::TPlayer);
 
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
@@ -69,6 +59,14 @@ Player::Player(const std::string& name,
 	RegisterPhysicsToRenderTransformCallback();
 
 	tag = Tags::TPlayer;
+
+	physicsNode->SetOnCollisionCallback(
+		std::bind(
+			&Player::collisionCallback,		// Function to call
+			this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+			std::placeholders::_1,
+			std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+	);
 
 	body = CommonUtils::BuildCuboidObject("body",
 		Vector3(0.0f, 2.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
@@ -132,13 +130,13 @@ void Player::move() {
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = 0.5f;
+		rotation = 0.4f;
 		camera->SetYaw(yaw + rotation);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		rotation = -0.5f;
+		rotation = -0.4f;
 		camera->SetYaw(yaw + rotation);
 	}
 
@@ -147,3 +145,13 @@ void Player::move() {
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 
 }
+
+bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
+	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+		Pickup* pickup = (Pickup*)otherNode->GetParent();
+		pickup->effect(this);
+		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		return false;
+	}
+	return true;
+};
