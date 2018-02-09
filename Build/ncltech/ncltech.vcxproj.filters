@@ -79,6 +79,12 @@
 
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pickup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedPickup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonMeshes.h">
@@ -152,6 +158,15 @@
 
     <ClInclude Include="Player.h">
 
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedPickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -94,6 +94,8 @@ public:
 	//Debug draw all physics objects, manifolds and constraints
 	void DebugRender();
 
+	void DeleteNextFrame(GameObject* obj) { objectsToDelete.push_back(obj); }
+
 
 
 	//Getters / Setters 
@@ -160,6 +162,8 @@ protected:
 	std::vector<CollisionPair>  broadphaseColPairs;
 
 	std::vector<PhysicsNode*>	physicsNodes;
+
+	std::vector<GameObject*> objectsToDelete;
 
 	std::vector<Constraint*>	constraints;		// Misc constraints applying to one or more physics objects e.g our DistanceConstraint
 	std::vector<Manifold*>		manifolds;			// Contact constraints between pairs of objects

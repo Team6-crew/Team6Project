@@ -146,6 +146,10 @@ GameObject* CommonUtils::BuildSphereObject(
 	}
 
 	GameObject* obj = new GameObject(name, rnode, pnode);
+	if (pnode)
+	{
+		pnode->SetParent(obj);
+	}
 
 	if (dragable)
 	{
@@ -191,6 +195,10 @@ GameObject* CommonUtils::BuildNonRenderObject(
 	}
 
 	GameObject* obj = new GameObject(name, NULL, pnode);
+	if (pnode)
+	{
+		pnode->SetParent(obj);
+	}
 
 	return obj;
 }
@@ -240,6 +248,10 @@ GameObject* CommonUtils::BuildCuboidObject(
 	}
 
 	GameObject* obj = new GameObject(name, rnode, pnode);
+	if (pnode) 
+	{
+		pnode->SetParent(obj);
+	}
 
 	if (dragable)
 	{
