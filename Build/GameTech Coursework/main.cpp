@@ -1,6 +1,6 @@
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\SceneManager.h>
-#include <nclgl\Window.h>
+
 #include <nclgl\NCLDebug.h>
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
@@ -23,7 +23,6 @@ void Quit(bool error = false, const std::string &reason = "") {
 	SceneManager::Release();
 	PhysicsEngine::Release();
 	GraphicsPipeline::Release();
-	Window::Destroy();
 
 	//Show console reason before exit
 	if (error) {
@@ -39,10 +38,6 @@ void Quit(bool error = false, const std::string &reason = "") {
 //    for the SceneManager to display
 void Initialize()
 {
-	//Initialise the Window
-	if (!Window::Initialise("Game Technologies", 1280, 800, false))
-		Quit(true, "Window failed to initialise!");
-
 	//Initialize Renderer
 	GraphicsPipeline::Instance();
 

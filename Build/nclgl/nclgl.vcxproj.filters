@@ -77,6 +77,8 @@
     </ClCompile>
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OGLRenderer.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderFactory.cpp" />
+    <ClCompile Include="Graphics\RenderConstants.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NCLDebug.h">
@@ -171,5 +173,7 @@
     </ClInclude>
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OGLRenderer.h" />
+    <ClInclude Include="Graphics\RenderConstants.h" />
+    <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
   </ItemGroup>
 </Project>

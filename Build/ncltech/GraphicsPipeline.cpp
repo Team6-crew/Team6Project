@@ -3,7 +3,8 @@
 #include "BoundingBox.h"
 #include <nclgl\NCLDebug.h>
 #include <algorithm>
-
+#include <nclgl\Graphics\Renderer\OGLRenderer.h>
+#include <nclgl\Graphics\Renderer\RenderFactory.h>
 
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
@@ -20,7 +21,7 @@ GraphicsPipeline::GraphicsPipeline()
 	, shadowFBO(NULL)
 	, shadowTex(NULL)
 {
-	renderer = new OGLRenderer(Window::GetWindow());
+	renderer = RenderFactory::Instance()->MakeRenderer();
 
 	LoadShaders();
 	NCLDebug::_LoadShaders();
@@ -39,49 +40,6 @@ GraphicsPipeline::GraphicsPipeline()
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
-	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.f);
-	InitializeDefaults();
-	Resize(renderer->GetWidth(), renderer->GetHeight());
-}
-
-
-GraphicsPipeline::GraphicsPipeline(OGLRenderer &render)
-	: camera(new Camera())
-	, isVsyncEnabled(false)
-	, screenTexWidth(0)
-	, screenTexHeight(0)
-	, screenFBO(NULL)
-	, screenTexColor(NULL)
-	, screenTexDepth(NULL)
-	, shaderPresentToWindow(NULL)
-	, shaderShadow(NULL)
-	, shaderForwardLighting(NULL)
-	, fullscreenQuad(NULL)
-	, shadowFBO(NULL)
-	, shadowTex(NULL)
-	, renderer(&render)
-{
-	
-
-	LoadShaders();
-	NCLDebug::_LoadShaders();
-
-	fullscreenQuad = Mesh::GenerateQuad();
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH_CLAMP);
-	glEnable(GL_STENCIL_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glEnable(GL_FRAMEBUFFER_SRGB);
-	glDepthFunc(GL_LEQUAL);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-	sceneBoundingRadius = 30.f; ///Approx based on scene contents
-	
 	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
 	camera->SetYaw(0.f);
 	camera->SetPitch(-20.f);
