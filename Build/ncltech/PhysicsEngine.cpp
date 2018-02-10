@@ -8,6 +8,8 @@
 #include <algorithm>
 
 OcTree* PhysicsEngine::octree = NULL;
+WorldPartition* PhysicsEngine::worldPartition = NULL;
+
 void PhysicsEngine::SetDefaults()
 {
 	//Variables set here /will/ be reset with each scene
@@ -22,7 +24,8 @@ PhysicsEngine::PhysicsEngine()
 	//Variables set here will /not/ be reset with each scene
 	isPaused = false;  
 	debugDrawFlags = DEBUGDRAW_FLAGS_MANIFOLD | DEBUGDRAW_FLAGS_CONSTRAINT;
-	octree = new OcTree(new AABB(Vector3(0, 20, 0), 20));
+	octree = new OcTree(new AABB(Vector3(0, worldSize, 0), worldSize));
+	worldPartition = new WorldPartition(new AABB(Vector3(0, worldSize, 0), worldSize), 4);
 	SetDefaults();
 }
 
@@ -133,7 +136,7 @@ void PhysicsEngine::UpdatePhysics()
 		OcTree::leaves.clear();
 		OcTree::draw(PhysicsEngine::GetOcTree());
 		OcTree::deleteTree(PhysicsEngine::GetOcTree());
-		octree = new OcTree(new AABB(Vector3(0, 0, 0),15));
+		octree = new OcTree(new AABB(Vector3(0, worldSize, 0),worldSize));
 		OcTree::setCapacity(40);
 		for (int i = 0; i < physicsNodes.size(); i++) {
 			octree->insert(physicsNodes[i]);
@@ -141,7 +144,36 @@ void PhysicsEngine::UpdatePhysics()
 		OcTree::populateLeaves(octree);
 		BroadPhaseCollisionsOcTree();
 	}
-	//TODO else if world partition enabled, cant add until moving objects added
+	//creates collision pairs when using world partitioning
+	else if (worldPartition->isEnabled()) {
+		broadphaseColPairs.clear();
+		for (int i = 0; i < physicsNodes.size(); i++) {
+			PhysicsNode *pnodeA, *pnodeB;
+			if (physicsNodes[i]->getDynamic()) {
+				vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
+				for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
+					pnodeA = physicsNodes[i];
+					pnodeB = possibleColliders.at(k);
+
+					if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
+
+					//Check they both atleast have collision shapes
+					if (pnodeA->GetCollisionShape() != NULL
+						&& pnodeB->GetCollisionShape() != NULL)
+					{
+						if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
+							CollisionPair cp;
+							cp.pObjectA = pnodeA;
+							cp.pObjectB = pnodeB;
+							broadphaseColPairs.push_back(cp);
+						}
+					}
+
+				}
+			}
+		}
+	}
+
 	//vector<PhysicsNode*> possibleCollisions = wsp->getPossibleCollisions(this->FindGameObject("object that is moving")->physicsNode);
 	else {
 		BroadPhaseCollisions();
