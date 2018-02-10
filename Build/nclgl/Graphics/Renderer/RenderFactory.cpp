@@ -1,6 +1,8 @@
 #include "RenderFactory.h"
 
-#include "OGLRenderer.h"
+#include <nclgl\Window.h>
+
+#include "OpenGL\OGLRenderer.h"
 #include "../RenderConstants.h"
 
 #include <cassert>

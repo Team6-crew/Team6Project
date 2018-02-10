@@ -18,8 +18,8 @@ _-_-_-_-_-_-_-""  ""
 
 #pragma once
 
-#include "../nclgl/Graphics/Renderer/OGLRenderer.h"
-
+#include "../nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h"
+#include <nclgl\Graphics\MeshBase.h>
 
 #include <vector>
 
@@ -42,14 +42,14 @@ class Vector2;
 class Vector3;
 class Vector4;
 
-class Mesh	{
+class Mesh	: public MeshBase {
 public:
 	friend class MD5Mesh;
 	Mesh(void);
 	Mesh(const Mesh& rhs);
 	virtual ~Mesh(void);
 
-	virtual void Draw();
+	void Draw() override;
 
 	//Generates a single triangle, with RGB colours
 	static Mesh*	GenerateTriangle();
@@ -63,7 +63,7 @@ public:
 	static Mesh*	GenerateQuadAlt();
 
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
-	void	SetTexture(GLuint tex)	{texture = tex;}
+	void	SetTexture(int tex)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
 	GLuint  GetTexture()			{return texture;}
 

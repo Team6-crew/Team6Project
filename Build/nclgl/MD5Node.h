@@ -30,11 +30,11 @@ _-_-_-_-_-_-_-""  ""
 #ifdef USE_MD5MESH
 #ifdef WEEK_2_CODE
 #pragma once
-#include "RenderNode.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLRenderNode.h>
 #include "MD5FileData.h"
 #include "MD5Mesh.h"
 
-class MD5Node : public RenderNode	{
+class MD5Node : public OGLRenderNode	{
 public:
 	MD5Node(const MD5FileData &ofType);
 	~MD5Node(void);

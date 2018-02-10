@@ -1,12 +1,13 @@
 #pragma once
 
-
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
-#include <nclgl\RenderNode.h>
 #include <nclgl\Graphics\RenderConstants.h>
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 
-typedef std::pair<RenderNode*, float> TransparentPair;
+#include <GL/glew.h>
+
+typedef std::pair<RenderNodeBase*, float> TransparentPair;
 
 
 class Shader;
@@ -22,35 +23,16 @@ public:
 	void InitializeDefaults();
 
 	//Add/Remove Render objects to renderable object lists
-	void AddRenderNode(RenderNode* node);
-	void RemoveRenderNode(RenderNode* node);
-
-
-
+	void AddRenderNode(RenderNodeBase* node);
+	void RemoveRenderNode(RenderNodeBase* node);
 
 	//Called by main game loop
 	// - Naming convention from oglrenderer
 	void UpdateScene(float dt);
 	void RenderScene();
 
-
-
 	//Utils
 	inline Camera* GetCamera() { return camera; }
-	//inline bool GetVsyncEnabled() const { return isVsyncEnabled; }
-	//inline void SetVsyncEnabled(bool enabled) { wglSwapIntervalEXT((isVsyncEnabled = enabled) ? 1 : 0); }
-
-	inline Matrix4& GetProjMtx() { return renderer->GetProjMatrix(); }
-	inline Matrix4& GetViewMtx() { return renderer->GetViewMatrix(); }
-
-	inline Matrix4& GetShadowViewMtx() { return shadowViewMtx; }
-	inline Matrix4* GetShadowProjMatrices() { return shadowProj; }
-	inline Matrix4* GetShadowProjViewMatrices() { return shadowProjView; }
-
-	inline Vector3& GetAmbientColor() { return ambientColor; }
-	inline Vector3& GetLightDirection() { return lightDirection; }
-	inline float& GetSpecularFactor() { return specularFactor; }
-	inline GLuint& GetShadowTex() { return shadowTex; }
 
 protected:
 	GraphicsPipeline();
@@ -61,8 +43,8 @@ protected:
 	void LoadShaders();
 	void UpdateAssets(int width, int height);
 	void BuildAndSortRenderLists();
-	void RecursiveAddToRenderLists(RenderNode* node);
-	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNode*)> perObjectFunc = NULL);
+	void RecursiveAddToRenderLists(RenderNodeBase* node);
+	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNodeBase*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
 
 protected:
@@ -102,11 +84,11 @@ protected:
 	float   normalizedFarPlanes[SHADOWMAP_NUM - 1];
 
 	//Common
-	Mesh* fullscreenQuad;
+	MeshBase* fullscreenQuad;
 	Camera* camera;
 	bool isVsyncEnabled;
-	std::vector<RenderNode*> allNodes;
+	std::vector<RenderNodeBase*> allNodes;
 
-	std::vector<RenderNode*> renderlistOpaque;
+	std::vector<RenderNodeBase*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
 };

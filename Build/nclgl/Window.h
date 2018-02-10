@@ -13,7 +13,7 @@ Description:Creates and handles the Window, including the initialisation of the 
 #include <stdio.h>
 #include <fcntl.h>
 
-#include "../nclgl/Graphics/Renderer/OGLRenderer.h"
+#include "../nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h"
 
 #include "Keyboard.h"
 #include "Mouse.h"

@@ -17,7 +17,7 @@ _-_-_-_-_-_-_-""  ""
 #pragma once
 
 
-#include "../nclgl/Graphics/Renderer/OGLRenderer.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLRenderer.h>
 
 #include <string> //getline
 

@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CubeRobot.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
@@ -36,14 +35,17 @@
     <ClCompile Include="MD5Mesh.cpp" />
     <ClCompile Include="MD5Node.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Graphics\MeshBase.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
-    <ClCompile Include="Graphics\Renderer\OGLRenderer.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderFactory.cpp" />
-    <ClCompile Include="RenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderNodeBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderNodeFactory.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="NCLDebug.cpp" />
@@ -52,7 +54,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="CubeRobot.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
@@ -67,15 +68,18 @@
     <ClInclude Include="MD5Mesh.h" />
     <ClInclude Include="MD5Node.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Graphics\MeshBase.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="OBJMesh.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
-    <ClInclude Include="Graphics\Renderer\OGLRenderer.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
     <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
-    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\RenderNodeBase.h" />
+    <ClInclude Include="Graphics\Renderer\RenderNodeFactory.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />

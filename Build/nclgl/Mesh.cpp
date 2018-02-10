@@ -633,3 +633,10 @@ void Mesh::DrawDebugTangents(float length)	{
 	//	children.at(i)->DrawDebugTangents();
 	//}
 }
+
+
+
+void Mesh::SetTexture(int tex)
+{
+	texture = tex;
+}

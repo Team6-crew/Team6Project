@@ -3,8 +3,11 @@
 #include "BoundingBox.h"
 #include <nclgl\NCLDebug.h>
 #include <algorithm>
-#include <nclgl\Graphics\Renderer\OGLRenderer.h>
 #include <nclgl\Graphics\Renderer\RenderFactory.h>
+
+#include <nclgl/Mesh.h>
+
+
 
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
@@ -95,13 +98,13 @@ void GraphicsPipeline::InitializeDefaults()
 }
 
 
-void GraphicsPipeline::AddRenderNode(RenderNode* node)
+void GraphicsPipeline::AddRenderNode(RenderNodeBase* node)
 {
 	if (std::find(allNodes.begin(), allNodes.end(), node) == allNodes.end())
 		allNodes.push_back(node);
 }
 
-void GraphicsPipeline::RemoveRenderNode(RenderNode* node)
+void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 {
 	allNodes.erase(std::remove(allNodes.begin(), allNodes.end(), node), allNodes.end());
 }
@@ -229,7 +232,7 @@ void GraphicsPipeline::RenderScene()
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
-	for (RenderNode* node : allNodes)
+	for (RenderNodeBase* node : allNodes)
 		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 	
 	//Build Transparent/Opaque Renderlists
@@ -251,7 +254,7 @@ void GraphicsPipeline::RenderScene()
 		GLint uModelMtx = glGetUniformLocation(shaderShadow->GetProgram(), "uModelMtx");
 
 		RenderAllObjects(true,
-			[&](RenderNode* node)
+			[&](RenderNodeBase* node)
 			{
 				glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
 			}
@@ -284,10 +287,10 @@ void GraphicsPipeline::RenderScene()
 		uModelMtx = glGetUniformLocation(shaderForwardLighting->GetProgram(), "uModelMtx");
 		GLint uColor = glGetUniformLocation(shaderForwardLighting->GetProgram(), "uColor");
 		RenderAllObjects(false,
-			[&](RenderNode* node)
+			[&](RenderNodeBase* node)
 			{
 				glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
-				glUniform4fv(uColor, 1, (float*)&node->GetColor());
+				glUniform4fv(uColor, 1, (float*)&node->GetColour());
 			}
 		);
 
@@ -354,7 +357,7 @@ void GraphicsPipeline::BuildAndSortRenderLists()
 	renderlistOpaque.clear();
 	renderlistTransparent.clear();
 
-	for (RenderNode* node : allNodes)
+	for (RenderNodeBase* node : allNodes)
 		RecursiveAddToRenderLists(node);
 	
 	//Sort transparent objects back to front
@@ -368,12 +371,12 @@ void GraphicsPipeline::BuildAndSortRenderLists()
 	);
 }
 
-void GraphicsPipeline::RecursiveAddToRenderLists(RenderNode* node)
+void GraphicsPipeline::RecursiveAddToRenderLists(RenderNodeBase* node)
 {
 	//If the node is renderable, add it to either a opaque or transparent render list
 	if (node->IsRenderable())
 	{
-		if (node->GetColor().w > 0.999f)
+		if (node->GetColour().w > 0.999f)
 		{
 			renderlistOpaque.push_back(node);
 		}
@@ -391,12 +394,12 @@ void GraphicsPipeline::RecursiveAddToRenderLists(RenderNode* node)
 		RecursiveAddToRenderLists(*itr);
 }
 
-void GraphicsPipeline::RenderAllObjects(bool isShadowPass, std::function<void(RenderNode*)> perObjectFunc)
+void GraphicsPipeline::RenderAllObjects(bool isShadowPass, std::function<void(RenderNodeBase*)> perObjectFunc)
 {
-	for (RenderNode* node : renderlistOpaque)
+	for (RenderNodeBase* node : renderlistOpaque)
 	{
 		perObjectFunc(node);
-		node->DrawOpenGL(isShadowPass);
+		node->Draw();
 	}
 
 	if (isShadowPass)
@@ -404,7 +407,7 @@ void GraphicsPipeline::RenderAllObjects(bool isShadowPass, std::function<void(Re
 		for (TransparentPair& node : renderlistTransparent)
 		{
 			perObjectFunc(node.first);
-			node.first->DrawOpenGL(isShadowPass);
+			node.first->Draw();
 		}
 	}
 	else
@@ -413,10 +416,10 @@ void GraphicsPipeline::RenderAllObjects(bool isShadowPass, std::function<void(Re
 		{
 			perObjectFunc(node.first);
 			glCullFace(GL_FRONT);
-			node.first->DrawOpenGL(isShadowPass);
+			node.first->Draw();
 
 			glCullFace(GL_BACK);
-			node.first->DrawOpenGL(isShadowPass);
+			node.first->Draw();
 		}
 	}
 }

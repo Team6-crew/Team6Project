@@ -1,12 +1,12 @@
 #pragma once
 
-#include "RenderBase.h"
+#include "../RenderBase.h"
 
 #include <windows.h> // Windows specific functions and constants
 
 class Window;
 
-#include "../../Matrix4.h"
+#include "../../../Matrix4.h"
 
 class OGLRenderer : public RenderBase
 {

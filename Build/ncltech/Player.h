@@ -23,7 +23,7 @@ private:
 	GameObject* body;
 	GameObject* cube;
 
-	RenderNode* camera_transform;
+	RenderNodeBase* camera_transform;
 	Camera* camera;
 
 	float speed;

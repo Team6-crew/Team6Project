@@ -1,7 +1,7 @@
 #pragma once
 
 #include <nclgl\TSingleton.h>
-#include <nclgl\Window.h>
+
 
 class RenderBase;
 

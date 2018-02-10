@@ -44,7 +44,7 @@ void	MD5Node::Update(float msec) {
 	}
 	//Call our base class update function, too! Doing so will presever the 
 	//ability to build up the world matrices for every node. 
-	RenderNode::Update(msec);
+	OGLRenderNode::Update(msec);
 }
 
 

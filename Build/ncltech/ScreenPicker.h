@@ -34,7 +34,7 @@ which can be extended (with the new physics collision shapes) to provide an accu
 
 #pragma once
 #include <nclgl\TSingleton.h>
-#include <nclgl\RenderNode.h>
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 #include <nclgl\Shader.h>
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
 
@@ -55,7 +55,7 @@ typedef std::function<void(float dt, const Vector3& new_pos, const Vector3& pos_
 //In the screen picker we need to store a couple of extra bits of information about the render nodes.
 typedef struct
 {
-	RenderNode*			_renderNode;
+	RenderNodeBase*			_renderNode;
 	OnMouseDownCallback _callback;
 } PickerNode;
 
@@ -78,6 +78,7 @@ typedef struct
 
 typedef unsigned short ushort;
 
+class Vector2;
 
 class ScreenPicker : public TSingleton<ScreenPicker>
 {
@@ -88,10 +89,10 @@ public:
 
 	//Add object to list of 'clickable' objects to be tested 
 	// - Optional callback which if set will be called each frame while the RenderNode is pressed/held
-	void RegisterNodeForMouseCallback(RenderNode* node, OnMouseDownCallback callback = NULL);
+	void RegisterNodeForMouseCallback(RenderNodeBase* node, OnMouseDownCallback callback = NULL);
 
 	//Remove object from the list of 'clickable' objects
-	void UnregisterNodeForMouseCallback(RenderNode* node);
+	void UnregisterNodeForMouseCallback(RenderNodeBase* node);
 
 
 
