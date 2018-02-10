@@ -1,6 +1,6 @@
 #include "NCLDebug.h"
 #include "Window.h"
-#include "Mesh.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <SOIL.h>
 #include <algorithm>
 #include <sstream>

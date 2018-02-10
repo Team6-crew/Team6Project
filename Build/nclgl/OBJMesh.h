@@ -83,7 +83,7 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #include "Vector3.h"
 #include "Vector2.h"
-#include "Mesh.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include "ChildMeshInterface.h"
 
 #define OBJOBJECT		"object"	//the current line of the obj file defines the start of a new material
@@ -138,7 +138,7 @@ struct MTLInfo {
 	//this is all we care about...
 };
 
-class OBJMesh : public Mesh, public ChildMeshInterface	{
+class OBJMesh : public OGLMesh, public ChildMeshInterface	{
 public:
 	OBJMesh(void){};
 	OBJMesh(std::string filename){LoadOBJMesh(filename);};

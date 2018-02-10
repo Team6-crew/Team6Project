@@ -48,9 +48,6 @@
     <ClCompile Include="MD5Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,6 +74,9 @@
     <ClCompile Include="Graphics\MeshBase.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderNodeFactory.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,9 +129,6 @@
     <ClInclude Include="MD5Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,6 +170,9 @@
     <ClInclude Include="Graphics\MeshBase.h" />
     <ClInclude Include="Graphics\Renderer\RenderNodeFactory.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

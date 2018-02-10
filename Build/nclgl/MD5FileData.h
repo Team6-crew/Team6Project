@@ -196,7 +196,7 @@ public:
 	void		UpdateTransformTBO(const MD5Skeleton &skel) const;
 #endif
 
-	Mesh*		GetRootMesh() const {return (Mesh*)rootMesh;}
+	OGLMesh*		GetRootMesh() const {return (OGLMesh*)rootMesh;}
 
 	MD5Anim*	GetAnim(const std::string &name) const;
 

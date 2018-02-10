@@ -265,7 +265,7 @@ automatically be used by this overloaded function. Once 'this' has been drawn,
 all of the children of 'this' will be drawn
 */
 void OBJMesh::Draw() {
-	Mesh::Draw();
+	OGLMesh::Draw();
 	for(unsigned int i = 0; i < children.size(); ++i) {
 		children.at(i)->Draw();
 	}

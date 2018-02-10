@@ -3,8 +3,8 @@
 #include <nclgl\OBJMesh.h>
 #include "../ExternalLibs/SOIL/include/SOIL.h" 
 
-Mesh* CommonMeshes::m_pCube		= NULL;
-Mesh* CommonMeshes::m_pSphere	= NULL;
+MeshBase* CommonMeshes::m_pCube		= NULL;
+MeshBase* CommonMeshes::m_pSphere	= NULL;
 
 GLuint    CommonMeshes::m_pCheckerboardTex = 0;
 

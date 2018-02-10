@@ -64,7 +64,7 @@ than performing everything on the GPU.
 #include "Vector3.h"
 #include "Vector2.h"
 
-#include "Mesh.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include "MD5Anim.h"
 #include "MD5FileData.h"
 
@@ -82,7 +82,7 @@ MD5Mesh is also a subclass of Mesh, meaning we get access to all of the usual
 Mesh stuff you've been adding in as the tutorial series goes on.
 */
 
-class MD5Mesh : public Mesh, public ChildMeshInterface	{
+class MD5Mesh : public OGLMesh, public ChildMeshInterface	{
 public:
 	//The MD5Anim class works on the data of this class. We don't want any
 	//other class messing around with its internal data though, so instead

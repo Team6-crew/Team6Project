@@ -1,7 +1,6 @@
 #include "RenderNodeFactory.h"
 
 #include "OpenGL\OGLRenderNode.h"
-#include "../../Mesh.h"
 
 RenderNodeFactory::RenderNodeFactory()
 {

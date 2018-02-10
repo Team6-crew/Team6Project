@@ -2,7 +2,7 @@
 #include "NCLDebug.h"
 
 // Note: Phil only including this for enums
-#include <nclgl\Mesh.h>
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 
 #include <fstream>
 

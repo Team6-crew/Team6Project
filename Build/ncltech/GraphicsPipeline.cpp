@@ -5,9 +5,7 @@
 #include <algorithm>
 #include <nclgl\Graphics\Renderer\RenderFactory.h>
 
-#include <nclgl/Mesh.h>
-
-
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
@@ -29,7 +27,7 @@ GraphicsPipeline::GraphicsPipeline()
 	LoadShaders();
 	NCLDebug::_LoadShaders();
 
-	fullscreenQuad = Mesh::GenerateQuad();
+	fullscreenQuad = OGLMesh::GenerateQuad();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);

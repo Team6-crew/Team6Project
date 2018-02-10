@@ -18,7 +18,7 @@ _-_-_-_-_-_-_-""  ""
 
 #pragma once
 
-#include "../nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h"
+#include <nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h>
 #include <nclgl\Graphics\MeshBase.h>
 
 #include <vector>
@@ -42,25 +42,25 @@ class Vector2;
 class Vector3;
 class Vector4;
 
-class Mesh	: public MeshBase {
+class OGLMesh	: public MeshBase {
 public:
 	friend class MD5Mesh;
-	Mesh(void);
-	Mesh(const Mesh& rhs);
-	virtual ~Mesh(void);
+	OGLMesh(void);
+	OGLMesh(const OGLMesh& rhs);
+	virtual ~OGLMesh(void);
 
 	void Draw() override;
 
 	//Generates a single triangle, with RGB colours
-	static Mesh*	GenerateTriangle();
+	static OGLMesh*	GenerateTriangle();
 
-	static Mesh*	GenerateCone(float segments);
-	static Mesh*	TestTriangle(float texRotation);
-	static Mesh*	TestQuad(float texRotation);
+	static OGLMesh*	GenerateCone(float segments);
+	static OGLMesh*	TestTriangle(float texRotation);
+	static OGLMesh*	TestQuad(float texRotation);
 
 	//Generates a single white quad, going from -1 to 1 on the x and z axis.
-	static Mesh*	GenerateQuad();
-	static Mesh*	GenerateQuadAlt();
+	static OGLMesh*	GenerateQuad();
+	static OGLMesh*	GenerateQuadAlt();
 
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
 	void	SetTexture(int tex)	override;

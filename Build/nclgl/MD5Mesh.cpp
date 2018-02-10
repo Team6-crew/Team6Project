@@ -36,7 +36,7 @@ void MD5Mesh::Draw() {
 			children[i]->Draw();
 		}
 	}
-	Mesh::Draw();
+	OGLMesh::Draw();
 };
 
 /*

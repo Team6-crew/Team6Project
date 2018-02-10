@@ -34,7 +34,7 @@
     <ClCompile Include="MD5FileData.cpp" />
     <ClCompile Include="MD5Mesh.cpp" />
     <ClCompile Include="MD5Node.cpp" />
-    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
     <ClCompile Include="Graphics\MeshBase.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
@@ -67,7 +67,7 @@
     <ClInclude Include="MD5FileData.h" />
     <ClInclude Include="MD5Mesh.h" />
     <ClInclude Include="MD5Node.h" />
-    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />
     <ClInclude Include="Graphics\MeshBase.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="OBJMesh.h" />

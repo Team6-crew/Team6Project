@@ -1,14 +1,14 @@
-#include "Mesh.h"
+#include "OGLMesh.h"
 
-#include "../nclgl/Vector2.h"
-#include "../nclgl/Vector3.h"
-#include "../nclgl/Vector4.h"
+#include <nclgl/Vector2.h>
+#include <nclgl/Vector3.h>
+#include <nclgl/Vector4.h>
 
-#include "../nclgl/Matrix4.h"
+#include <nclgl/Matrix4.h>
 
-#include "common.h" // uint
+#include <nclgl\common.h> // uint
 
-Mesh::Mesh(void)	{
+OGLMesh::OGLMesh(void)	{
 	glGenVertexArrays(1, &arrayObject);
 	
 	for(int i = 0; i < MAX_BUFFER; ++i) {
@@ -30,7 +30,7 @@ Mesh::Mesh(void)	{
 	colours		  = NULL;
 }
 
-Mesh::Mesh(const Mesh& rhs)
+OGLMesh::OGLMesh(const OGLMesh& rhs)
 {
 	glGenVertexArrays(1, &arrayObject);
 
@@ -63,7 +63,7 @@ Mesh::Mesh(const Mesh& rhs)
 	BufferData();
 }
 
-Mesh::~Mesh(void)	{
+OGLMesh::~OGLMesh(void)	{
 	glDeleteVertexArrays(1, &arrayObject);			//Delete our VAO
 	glDeleteBuffers(MAX_BUFFER, bufferObject);		//Delete our VBOs
 
@@ -95,7 +95,7 @@ Mesh::~Mesh(void)	{
 GLuint activeArrayHack = 0;
 GLuint activeTexture1Hack = 0;
 GLuint activeTexture2Hack = 0;
-void Mesh::Draw()	{
+void OGLMesh::Draw()	{
 	//if (activeTexture1Hack != texture)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -123,8 +123,8 @@ void Mesh::Draw()	{
 		glBindVertexArray(0);
 }
 
-Mesh* Mesh::GenerateTriangle()	{
-	Mesh*m = new Mesh();
+OGLMesh* OGLMesh::GenerateTriangle()	{
+	OGLMesh*m = new OGLMesh();
 	m->numVertices = 3;
 
 	m->vertices = new Vector3[m->numVertices];
@@ -149,8 +149,8 @@ Mesh* Mesh::GenerateTriangle()	{
 	return m;
 }
 
-Mesh* Mesh::TestQuad(float r)	{
-	Mesh*m = new Mesh();
+OGLMesh* OGLMesh::TestQuad(float r)	{
+	OGLMesh*m = new OGLMesh();
 	m->numVertices = 6;
 	m->type = GL_TRIANGLES;
 
@@ -194,8 +194,8 @@ Mesh* Mesh::TestQuad(float r)	{
 	return m;
 }
 
-Mesh*	Mesh::GenerateCone(float segments) {
-	Mesh*m = new Mesh();
+OGLMesh*	OGLMesh::GenerateCone(float segments) {
+	OGLMesh*m = new OGLMesh();
 
 	m->numVertices = 16;
 	m->numIndices  = 8 * 6;
@@ -258,8 +258,8 @@ Mesh*	Mesh::GenerateCone(float segments) {
 	return m;
 }
 
-Mesh*	Mesh::TestTriangle(float r) {
-	Mesh*m = new Mesh();
+OGLMesh*	OGLMesh::TestTriangle(float r) {
+	OGLMesh*m = new OGLMesh();
 	m->numVertices = 3;
 
 	m->vertices		= new Vector3[m->numVertices];
@@ -290,8 +290,8 @@ Mesh*	Mesh::TestTriangle(float r) {
 	return m;
 }
 
-Mesh* Mesh::GenerateQuad()	{
-	Mesh* m = new Mesh();
+OGLMesh* OGLMesh::GenerateQuad()	{
+	OGLMesh* m = new OGLMesh();
 
 	m->numVertices = 4;
 	m->type = GL_TRIANGLE_STRIP;
@@ -326,8 +326,8 @@ Mesh* Mesh::GenerateQuad()	{
 }
 
 
-Mesh* Mesh::GenerateQuadAlt()	{
-	Mesh* m = new Mesh();
+OGLMesh* OGLMesh::GenerateQuadAlt()	{
+	OGLMesh* m = new OGLMesh();
 
 	m->numVertices = 4;
 	m->type = GL_TRIANGLE_STRIP;
@@ -359,7 +359,7 @@ Mesh* Mesh::GenerateQuadAlt()	{
 	return m;
 }
 
-void	Mesh::BufferData()	{
+void	OGLMesh::BufferData()	{
 	//GenerateNormals();
 	//GenerateTangents();
 
@@ -422,7 +422,7 @@ void	Mesh::BufferData()	{
 Stuff for later tutorials...
 */
 
-void	Mesh::GenerateNormals()	{
+void	OGLMesh::GenerateNormals()	{
 	if(!normals) {
 		normals = new Vector3[numVertices];
 	}
@@ -469,7 +469,7 @@ void	Mesh::GenerateNormals()	{
 	}
 }
 
-void Mesh::GenerateTangents() {
+void OGLMesh::GenerateTangents() {
 	//Extra! stops rare occurrence of this function being called
 	//on a mesh without tex coords, which would break quite badly!
 	if(!textureCoords) {
@@ -510,7 +510,7 @@ void Mesh::GenerateTangents() {
 	}
 }
 
-Vector3 Mesh::GenerateTangent(const Vector3 &a,const Vector3 &b,const Vector3 &c,const Vector2 &ta,const Vector2 &tb,const Vector2 &tc)	 {
+Vector3 OGLMesh::GenerateTangent(const Vector3 &a,const Vector3 &b,const Vector3 &c,const Vector2 &ta,const Vector2 &tb,const Vector2 &tc)	 {
 	Vector2 coord1  = tb-ta;
 	Vector2 coord2  = tc-ta;
 
@@ -526,7 +526,7 @@ Vector3 Mesh::GenerateTangent(const Vector3 &a,const Vector3 &b,const Vector3 &c
 	return axis * invDet;
 }
 
-void Mesh::DrawDebugNormals(float length)	{
+void OGLMesh::DrawDebugNormals(float length)	{
 	if(numVertices > 0) {
 		GLuint array;
 		GLuint buffer;
@@ -580,7 +580,7 @@ void Mesh::DrawDebugNormals(float length)	{
 	//}
 }
 
-void Mesh::DrawDebugTangents(float length)	{
+void OGLMesh::DrawDebugTangents(float length)	{
 	if(numVertices > 0) {
 		GLuint array;
 		GLuint buffer;
@@ -636,7 +636,7 @@ void Mesh::DrawDebugTangents(float length)	{
 
 
 
-void Mesh::SetTexture(int tex)
+void OGLMesh::SetTexture(int tex)
 {
 	texture = tex;
 }

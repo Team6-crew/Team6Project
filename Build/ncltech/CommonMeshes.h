@@ -12,7 +12,7 @@ Description:
 *//////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <nclgl\Mesh.h>
+#include <nclgl\Graphics\MeshBase.h>
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
 
 class Scene;
@@ -26,10 +26,10 @@ public:
 	// e.g RenderNode* cube_copy = new RenderNode(*CommonMeshes::Cube());
 
 	//Cube
-	static Mesh* Cube()			{ return m_pCube; }
+	static MeshBase* Cube()			{ return m_pCube; }
 
 	//Sphere
-	static Mesh* Sphere()		{ return m_pSphere; }
+	static MeshBase* Sphere()		{ return m_pSphere; }
 
 
 
@@ -43,8 +43,8 @@ protected:
 	static void ReleaseMeshes();
 
 protected:
-	static Mesh* m_pCube;
-	static Mesh* m_pSphere;
+	static MeshBase* m_pCube;
+	static MeshBase* m_pSphere;
 
 	static GLuint m_pCheckerboardTex;
 };
