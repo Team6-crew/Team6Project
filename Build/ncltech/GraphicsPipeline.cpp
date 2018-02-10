@@ -43,7 +43,7 @@ GraphicsPipeline::GraphicsPipeline()
 	camera->SetYaw(0.f);
 	camera->SetPitch(-20.f);
 	InitializeDefaults();
-	Resize(renderer->width, renderer->height);
+	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
 
 
@@ -86,7 +86,7 @@ GraphicsPipeline::GraphicsPipeline(OGLRenderer &render)
 	camera->SetYaw(0.f);
 	camera->SetPitch(-20.f);
 	InitializeDefaults();
-	Resize(renderer->width, renderer->height);
+	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -257,12 +257,12 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->HandleMouse(dt);
 
 	camera->HandleKeyboard(dt);
-	renderer->viewMatrix = camera->BuildViewMatrix();
-	projViewMatrix = renderer->projMatrix * renderer->viewMatrix;
+	renderer->SetViewMatrix(camera->BuildViewMatrix());
+	projViewMatrix = renderer->GetProjMatrix() * renderer->GetViewMatrix();
 
 	NCLDebug::_SetDebugDrawData(
-		renderer->projMatrix,
-		renderer->viewMatrix,
+		renderer->GetProjMatrix(),
+		renderer->GetViewMatrix(),
 		camera->GetPosition());
 }
 
@@ -349,7 +349,7 @@ void GraphicsPipeline::RenderScene()
 
 	//Downsample and present to screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, renderer->width, renderer->height);
+		glViewport(0, 0, renderer->GetWidth(), renderer->GetHeight());
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		float superSamples = (float)(numSuperSamples);
@@ -384,7 +384,7 @@ void GraphicsPipeline::Resize(int x, int y)
 	renderer->Resize(x, y);
 
 	//Update our projection matrix
-	renderer->projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, (float)x / (float)y, PROJ_FOV);
+	renderer->SetProjMatrix(Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, (float)x / (float)y, PROJ_FOV));
 }
 
 void GraphicsPipeline::BuildAndSortRenderLists()
@@ -474,12 +474,12 @@ void GraphicsPipeline::BuildShadowTransforms()
 	//Fixed size shadow area (just moves with camera) 
 	shadowViewMtx = Matrix4::BuildViewMatrix(Vector3(0.0f, 0.0f, 0.0f), -lightDirection, Vector3(0, 1, 0));
 
-	Matrix4 invCamProjView = Matrix4::Inverse(renderer->projMatrix * renderer->viewMatrix);
+	Matrix4 invCamProjView = Matrix4::Inverse(renderer->GetProjMatrix() * renderer->GetViewMatrix());
 
 	auto compute_depth = [&](float x)
 	{
 		float proj_start = -(proj_range * x + PROJ_NEAR);
-		return (proj_start*renderer->projMatrix[10] + renderer->projMatrix[14]) / (proj_start*renderer->projMatrix[11]);
+		return (proj_start*renderer->GetProjMatrix()[10] + renderer->GetProjMatrix()[14]) / (proj_start*renderer->GetProjMatrix()[11]);
 	};
 
 	const float divisor = (SHADOWMAP_NUM*SHADOWMAP_NUM) - 1.f;

@@ -1,5 +1,7 @@
 #include "RenderNode.h"
 
+using std::vector;
+
 RenderNode::RenderNode(Mesh*mesh, Vector4 colour)	{
 	awake				= true;
 	this->mesh			= mesh;

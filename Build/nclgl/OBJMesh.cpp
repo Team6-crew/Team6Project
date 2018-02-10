@@ -1,5 +1,11 @@
 #include "OBJMesh.h"
 #include "NCLDebug.h"
+
+#include <SOIL.h>
+
+using std::string;
+
+
 #ifdef WEEK_2_CODE
 /*
 OBJ files look generally something like this:
@@ -21,6 +27,8 @@ f vert index / tex index / norm index  vert index / tex index / norm index  vert
 OBJ files can also be split up into a number of submeshes, making loading them
 in even more annoying. 
 */
+
+
 bool	OBJMesh::LoadOBJMesh(std::string filename)	{
 	NCLDebug::Log("Loading Mesh: %s", filename.c_str());
 
@@ -268,7 +276,7 @@ void	OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 		return;
 	}
 
-	map <string, MTLInfo>::iterator i = materials.find(mtlType);
+	std::map <std::string, MTLInfo>::iterator i = materials.find(mtlType);
 
 	if(i != materials.end()) {
 		if(!i->second.diffuse.empty())	{

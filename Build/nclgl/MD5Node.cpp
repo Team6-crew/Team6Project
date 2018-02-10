@@ -1,6 +1,9 @@
 #include "MD5Node.h"
 #ifdef USE_MD5MESH
 #ifdef WEEK_2_CODE
+
+using std::string;
+
 MD5Node::MD5Node(const MD5FileData &ofType) : sourceData(ofType)	{
 	currentAnim		 = NULL;
 	frameTime		 = 0.0f;
@@ -122,7 +125,7 @@ bool	MD5Node::GetJointLocalTransform(const string&name, Matrix4 &t) {
 }
 
 
-bool	MD5Node::GetParentLocalOrientation(const string&name, Quaternion &t) {
+bool	MD5Node::GetParentLocalOrientation(const string& name, Quaternion &t) {
 	int index = sourceData.GetIndexForJointName(name);
 	if (index < 0) {
 		return false;

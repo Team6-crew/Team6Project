@@ -1,5 +1,6 @@
 #pragma once
-#include <nclgl\OGLRenderer.h>
+
+#include <nclgl\Graphics\Renderer\OGLRenderer.h>
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
 #include <nclgl\RenderNode.h>
@@ -74,6 +75,8 @@
 typedef std::pair<RenderNode*, float> TransparentPair;
 
 
+class Shader;
+
 class GraphicsPipeline : public TSingleton<GraphicsPipeline>
 {
 	friend class TSingleton<GraphicsPipeline>;
@@ -99,11 +102,11 @@ public:
 
 	//Utils
 	inline Camera* GetCamera() { return camera; }
-	inline bool GetVsyncEnabled() const { return isVsyncEnabled; }
-	inline void SetVsyncEnabled(bool enabled) { wglSwapIntervalEXT((isVsyncEnabled = enabled) ? 1 : 0); }
+	//inline bool GetVsyncEnabled() const { return isVsyncEnabled; }
+	//inline void SetVsyncEnabled(bool enabled) { wglSwapIntervalEXT((isVsyncEnabled = enabled) ? 1 : 0); }
 
-	inline Matrix4& GetProjMtx() { return renderer->projMatrix; }
-	inline Matrix4& GetViewMtx() { return renderer->viewMatrix; }
+	inline Matrix4& GetProjMtx() { return renderer->GetProjMatrix(); }
+	inline Matrix4& GetViewMtx() { return renderer->GetViewMatrix(); }
 
 	inline Matrix4& GetShadowViewMtx() { return shadowViewMtx; }
 	inline Matrix4* GetShadowProjMatrices() { return shadowProj; }

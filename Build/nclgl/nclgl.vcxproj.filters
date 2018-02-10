@@ -60,9 +60,6 @@
     <ClCompile Include="OBJMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OGLRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,6 +75,8 @@
     <ClCompile Include="RenderNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OGLRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NCLDebug.h">
@@ -140,9 +139,6 @@
     <ClInclude Include="OBJMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OGLRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,5 +169,7 @@
     <ClInclude Include="PerfTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Renderer\RenderBase.h" />
+    <ClInclude Include="Graphics\Renderer\OGLRenderer.h" />
   </ItemGroup>
 </Project>

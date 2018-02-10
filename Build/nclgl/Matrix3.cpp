@@ -1,6 +1,6 @@
 #include "Matrix3.h"
 #include "Matrix4.h"
-#include "OGLRenderer.h"
+#include "../nclgl/Graphics/Renderer/OGLRenderer.h"
 #include "common.h"
 
 const Matrix3 Matrix3::Identity = Matrix3(1.0f, 0.0f, 0.0f,

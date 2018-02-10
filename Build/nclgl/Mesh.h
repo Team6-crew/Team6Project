@@ -18,9 +18,14 @@ _-_-_-_-_-_-_-""  ""
 
 #pragma once
 
-#include "OGLRenderer.h"
+#include "../nclgl/Graphics/Renderer/OGLRenderer.h"
+
+
 #include <vector>
 
+
+
+#include <GL/glew.h>
 //A handy enumerator, to determine which member of the bufferObject array
 //holds which data
 enum MeshBuffer {
@@ -32,6 +37,10 @@ enum MeshBuffer {
 	INDEX_BUFFER	,
 	MAX_BUFFER
 };
+
+class Vector2;
+class Vector3;
+class Vector4;
 
 class Mesh	{
 public:

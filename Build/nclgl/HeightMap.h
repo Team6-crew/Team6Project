@@ -5,6 +5,7 @@
 
 #include "..\nclgl\mesh.h"
 
+#include "common.h" // uint
 
 #ifndef HEIGHT_MAP_DEF_OFF
 #define RAW_WIDTH 257

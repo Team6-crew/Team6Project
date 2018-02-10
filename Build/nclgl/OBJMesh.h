@@ -120,13 +120,13 @@ struct OBJSubMesh {
 	std::vector<int> normIndices;
 
 	int indexOffset;
-	string mtlType;
-	string mtlSrc;
+	std::string mtlType;
+	std::string mtlSrc;
 };
 
 struct MTLInfo {
-	string bump;
-	string diffuse;
+	std::string bump;
+	std::string diffuse;
 
 	GLuint bumpNum;
 	GLuint diffuseNum;
@@ -148,11 +148,11 @@ public:
 	virtual void Draw();
 
 protected:
-	void	SetTexturesFromMTL(string &mtlFile, string &mtlType);
+	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType);
 
 	void	FixTextures(MTLInfo &info);
 
-	map <string, MTLInfo> materials;
+	std::map <std::string, MTLInfo> materials;
 };
 
 #endif

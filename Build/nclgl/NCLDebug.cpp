@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <sstream>
 
+
+
 Vector3	NCLDebug::g_CameraPosition;
 Matrix4	NCLDebug::g_ProjMtx;
 Matrix4	NCLDebug::g_ViewMtx;

@@ -17,7 +17,12 @@ _-_-_-_-_-_-_-""  ""
 #pragma once
 
 
-#include "OGLRenderer.h"
+#include "../nclgl/Graphics/Renderer/OGLRenderer.h"
+
+#include <string> //getline
+
+#include <GL/glew.h>
+#include <GL/wglew.h>
 
 #define SHADER_VERTEX   0
 #define SHADER_FRAGMENT 1
@@ -26,7 +31,7 @@ _-_-_-_-_-_-_-""  ""
 using namespace std;
 class Shader	{
 public:
-	Shader(string vertex, string fragment , string geometry = "");
+	Shader(std::string vertex, std::string fragment , std::string geometry = "");
 	~Shader(void);
 
 	GLuint  GetProgram() { return program;}
@@ -40,8 +45,8 @@ public:
 	}
 	bool	LinkProgram();
 protected:
-	bool	LoadShaderFile(string from, string &into);
-	GLuint	GenerateShader(string from, GLenum type);
+	bool	LoadShaderFile(std::string from, std::string &into);
+	GLuint	GenerateShader(std::string from, GLenum type);
 	void	SetDefaultAttributes();
 	
 	GLuint	objects[3];
@@ -49,8 +54,8 @@ protected:
 
 	bool	loadFailed;
 
-	string	vertexName;
-	string	fragName;
-	string	geomName;
+	std::string	vertexName;
+	std::string	fragName;
+	std::string	geomName;
 };
 

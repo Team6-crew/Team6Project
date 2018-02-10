@@ -37,9 +37,10 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
-    <ClCompile Include="OGLRenderer.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OGLRenderer.cpp" />
     <ClCompile Include="RenderNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -65,10 +66,11 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="OBJMesh.h" />
-    <ClInclude Include="OGLRenderer.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Graphics\Renderer\RenderBase.h" />
+    <ClInclude Include="Graphics\Renderer\OGLRenderer.h" />
     <ClInclude Include="RenderNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TSingleton.h" />

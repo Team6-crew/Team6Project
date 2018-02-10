@@ -1,6 +1,13 @@
 #include "Shader.h"
 #include "NCLDebug.h"
 
+// Note: Phil only including this for enums
+#include <nclgl\Mesh.h>
+
+#include <fstream>
+
+using std::string;
+
 Shader::Shader(string vFile, string fFile, string gFile) {
 	NCLDebug::Log("Loading Shader:");
 
@@ -46,7 +53,7 @@ bool	Shader::LoadShaderFile(string from, string &into) {
 	return true;
 }
 
-GLuint	Shader::GenerateShader(string from, GLenum type) {
+GLuint	Shader::GenerateShader(std::string from, GLenum type) {
 
 	NCLDebug::Log("    -> Compiling Shader: %s", from.c_str());
 
