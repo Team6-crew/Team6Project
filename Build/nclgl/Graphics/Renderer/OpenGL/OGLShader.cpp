@@ -1,14 +1,20 @@
-#include "Shader.h"
-#include "NCLDebug.h"
+#include "OGLShader.h"
+#include <nclgl\NCLDebug.h>
+
 
 // Note: Phil only including this for enums
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 
 #include <fstream>
 
+using namespace std;
 using std::string;
 
-Shader::Shader(string vFile, string fFile, string gFile) {
+#include <iostream>
+#include <cassert>
+
+
+OGLShader::OGLShader(std::string vFile, std::string fFile, std::string gFile) {
 	NCLDebug::Log("Loading Shader:");
 
 	program = glCreateProgram();
@@ -25,9 +31,11 @@ Shader::Shader(string vFile, string fFile, string gFile) {
 	glAttachShader(program, objects[SHADER_FRAGMENT]);
 
 	SetDefaultAttributes();
+
+	LinkProgram();
 }
 
-Shader::~Shader(void) {
+OGLShader::~OGLShader(void) {
 	for (int i = 0; i < 3; ++i) {
 		glDetachShader(program, objects[i]);
 		glDeleteShader(objects[i]);
@@ -35,7 +43,7 @@ Shader::~Shader(void) {
 	glDeleteProgram(program);
 }
 
-bool	Shader::LoadShaderFile(string from, string &into) {
+bool	OGLShader::LoadShaderFile(string from, string &into) {
 	ifstream	file;
 	string		temp;
 	
@@ -53,7 +61,7 @@ bool	Shader::LoadShaderFile(string from, string &into) {
 	return true;
 }
 
-GLuint	Shader::GenerateShader(std::string from, GLenum type) {
+GLuint	OGLShader::GenerateShader(std::string from, GLenum type) {
 
 	NCLDebug::Log("    -> Compiling Shader: %s", from.c_str());
 
@@ -87,7 +95,7 @@ GLuint	Shader::GenerateShader(std::string from, GLenum type) {
 	return shader;
 }
 
-bool Shader::LinkProgram() {
+bool OGLShader::LinkProgram() {
 	if (loadFailed) {
 		return false;
 	}
@@ -111,7 +119,7 @@ bool Shader::LinkProgram() {
 	return true;
 }
 
-void	Shader::SetDefaultAttributes() {
+void	OGLShader::SetDefaultAttributes() {
 	glBindAttribLocation(program, VERTEX_BUFFER, "position");
 	glBindAttribLocation(program, COLOUR_BUFFER, "colour"); //ARGHHH
 	glBindAttribLocation(program, COLOUR_BUFFER, "color");
@@ -121,3 +129,66 @@ void	Shader::SetDefaultAttributes() {
 
 	glBindAttribLocation(program, MAX_BUFFER + 1, "transformIndex");
 }
+
+
+void OGLShader::Activate()
+{
+	glUseProgram(program);
+}
+
+void OGLShader::SetUniform(const std::string& name, int i)
+{
+	glUniform1i(GetUniformLocation(name), i);
+}
+
+void OGLShader::SetUniform(const std::string& name, float f)
+{
+	glUniform1f(GetUniformLocation(name), f);
+}
+
+void OGLShader::SetUniform(const std::string& name, const Matrix4& mat)
+{
+	glUniformMatrix4fv(GetUniformLocation(name), 1, false, (float*)&mat);
+}
+
+void OGLShader::SetUniform(const std::string& name, const Vector2& vec)
+{
+	glUniform2fv(GetUniformLocation(name), 1, (float*)& vec);
+}
+
+void OGLShader::SetUniform(const std::string& name, const Vector3& vec)
+{
+	glUniform3fv(GetUniformLocation(name), 1, (float*)& vec);
+}
+
+void OGLShader::SetUniform(const std::string& name, const Vector4& vec)
+{
+	glUniform4fv(GetUniformLocation(name), 1, (float*)& vec);
+}
+
+void OGLShader::SetUniform(const std::string& name, int numMats, Matrix4* mat)
+{
+	glUniformMatrix4fv(GetUniformLocation(name), numMats, false, (float*)mat);
+}
+
+void OGLShader::SetUniform(const std::string& name, int numVecs, Vector3* vecs)
+{
+	glUniform3fv(GetUniformLocation(name), numVecs, (float*)vecs);
+}
+
+void OGLShader::SetUniform(const std::string& name, int numFloats, float* floats)
+{
+	glUniform1fv(GetUniformLocation(name), numFloats, floats);
+}
+
+GLint OGLShader::GetUniformLocation(string name)
+{
+	GLint location = glGetUniformLocation(program, name.c_str());
+	if (location < 0)
+	{
+		cout << "Uniform " << name << " does not exist" << endl;
+		assert(false);
+	}
+	return location;
+}
+

@@ -12,9 +12,6 @@
     <Text Include="CHANGELIST.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NCLDebug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,9 +57,6 @@
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,11 +73,18 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\FrameBufferBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
+    <ClCompile Include="Graphics\TextureBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
+    <ClCompile Include="Graphics\ShaderBase.cpp" />
+    <ClCompile Include="NCLDebug.cpp" />
+    <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NCLDebug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -141,9 +142,6 @@
     <ClInclude Include="Quaternion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -164,7 +162,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
-    <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
     <ClInclude Include="Graphics\Renderer\RenderNodeBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
     <ClInclude Include="Graphics\MeshBase.h" />
@@ -173,6 +170,17 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\FrameBufferBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
+    <ClInclude Include="Graphics\TextureBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
+    <ClInclude Include="Graphics\ShaderBase.h" />
+    <ClInclude Include="NCLDebug.h" />
+    <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

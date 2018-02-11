@@ -10,6 +10,8 @@
 OcTree* PhysicsEngine::octree = NULL;
 WorldPartition* PhysicsEngine::worldPartition = NULL;
 
+using namespace std;
+
 void PhysicsEngine::SetDefaults()
 {
 	//Variables set here /will/ be reset with each scene

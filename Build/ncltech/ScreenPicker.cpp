@@ -1,7 +1,11 @@
 #include "ScreenPicker.h"
 #include "GraphicsPipeline.h"
 #include <nclgl\NCLDebug.h>
-
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
+#include <nclgl\Graphics\Renderer\ShaderFactory.h>
+#include <nclgl\Graphics\ShaderBase.h>
+#include <nclgl\Vector2.h>
+#include <nclgl\Vector3.h>
 #include <nclgl\Graphics\MeshBase.h>
 
 ScreenPicker::ScreenPicker()
@@ -102,13 +106,11 @@ void ScreenPicker::UpdateAssets(int screen_width, int screen_height)
 	if (!m_pShaderPicker)
 	{
 #ifdef USE_NSIGHT_HACK
-		m_pShaderPicker = new Shader(SHADERDIR"SceneRenderer/TechVertexPicker.glsl", SHADERDIR"SceneRenderer/TechFragScreenPicker_nsightfix.glsl");
+		m_pShaderPicker = ShaderFactory::Instance()->MakeShader(SHADERDIR"SceneRenderer/TechVertexPicker.glsl", SHADERDIR"SceneRenderer/TechFragScreenPicker_nsightfix.glsl");
 #else
 		m_pShaderPicker = new Shader(SHADERDIR"SceneRenderer/TechVertexPicker.glsl", SHADERDIR"SceneRenderer/TechFragScreenPicker.glsl");
 #endif
-		glBindFragDataLocation(m_pShaderPicker->GetProgram(), 0, "OutFrag");
-		if (!m_pShaderPicker->LinkProgram())
-			NCLERROR("Unable to build ScreenPicker Shader!");
+		//glBindFragDataLocation(m_pShaderPicker->GetProgram(), 0, "OutFrag"); TODO: Need to hack this in? What on earth does it do
 
 	}
 
@@ -387,9 +389,8 @@ void ScreenPicker::RenderPickingScene(
 	mousepos.y = Window::GetWindow().GetScreenSize().y - mousepos.y;
 
 	//Setup Shader
-	glUseProgram(m_pShaderPicker->GetProgram());
-	//m_pShaderPicker->SetUniform("uProjViewMtx", &projViewMtx);
-	glUniformMatrix4fv(glGetUniformLocation(m_pShaderPicker->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, (float*)&projViewMtx);
+	m_pShaderPicker->Activate();
+	m_pShaderPicker->SetUniform("uProjViewMtx", projViewMtx);
 
 
 	//Bind FBO
@@ -411,16 +412,13 @@ void ScreenPicker::RenderPickingScene(
 	glPolygonOffset(0.f, -1.f);
 
 	//Render our clickable objects
-	GLint uModelMtx  = glGetUniformLocation(m_pShaderPicker->GetProgram(), "uModelMtx");
-	GLint uPickerIdx = glGetUniformLocation(m_pShaderPicker->GetProgram(), "uPickerIdx");
 	for (uint i = 0; i < m_AllRegisteredObjects.size(); ++i)
 	{
 		PickerNode& node = m_AllRegisteredObjects[i];
 		if (node._renderNode->GetMesh())
 		{
-			glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node._renderNode->GetWorldTransform());
-			glUniform1ui(uPickerIdx, i + 1);
-
+			m_pShaderPicker->SetUniform("uModelMtx", node._renderNode->GetWorldTransform());
+			m_pShaderPicker->SetUniform("uPickerIdx", int(i + 1));
 			node._renderNode->GetMesh()->Draw();
 		}
 	}

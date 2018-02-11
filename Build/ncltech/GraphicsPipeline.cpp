@@ -4,8 +4,10 @@
 #include <nclgl\NCLDebug.h>
 #include <algorithm>
 #include <nclgl\Graphics\Renderer\RenderFactory.h>
-
+#include <nclgl\Graphics\Renderer\ShaderFactory.h>
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
+#include <nclgl\Graphics\ShaderBase.h>
 
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
@@ -109,30 +111,19 @@ void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 
 void GraphicsPipeline::LoadShaders()
 {
-	shaderPresentToWindow = new Shader(
+	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
-	if (!shaderPresentToWindow->LinkProgram())
-	{
-		NCLERROR("Could not link shader: Present to window / SuperSampling");
-	}
 
-	shaderShadow = new Shader(
+	shaderShadow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexShadow.glsl",
 		SHADERDIR"Common/EmptyFragment.glsl",
 		SHADERDIR"SceneRenderer/TechGeomShadow.glsl");
-	if (!shaderShadow->LinkProgram())
-	{
-		NCLERROR("Could not link shader: Shadow Shader");
-	}
 
-	shaderForwardLighting = new Shader(
+
+	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
 		SHADERDIR"SceneRenderer/TechFragForwardRender.glsl");
-	if (!shaderForwardLighting->LinkProgram())
-	{
-		NCLERROR("Could not link shader: Forward Renderer");
-	}
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -247,14 +238,13 @@ void GraphicsPipeline::RenderScene()
 		glViewport(0, 0, SHADOWMAP_SIZE, SHADOWMAP_SIZE);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(shaderShadow->GetProgram());
-		glUniformMatrix4fv(glGetUniformLocation(shaderShadow->GetProgram(), "uShadowTransform[0]"), SHADOWMAP_NUM, GL_FALSE, (float*)&shadowProjView[0]);
-		GLint uModelMtx = glGetUniformLocation(shaderShadow->GetProgram(), "uModelMtx");
+		shaderShadow->Activate();
+		shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
 
 		RenderAllObjects(true,
 			[&](RenderNodeBase* node)
 			{
-				glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
+				shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
 			}
 		);
 	
@@ -267,28 +257,25 @@ void GraphicsPipeline::RenderScene()
 		glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		
-		glUseProgram(shaderForwardLighting->GetProgram());
-		glUniformMatrix4fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, (float*)&projViewMatrix);
-		glUniform1i(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uDiffuseTex"), 0);
-		glUniform3fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uCameraPos"), 1, (float*)&camera->GetPosition());
-		glUniform3fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uAmbientColor"), 1, (float*)&ambientColor);
-		glUniform3fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uLightDirection"), 1, (float*)&lightDirection);
-		glUniform1fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uSpecularFactor"), 1, &specularFactor);
-
-		glUniform1fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uNormalizedFarPlanes[0]"), SHADOWMAP_NUM - 1, (float*)&normalizedFarPlanes[0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uShadowTransform[0]"), SHADOWMAP_NUM, GL_FALSE, (float*)&shadowProjView[0]);
-		glUniform1i(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uShadowTex"), 2);
-		glUniform2f(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uShadowSinglePixel"), 1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE);
+		shaderForwardLighting->Activate();
+		shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
+		shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+		shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
+		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
+		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
+		shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
+		shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+		shaderForwardLighting->SetUniform("uShadowTex", 2);
+		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
+	
 
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D_ARRAY, shadowTex);
 
-		uModelMtx = glGetUniformLocation(shaderForwardLighting->GetProgram(), "uModelMtx");
-		GLint uColor = glGetUniformLocation(shaderForwardLighting->GetProgram(), "uColor");
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
 			{
-				glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
-				glUniform4fv(uColor, 1, (float*)&node->GetColour());
+				shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
+				shaderForwardLighting->SetUniform("uColor", node->GetColour());
 			}
 		);
 
@@ -312,11 +299,11 @@ void GraphicsPipeline::RenderScene()
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		float superSamples = (float)(numSuperSamples);
-		glUseProgram(shaderPresentToWindow->GetProgram());
-		glUniform1i(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uColorTex"), 0);
-		glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uGammaCorrection"), gammaCorrection);
-		glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uNumSuperSamples"), superSamples);
-		glUniform2f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uSinglepixel"), 1.f / screenTexWidth, 1.f / screenTexHeight);
+		shaderPresentToWindow->Activate();
+		shaderPresentToWindow->SetUniform("uColorTex", 0);
+		shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+		shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+		shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 		fullscreenQuad->SetTexture(screenTexColor);
 		fullscreenQuad->Draw();
 

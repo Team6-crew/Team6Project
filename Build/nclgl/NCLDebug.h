@@ -65,10 +65,13 @@ function as it will include the filename and linenumber it was triggered on with
 #include "Matrix3.h"
 #include "Vector4.h"
 #include "Vector3.h"
-#include "Shader.h"
+
 #include <vector>
 #include <mutex>
 #include <deque>
+#include <string>
+
+#include <GL/glew.h>
 
 #define MAX_LOG_SIZE		12
 #define LOG_TEXT_SIZE  		12
@@ -95,7 +98,7 @@ enum TextAlignment
 
 #define NCLLOG(str, ...) NCLDebug::Log(str, __VA_ARGS__)
 
-
+class ShaderBase;
 
 typedef struct
 {
@@ -238,10 +241,10 @@ protected:
 	static DebugDrawList g_DrawList[2];			//Depth-Tested		(Transparent - Opaque)
 	static DebugDrawList g_DrawListNDT[2];		//Not Depth-Tested	(Transparent - Opaque)
 
-	static Shader*	g_pShaderPoints;
-	static Shader*	g_pShaderLines;
-	static Shader*	g_pShaderHairLines;
-	static Shader*	g_pShaderText;
+	static ShaderBase*	g_pShaderPoints;
+	static ShaderBase*	g_pShaderLines;
+	static ShaderBase*	g_pShaderHairLines;
+	static ShaderBase*	g_pShaderText;
 
 	static GLuint	g_glArr, g_glBuf;
 	static uint		g_glBufOffsets[9];

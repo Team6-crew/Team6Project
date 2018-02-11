@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
@@ -37,7 +38,10 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
     <ClCompile Include="Graphics\MeshBase.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="NCLDebug.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
@@ -46,14 +50,17 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderNodeBase.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderNodeFactory.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLShader.cpp" />
+    <ClCompile Include="Graphics\TextureBase.cpp" />
+    <ClCompile Include="Graphics\ShaderBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="NCLDebug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Graphics\FrameBufferBase.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
@@ -70,7 +77,10 @@
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />
     <ClInclude Include="Graphics\MeshBase.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="NCLDebug.h" />
     <ClInclude Include="OBJMesh.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quaternion.h" />
@@ -80,13 +90,15 @@
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderNode.h" />
     <ClInclude Include="Graphics\Renderer\RenderNodeBase.h" />
     <ClInclude Include="Graphics\Renderer\RenderNodeFactory.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLShader.h" />
+    <ClInclude Include="Graphics\TextureBase.h" />
+    <ClInclude Include="Graphics\ShaderBase.h" />
+    <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="NCLDebug.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{98D6B51B-CB0A-4389-ADC6-24082B967C3F}</ProjectGuid>

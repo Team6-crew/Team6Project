@@ -3,15 +3,19 @@
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
 #include <nclgl\Graphics\RenderConstants.h>
-#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 
 #include <GL/glew.h>
 
+#include <vector>
+
+class FrameBufferBase;
+class ShaderBase;
+class RenderBase;
+class RenderNodeBase;
+class MeshBase;
+
 typedef std::pair<RenderNodeBase*, float> TransparentPair;
 
-
-class Shader;
-class RenderBase;
 
 class GraphicsPipeline : public TSingleton<GraphicsPipeline>
 {
@@ -54,16 +58,16 @@ protected:
 
 	Matrix4 projViewMatrix;
 
-	//Render FBO
+	FrameBufferBase*	renderFBO;
 	GLuint				screenTexWidth, screenTexHeight;
 	GLuint				screenFBO;
 	GLuint				screenTexColor;
 	GLuint				screenTexDepth;
 
 	//Shaders
-	Shader* shaderPresentToWindow;
-	Shader* shaderShadow;
-	Shader* shaderForwardLighting;
+	ShaderBase* shaderPresentToWindow;
+	ShaderBase* shaderShadow;
+	ShaderBase* shaderForwardLighting;
 
 	//Render Params
 	Vector3	ambientColor;

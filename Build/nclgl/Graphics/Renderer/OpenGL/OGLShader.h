@@ -18,8 +18,9 @@ _-_-_-_-_-_-_-""  ""
 
 
 #include <nclgl\Graphics\Renderer\OpenGL\OGLRenderer.h>
+#include <nclgl\Graphics\ShaderBase.h>
 
-#include <string> //getline
+#include <string> //getline()
 
 #include <GL/glew.h>
 #include <GL/wglew.h>
@@ -28,23 +29,27 @@ _-_-_-_-_-_-_-""  ""
 #define SHADER_FRAGMENT 1
 #define SHADER_GEOMETRY 2
 
-using namespace std;
-class Shader	{
+
+class OGLShader	: public ShaderBase
+{
 public:
-	Shader(std::string vertex, std::string fragment , std::string geometry = "");
-	~Shader(void);
+	OGLShader(std::string vertex, std::string fragment , std::string geometry = "");
+	~OGLShader(void);
 
-	GLuint  GetProgram() { return program;}
-	
+	void Activate() override;
 
-	void	Reload(bool deleteOld = true);
+	void SetUniform(const std::string& name, int i) override;
+	void SetUniform(const std::string& name, float f) override;
+	void SetUniform(const std::string& name, const Matrix4& mat) override;
+	void SetUniform(const std::string& name, const Vector2& vec) override;
+	void SetUniform(const std::string& name, const Vector3& vec) override;
+	void SetUniform(const std::string& name, const Vector4& vec) override;
+	void SetUniform(const std::string& name, int numMats, Matrix4* mats) override;
+	void SetUniform(const std::string& name, int numVecs, Vector3* vecs) override;
+	void SetUniform(const std::string& name, int numFloats, float* floats) override;
 
-
-	bool	LoadSuccess() {
-		return !loadFailed;
-	}
-	bool	LinkProgram();
 protected:
+	bool	LinkProgram();
 	bool	LoadShaderFile(std::string from, std::string &into);
 	GLuint	GenerateShader(std::string from, GLenum type);
 	void	SetDefaultAttributes();
@@ -57,5 +62,8 @@ protected:
 	std::string	vertexName;
 	std::string	fragName;
 	std::string	geomName;
+
+protected:
+	GLint GetUniformLocation(std::string name);
 };
 

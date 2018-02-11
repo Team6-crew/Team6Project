@@ -34,9 +34,16 @@ which can be extended (with the new physics collision shapes) to provide an accu
 
 #pragma once
 #include <nclgl\TSingleton.h>
-#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
-#include <nclgl\Shader.h>
+#include <nclgl\common.h> //uint
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
+#include <vector>
+#include <nclgl\Vector4.h>
+#include <nclgl\Matrix4.h>
+
+class ShaderBase;
+class RenderNodeBase;
+class Vector3;
+class Vector2;
 
 //Our texture only stores 16bit unsigned shorts, so has a hard limit on the number of values it can store. 
 //  Hopefully you will never be able to trigger this value though. 
@@ -77,8 +84,6 @@ typedef struct
 
 
 typedef unsigned short ushort;
-
-class Vector2;
 
 class ScreenPicker : public TSingleton<ScreenPicker>
 {
@@ -147,7 +152,7 @@ protected:
 	Matrix4			m_invViewProjMtx;
 
 	//Shader
-	Shader* m_pShaderPicker;
+	ShaderBase* m_pShaderPicker;
 
 	//Framebuffer
 	int		m_TexWidth;

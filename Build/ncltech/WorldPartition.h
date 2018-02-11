@@ -32,7 +32,7 @@ public:
 	}
 
 	//insert vector of game objects into world partition
-	void insert(vector<GameObject*> &objects);
+	void insert(std::vector<GameObject*> &objects);
 
 	//used for inserting static nodes into the world partition, should be performed on loading of level
 	void insert(PhysicsNode* p);
@@ -60,7 +60,7 @@ private:
 
 	bool isActive = true;
 
-	void subdivide(vector<Partition>& leaves);
+	void subdivide(std::vector<Partition>& leaves);
 
 	std::vector<Partition> leaves;
 
