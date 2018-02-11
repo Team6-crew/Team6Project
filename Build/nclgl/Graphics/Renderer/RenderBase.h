@@ -2,6 +2,13 @@
 
 class RenderNode;
 class Matrix4;
+class Vector3;
+
+namespace Renderer
+{
+	enum Clear { COLOUR, DEPTH, COLOUR_DEPTH };
+	enum Culling { FRONT, BACK};
+};
 
 class RenderBase
 {
@@ -25,6 +32,16 @@ public:
 	virtual Matrix4 GetProjMatrix() = 0;
 	virtual void 	SetViewMatrix(Matrix4& mat) = 0;
 	virtual void    SetProjMatrix(Matrix4& mat) = 0;
+
+	virtual void	SetViewPort(int width, int height) = 0;
+	virtual void	Clear(Renderer::Clear clearType) = 0;
+	virtual void	SetClearColour(Vector3& colour) = 0;
+
+	virtual void	BindScreenFramebuffer() = 0;
+
+
+	virtual void	SetScreenCulling(Renderer::Culling type) = 0;
+	virtual void	SetDefaultSettings() = 0;
 
 protected:
 	bool initSuccess;

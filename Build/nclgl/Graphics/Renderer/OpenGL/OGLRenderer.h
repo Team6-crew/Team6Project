@@ -23,6 +23,16 @@ public:
 	Matrix4 GetProjMatrix() override;
 	void 	SetViewMatrix(Matrix4& mat) override;
 	void	SetProjMatrix(Matrix4& mat) override;
+
+	void	SetViewPort(int width, int height) override;
+	void	Clear(Renderer::Clear clearType) override;
+	void	SetClearColour(Vector3& vec) override;
+
+	void	BindScreenFramebuffer() override;
+
+
+	void	SetScreenCulling(Renderer::Culling type) override;
+	void	SetDefaultSettings() override;
 protected:
 	// Windows specific handles
 	HDC		deviceContext;	

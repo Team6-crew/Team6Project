@@ -12,6 +12,7 @@
 #include <GL\wglew.h>
 
 
+using namespace Renderer;
 
 OGLRenderer::OGLRenderer(Window& window)
 {
@@ -151,4 +152,60 @@ Matrix4	OGLRenderer::GetViewMatrix()
 Matrix4 OGLRenderer::GetProjMatrix()
 {
 	return projMatrix;
+}
+
+void	OGLRenderer::SetViewPort(int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void	OGLRenderer::Clear(Renderer::Clear clearType)
+{
+	switch (clearType)
+	{
+	case DEPTH:
+		glClear(GL_DEPTH_BUFFER_BIT);
+		break;
+	case COLOUR:
+		glClear(GL_COLOR_BUFFER_BIT);
+		break;
+	case COLOUR_DEPTH:
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		break;
+	}
+}
+
+void	OGLRenderer::SetClearColour(Vector3& col)
+{
+	glClearColor(col.x, col.y, col.z, 1.0f);
+}
+
+void	OGLRenderer::BindScreenFramebuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void	OGLRenderer::SetScreenCulling(Culling type)
+{
+	switch (type)
+	{
+	case FRONT:
+		glCullFace(GL_FRONT);
+		break;
+	case BACK:
+		glCullFace(GL_BACK);
+		break;
+	}
+}
+void	OGLRenderer::SetDefaultSettings()
+{
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_CLAMP);
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glEnable(GL_FRAMEBUFFER_SRGB);
+	glDepthFunc(GL_LEQUAL);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

@@ -60,7 +60,7 @@ protected:
 	Matrix4 projViewMatrix;
 
 	FrameBufferBase*	renderFBO;
-	GLuint				screenTexWidth, screenTexHeight;
+	uint				screenTexWidth, screenTexHeight;
 	FrameBufferBase*	screenFBO;
 	TextureBase*		screenTexColor;
 	TextureBase*		screenTexDepth;

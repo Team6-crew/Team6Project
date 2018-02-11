@@ -35,14 +35,7 @@ GraphicsPipeline::GraphicsPipeline()
 
 	fullscreenQuad = OGLMesh::GenerateQuad();
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH_CLAMP);
-	glEnable(GL_STENCIL_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glEnable(GL_FRAMEBUFFER_SRGB);
-	glDepthFunc(GL_LEQUAL);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	renderer->SetDefaultSettings();
 
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
@@ -170,8 +163,8 @@ void GraphicsPipeline::RenderScene()
 	//Build shadowmaps
 		BuildShadowTransforms();
 		shadowFBO->Activate();
-		glViewport(0, 0, SHADOWMAP_SIZE, SHADOWMAP_SIZE);
-		glClear(GL_DEPTH_BUFFER_BIT);
+		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+		renderer->Clear(Renderer::DEPTH);
 
 		shaderShadow->Activate();
 		shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
@@ -185,10 +178,10 @@ void GraphicsPipeline::RenderScene()
 
 	//Render scene to screen fbo
 		screenFBO->Activate();
-		glViewport(0, 0, screenTexWidth, screenTexHeight);
-		glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		
+		renderer->SetViewPort(screenTexWidth, screenTexHeight);
+		renderer->SetClearColour(backgroundColor);
+		renderer->Clear(Renderer::COLOUR_DEPTH);
+
 		shaderForwardLighting->Activate();
 		shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
 		shaderForwardLighting->SetUniform("uDiffuseTex", 0);
@@ -217,7 +210,7 @@ void GraphicsPipeline::RenderScene()
 		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
-		glViewport(0, 0, screenTexWidth, screenTexHeight);
+		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
@@ -225,9 +218,9 @@ void GraphicsPipeline::RenderScene()
 
 
 	//Downsample and present to screen
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, renderer->GetWidth(), renderer->GetHeight());
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		renderer->BindScreenFramebuffer();
+		renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+		renderer->Clear(Renderer::COLOUR_DEPTH);
 
 		float superSamples = (float)(numSuperSamples);
 		shaderPresentToWindow->Activate();
@@ -242,7 +235,6 @@ void GraphicsPipeline::RenderScene()
 		NCLDebug::_RenderDebugClipSpace();
 		NCLDebug::_ClearDebugLists();
 	
-
 		renderer->SwapBuffers();
 }
 
@@ -331,10 +323,10 @@ void GraphicsPipeline::RenderAllObjects(bool isShadowPass, std::function<void(Re
 		for (TransparentPair& node : renderlistTransparent)
 		{
 			perObjectFunc(node.first);
-			glCullFace(GL_FRONT);
+			renderer->SetScreenCulling(Renderer::FRONT);
 			node.first->Draw();
 
-			glCullFace(GL_BACK);
+			renderer->SetScreenCulling(Renderer::BACK);
 			node.first->Draw();
 		}
 	}
