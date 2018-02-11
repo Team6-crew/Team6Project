@@ -10,6 +10,8 @@
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
+#include <nclgl\Graphics\FrameBufferBase.h>
+#include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
 
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
@@ -63,18 +65,8 @@ GraphicsPipeline::~GraphicsPipeline()
 	SAFE_DELETE(shaderForwardLighting);
 
 	NCLDebug::_ReleaseShaders();
-
-	if (screenFBO)
-	{
-		glDeleteFramebuffers(1, &screenFBO);
-		screenFBO = NULL;
-	}
-
-	if (shadowFBO)
-	{
-		glDeleteFramebuffers(1, &shadowFBO);
-		shadowFBO = NULL;
-	}
+	SAFE_DELETE(screenFBO);
+	SAFE_DELETE(shadowFBO);
 }
 
 void GraphicsPipeline::InitializeDefaults()
@@ -114,7 +106,6 @@ void GraphicsPipeline::LoadShaders()
 		SHADERDIR"Common/EmptyFragment.glsl",
 		SHADERDIR"SceneRenderer/TechGeomShadow.glsl");
 
-
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
 		SHADERDIR"SceneRenderer/TechFragForwardRender.glsl");
@@ -122,8 +113,6 @@ void GraphicsPipeline::LoadShaders()
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
 {
-	GLuint status;
-
 	//Screen Framebuffer
 	if (width * numSuperSamples != screenTexWidth || height * numSuperSamples != screenTexHeight)
 	{
@@ -136,34 +125,13 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		//Depth Texture
 		screenTexDepth = TextureFactory::Instance()->MakeTexture(Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
-		if (!screenFBO) glGenFramebuffers(1, &screenFBO);
-		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexColor->TempGetID(), 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screenTexDepth->TempGetID(), 0);
-
-		GLenum buf = GL_COLOR_ATTACHMENT0;
-		glDrawBuffers(1, &buf);
-		//Validate our framebuffer
-		if ((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != GL_FRAMEBUFFER_COMPLETE)
-		{
-			NCLERROR("Unable to create Screen Framebuffer! StatusCode: %x", status);
-		}
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
 	}
 
 	//Construct our Shadow Maps and Shadow UBO
 	shadowTex = TextureFactory::Instance()->MakeTexture(Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex);
 
-	if (!shadowFBO) glGenFramebuffers(1, &shadowFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->TempGetID(), 0);
-	glDrawBuffers(0, GL_NONE);
-	if ((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		NCLERROR("Unable to create Shadow Framebuffer! StatusCode: %x", status);
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
 }
@@ -201,8 +169,7 @@ void GraphicsPipeline::RenderScene()
 
 	//Build shadowmaps
 		BuildShadowTransforms();
-		glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->TempGetID(), 0);
+		shadowFBO->Activate();
 		glViewport(0, 0, SHADOWMAP_SIZE, SHADOWMAP_SIZE);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -215,12 +182,9 @@ void GraphicsPipeline::RenderScene()
 				shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
 			}
 		);
-	
-	
-
 
 	//Render scene to screen fbo
-		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+		screenFBO->Activate();
 		glViewport(0, 0, screenTexWidth, screenTexHeight);
 		glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -235,9 +199,8 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
 		shaderForwardLighting->SetUniform("uShadowTex", 2);
 		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
-	
 
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D_ARRAY, shadowTex->TempGetID());
+		shadowTex->Bind(2);
 
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
@@ -253,7 +216,7 @@ void GraphicsPipeline::RenderScene()
 		//   a much higher resolution. Which is silly.
 		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+		screenFBO->Activate();
 		glViewport(0, 0, screenTexWidth, screenTexHeight);
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();

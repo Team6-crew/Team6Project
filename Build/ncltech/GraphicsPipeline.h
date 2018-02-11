@@ -61,7 +61,7 @@ protected:
 
 	FrameBufferBase*	renderFBO;
 	GLuint				screenTexWidth, screenTexHeight;
-	GLuint				screenFBO;
+	FrameBufferBase*	screenFBO;
 	TextureBase*		screenTexColor;
 	TextureBase*		screenTexDepth;
 
@@ -80,13 +80,13 @@ protected:
 
 
 	//Shadowmaps
-	float			sceneBoundingRadius; ///Approx based on scene contents
-	GLuint			shadowFBO;
-	TextureBase*	shadowTex;
-	Matrix4			shadowProj[SHADOWMAP_NUM];
-	Matrix4			shadowViewMtx;
-	Matrix4			shadowProjView[SHADOWMAP_NUM];
-	float			normalizedFarPlanes[SHADOWMAP_NUM - 1];
+	float				sceneBoundingRadius; ///Approx based on scene contents
+	FrameBufferBase*	shadowFBO;
+	TextureBase*		shadowTex;
+	Matrix4				shadowProj[SHADOWMAP_NUM];
+	Matrix4				shadowViewMtx;
+	Matrix4				shadowProjView[SHADOWMAP_NUM];
+	float				normalizedFarPlanes[SHADOWMAP_NUM - 1];
 
 	//Common
 	MeshBase* fullscreenQuad;

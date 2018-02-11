@@ -20,6 +20,7 @@ public:
 
 
 	int TempGetID() override;
+	int GetID() { return textureID; }
 protected:
 	void LoadTexture(const std::string& filepath) override;
 	GLuint textureID;

@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameTimer.cpp" />
@@ -44,6 +45,12 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -62,6 +69,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
     <ClInclude Include="Graphics\FrameBufferBase.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameTimer.h" />
@@ -86,6 +94,12 @@
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />

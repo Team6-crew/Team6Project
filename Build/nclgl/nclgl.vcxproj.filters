@@ -85,6 +85,13 @@
     </ClCompile>
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
     <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -187,5 +194,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
     <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
+    <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
   </ItemGroup>
 </Project>

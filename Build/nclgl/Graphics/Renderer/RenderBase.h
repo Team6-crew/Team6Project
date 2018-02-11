@@ -25,7 +25,7 @@ public:
 	virtual Matrix4 GetProjMatrix() = 0;
 	virtual void 	SetViewMatrix(Matrix4& mat) = 0;
 	virtual void    SetProjMatrix(Matrix4& mat) = 0;
-	
+
 protected:
 	bool initSuccess;
 

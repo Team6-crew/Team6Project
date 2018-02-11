@@ -31,12 +31,10 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 	if (type == COLOUR)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
-		std::cout << glGetError() << std::endl;
 	}
 	else if (type == DEPTH)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		std::cout << glGetError() << std::endl;
 	}
 	else
 	{
