@@ -42,6 +42,7 @@
     <ClCompile Include="OBJMesh.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="Graphics\TextureBase.cpp" />
     <ClCompile Include="Graphics\ShaderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +83,7 @@
     <ClInclude Include="OBJMesh.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quaternion.h" />
@@ -94,6 +97,7 @@
     <ClInclude Include="Graphics\TextureBase.h" />
     <ClInclude Include="Graphics\ShaderBase.h" />
     <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />

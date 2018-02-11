@@ -1,4 +1,7 @@
 #pragma once
+
+class TextureBase;
+
 class MeshBase
 {
 public:
@@ -6,6 +9,6 @@ public:
 	virtual ~MeshBase();
 
 	virtual void Draw() = 0;
-	virtual void SetTexture(int temp) = 0;
+	virtual void SetTexture(TextureBase* texture) = 0;
 };
 

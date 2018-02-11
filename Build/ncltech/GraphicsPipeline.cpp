@@ -8,6 +8,8 @@
 #include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <nclgl\Graphics\ShaderBase.h>
+#include <nclgl\Graphics\TextureBase.h>
+#include <nclgl\Graphics\Renderer\TextureFactory.h>
 
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
@@ -64,15 +66,12 @@ GraphicsPipeline::~GraphicsPipeline()
 
 	if (screenFBO)
 	{
-		glDeleteTextures(1, &screenTexColor);
-		glDeleteTextures(1, &screenTexDepth);
 		glDeleteFramebuffers(1, &screenFBO);
 		screenFBO = NULL;
 	}
 
 	if (shadowFBO)
 	{
-		glDeleteTextures(1, &shadowTex);
 		glDeleteFramebuffers(1, &shadowFBO);
 		shadowFBO = NULL;
 	}
@@ -82,11 +81,6 @@ void GraphicsPipeline::InitializeDefaults()
 {
 	allNodes.clear();
 	ScreenPicker::Instance()->ClearAllObjects();
-
-	//--- Do we want the camera to reset pos/orientation everytime we reset a scene????
-	//camera->SetPosition(Vector3(-3.0f, 10.0f, 15.0f));
-	//camera->SetYaw(-10.f);
-	//camera->SetPitch(-30.f);
 
 	backgroundColor = Vector3(0.8f, 0.8f, 0.8f);
 	ambientColor = Vector3(0.2f, 0.2f, 0.2f);
@@ -137,32 +131,16 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		screenTexHeight = (uint)(height * numSuperSamples);
 		ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
-
-		auto SetTextureDefaults = []() {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		};
-
 		//Color Texture
-		if (!screenTexColor) glGenTextures(1, &screenTexColor);
-		glBindTexture(GL_TEXTURE_2D, screenTexColor);
-		SetTextureDefaults();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, screenTexWidth, screenTexHeight, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
-
-		//Depth+Stencil Texture
-		if (!screenTexDepth) glGenTextures(1, &screenTexDepth);
-		glBindTexture(GL_TEXTURE_2D, screenTexDepth);
-		SetTextureDefaults();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, screenTexWidth, screenTexHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-
+		screenTexColor = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, screenTexWidth, screenTexHeight);
+		//Depth Texture
+		screenTexDepth = TextureFactory::Instance()->MakeTexture(Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
 		if (!screenFBO) glGenFramebuffers(1, &screenFBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexColor, 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screenTexDepth, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexColor->TempGetID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screenTexDepth->TempGetID(), 0);
+
 		GLenum buf = GL_COLOR_ATTACHMENT0;
 		glDrawBuffers(1, &buf);
 		//Validate our framebuffer
@@ -175,21 +153,11 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 	}
 
 	//Construct our Shadow Maps and Shadow UBO
-	if (!shadowTex) glGenTextures(1, &shadowTex);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, shadowTex);
-	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT32, SHADOWMAP_SIZE, SHADOWMAP_SIZE, SHADOWMAP_NUM);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S,		GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T,		GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+	shadowTex = TextureFactory::Instance()->MakeTexture(Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
 
 	if (!shadowFBO) glGenFramebuffers(1, &shadowFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->TempGetID(), 0);
 	glDrawBuffers(0, GL_NONE);
 	if ((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != GL_FRAMEBUFFER_COMPLETE)
 	{
@@ -234,7 +202,7 @@ void GraphicsPipeline::RenderScene()
 	//Build shadowmaps
 		BuildShadowTransforms();
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->TempGetID(), 0);
 		glViewport(0, 0, SHADOWMAP_SIZE, SHADOWMAP_SIZE);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -269,7 +237,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 	
 
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D_ARRAY, shadowTex);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D_ARRAY, shadowTex->TempGetID());
 
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
@@ -283,7 +251,7 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth, screenTexWidth, screenTexHeight);
+		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 		glViewport(0, 0, screenTexWidth, screenTexHeight);

@@ -63,7 +63,7 @@ public:
 	static OGLMesh*	GenerateQuadAlt();
 
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
-	void	SetTexture(int tex)	override;
+	void	SetTexture(TextureBase* texture)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
 	GLuint  GetTexture()			{return texture;}
 

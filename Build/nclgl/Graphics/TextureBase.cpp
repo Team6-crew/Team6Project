@@ -20,3 +20,4 @@ uint TextureBase::GetWidth() const
 uint TextureBase::GetHeight() const {
 	return height;
 }
+

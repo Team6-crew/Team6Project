@@ -17,6 +17,8 @@ Description:
 
 class Scene;
 
+class TextureBase;
+
 class CommonMeshes
 {
 	friend class SceneManager; //Initializes/Destroys the given meshes within it's own lifecycle
@@ -34,7 +36,7 @@ public:
 
 
 	//PhysicsEngine Checkerboard - Hidden here for reasons of laziness
-	static const GLuint CheckerboardTex()   { return m_pCheckerboardTex; }
+	//static const GLuint CheckerboardTex()   { return m_pCheckerboardTex; }
 
 
 protected:
@@ -46,5 +48,5 @@ protected:
 	static MeshBase* m_pCube;
 	static MeshBase* m_pSphere;
 
-	static GLuint m_pCheckerboardTex;
+	static TextureBase* m_pCheckerboardTex;
 };

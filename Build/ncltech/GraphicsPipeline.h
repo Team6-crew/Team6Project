@@ -13,6 +13,7 @@ class ShaderBase;
 class RenderBase;
 class RenderNodeBase;
 class MeshBase;
+class TextureBase;
 
 typedef std::pair<RenderNodeBase*, float> TransparentPair;
 
@@ -61,8 +62,8 @@ protected:
 	FrameBufferBase*	renderFBO;
 	GLuint				screenTexWidth, screenTexHeight;
 	GLuint				screenFBO;
-	GLuint				screenTexColor;
-	GLuint				screenTexDepth;
+	TextureBase*		screenTexColor;
+	TextureBase*		screenTexDepth;
 
 	//Shaders
 	ShaderBase* shaderPresentToWindow;
@@ -79,13 +80,13 @@ protected:
 
 
 	//Shadowmaps
-	float	sceneBoundingRadius; ///Approx based on scene contents
-	GLuint	shadowFBO;
-	GLuint	shadowTex;
-	Matrix4	shadowProj[SHADOWMAP_NUM];
-	Matrix4	shadowViewMtx;
-	Matrix4	shadowProjView[SHADOWMAP_NUM];
-	float   normalizedFarPlanes[SHADOWMAP_NUM - 1];
+	float			sceneBoundingRadius; ///Approx based on scene contents
+	GLuint			shadowFBO;
+	TextureBase*	shadowTex;
+	Matrix4			shadowProj[SHADOWMAP_NUM];
+	Matrix4			shadowViewMtx;
+	Matrix4			shadowProjView[SHADOWMAP_NUM];
+	float			normalizedFarPlanes[SHADOWMAP_NUM - 1];
 
 	//Common
 	MeshBase* fullscreenQuad;

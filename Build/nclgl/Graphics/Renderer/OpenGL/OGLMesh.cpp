@@ -8,6 +8,8 @@
 
 #include <nclgl\common.h> // uint
 
+#include <nclgl\Graphics\Renderer\OpenGL\OGLTexture.h>
+
 OGLMesh::OGLMesh(void)	{
 	glGenVertexArrays(1, &arrayObject);
 	
@@ -67,7 +69,7 @@ OGLMesh::~OGLMesh(void)	{
 	glDeleteVertexArrays(1, &arrayObject);			//Delete our VAO
 	glDeleteBuffers(MAX_BUFFER, bufferObject);		//Delete our VBOs
 
-	glDeleteTextures(1,&texture);					//We'll be nice and delete our texture when we're done with it
+	//glDeleteTextures(1,&texture);					//We'll be nice and delete our texture when we're done with it
 	glDeleteTextures(1,&bumpTexture);				//We'll be nice and delete our texture when we're done with it
 
 	//Later tutorial stuff
@@ -636,7 +638,10 @@ void OGLMesh::DrawDebugTangents(float length)	{
 
 
 
-void OGLMesh::SetTexture(int tex)
+void OGLMesh::SetTexture(TextureBase* texture)
 {
-	texture = tex;
+	//TODO: Can we avoid this cast?
+	// Dynamic is safer but slower if static cast fails have big problems anyway
+	this->texture = static_cast<OGLTexture*>(texture)->GetID();
+	//TODO: Don't actually need texture here is for OBJMesh??
 }
