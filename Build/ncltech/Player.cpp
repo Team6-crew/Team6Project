@@ -2,6 +2,8 @@
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
+GameObject* Player::ball;
+
 Player::Player()
 {   
 	speed = 20.0f;

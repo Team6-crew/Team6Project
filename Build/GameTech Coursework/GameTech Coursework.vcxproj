@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ncltech\BallAI.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ncltech\BallAI.h" />
     <ClInclude Include="EmptyScene.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
