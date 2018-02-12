@@ -34,9 +34,16 @@ which can be extended (with the new physics collision shapes) to provide an accu
 
 #pragma once
 #include <nclgl\TSingleton.h>
-#include <nclgl\RenderNode.h>
-#include <nclgl\Shader.h>
+#include <nclgl\common.h> //uint
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
+#include <vector>
+#include <nclgl\Vector4.h>
+#include <nclgl\Matrix4.h>
+
+class ShaderBase;
+class RenderNodeBase;
+class Vector3;
+class Vector2;
 
 //Our texture only stores 16bit unsigned shorts, so has a hard limit on the number of values it can store. 
 //  Hopefully you will never be able to trigger this value though. 
@@ -55,7 +62,7 @@ typedef std::function<void(float dt, const Vector3& new_pos, const Vector3& pos_
 //In the screen picker we need to store a couple of extra bits of information about the render nodes.
 typedef struct
 {
-	RenderNode*			_renderNode;
+	RenderNodeBase*			_renderNode;
 	OnMouseDownCallback _callback;
 } PickerNode;
 
@@ -78,7 +85,6 @@ typedef struct
 
 typedef unsigned short ushort;
 
-
 class ScreenPicker : public TSingleton<ScreenPicker>
 {
 	friend class TSingleton<ScreenPicker>;
@@ -88,10 +94,10 @@ public:
 
 	//Add object to list of 'clickable' objects to be tested 
 	// - Optional callback which if set will be called each frame while the RenderNode is pressed/held
-	void RegisterNodeForMouseCallback(RenderNode* node, OnMouseDownCallback callback = NULL);
+	void RegisterNodeForMouseCallback(RenderNodeBase* node, OnMouseDownCallback callback = NULL);
 
 	//Remove object from the list of 'clickable' objects
-	void UnregisterNodeForMouseCallback(RenderNode* node);
+	void UnregisterNodeForMouseCallback(RenderNodeBase* node);
 
 
 
@@ -146,7 +152,7 @@ protected:
 	Matrix4			m_invViewProjMtx;
 
 	//Shader
-	Shader* m_pShaderPicker;
+	ShaderBase* m_pShaderPicker;
 
 	//Framebuffer
 	int		m_TexWidth;

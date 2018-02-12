@@ -15,13 +15,12 @@ position/orientation each frame.
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include <nclgl\Matrix4.h>
-#include <nclgl\RenderNode.h>
 #include "GraphicsPipeline.h"
 #include "PhysicsEngine.h"
 #include "PhysicsNode.h"
 #include <vector>
 #include <functional>
-
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 
 class Scene;
 class PhysicsEngine;
@@ -37,7 +36,7 @@ public:
 		, renderNode(NULL)
 		, physicsNode(NULL) {}
 
-	GameObject(const std::string& name, RenderNode* renderNde, PhysicsNode* physicsNde = NULL)
+	GameObject(const std::string& name, RenderNodeBase* renderNde, PhysicsNode* physicsNde = NULL)
 		: friendlyName(name)
 		, renderNode(renderNde)
 		, physicsNode(physicsNde)
@@ -65,7 +64,7 @@ public:
 	inline const Scene* GetScene() const	{ return scene; }
 	inline		 Scene* GetScene()			{ return scene; }
 
-
+	
 	//<---------- PHYSICS ------------>
 	inline bool  HasPhysics() const					{ return (physicsNode != NULL); }
 	inline const PhysicsNode*	Physics() const		{ return physicsNode; }
@@ -91,10 +90,10 @@ public:
 
 	//<---------- GRAPHICS ------------>
 	inline bool  HasRender() const						{ return (renderNode != NULL); }
-	inline const RenderNode*	Render() const			{ return renderNode; }
-	inline		 RenderNode*	Render()				{ return renderNode; }
+	inline const RenderNodeBase*	Render() const		{ return renderNode; }
+	inline		 RenderNodeBase*	Render()			{ return renderNode; }
 
-	inline void  SetRender(RenderNode* node)
+	inline void  SetRender(RenderNodeBase* node)
 	{
 		if (renderNode != node)
 		{
@@ -120,7 +119,7 @@ public:
 		{
 			physicsNode->SetOnUpdateCallback(
 				std::bind(
-					&RenderNode::SetTransform,		// Function to call
+					&RenderNodeBase::SetTransform,		// Function to call
 					renderNode,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
 					std::placeholders::_1)			// Variable parameter(s) that will be set by the callback function
 			);
@@ -135,16 +134,21 @@ public:
 		}
 	}
 
+	void setDynamic(bool isDynamic) {
+		physicsNode->setDynamic(isDynamic);
+	}
 
 public:
-	
+	PhysicsNode * physicsNode;
 
+	
+	
 protected:
 	//Scene  
 	std::string					friendlyName;
 	Scene*						scene;
 
 	//Components
-	RenderNode*					renderNode;
-	PhysicsNode*				physicsNode;
+	RenderNodeBase*					renderNode;
+
 };

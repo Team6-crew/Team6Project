@@ -2,12 +2,17 @@
 
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
+#include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
+#include <ncltech\WorldPartition.h>
+#include <algorithm>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
 public:
+	
+	Player* player1;
 	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
 	{
@@ -15,38 +20,57 @@ public:
 
 	virtual ~EmptyScene()
 	{
+		delete player1;
 	}
+
+	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		OcTree *space = new OcTree(new AABB(Vector3(0, 20, 0), 20));
-
+	
+		
+		player1 = new Player();
 		//Who doesn't love finding some common ground?
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",
 			Vector3(0.0f, -1.5f, 0.0f),
 			Vector3(20.0f, 1.0f, 20.0f),
-			false,
+			true,
 			0.0f,
-			false,
+			true,
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
-		this->AddGameObject(CommonUtils::BuildCuboidObject("asdf",
-			Vector3(-20.0f, 0.f, 20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
-			Vector3(0.5f, 0.5f, 0.5f),				//Half dimensions
-			true,									//Has Physics Object
-			0.0f,									//Infinite Mass
-			true,									//Has Collision Shape
-			true,									//Dragable by the user
-			CommonUtils::GenColor(0.45f, 0.5f)));	//Color
+		
+
+		//Who doesn't love finding some common ground?
+		this->AddGameObject(CommonUtils::BuildCuboidObject(
+			"test",
+			Vector3(5.0f, 1.5f, 0.0f),
+			Vector3(2.0f, 1.0f, 2.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
+
+		//Add player to scene
+		this->AddGameObject(player1->getBall());	
+		this->AddGameObject(player1->getBody());	
+		
+		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
+
+		//add world part
+		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
 		Scene::OnUpdateScene(dt);
+		
+		player1->move();
 
 	}
 };

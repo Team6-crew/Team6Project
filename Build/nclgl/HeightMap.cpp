@@ -1,7 +1,11 @@
 #include "HeightMap.h"
 
+#include "Vector2.h"
+#include "Vector3.h"
+
+
 HeightMap::HeightMap(std::string name, const uint rawWidth, const uint rawHeight, const float HeightMapX, const float HeightMapY, const float HeightMapZ, const float HeightMapTexX, const float HeightMapTexZ) {
-	std::ifstream file(name.c_str(), ios::binary);
+	std::ifstream file(name.c_str(), std::ios::binary);
 	if (!file) {
 		return;
 	}

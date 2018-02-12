@@ -1,6 +1,8 @@
 #include "Frustum.h"
+#include "Matrix4.h"
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 
-bool Frustum::InsideFrustum(RenderNode &n) {
+bool Frustum::InsideFrustum(RenderNodeBase &n) {
 	for (int p = 0; p < 6; ++p) {
 		if (!planes[p].SphereInPlane(n.GetWorldTransform().GetPositionVector(), n.GetBoundingRadius())) {
 			return false; // RenderNode is outside this plane !

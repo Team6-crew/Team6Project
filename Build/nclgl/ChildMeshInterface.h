@@ -21,13 +21,13 @@ _-_-_-_-_-_-_-""  ""
 #ifdef WEEK_2_CODE
 #pragma once
 
-#include "Mesh.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <vector>
 
 class ChildMeshInterface	{
 public:
 	//Adds a child mesh to this mesh (only used by OBJ and MD5Mesh)
-	void ChildMeshInterface::AddChild(Mesh*m)	{
+	void ChildMeshInterface::AddChild(OGLMesh*m)	{
 		children.push_back(m);
 	}
 
@@ -39,7 +39,7 @@ public:
 
 protected:
 	//Some Meshes have children...
-	std::vector<Mesh*>children;
+	std::vector<OGLMesh*>children;
 	ChildMeshInterface(void){};
 };
 #endif

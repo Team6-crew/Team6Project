@@ -1,5 +1,6 @@
 #include "CubeRobot.h"
 
+
 //cube is a static class variable, and so must be initialised outside of the 
 //class...here's as good a place as any!
 Mesh* CubeRobot::cube = NULL;
@@ -11,7 +12,7 @@ CubeRobot::CubeRobot(void)	{
 	SetMesh(cube);
 
 	//Make the body
-	RenderNode*body = new RenderNode(cube,Vector4(1,0,0,1));
+	RenderNodeBase* body = new RenderNode(cube,Vector4(1,0,0,1));
 	body->SetModelScale(Vector3(10,15,5));
 	body->SetTransform(Matrix4::Translation(Vector3(0,35,0)));
 	AddChild(body);

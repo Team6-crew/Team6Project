@@ -23,9 +23,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CubeRobot.cpp" />
+    <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
+    <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Matrix3.cpp" />
@@ -34,24 +36,44 @@
     <ClCompile Include="MD5FileData.cpp" />
     <ClCompile Include="MD5Mesh.cpp" />
     <ClCompile Include="MD5Node.cpp" />
-    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
+    <ClCompile Include="Graphics\MeshBase.cpp" />
     <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="OBJMesh.cpp" />
-    <ClCompile Include="OGLRenderer.cpp" />
-    <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
-    <ClCompile Include="RenderNode.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Window.cpp" />
     <ClCompile Include="NCLDebug.cpp" />
+    <ClCompile Include="OBJMesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
+    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderNodeBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderNodeFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLShader.cpp" />
+    <ClCompile Include="Graphics\TextureBase.cpp" />
+    <ClCompile Include="Graphics\ShaderBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="CubeRobot.h" />
+    <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="Graphics\FrameBufferBase.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="Graphics\RenderConstants.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keyboard.h" />
@@ -62,21 +84,39 @@
     <ClInclude Include="MD5FileData.h" />
     <ClInclude Include="MD5Mesh.h" />
     <ClInclude Include="MD5Node.h" />
-    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />
+    <ClInclude Include="Graphics\MeshBase.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="NCLDebug.h" />
     <ClInclude Include="OBJMesh.h" />
-    <ClInclude Include="OGLRenderer.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
     <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="RenderNode.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Graphics\Renderer\RenderBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
+    <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\RenderNodeBase.h" />
+    <ClInclude Include="Graphics\Renderer\RenderNodeFactory.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLShader.h" />
+    <ClInclude Include="Graphics\TextureBase.h" />
+    <ClInclude Include="Graphics\ShaderBase.h" />
+    <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="NCLDebug.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{98D6B51B-CB0A-4389-ADC6-24082B967C3F}</ProjectGuid>
@@ -145,7 +185,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN_OGL;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -163,6 +203,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN_OGL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

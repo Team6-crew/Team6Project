@@ -1,9 +1,12 @@
 #include "NCLDebug.h"
 #include "Window.h"
-#include "Mesh.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <SOIL.h>
 #include <algorithm>
 #include <sstream>
+#include <nclgl\Graphics\ShaderBase.h>
+#include <nclgl\Graphics\Renderer\ShaderFactory.h>
+using namespace std;
 
 Vector3	NCLDebug::g_CameraPosition;
 Matrix4	NCLDebug::g_ProjMtx;
@@ -26,10 +29,10 @@ uint NCLDebug::g_vCharsLogStart = 0;
 DebugDrawList NCLDebug::g_DrawList[2];
 DebugDrawList NCLDebug::g_DrawListNDT[2];
 
-Shader*	NCLDebug::g_pShaderPoints		= NULL;
-Shader*	NCLDebug::g_pShaderLines		= NULL;
-Shader*	NCLDebug::g_pShaderHairLines	= NULL;
-Shader*	NCLDebug::g_pShaderText			= NULL;
+ShaderBase*	NCLDebug::g_pShaderPoints		= NULL;
+ShaderBase*	NCLDebug::g_pShaderLines		= NULL;
+ShaderBase*	NCLDebug::g_pShaderHairLines	= NULL;
+ShaderBase*	NCLDebug::g_pShaderText			= NULL;
 
 GLuint	 NCLDebug::g_glArr				= NULL;
 GLuint	 NCLDebug::g_glBuf				= NULL;
@@ -40,6 +43,7 @@ uint	 NCLDebug::g_glBufOffsets[9];
 GLuint NCLDebug::g_glLogFontTex			= NULL;
 GLuint NCLDebug::g_glDefaultFontTex		= NULL;
 
+using std::string;
 
 int IsOpaque(const Vector4& col)
 {
@@ -895,26 +899,25 @@ void NCLDebug::_RenderDrawlist(uint* offsets)
 
 	if (g_pShaderPoints && n_points > 0)
 	{
-		glUseProgram(g_pShaderPoints->GetProgram());
-		glUniformMatrix4fv(glGetUniformLocation(g_pShaderPoints->GetProgram(), "uProjMtx"), 1, GL_FALSE, &g_ProjMtx.values[0]);
-		glUniformMatrix4fv(glGetUniformLocation(g_pShaderPoints->GetProgram(), "uViewMtx"), 1, GL_FALSE, &g_ViewMtx.values[0]);
-
+		g_pShaderPoints->Activate();
+		g_pShaderPoints->SetUniform(string("uProjMtx"), g_ProjMtx);
+		g_pShaderPoints->SetUniform(string("uViewMtx"), g_ViewMtx);
 		glDrawArrays(GL_POINTS, offsets[0] >> 1, n_points);
 	}
 
 	if (g_pShaderLines && n_tlines > 0)
 	{
-		glUseProgram(g_pShaderLines->GetProgram());
-		glUniformMatrix4fv(glGetUniformLocation(g_pShaderLines->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, &g_ProjViewMtx.values[0]);
-		glUniform1f(glGetUniformLocation(g_pShaderLines->GetProgram(), "uAspect"), aspectRatio);
+		g_pShaderLines->Activate();
+		g_pShaderLines->SetUniform("uProjViewMtx", g_ProjViewMtx);
+		g_pShaderLines->SetUniform("uAspect", aspectRatio);
 
 		glDrawArrays(GL_LINES, offsets[1] >> 1, n_tlines);
 	}
 
 	if (g_pShaderHairLines && (n_hlines + n_tris) > 0)
 	{
-		glUseProgram(g_pShaderHairLines->GetProgram());
-		glUniformMatrix4fv(glGetUniformLocation(g_pShaderHairLines->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, &g_ProjViewMtx.values[0]);
+		g_pShaderHairLines->Activate();
+		g_pShaderHairLines->SetUniform("uProjViewMtx", g_ProjViewMtx);
 
 		if (n_hlines) glDrawArrays(GL_LINES, offsets[2] >> 1, n_hlines);
 		if (n_tris) glDrawArrays(GL_TRIANGLES, offsets[3] >> 1, n_tris);
@@ -955,8 +958,8 @@ void NCLDebug::_RenderDebugClipSpace()
 	if (g_pShaderText && g_vChars.size() > 0)
 	{
 		glBindVertexArray(g_glArr);
-		glUseProgram(g_pShaderText->GetProgram());
-		glUniform1i(glGetUniformLocation(g_pShaderText->GetProgram(), "uFontTex"), 5);
+		g_pShaderText->Activate();
+		g_pShaderText->SetUniform("uFontTex", 5);
 
 		glActiveTexture(GL_TEXTURE5);
 		
@@ -972,44 +975,44 @@ void NCLDebug::_RenderDebugClipSpace()
 
 void NCLDebug::_LoadShaders()
 {
-	g_pShaderPoints = new Shader(
+	g_pShaderPoints = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"DebugShaders/PointVertex.glsl",
 		SHADERDIR"DebugShaders/PointFragment.glsl",
 		SHADERDIR"DebugShaders/PointGeometry.glsl");
-	if (!g_pShaderPoints->LinkProgram())
-	{
-		NCLERROR("NCLDebug Point shader could not be loaded");
-		return;
-	}
+	//if (!g_pShaderPoints->LinkProgram())
+	//{
+	//	NCLERROR("NCLDebug Point shader could not be loaded");
+	//	return;
+	//}
 	
-	g_pShaderLines = new Shader(
+	g_pShaderLines = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"DebugShaders/Vertex.glsl",
 		SHADERDIR"DebugShaders/Fragment.glsl",
 		SHADERDIR"DebugShaders/LineGeometry.glsl");
-	if (!g_pShaderLines->LinkProgram())
-	{
-		NCLERROR("NCLDebug ThickLine shader could not be loaded");
-		return;
-	}
+	//if (!g_pShaderLines->LinkProgram())
+	//{
+	//	NCLERROR("NCLDebug ThickLine shader could not be loaded");
+	//	return;
+	//}
 
-	g_pShaderHairLines = new Shader(
+	g_pShaderHairLines = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"DebugShaders/VertexColOnly.glsl",
 		SHADERDIR"DebugShaders/Fragment.glsl");
-	if (!g_pShaderHairLines->LinkProgram())
-	{
-		NCLERROR("NCLDebug HairLine shader could not be loaded");
-		return;
-	}
+	//if (!g_pShaderHairLines->LinkProgram())
+	//{
+	//	NCLERROR("NCLDebug HairLine shader could not be loaded");
+	//	return;
+	//}
 
-	g_pShaderText = new Shader(
+	g_pShaderText = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"DebugShaders/TextVertex.glsl",
 		SHADERDIR"DebugShaders/TextFragment.glsl",
 		SHADERDIR"DebugShaders/TextGeometry.glsl");
-	if (!g_pShaderText->LinkProgram())
-	{
-		NCLERROR("NCLDebug Text shader could not be loaded");
-		return;
-	}
+	//if (!g_pShaderText->LinkProgram())
+	//{
+	//	NCLERROR("NCLDebug Text shader could not be loaded");
+	//	return;
+	//}
 
 	//Create Buffers
 	glGenVertexArrays(1, &g_glArr);
