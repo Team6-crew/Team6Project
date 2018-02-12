@@ -103,7 +103,7 @@ void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, 
 	move_jump = jump;
 }
 
-void Player::move() {
+void Player::move(float dt) {
 
 	
 	Vector3 ball_pos = physicsNode->GetPosition();
@@ -135,13 +135,13 @@ void Player::move() {
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = 0.4f;
+		rotation = dt*50.0f;
 		camera->SetYaw(yaw + rotation);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		rotation = -0.4f;
+		rotation = -dt*50.0f;
 		camera->SetYaw(yaw + rotation);
 	}
 

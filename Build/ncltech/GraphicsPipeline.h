@@ -141,6 +141,8 @@ protected:
 	Shader* shaderShadow;
 	Shader* shaderForwardLighting;
 
+	Shader* shaderTrail;
+
 	//Render Params
 	Vector3	ambientColor;
 	float	gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -167,4 +169,10 @@ protected:
 
 	std::vector<RenderNode*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
+
+
+	Mesh* trailQuad;
+
+	GLuint gr_tex;
+	GLuint TrailBuffer;
 };

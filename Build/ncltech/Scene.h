@@ -35,7 +35,7 @@ Description:
 #include <functional>
 #include <algorithm>
 #include <unordered_map>
-
+#include "Player.h"
 //Callback function called whenever the scene is updated
 // - Should be used to register Update(dt) functions for AI/Game Logic
 //Params:
@@ -54,6 +54,9 @@ typedef std::unordered_map<void*, SceneUpdateCallback> SceneUpdateMap;
 class Scene
 {
 public:
+	Player * getPlayer() { return player1; }
+
+	
 	Scene(const std::string& friendly_name)	//Called once at program start - all scene initialization should be done in 'OnInitializeScene'
 		: m_SceneName(friendly_name)
 	{}; 
@@ -193,5 +196,5 @@ protected:
 	std::string					m_SceneName;
 	std::vector<GameObject*>	m_vpObjects;
 	SceneUpdateMap				m_UpdateCallbacks;
-
+	Player * player1;
 };

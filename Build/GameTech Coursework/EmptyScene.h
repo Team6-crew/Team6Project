@@ -16,9 +16,7 @@
 class EmptyScene : public Scene
 {
 public:
-	Player* getPlayer() { return player1; }
-
-	Player* player1;
+	
 	float rotation = 0.0f;
 	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
@@ -27,7 +25,7 @@ public:
 
 	virtual ~EmptyScene()
 	{
-		delete player1;
+		
 	}
 
 	//WorldPartition *wsp;
@@ -71,11 +69,15 @@ public:
 			0.0f,
 			true,
 			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-
+			Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		GLuint trail = SOIL_load_OGL_texture(
+			TEXTUREDIR"trail.jpg",
+			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->SetTexture(trail);
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"pickup",
 			Vector3(10.0f, 1.f, 0.0f),
@@ -109,7 +111,7 @@ public:
 		if(pickup)
 		(*pickup->Render()->GetChildIteratorStart())->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
-		player1->move();
+		player1->move(dt);
 
 	}
 };

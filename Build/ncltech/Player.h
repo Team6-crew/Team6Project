@@ -21,7 +21,7 @@ public:
 	GameObject* getBody() { return body; }
 
 
-	void move();
+	void move(float dt);
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump);
 
 	float getSpeed() { return speed; }

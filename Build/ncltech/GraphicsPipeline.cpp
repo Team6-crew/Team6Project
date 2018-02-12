@@ -3,6 +3,8 @@
 #include "BoundingBox.h"
 #include <nclgl\NCLDebug.h>
 #include <algorithm>
+#include "Player.h"
+#include "SceneManager.h"
 
 GraphicsPipeline::GraphicsPipeline()
 	: OGLRenderer(Window::GetWindow())
@@ -19,6 +21,7 @@ GraphicsPipeline::GraphicsPipeline()
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, shadowTex(NULL)
+	, TrailBuffer(NULL)
 {
 	
 
@@ -26,6 +29,7 @@ GraphicsPipeline::GraphicsPipeline()
 	NCLDebug::_LoadShaders();
 
 	fullscreenQuad = Mesh::GenerateQuad();
+	trailQuad = Mesh::GenerateQuad();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
@@ -45,6 +49,25 @@ GraphicsPipeline::GraphicsPipeline()
 
 	InitializeDefaults();
 	Resize(width, height);
+
+
+	
+	glGenFramebuffers(1, &TrailBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
+
+	glGenTextures(1, &gr_tex);
+	glBindTexture(GL_TEXTURE_2D, gr_tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2048, 2048, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, gr_tex, 0);
+
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "error";
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -108,6 +131,14 @@ void GraphicsPipeline::RemoveRenderNode(RenderNode* node)
 
 void GraphicsPipeline::LoadShaders()
 {
+	shaderTrail = new Shader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/testfrag.glsl");
+	if (!shaderTrail->LinkProgram())
+	{
+		NCLERROR("Could not link shader: TRAIL");
+	}
+
 	shaderPresentToWindow = new Shader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
@@ -229,9 +260,39 @@ void GraphicsPipeline::RenderScene()
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
-	for (RenderNode* node : allNodes)
+	RenderNode * ground = NULL;
+	for (RenderNode* node : allNodes) {
 		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+			ground = (*node->GetChildIteratorStart());
+		}
+	}
+	//gr_tex = ground->GetMesh()->GetTexture();
+	Vector3 gr_pos = ground->GetWorldTransform().GetPositionVector();
+	Vector3 position = SceneManager::Instance()->GetCurrentScene()->getPlayer()->Physics()->GetPosition();
+
+	float perc_x = (position.x-gr_pos.x+40)/80;
+	float perc_z = 1-(position.z - gr_pos.z + 40) / 80;
+
 	
+	Vector3 trailColor = Vector3(1.0f, 0.0f, 0.0f);
+	if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+		trailColor = Vector3(0.0f, 1.0f, 0.0f);
+	}
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
+	glViewport(0, 0, 2048, 2048);
+
+	glUseProgram(shaderTrail->GetProgram());
+	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "perc_x"), perc_x);
+	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "perc_z"), perc_z);
+	glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "DiffuseTex"), 0);
+	glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(), "trailColor"), 1, (float*)&trailColor);
+	trailQuad->Draw();
+	ground->GetMesh()->SetTexture(gr_tex);
+
+
+
 	//Build Transparent/Opaque Renderlists
 	BuildAndSortRenderLists();
 

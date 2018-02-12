@@ -23,7 +23,7 @@ _-_-_-_-_-_-_-""  ""
 #include "Vector4.h"
 #include "Mesh.h"
 #include <vector>
-
+#include "../ncltech/Tags.h"
 class RenderNode	{
 public:
 	 RenderNode(Mesh*m = NULL, Vector4 colour = Vector4(1,1,1,1));
@@ -63,6 +63,12 @@ public:
 	float			GetCameraDistance() const	{return distanceFromCamera;}
 	void			SetCameraDistance(float f)	{distanceFromCamera = f;}
 
+
+
+	inline bool	 HasTag(Tags t) { return t == tag; }
+	void SetTag(Tags t) { tag = t; }
+
+
 	void			SetMesh(Mesh*m)				{mesh = m;}
 	Mesh*			GetMesh()					{return mesh;}
 
@@ -77,6 +83,7 @@ public:
 	static bool		CompareByZ(RenderNode*a,RenderNode*b) ;
 
 protected:
+	Tags tag;
 	Matrix4		worldTransform;
 	Matrix4		transform;
 	RenderNode*	parent;
