@@ -9,6 +9,7 @@
 
 using namespace std;
 using std::string;
+using namespace nclgl::Maths;
 
 #include <iostream>
 #include <cassert>

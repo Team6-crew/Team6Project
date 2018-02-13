@@ -8,6 +8,8 @@
 #include <nclgl\Vector3.h>
 #include <nclgl\Graphics\MeshBase.h>
 
+using namespace nclgl::Maths;
+
 ScreenPicker::ScreenPicker()
 	: m_pCurrentlyHeldObject(NULL)
 	, m_pCurrentlyHoverObject(NULL)

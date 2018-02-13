@@ -4,6 +4,7 @@
 #include <nclgl\Matrix3.h>
 #include <nclgl\Vector3.h>
 
+using namespace nclgl::Maths;
 
 SphereCollisionShape::SphereCollisionShape()
 {

@@ -57,7 +57,7 @@ protected:
 	RenderBase* renderer = nullptr;
 
 
-	Matrix4 projViewMatrix;
+	nclgl::Maths::Matrix4 projViewMatrix;
 
 	FrameBufferBase*	renderFBO;
 	uint				screenTexWidth, screenTexHeight;
@@ -71,22 +71,22 @@ protected:
 	ShaderBase* shaderForwardLighting;
 
 	//Render Params
-	Vector3	ambientColor;
-	float	gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
-	Vector3	lightDirection;
-	Vector3 backgroundColor;
-	float	specularFactor;
-	uint	numSuperSamples;
+	nclgl::Maths::Vector3	ambientColor;
+	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
+	nclgl::Maths::Vector3	lightDirection;
+	nclgl::Maths::Vector3	backgroundColor;
+	float					specularFactor;
+	uint					numSuperSamples;
 
 
 	//Shadowmaps
-	float				sceneBoundingRadius; ///Approx based on scene contents
-	FrameBufferBase*	shadowFBO;
-	TextureBase*		shadowTex;
-	Matrix4				shadowProj[SHADOWMAP_NUM];
-	Matrix4				shadowViewMtx;
-	Matrix4				shadowProjView[SHADOWMAP_NUM];
-	float				normalizedFarPlanes[SHADOWMAP_NUM - 1];
+	float								sceneBoundingRadius; ///Approx based on scene contents
+	FrameBufferBase*					shadowFBO;
+	TextureBase*						shadowTex;
+	nclgl::Maths::Matrix4				shadowProj[SHADOWMAP_NUM];
+	nclgl::Maths::Matrix4				shadowViewMtx;
+	nclgl::Maths::Matrix4				shadowProjView[SHADOWMAP_NUM];
+	float								normalizedFarPlanes[SHADOWMAP_NUM - 1];
 
 	//Common
 	MeshBase* fullscreenQuad;

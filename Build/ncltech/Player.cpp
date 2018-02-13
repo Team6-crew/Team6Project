@@ -2,6 +2,8 @@
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
+using namespace nclgl::Maths;
+
 Player::Player()
 {   
 	speed = 20.0f;

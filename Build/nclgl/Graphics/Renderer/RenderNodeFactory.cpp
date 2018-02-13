@@ -11,7 +11,7 @@ RenderNodeFactory::~RenderNodeFactory()
 {
 }
 
-RenderNodeBase* RenderNodeFactory::MakeRenderNode(MeshBase* mesh, Vector4 colour)
+RenderNodeBase* RenderNodeFactory::MakeRenderNode(MeshBase* mesh, nclgl::Maths::Vector4 colour)
 {
 	#ifdef WIN_OGL
 		return new OGLRenderNode(mesh, colour);

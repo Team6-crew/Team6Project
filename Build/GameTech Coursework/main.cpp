@@ -6,6 +6,8 @@
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
 
+using namespace nclgl::Maths;
+
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
 

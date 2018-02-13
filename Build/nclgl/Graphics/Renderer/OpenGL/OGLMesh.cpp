@@ -10,6 +10,8 @@
 
 #include <nclgl\Graphics\Renderer\OpenGL\OGLTexture.h>
 
+using namespace nclgl::Maths;
+
 OGLMesh::OGLMesh(void)	{
 	glGenVertexArrays(1, &arrayObject);
 	

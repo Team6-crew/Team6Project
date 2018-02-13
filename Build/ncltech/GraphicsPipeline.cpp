@@ -13,6 +13,8 @@
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
 
+using namespace nclgl::Maths;
+
 GraphicsPipeline::GraphicsPipeline()
 	: camera(new Camera())
 	, isVsyncEnabled(false)

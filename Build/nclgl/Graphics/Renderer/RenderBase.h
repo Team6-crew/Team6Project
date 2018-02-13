@@ -1,8 +1,17 @@
 #pragma once
 
 class RenderNode;
-class Matrix4;
-class Vector3;
+
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Matrix4;
+		class Vector3;
+	}
+}
+
+
 
 namespace Renderer
 {
@@ -28,14 +37,14 @@ public:
 	inline int GetWidth()  { return width; }
 	inline int GetHeight() { return height; }
 
-	virtual Matrix4	GetViewMatrix() = 0;
-	virtual Matrix4 GetProjMatrix() = 0;
-	virtual void 	SetViewMatrix(Matrix4& mat) = 0;
-	virtual void    SetProjMatrix(Matrix4& mat) = 0;
+	virtual nclgl::Maths::Matrix4	GetViewMatrix() = 0;
+	virtual nclgl::Maths::Matrix4   GetProjMatrix() = 0;
+	virtual void 					SetViewMatrix(nclgl::Maths::Matrix4& mat) = 0;
+	virtual void					SetProjMatrix(nclgl::Maths::Matrix4& mat) = 0;
 
 	virtual void	SetViewPort(int width, int height) = 0;
 	virtual void	Clear(Renderer::Clear clearType) = 0;
-	virtual void	SetClearColour(Vector3& colour) = 0;
+	virtual void	SetClearColour(nclgl::Maths::Vector3& colour) = 0;
 
 	virtual void	BindScreenFramebuffer() = 0;
 
