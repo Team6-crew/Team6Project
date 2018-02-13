@@ -2,16 +2,17 @@
 
 #include <stdlib.h>
 #include <iostream>
-#include <ncltech\Player.h>
-#include <ncltech\BallAI.h>
+
+
 
 
 class State
 {
 public:
-	virtual State enter(GameObject* owner);
-	virtual State update(GameObject* owner, float dt);
-	virtual State exit(GameObject* owner);
+	virtual void enter(GameObject* owner) = 0;
+	virtual void update(GameObject* owner) = 0;
+	virtual void exit(GameObject* owner) = 0;
+
 
 private:
 };

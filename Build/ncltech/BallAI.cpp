@@ -1,26 +1,29 @@
+#pragma once
 #include "BallAI.h"
 #include "Player.h"
 #include <math.h>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <ncltech\StateMachine.h>
 
-
+#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <algorithm> //used for remove
-
+#include "RoamingState.h"
 float maxVel = 20.0f;
 
 using namespace std;
 
-GameObject* BallAI::AIBall;
 State* roamingState;
+StateMachine * AIStateMachine;
+
 
 BallAI::BallAI()
 {
 	
-	StateMachine * AIStateMachine;
+	
 	AIStateMachine = new StateMachine(AIBall);
-	AIStateMachine->setDefaultState(roamingState);
+	AIStateMachine->setDefaultState(RoamingState::GetInstance());
 
 	AIBall = CommonUtils::BuildSphereObject("ball",
 		Vector3(20.0f, 2.0f, -20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
@@ -32,56 +35,56 @@ BallAI::BallAI()
 		CommonUtils::GenColor(1.f, 1.f));
 
 	AIBall->setDynamic(true);
-	std::ifstream myReadFile;
-	myReadFile.open("../pos.txt");
-	string line;
+	//std::ifstream myReadFile;
+	//myReadFile.open("../pos.txt");
+	//string line;
 
-	float xQ;
-	float yQ;
-	float zQ;
-	Vector3 pos;
-	int nodes = 0;
+	//float xQ;
+	//float yQ;
+	//float zQ;
+	//Vector3 pos;
+	//int nodes = 0;
 
-	if (myReadFile.is_open())
-	{
-		while (!myReadFile.eof())
-		{
-			string vector3;
-			getline(myReadFile, line);
-			remove(line.begin(), line.end(), ' '); //remove any spaces
-			getline(myReadFile, vector3, '(');
-			string x;
-			getline(myReadFile, x, ',');
-			string y;
-			getline(myReadFile, y, ',');
-			string z;
-			getline(myReadFile, z, ')');
+	//if (myReadFile.is_open())
+	//{
+	//	while (!myReadFile.eof())
+	//	{
+	//		string vector3;
+	//		getline(myReadFile, line);
+	//		remove(line.begin(), line.end(), ' '); //remove any spaces
+	//		getline(myReadFile, vector3, '(');
+	//		string x;
+	//		getline(myReadFile, x, ',');
+	//		string y;
+	//		getline(myReadFile, y, ',');
+	//		string z;
+	//		getline(myReadFile, z, ')');
 
-			if (myReadFile.eof())
-				break;
+	//		if (myReadFile.eof())
+	//			break;
 
-			std::string::size_type sz;
+	//		std::string::size_type sz;
 
-			xQ = std::stof(x, &sz);
-			yQ = std::stof(y, &sz);
-			zQ = std::stof(z, &sz);
+	//		xQ = std::stof(x, &sz);
+	//		yQ = std::stof(y, &sz);
+	//		zQ = std::stof(z, &sz);
 
-			
+	//		
 
-			pos = (Vector3(xQ, yQ, zQ));
-			setNodes(pos);
-			++nodes;
-			cout << "Node " << nodes << " added \n";
-		}
-		myReadFile.close();
-	}
+	//		pos = (Vector3(xQ, yQ, zQ));
+	//		setNodes(pos);
+	//		++nodes;
+	//		cout << "Node " << nodes << " added \n";
+	//	}
+	//	myReadFile.close();
+	//}
 
 }
 
 
 BallAI::~BallAI()
 {
-
+	delete AIStateMachine;
 }
 
 
@@ -97,7 +100,6 @@ Vector3 BallAI::followPath()
 	//following a path created by a collection of nodes. You can make your own path by pressing 1 when playing.
 	//This will print a vector3 to screen and add it to a txt file. This file is read before run time
 	//Give it a shot and add as many nodes as you would like
-
 	std::vector<Vector3> nodesList = getNodes();
 	goal = nodesList[CurrentNode];
 
@@ -137,7 +139,8 @@ void BallAI::chasePlayer()
 
 void BallAI::move()
 {
-	AIBall->Physics()->SetForce(followPath());
+	AIStateMachine->setCurrentState(roamingState);
+	//AIBall->Physics()->SetForce(followPath());
 
 
 }

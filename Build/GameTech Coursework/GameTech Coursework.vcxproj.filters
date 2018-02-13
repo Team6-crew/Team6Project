@@ -29,5 +29,11 @@
     <ClInclude Include="..\ncltech\BallAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\ncltech\RoamingState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChasingState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
