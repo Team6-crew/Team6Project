@@ -122,7 +122,7 @@ void HandleKeyboardInputs()
 	{
 		pos = Player::getBall()->Physics()->GetPosition();
 		std::ofstream myfile;
-		myfile.open("../pos.txt", std::ios_base::app);
+		myfile.open("..pos.txt", std::ios_base::app);
 		std::cout << pos << "\n";
 
 		if (myfile.is_open())
@@ -131,7 +131,6 @@ void HandleKeyboardInputs()
 			myfile.close();
 		}
 	}
-
 }
 
 

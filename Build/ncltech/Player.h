@@ -18,7 +18,6 @@ public:
 	void setSpeed(float sp) { speed = sp; }
 
 private:
-	
 	static GameObject* ball;
 	GameObject* body;
 	GameObject* cube;

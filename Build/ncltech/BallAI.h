@@ -1,6 +1,8 @@
 #pragma once
 #include <ncltech\CommonUtils.h>
 #include <vector>
+#include <ncltech\StateMachine.h>
+#include <ncltech\State.h>
 class BallAI
 {
 public:
@@ -15,7 +17,7 @@ public:
 	Vector3 seek(Vector3 TargetPos);
 	Vector3 followPath();
 	void chasePlayer();
-	GameObject* getBall(int a) { if (a = 1){return AIBall;}  }
+	static GameObject* getBall() {return AIBall;}  
 
 	void move();
 
@@ -26,7 +28,7 @@ private:
 	Vector3 goal;
 	int CurrentNode = 0;
 	std::vector<Vector3> Nodes;
-	GameObject * AIBall;
+	static GameObject* AIBall;
 	float speed;
 
 };

@@ -9,12 +9,9 @@
 class State
 {
 public:
-	void updateState( GameObject*);
-
+	virtual State enter(GameObject* owner);
+	virtual State update(GameObject* owner, float dt);
+	virtual State exit(GameObject* owner);
 
 private:
-	State* currentState;
-	State* previousState;
-	State* roamingState;
-	State* chasingState;
 };

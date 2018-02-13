@@ -147,34 +147,34 @@ void PhysicsEngine::UpdatePhysics()
 		BroadPhaseCollisionsOcTree();
 	}
 	//creates collision pairs when using world partitioning
-	else if (worldPartition->isEnabled()) {
-		broadphaseColPairs.clear();
-		for (int i = 0; i < physicsNodes.size(); i++) {
-			PhysicsNode *pnodeA, *pnodeB;
-			if (physicsNodes[i]->getDynamic()) {
-				vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
-				for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
-					pnodeA = physicsNodes[i];
-					pnodeB = possibleColliders.at(k);
+	//else if (worldPartition->isEnabled()) {
+	//	broadphaseColPairs.clear();
+	//	for (int i = 0; i < physicsNodes.size(); i++) {
+	//		PhysicsNode *pnodeA, *pnodeB;
+	//		if (physicsNodes[i]->getDynamic()) {
+	//			vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
+	//			for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
+	//				pnodeA = physicsNodes[i];
+	//				pnodeB = possibleColliders.at(k);
 
-					if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
+	//				if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
 
-					//Check they both atleast have collision shapes
-					if (pnodeA->GetCollisionShape() != NULL
-						&& pnodeB->GetCollisionShape() != NULL)
-					{
-						if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
-							CollisionPair cp;
-							cp.pObjectA = pnodeA;
-							cp.pObjectB = pnodeB;
-							broadphaseColPairs.push_back(cp);
-						}
-					}
+	//				//Check they both atleast have collision shapes
+	//				if (pnodeA->GetCollisionShape() != NULL
+	//					&& pnodeB->GetCollisionShape() != NULL)
+	//				{
+	//					if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
+	//						CollisionPair cp;
+	//						cp.pObjectA = pnodeA;
+	//						cp.pObjectB = pnodeB;
+	//						broadphaseColPairs.push_back(cp);
+	//					}
+	//				}
 
-				}
-			}
-		}
-	}
+	//			}
+	//		}
+	//	}
+	//}
 
 	//vector<PhysicsNode*> possibleCollisions = wsp->getPossibleCollisions(this->FindGameObject("object that is moving")->physicsNode);
 	else {

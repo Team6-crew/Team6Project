@@ -7,6 +7,7 @@
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
 #include <ncltech\BallAI.h>
+#include <ncltech\StateMachine.h>
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
@@ -18,6 +19,7 @@ public:
 	{
 	}
 	BallAI * AIBall;
+	
 
 	virtual ~EmptyScene()
 	{
@@ -34,12 +36,14 @@ public:
 		
 		player1 = new Player();
 		AIBall = new BallAI();
+		
+
 
 		//Who doesn't love finding some common ground?
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",
 			Vector3(0.0f, -1.5f, 0.0f),
-			Vector3(40.0f, 1.0f, 40.0f),
+			Vector3(80.0f, 1.0f, 80.0f),
 			true,
 			0.0f,
 			true,
@@ -65,10 +69,11 @@ public:
 		
 		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
-		this->AddGameObject(AIBall->getBall(1));
+		this->AddGameObject(AIBall->getBall());
 
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
+
 	}
 
 

@@ -5,15 +5,23 @@
 #include <fstream>
 #include <string>
 
+
 #include <algorithm> //used for remove
 
 float maxVel = 20.0f;
 
 using namespace std;
 
+GameObject* BallAI::AIBall;
+State* roamingState;
+
 BallAI::BallAI()
 {
 	
+	StateMachine * AIStateMachine;
+	AIStateMachine = new StateMachine(AIBall);
+	AIStateMachine->setDefaultState(roamingState);
+
 	AIBall = CommonUtils::BuildSphereObject("ball",
 		Vector3(20.0f, 2.0f, -20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
 		1.0f,				//Half dimensions
@@ -116,7 +124,6 @@ void BallAI::chasePlayer()
 	//once all behaviours are done, will be added to a state machine
 
 	Vector3 AIVelocity = AIBall->Physics()->GetLinearVelocity();
-	Vector3 playerPos = Player::getBall()->Physics()->GetLinearVelocity();
 	Vector3 ballPos = AIBall->Physics()->GetPosition();
 
 	Vector3 goal = Player::getBall()->Physics()->GetPosition();
@@ -130,8 +137,7 @@ void BallAI::chasePlayer()
 
 void BallAI::move()
 {
-	AIBall->Physics()->SetForce(followPath()* 5);
-	
-	//chasePlayer();
+	AIBall->Physics()->SetForce(followPath());
+
 
 }
