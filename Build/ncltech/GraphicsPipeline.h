@@ -173,6 +173,10 @@ protected:
 
 	Mesh* trailQuad;
 
+	int world_paint[2048][2048];
+
 	GLuint gr_tex;
 	GLuint TrailBuffer;
+
+	float red_perc;
 };
