@@ -18,6 +18,7 @@ class EmptyScene : public Scene
 public:
 	
 	float rotation = 0.0f;
+	
 	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
 	{
@@ -105,7 +106,7 @@ public:
 	virtual void OnUpdateScene(float dt) override
 	{
 		Scene::OnUpdateScene(dt);
-
+		NCLDebug::AddHUD(Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
 		rotation = 0.1f;
 		if(pickup)

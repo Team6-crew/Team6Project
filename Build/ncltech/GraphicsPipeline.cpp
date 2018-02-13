@@ -51,7 +51,7 @@ GraphicsPipeline::GraphicsPipeline()
 	Resize(width, height);
 
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * 2048 * 2048);
-	red_perc = 0.0f;
+	paint_perc = 0.0f;
 	
 	glGenFramebuffers(1, &TrailBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
@@ -69,6 +69,7 @@ GraphicsPipeline::GraphicsPipeline()
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "error";
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -273,27 +274,26 @@ void GraphicsPipeline::RenderScene()
 
 	Vector3 gr_pos = ground->GetWorldTransform().GetPositionVector();
 	Vector3 position = SceneManager::Instance()->GetCurrentScene()->getPlayer()->Physics()->GetPosition();
-
+	
 	float rad = 0.01f;
 
-	float perc_x = (position.x-gr_pos.x+40)/80;
-	float perc_z = 1-(position.z - gr_pos.z + 40) / 80;
+	float pos_x = (position.x-gr_pos.x+40)/80;
+	float pos_z = 1-(position.z - gr_pos.z + 40) / 80;
 
-	for (int i = max((perc_x - rad) * 2048,0); i < min((perc_x + rad) * 2048,2047); i++) {
-		for (int j = max((perc_z - rad) * 2048,0); j < min((perc_z + rad) * 2048,2047); j++) {
+	for (int i = max((pos_x - rad) * 2048,0); i < min((pos_x + rad) * 2048,2047); i++) {
+		for (int j = max((pos_z - rad) * 2048,0); j < min((pos_z + rad) * 2048,2047); j++) {
 			
-			float in_circle = (i - perc_x*2048)*(i  - perc_x * 2048) + (j  - perc_z * 2048)*(j - perc_z * 2048);
+			float in_circle = (i - pos_x*2048)*(i  - pos_x * 2048) + (j  - pos_z * 2048)*(j - pos_z * 2048);
 			if (in_circle < rad*rad * 2048 * 2048) {
 				if (world_paint[i][j] == 0) {
-					red_perc += 100.0f / (2048 * 2048);
+					paint_perc += 100.0f / (2048 * 2048);
 				}
 				world_paint[i][j] = 1;
 			}
 		}
 	}
+	SceneManager::Instance()->GetCurrentScene()->Score = paint_perc;
 	
-	std::cout << red_perc << endl;
-
 
 	Vector3 trailColor = Vector3(1.0f, 0.0f, 0.0f);
 	if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
@@ -304,10 +304,9 @@ void GraphicsPipeline::RenderScene()
 	glViewport(0, 0, 2048, 2048);
 
 	glUseProgram(shaderTrail->GetProgram());
-	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "perc_x"), perc_x);
-	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "perc_z"), perc_z);
+	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "pos_x"), pos_x);
+	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "pos_z"), pos_z);
 	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "rad"), rad);
-	glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "DiffuseTex"), 0);
 	glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(), "trailColor"), 1, (float*)&trailColor);
 	trailQuad->Draw();
 	ground->GetMesh()->SetTexture(gr_tex);

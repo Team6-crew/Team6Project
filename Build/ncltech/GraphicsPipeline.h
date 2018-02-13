@@ -178,5 +178,5 @@ protected:
 	GLuint gr_tex;
 	GLuint TrailBuffer;
 
-	float red_perc;
+	float paint_perc;
 };
