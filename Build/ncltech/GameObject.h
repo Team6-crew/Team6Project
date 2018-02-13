@@ -130,7 +130,7 @@ public:
 	{
 		if (physicsNode)
 		{
-			physicsNode->SetOnUpdateCallback([](const Matrix4&) {});
+			physicsNode->SetOnUpdateCallback([](const nclgl::Maths::Matrix4&) {});
 		}
 	}
 

@@ -3,8 +3,12 @@
 
 #include <SOIL.h>
 
-using std::string;
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
 
+using std::string;
+using namespace nclgl::Maths;
 
 #ifdef WEEK_2_CODE
 /*
@@ -41,9 +45,9 @@ bool	OBJMesh::LoadOBJMesh(std::string filename)	{
 	/*
 	Stores the loaded in vertex attributes
 	*/
-	std::vector<Vector2>inputTexCoords;
-	std::vector<Vector3>inputVertices;
-	std::vector<Vector3>inputNormals;
+	std::vector<nclgl::Maths::Vector2>inputTexCoords;
+	std::vector<nclgl::Maths::Vector3>inputVertices;
+	std::vector<nclgl::Maths::Vector3>inputNormals;
 
 	/*
 	SubMeshes temporarily get kept in here

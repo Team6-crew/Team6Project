@@ -14,7 +14,16 @@ _-_-_-_-_-_-_-""  ""
 
 #include "Vector3.h"
 
-class Vector4	{
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Vector4;
+	}
+}
+
+
+class nclgl::Maths::Vector4 {
 public:
 	Vector4(void) {
 		x = y = z = w = 1.0f;
@@ -30,7 +39,7 @@ public:
 		return Vector3(x, y, z);
 	}
 
-	~Vector4(void){}
+	~Vector4(void) {}
 
 	Vector4 operator+(const Vector4& rhs) const
 	{
@@ -65,4 +74,3 @@ public:
 	float z;
 	float w;
 };
-

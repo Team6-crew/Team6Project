@@ -8,6 +8,8 @@
 #include <nclgl\Graphics\Renderer\ShaderFactory.h>
 using namespace std;
 
+using namespace nclgl::Maths;
+
 Vector3	NCLDebug::g_CameraPosition;
 Matrix4	NCLDebug::g_ProjMtx;
 Matrix4	NCLDebug::g_ViewMtx;
@@ -43,7 +45,6 @@ uint	 NCLDebug::g_glBufOffsets[9];
 GLuint NCLDebug::g_glLogFontTex			= NULL;
 GLuint NCLDebug::g_glDefaultFontTex		= NULL;
 
-using std::string;
 
 int IsOpaque(const Vector4& col)
 {

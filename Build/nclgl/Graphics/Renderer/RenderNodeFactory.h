@@ -11,7 +11,8 @@ class RenderNodeFactory : public TSingleton<RenderNodeFactory>
 {
 	friend class RenderNodeFactory;
 public:
-	RenderNodeBase * MakeRenderNode(MeshBase* mesh = nullptr, Vector4 colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	RenderNodeBase * MakeRenderNode(MeshBase* mesh = nullptr, 
+									nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 public:
 	RenderNodeFactory();
 	~RenderNodeFactory();

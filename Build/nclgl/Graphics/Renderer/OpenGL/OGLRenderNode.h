@@ -29,29 +29,29 @@ class MeshBase;
 class OGLRenderNode : public RenderNodeBase	
 {
 public:
-	OGLRenderNode(MeshBase* m = NULL, Vector4 colour = Vector4(1,1,1,1));
-	virtual ~OGLRenderNode(void);
+	OGLRenderNode(MeshBase* m = NULL, nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1, 1, 1, 1));
+	virtual ~OGLRenderNode(void);	  
 
 
 	virtual void	Update(float msec) override;
 	void Draw() override;
 
-	void			SetTransform(const Matrix4 &matrix) override;
-	const Matrix4&	GetTransform() const override;
-	const Matrix4&	GetWorldTransform() const override;
-	void			SetWorldTransform(const Matrix4 &matrix) override;
+	void							SetTransform(const  nclgl::Maths::Matrix4 &matrix) override;
+	const  nclgl::Maths::Matrix4&	GetTransform() const override;
+	const  nclgl::Maths::Matrix4&	GetWorldTransform() const override;
+	void							SetWorldTransform(const  nclgl::Maths::Matrix4 &matrix) override;
 
-	Vector4&		GetColour() override;
-	void			SetColour(const Vector4 &c) override;
+	nclgl::Maths::Vector4&		GetColour() override;
+	void						SetColour(const  nclgl::Maths::Vector4 &c) override;
 
-	const Vector3&	GetModelScale()		const			override; 
-	void			SetModelScale(const Vector3 &s)		override;
+	const  nclgl::Maths::Vector3&	GetModelScale()		const			override;
+	void							SetModelScale(const  nclgl::Maths::Vector3 &s)		override;
 
 protected:
-	Matrix4		worldTransform;
-	Matrix4		transform;
+	 nclgl::Maths::Matrix4		worldTransform;
+	 nclgl::Maths::Matrix4		transform;
 
-	Vector4		colour;
-	Vector3		modelScale;
+	 nclgl::Maths::Vector4		colour;
+	 nclgl::Maths::Vector3		modelScale;
 };
 

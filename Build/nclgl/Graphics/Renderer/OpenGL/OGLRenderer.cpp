@@ -13,6 +13,7 @@
 
 
 using namespace Renderer;
+using namespace nclgl::Maths;
 
 OGLRenderer::OGLRenderer(Window& window)
 {
@@ -202,7 +203,6 @@ void	OGLRenderer::SetDefaultSettings()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
-	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glEnable(GL_FRAMEBUFFER_SRGB);

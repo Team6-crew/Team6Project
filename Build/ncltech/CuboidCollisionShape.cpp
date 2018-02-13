@@ -3,6 +3,9 @@
 #include "GeometryUtils.h"
 #include <nclgl/Matrix3.h>
 
+
+using namespace nclgl::Maths;
+
 Hull CuboidCollisionShape::cubeHull = Hull();
 
 CuboidCollisionShape::CuboidCollisionShape()

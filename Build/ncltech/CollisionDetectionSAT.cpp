@@ -4,6 +4,8 @@
 
 using namespace GeometryUtils;
 
+using namespace nclgl::Maths;
+
 CollisionDetectionSAT::CollisionDetectionSAT()
 {
 }

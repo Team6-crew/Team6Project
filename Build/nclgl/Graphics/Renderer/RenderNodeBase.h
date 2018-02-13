@@ -2,9 +2,15 @@
 
 #include <vector>
 
-class Vector3;
-class Vector4;
-class Matrix4;
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Vector3;
+		class Vector4;
+		class Matrix4;
+	}
+}
 
 class MeshBase;
 
@@ -18,22 +24,22 @@ public:
 	virtual void	Draw() = 0;
 
 	// Transforms
-	virtual void			SetTransform(const Matrix4 &matrix) = 0;
-	virtual const Matrix4&	GetTransform() const = 0;
-	virtual const Matrix4&	GetWorldTransform() const = 0;
-	virtual void			SetWorldTransform(const Matrix4 &matrix) = 0;
+	virtual void							SetTransform(const nclgl::Maths::Matrix4 &matrix) = 0;
+	virtual const nclgl::Maths::Matrix4&	GetTransform() const = 0;
+	virtual const nclgl::Maths::Matrix4&	GetWorldTransform() const = 0;
+	virtual void							SetWorldTransform(const nclgl::Maths::Matrix4 &matrix) = 0;
 
-	virtual void			SetModelScale(const Vector3& scale) = 0;
-	virtual const Vector3&	GetModelScale() const = 0;
+	virtual void							SetModelScale(const nclgl::Maths::Vector3& scale) = 0;
+	virtual const nclgl::Maths::Vector3&	GetModelScale() const = 0;
 
-	virtual Vector4&		GetColour() = 0; 
-	virtual void			SetColour(const Vector4 &c) = 0;
+	virtual nclgl::Maths::Vector4&			GetColour() = 0;
+	virtual void							SetColour(const nclgl::Maths::Vector4 &c) = 0;
 
 	// Mesh
-	inline MeshBase*		GetMesh() { return mesh; }
-	inline void				SetMesh(MeshBase* newMesh) { mesh = newMesh; } 
+	inline MeshBase*						GetMesh() { return mesh; }
+	inline void								SetMesh(MeshBase* newMesh) { mesh = newMesh; } 
 
-	inline bool				IsRenderable() { return (this->mesh != nullptr); }
+	inline bool								IsRenderable() { return (this->mesh != nullptr); }
 
 	// Children
 	void	AddChild(RenderNodeBase* s);

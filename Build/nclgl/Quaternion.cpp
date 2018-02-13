@@ -1,5 +1,7 @@
 #include "Quaternion.h"
 
+using namespace nclgl::Maths;
+
 Quaternion::Quaternion(void)
 {
 	x = y = z = 0.0f;
@@ -67,9 +69,9 @@ Quaternion Quaternion::operator *(const Vector3 &b) const {
 
 	ans.w = -(x * b.x) - (y * b.y) - (z * b.z);
 
-	ans.x =  (w * b.x) + (y * b.z) - (z * b.y);
-	ans.y =  (w * b.y) + (z * b.x) - (x * b.z);
-	ans.z =  (w * b.z) + (x * b.y) - (y * b.x);
+	ans.x = (w * b.x) + (y * b.z) - (z * b.y);
+	ans.y = (w * b.y) + (z * b.x) - (x * b.z);
+	ans.z = (w * b.z) + (x * b.y) - (y * b.x);
 
 	return ans;
 }
@@ -81,7 +83,7 @@ Vector3 Quaternion::Transform(const Vector3& point)
 	return xyz * (2.0f * Vector3::Dot(xyz, point))
 		+ point * (w * w - Vector3::Dot(xyz, xyz))
 		+ Vector3::Cross(xyz, point) * (2.0f * w);
-	
+
 }
 
 Quaternion Quaternion::operator*(const float &a) const
@@ -89,18 +91,18 @@ Quaternion Quaternion::operator*(const float &a) const
 	return Quaternion(x * a, y * a, z * a, w * a);
 }
 
-Matrix4 Quaternion::ToMatrix4() const {
+nclgl::Maths::Matrix4 Quaternion::ToMatrix4() const {
 	Matrix4 mat;
 
-	float yy = y*y;
-	float zz = z*z;
-	float xy = x*y;
-	float zw = z*w;
-	float xz = x*z;
-	float yw = y*w;
-	float xx = x*x;
-	float yz = y*z;
-	float xw = x*w;
+	float yy = y * y;
+	float zz = z * z;
+	float xy = x * y;
+	float zw = z * w;
+	float xz = x * z;
+	float yw = y * w;
+	float xx = x * x;
+	float yz = y * z;
+	float xw = x * w;
 
 	mat.values[0] = 1.0f - 2.0f * (yy + zz);
 	mat.values[1] = 2.0f * (xy + zw);
@@ -120,15 +122,15 @@ Matrix4 Quaternion::ToMatrix4() const {
 Matrix3 Quaternion::ToMatrix3() const {
 	Matrix3 mat;
 
-	float yy = y*y;
-	float zz = z*z;
-	float xy = x*y;
-	float zw = z*w;
-	float xz = x*z;
-	float yw = y*w;
-	float xx = x*x;
-	float yz = y*z;
-	float xw = x*w;
+	float yy = y * y;
+	float zz = z * z;
+	float xy = x * y;
+	float zw = z * w;
+	float xz = x * z;
+	float yw = y * w;
+	float xx = x * x;
+	float yz = y * z;
+	float xw = x * w;
 
 	mat._11 = 1.0f - 2.0f * (yy + zz);
 	mat._12 = 2.0f * (xy + zw);
@@ -309,10 +311,11 @@ Quaternion Quaternion::GetRotation(const Vector3& from_dir, const Vector3& to_di
 		return Quaternion(up, PI);
 	}
 
-	
+
 	//Otherwise build a new rotation
 	float theta = acosf(costheta);
 	Vector3 rotAxis = Vector3::Cross(from_dir, to_dir).Normalise();
 
 	return Quaternion::AxisAngleToQuaterion(rotAxis, (float)RadToDeg(theta));
 }
+

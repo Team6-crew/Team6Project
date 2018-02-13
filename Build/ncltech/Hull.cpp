@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <nclgl\NCLDebug.h>
 
+using namespace nclgl::Maths;
+
 Hull::Hull()
 {
 
