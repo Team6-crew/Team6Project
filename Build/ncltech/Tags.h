@@ -4,5 +4,6 @@ enum Tags {
 	TPlayer = 1,
 	TPickup = 2,
 	TGround = 3,
-	TCanKiLL = 4
+	TCanKiLL = 4,
+	TLaunch = 5
 };

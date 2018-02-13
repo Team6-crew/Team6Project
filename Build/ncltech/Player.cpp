@@ -7,6 +7,7 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\RenderNode.h>
 #include <functional>
+#include <nclgl\Launchpad.h>
 
 
 
@@ -108,8 +109,8 @@ void Player::move() {
 	
 	Vector3 ball_pos = physicsNode->GetPosition();
 	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
-	Vector3 jump(0, 20, 0);
-
+	Vector3 jump(0, 10, 0);
+	
 	RenderNode* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
 	worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
@@ -165,6 +166,13 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
 		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		return false;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
+	{
+		Launchpad* launchpad = (Launchpad*)otherNode->GetParent();
+		launchpad->Launch(this);
+		canjump = false;
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))

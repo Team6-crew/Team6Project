@@ -28,6 +28,7 @@
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Launchpad.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="MD5Anim.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RenderNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Launchpad.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />

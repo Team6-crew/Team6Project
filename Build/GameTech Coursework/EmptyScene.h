@@ -4,6 +4,7 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
+#include <nclgl\Launchpad.h>
 
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
@@ -129,6 +130,17 @@ public:
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
+		Launchpad* launchpad = new Launchpad(
+			"launchpad",
+			Vector3(-10.0f, -0.3f, 0.0f),
+			Vector3(1.0f,0.1f,1.0f),
+			true,
+			0.0f,
+			true,
+			Vector4(0.7f, 0.5f, 0.7f, 1.0f));
+		launchpad->SetPhysics(launchpad->Physics());
+		this->AddGameObject(launchpad);
+
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
@@ -149,7 +161,7 @@ public:
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
-		if (otherNode->GetParent()->HasTag(Tags::TcanbeKiLL))
+		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
 		{			
 			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
 			PhysicsEngine::Instance()->DeleteNextFrame(kill_ob);

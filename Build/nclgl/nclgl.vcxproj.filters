@@ -78,6 +78,7 @@
     <ClCompile Include="RenderNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Launchpad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NCLDebug.h">
@@ -173,5 +174,6 @@
     <ClInclude Include="PerfTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Launchpad.h" />
   </ItemGroup>
 </Project>
