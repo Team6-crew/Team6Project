@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "Player.h"
 #include "SceneManager.h"
+#include <nclgl\GameLogic.h>
+
 
 GraphicsPipeline::GraphicsPipeline()
 	: OGLRenderer(Window::GetWindow())
@@ -50,7 +52,7 @@ GraphicsPipeline::GraphicsPipeline()
 	InitializeDefaults();
 	Resize(width, height);
 
-	memset(world_paint, 0, sizeof(world_paint[0][0]) * 2048 * 2048);
+	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 	
 	glGenFramebuffers(1, &TrailBuffer);
@@ -269,49 +271,47 @@ void GraphicsPipeline::RenderScene()
 			ground = (*node->GetChildIteratorStart());
 		}
 	}
-	//gr_tex = ground->GetMesh()->GetTexture();
-
-
-	Vector3 gr_pos = ground->GetWorldTransform().GetPositionVector();
-	Vector3 position = SceneManager::Instance()->GetCurrentScene()->getPlayer()->Physics()->GetPosition();
-	
-	float rad = 0.01f;
-
-	float pos_x = (position.x-gr_pos.x+40)/80;
-	float pos_z = 1-(position.z - gr_pos.z + 40) / 80;
-
-	for (int i = max((pos_x - rad) * 2048,0); i < min((pos_x + rad) * 2048,2047); i++) {
-		for (int j = max((pos_z - rad) * 2048,0); j < min((pos_z + rad) * 2048,2047); j++) {
-			
-			float in_circle = (i - pos_x*2048)*(i  - pos_x * 2048) + (j  - pos_z * 2048)*(j - pos_z * 2048);
-			if (in_circle < rad*rad * 2048 * 2048) {
-				if (world_paint[i][j] == 0) {
-					paint_perc += 100.0f / (2048 * 2048);
-				}
-				world_paint[i][j] = 1;
-			}
-		}
-	}
-	SceneManager::Instance()->GetCurrentScene()->Score = paint_perc;
 	
 
-	Vector3 trailColor = Vector3(1.0f, 0.0f, 0.0f);
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
-		trailColor = Vector3(0.0f, 1.0f, 0.0f);
-	}
+
+	GameLogic::Instance()->calculatePaintPercentage();
+
+	
+	
+	SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+	
+
+	
+	
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
 	glViewport(0, 0, 2048, 2048);
 
 	glUseProgram(shaderTrail->GetProgram());
-	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "pos_x"), pos_x);
-	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "pos_z"), pos_z);
-	glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), "rad"), rad);
-	glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(), "trailColor"), 1, (float*)&trailColor);
+	glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "num_players") ,GameLogic::Instance()->getNumPlayers());
+	for (int i = 0; i <GameLogic::Instance()->getNumPlayers(); i++) {
+		string arr = "players[" + to_string(i) + "].";
+		float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColor();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+		if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+			trailColor = Vector3(0.0f, 1.0f, 0.0f);
+		}
+		glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_x").c_str()), pos_x);
+		glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_z").c_str()), pos_z);
+		glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "rad").c_str()), rad);
+		glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(),(arr + "trailColor").c_str()), 1, (float*)&trailColor);
+
+	}
+
+	
 	trailQuad->Draw();
 	ground->GetMesh()->SetTexture(gr_tex);
 
-
+	
+	
 
 	//Build Transparent/Opaque Renderlists
 	BuildAndSortRenderLists();

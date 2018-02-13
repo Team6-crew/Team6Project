@@ -10,7 +10,7 @@
 
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
-
+#include <nclgl/GameLogic.h>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -36,31 +36,16 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		/*player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-
-		player1->SetPhysics(player1->Physics());*/
-
-		player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		player1->SetPhysics(player1->Physics());
+		GameLogic::Instance()->addPlayers(1);
+		
+		this->AddGameObject(GameLogic::Instance()->getPlayer(0));
 
 		//Add player to scene
-		this->AddGameObject(player1);
+		;
 		//Also add body which is used for camera manipulation
-		this->AddGameObject(player1->getBody());
+		this->AddGameObject(GameLogic::Instance()->getPlayer(0)->getBody());
 
-		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
@@ -112,7 +97,9 @@ public:
 		if(pickup)
 		(*pickup->Render()->GetChildIteratorStart())->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
-		player1->move(dt);
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			GameLogic::Instance()->getPlayer(i)->move(dt);
+		}
 
 	}
 };

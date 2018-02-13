@@ -3,6 +3,7 @@
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
 #include <nclgl\RenderNode.h>
+#include <nclgl\Definitions.h>
 
 //---------------------------
 //------ Base Renderer ------
@@ -173,7 +174,7 @@ protected:
 
 	Mesh* trailQuad;
 
-	int world_paint[2048][2048];
+	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 
 	GLuint gr_tex;
 	GLuint TrailBuffer;
