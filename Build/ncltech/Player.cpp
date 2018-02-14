@@ -80,7 +80,9 @@ Player::Player(const std::string& name,
 		false,									//Dragable by the user
 		CommonUtils::GenColor(0.45f, 0.5f));
 
-	camera = GraphicsPipeline::Instance()->GetCamera();
+	//camera = GraphicsPipeline::Instance()->GetCamera1();
+	camera = new Camera();
+	camera->SetYaw(0.f);
 
 	camera_transform = new RenderNode();
 	camera_transform->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
@@ -135,13 +137,13 @@ void Player::move(float dt) {
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = dt*50.0f;
+		rotation = dt*100.0f;
 		camera->SetYaw(yaw + rotation);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		rotation = -dt*50.0f;
+		rotation = -dt*100.0f;
 		camera->SetYaw(yaw + rotation);
 	}
 

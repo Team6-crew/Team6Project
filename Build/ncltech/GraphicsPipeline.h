@@ -4,6 +4,7 @@
 #include <nclgl\Camera.h>
 #include <nclgl\RenderNode.h>
 #include <nclgl\Definitions.h>
+#include <vector>
 
 //---------------------------
 //------ Base Renderer ------
@@ -100,6 +101,7 @@ public:
 
 	//Utils
 	inline Camera* GetCamera() { return camera; }
+	inline Camera* GetCamera(int index) { return cameras[index]; }
 	inline bool GetVsyncEnabled() const { return isVsyncEnabled; }
 	inline void SetVsyncEnabled(bool enabled) { wglSwapIntervalEXT((isVsyncEnabled = enabled) ? 1 : 0); }
 
@@ -114,6 +116,8 @@ public:
 	inline Vector3& GetLightDirection() { return lightDirection; }
 	inline float& GetSpecularFactor() { return specularFactor; }
 	inline GLuint& GetShadowTex() { return shadowTex; }
+
+	Camera* CreateNewCamera();
 
 protected:
 	GraphicsPipeline();
@@ -165,12 +169,16 @@ protected:
 	//Common
 	Mesh* fullscreenQuad;
 	Camera* camera;
+	/*Camera* camera1;
+	Camera* camera2;*/
 	bool isVsyncEnabled;
 	std::vector<RenderNode*> allNodes;
 
 	std::vector<RenderNode*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
-
+	std::vector<Camera*> cameras;
+	std::vector<Matrix4> viewMatrices;
+	std::vector<Matrix4> projViewMatrices;
 
 	Mesh* trailQuad;
 
@@ -180,4 +188,10 @@ protected:
 	GLuint TrailBuffer;
 
 	float paint_perc;
+
+	
+	//Matrix4 viewMatrix1;
+	//Matrix4 projViewMatrix1;
+	//Matrix4 viewMatrix2;
+	//Matrix4 projViewMatrix2;
 };

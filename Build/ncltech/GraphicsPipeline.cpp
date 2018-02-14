@@ -44,10 +44,6 @@ GraphicsPipeline::GraphicsPipeline()
 
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
-	
-	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.f);
 
 	InitializeDefaults();
 	Resize(width, height);
@@ -75,8 +71,11 @@ GraphicsPipeline::GraphicsPipeline()
 }
 
 GraphicsPipeline::~GraphicsPipeline()
-{
+{  
 	SAFE_DELETE(camera);
+	for (int i = 0; i < cameras.size(); i++) {
+		SAFE_DELETE(cameras[i]);
+	}
 	
 	SAFE_DELETE(fullscreenQuad);
 
@@ -249,9 +248,11 @@ void GraphicsPipeline::UpdateScene(float dt)
 	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 		camera->HandleMouse(dt);
 
-	camera->HandleKeyboard(dt);
-	viewMatrix = camera->BuildViewMatrix();
-	projViewMatrix = projMatrix * viewMatrix;
+	for (int i = 0; i < cameras.size(); i++) {
+		cameras[i]->HandleKeyboard(dt);
+		viewMatrices[i] = cameras[i]->BuildViewMatrix();
+		projViewMatrices[i] = projMatrix * viewMatrices[i];
+	}
 
 	NCLDebug::_SetDebugDrawData(
 		projMatrix,
@@ -261,6 +262,10 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
+	for (int i = 0; i <cameras.size(); i++) {
+		camera = cameras[i];
+		projViewMatrix = projViewMatrices[i];
+
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
@@ -271,17 +276,11 @@ void GraphicsPipeline::RenderScene()
 			ground = (*node->GetChildIteratorStart());
 		}
 	}
-	
 
 
 	GameLogic::Instance()->calculatePaintPercentage();
-
-	
 	
 	SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
-	
-
-	
 	
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
@@ -309,8 +308,6 @@ void GraphicsPipeline::RenderScene()
 	
 	trailQuad->Draw();
 	ground->GetMesh()->SetTexture(gr_tex);
-
-	
 	
 
 	//Build Transparent/Opaque Renderlists
@@ -387,9 +384,20 @@ void GraphicsPipeline::RenderScene()
 
 
 	//Downsample and present to screen
+		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, width, height);
+		glEnable(GL_SCISSOR_TEST);
+		if (i == 0) {
+			glViewport(0, 0, width / 2, height);
+			glScissor(0, 0, width / 2, height);
+		}
+		else {
+			glViewport(width / 2, 0, width / 2, height);
+			glScissor(width / 2, 0, width / 2, height);
+		}
+
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glDisable(GL_SCISSOR_TEST);
 
 		float superSamples = (float)(numSuperSamples);
 		glUseProgram(shaderPresentToWindow->GetProgram());
@@ -397,12 +405,21 @@ void GraphicsPipeline::RenderScene()
 		glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uGammaCorrection"), gammaCorrection);
 		glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uNumSuperSamples"), superSamples);
 		glUniform2f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uSinglepixel"), 1.f / screenTexWidth, 1.f / screenTexHeight);
+		
 		fullscreenQuad->SetTexture(screenTexColor);
+			
 		fullscreenQuad->Draw();
 
 		//NCLDEBUG - Text Elements (aliased)
 		NCLDebug::_RenderDebugClipSpace();
 		NCLDebug::_ClearDebugLists();
+		}
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	
 
 	OGLRenderer::SwapBuffers();
@@ -555,4 +572,13 @@ void GraphicsPipeline::BuildShadowTransforms()
 		shadowProj[i] = Matrix4::Orthographic(bb._max.z, bb._min.z, bb._min.x, bb._max.x, bb._max.y, bb._min.y);
 		shadowProjView[i] = shadowProj[i] * shadowViewMtx;
 	}
+}
+
+Camera* GraphicsPipeline::CreateNewCamera() {
+	Camera* cam = new Camera();
+	cameras.push_back(cam);
+	viewMatrices.push_back(cam->BuildViewMatrix());
+	projViewMatrices.push_back(projMatrix);
+	cam->SetPitch(-20.0f);
+	return cam;
 }

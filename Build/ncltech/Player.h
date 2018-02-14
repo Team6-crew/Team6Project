@@ -36,6 +36,10 @@ public:
 	float getRadius() { return rad; }
 
 	void setRadius(float radius) { rad = radius; }
+
+	void setCamera(Camera* c) { camera = c; }
+
+	Camera* getCamera() { return camera; }
 private:
 
 	GameObject* body;

@@ -36,14 +36,13 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		GameLogic::Instance()->addPlayers(1);
-		
-		this->AddGameObject(GameLogic::Instance()->getPlayer(0));
-
+		GameLogic::Instance()->addPlayers(3);
 		//Add player to scene
-		;
-		//Also add body which is used for camera manipulation
-		this->AddGameObject(GameLogic::Instance()->getPlayer(0)->getBody());
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
+			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+		}
+
 
 
 		//Who doesn't love finding some common ground?
