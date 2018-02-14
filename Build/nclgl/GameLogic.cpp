@@ -4,6 +4,10 @@ GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 	rad = 0.01f;
+	colours[0] = Vector4(1.0f, 0.0f, 0.69f, 1.0f);
+	colours[1] = Vector4(0.3f, 1.0f, 1.0f, 1.0f);
+	colours[2] = Vector4(1.0f, 0.68f, 0.33f, 1.0f);
+	colours[3] = Vector4(0.0f, 1.0f, 0.02f, 1.0f);
 	
 }
 
@@ -15,7 +19,7 @@ void GameLogic::addPlayers(int num_players) {
 			true,
 			1.0f,
 			true,
-			Vector4(0.2f*i, 0.2f*i, 1.0f, 1.0f));
+			colours[i]);
 		player->SetPhysics(player->Physics());
 		switch (i) {
 		case 0:

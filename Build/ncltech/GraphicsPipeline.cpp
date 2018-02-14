@@ -260,6 +260,8 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->GetPosition());
 }
 
+
+
 void GraphicsPipeline::RenderScene()
 {
 	for (int i = 0; i <cameras.size(); i++) {
@@ -387,15 +389,9 @@ void GraphicsPipeline::RenderScene()
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glEnable(GL_SCISSOR_TEST);
-		if (i == 0) {
-			glViewport(0, 0, width / 2, height);
-			glScissor(0, 0, width / 2, height);
-		}
-		else {
-			glViewport(width / 2, 0, width / 2, height);
-			glScissor(width / 2, 0, width / 2, height);
-		}
 
+		AdjustViewport(i);
+	
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glDisable(GL_SCISSOR_TEST);
 
@@ -423,6 +419,56 @@ void GraphicsPipeline::RenderScene()
 	
 
 	OGLRenderer::SwapBuffers();
+}
+
+void GraphicsPipeline::AdjustViewport(int i) {
+	if (GameLogic::Instance()->getNumPlayers() == 1) {
+		glViewport(0, 0, width, height);
+	}
+	else if (GameLogic::Instance()->getNumPlayers() == 2) {
+		projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, ((float)width) / ((float)height/2.0f), PROJ_FOV);
+		if (i == 0) {
+			glViewport(0, height / 2, width, height/2);
+			glScissor(0, height / 2, width, height/2);
+		}
+		else {
+			glViewport(0, 0, width, height / 2);
+			glScissor(0, 0, width, height / 2);
+		}
+	}
+	if (GameLogic::Instance()->getNumPlayers() == 3) {
+		if (i == 0) {
+			glViewport(width/4, height/2, width / 2, height / 2);
+			glScissor(width / 4, height / 2, width / 2, height / 2);
+		}
+		else if (i == 1) {
+			glViewport(0, 0, width / 2, height / 2);
+			glScissor(0, 0, width / 2, height / 2);
+		}
+		else {
+			glViewport(width / 2, 0, width / 2, height/2);
+			glScissor(width / 2, 0, width / 2, height/2);
+		}
+	}
+	if (GameLogic::Instance()->getNumPlayers() == 4) {
+		if (i == 0) {
+			glViewport(0, height / 2, width / 2, height / 2);
+			glScissor(0, height / 2, width / 2, height / 2);
+		}
+		else if (i == 1) {
+			glViewport(width / 2, height / 2, width / 2, height / 2);
+			glScissor(width / 2, height / 2, width / 2, height / 2);
+		}
+		else if (i == 2) {
+			glViewport(0, 0, width / 2, height / 2);
+			glScissor(0, 0, width / 2, height / 2);
+		}
+		else {
+			glViewport(width / 2, 0, width / 2, height / 2);
+			glScissor(width / 2, 0, width / 2, height / 2);
+		}
+	}
+
 }
 
 void GraphicsPipeline::Resize(int x, int y)

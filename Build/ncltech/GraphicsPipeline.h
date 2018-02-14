@@ -131,6 +131,7 @@ protected:
 	void RecursiveAddToRenderLists(RenderNode* node);
 	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNode*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
+	void AdjustViewport(int i);
 
 protected:
 	Matrix4 projViewMatrix;

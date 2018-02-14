@@ -25,4 +25,5 @@ private:
 	float posX, posZ;
 	float rad;
 	vector <Player*> players;
+	Vector4 colours[4];
 };
