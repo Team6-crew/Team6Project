@@ -1,6 +1,8 @@
 #include "GeometryUtils.h"
 #include <nclgl\common.h>
 
+using namespace nclgl::Maths;
+
 // Gets the closest point x on the line (edge) to point (pos)
 Vector3 GeometryUtils::GetClosestPoint(
 	const Vector3& pos,

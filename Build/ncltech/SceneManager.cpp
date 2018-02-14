@@ -42,8 +42,6 @@ void SceneManager::EnqueueScene(Scene* scene)
 	//If this was the first scene, activate it immediately
 	if (m_vpAllScenes.size() == 1)
 		JumpToScene(0);
-	else
-		Window::GetWindow().SetWindowTitle("NCLTech - [%d/%d] %s", m_SceneIdx + 1, m_vpAllScenes.size(), scene->GetSceneName().c_str());
 }
 
 void SceneManager::JumpToScene()
@@ -75,7 +73,6 @@ void SceneManager::JumpToScene(int idx)
 	PhysicsEngine::Instance()->SetDefaults();
 	GraphicsPipeline::Instance()->InitializeDefaults();
 	scene->OnInitializeScene();
-	Window::GetWindow().SetWindowTitle("NCLTech - [%d/%d] %s", idx + 1, m_vpAllScenes.size(), scene->GetSceneName().c_str());
 	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
 }
 

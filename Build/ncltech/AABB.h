@@ -4,23 +4,23 @@
 #include <ncltech\PhysicsNode.h>
 
 struct AABB {
-	Vector3 center;
-	float halfdim;
-	Vector3 corner1;
-	Vector3 corner2;
+	nclgl::Maths::Vector3 center;
+	float				  halfdim;
+	nclgl::Maths::Vector3 corner1;
+	nclgl::Maths::Vector3 corner2;
 
 	AABB() {
-		center = Vector3(0.0f, 0.0f, 0.0f);
+		center = nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f);
 		halfdim = 0.5f;
-		corner1 = center + Vector3(halfdim, halfdim, -halfdim);
-		corner2 = center - Vector3(halfdim, halfdim, -halfdim);
+		corner1 = center + nclgl::Maths::Vector3(halfdim, halfdim, -halfdim);
+		corner2 = center - nclgl::Maths::Vector3(halfdim, halfdim, -halfdim);
 	}
 
-	AABB(Vector3 cnt, float hlf) {
+	AABB(nclgl::Maths::Vector3 cnt, float hlf) {
 		center = cnt;
 		halfdim = hlf;
-		corner1 = center + Vector3(halfdim, halfdim, -halfdim);
-		corner2 = center - Vector3(halfdim, halfdim, -halfdim);
+		corner1 = center + nclgl::Maths::Vector3(halfdim, halfdim, -halfdim);
+		corner2 = center - nclgl::Maths::Vector3(halfdim, halfdim, -halfdim);
 	}
 	
     //Based on https://stackoverflow.com/questions/4578967/cube-sphere-intersection-test
@@ -28,7 +28,7 @@ struct AABB {
 	inline float squared(float v) { return v * v; }
 
 	bool containsObject(PhysicsNode* obj) {
-		Vector3 obj_pos = obj->GetPosition();
+		nclgl::Maths::Vector3 obj_pos = obj->GetPosition();
 		float d_squared = obj->GetColRadius() * obj->GetColRadius();
 
 		if (obj_pos.x > corner1.x) d_squared -= squared(obj_pos.x - corner1.x);

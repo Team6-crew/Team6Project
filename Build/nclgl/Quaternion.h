@@ -32,9 +32,16 @@ _-_-_-_-_-_-_-""  ""
 #include "Matrix4.h"
 #include "Matrix3.h"
 
-class Matrix4;
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Quaternion;
+	}
+}
 
-class Quaternion {
+
+class nclgl::Maths::Quaternion {
 public:
 	Quaternion(void);
 	Quaternion(const Vector3& vec, float w);
@@ -49,20 +56,20 @@ public:
 			float y;
 			float z;
 		};
-		Vector3 xyz;	
+		Vector3 xyz;
 	};
 	float w;
 
 	void	Normalise();
 
-	Matrix4 ToMatrix4() const;
-	Matrix3 ToMatrix3() const;
+	nclgl::Maths::Matrix4 ToMatrix4() const;
+	nclgl::Maths::Matrix3 ToMatrix3() const;
 
 	Quaternion	Conjugate() const;
 	void		GenerateW();	//builds 4th component when loading in shortened, 3 component quaternions - great for network compression ;)
 
 	static Quaternion EulerAnglesToQuaternion(float pitch, float yaw, float roll);
-	static Quaternion AxisAngleToQuaterion(const Vector3& vector, float degrees);
+	static Quaternion AxisAngleToQuaterion(const nclgl::Maths::Vector3& vector, float degrees);
 
 	static Quaternion FromMatrix(const Matrix4 &m);
 	static Quaternion FromMatrix(const Matrix3 &m);
@@ -76,7 +83,7 @@ public:
 
 	Quaternion operator *(const Quaternion &a) const;
 	Quaternion operator *(const Vector3 &a) const;
-	
+
 	Quaternion operator *(const float &a) const;
 
 	Quaternion operator+(const Quaternion &a) const {
@@ -91,3 +98,4 @@ public:
 		return o;
 	}
 };
+

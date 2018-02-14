@@ -8,7 +8,9 @@
 #include <nclgl\RenderNode.h>
 #include <functional>
 
+#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
+using namespace nclgl::Maths;
 
 Player::Player(const std::string& name,
 	const Vector3& pos,
@@ -82,7 +84,7 @@ Player::Player(const std::string& name,
 
 	camera = GraphicsPipeline::Instance()->GetCamera();
 
-	camera_transform = new RenderNode();
+	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
@@ -110,7 +112,7 @@ void Player::move() {
 	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
 	Vector3 jump(0, 20, 0);
 
-	RenderNode* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
+	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
 	worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
 	

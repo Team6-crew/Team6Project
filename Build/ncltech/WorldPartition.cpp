@@ -2,6 +2,9 @@
 #include "WorldPartition.h"
 #include <ncltech\GameObject.h>
 
+using namespace std;
+using namespace nclgl::Maths;
+
 std::vector<PhysicsNode*> WorldPartition::getPossibleCollisions(PhysicsNode * node)
 {
 	vector<PhysicsNode*> possibleCollisions;

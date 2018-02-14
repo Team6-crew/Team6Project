@@ -21,6 +21,7 @@ public:
 	GameObject* getBody() { return body; }
 
 
+
 	void move();
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump);
 
@@ -34,7 +35,9 @@ public:
 private:
 
 	GameObject* body;
-	RenderNode* camera_transform;
+	GameObject* cube;
+
+	RenderNodeBase* camera_transform;
 	Camera* camera;
 
 	float speed;

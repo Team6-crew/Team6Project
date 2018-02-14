@@ -21,7 +21,7 @@ _-_-_-_-_-_-_-""  ""
 #include "MD5Mesh.h"
 #include "MD5Anim.h"
 
-
+#include <string>
 /*
 MD5 Files are plain text, with each section in the file marked with tags.
 It's good practice to use defines to keep these tag strings, even though
@@ -76,7 +76,7 @@ that joints really are just RenderNode transforms like you are used to, as
 well as making it slightly more efficient to transform the mesh.
 */
 struct MD5Joint {
-	string*		name;			//Pointer to the name of this joint
+	std::string*		name;			//Pointer to the name of this joint
 	int			parent;			//Index into the joint array of parent
 	int			forceWorld;
 	Vector3		position;		//Position relative to parent joint
@@ -196,9 +196,9 @@ public:
 	void		UpdateTransformTBO(const MD5Skeleton &skel) const;
 #endif
 
-	Mesh*		GetRootMesh() const {return (Mesh*)rootMesh;}
+	OGLMesh*		GetRootMesh() const {return (OGLMesh*)rootMesh;}
 
-	MD5Anim*	GetAnim(const string &name) const;
+	MD5Anim*	GetAnim(const std::string &name) const;
 
 	/*
 	Adds an MD5Anim to the MD5Mesh's map of animations. This should probably
@@ -206,7 +206,7 @@ public:
 	*/
 	void		AddAnim(std::string filename);
 
-	int			GetIndexForJointName(const string &name) const;
+	int			GetIndexForJointName(const std::string &name) const;
 
 	/*
 	idTech games (as well as Unreal engine games, and some others) don't use
@@ -264,7 +264,7 @@ protected:
 
 	MD5SubMesh*		subMeshes;			//array of MD5SubMeshes
 	unsigned int	numSubMeshes;		//How many submeshes this mesh has
-	vector<string>	jointNames;			//Array of joint names for the skeleton
+	std::vector<std::string>	jointNames;			//Array of joint names for the skeleton
 
 	std::map<std::string, MD5Anim*>	animations;	//map of anims for this mesh
 

@@ -1,10 +1,12 @@
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\SceneManager.h>
-#include <nclgl\Window.h>
+
 #include <nclgl\NCLDebug.h>
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+
+using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
@@ -23,7 +25,6 @@ void Quit(bool error = false, const std::string &reason = "") {
 	SceneManager::Release();
 	PhysicsEngine::Release();
 	GraphicsPipeline::Release();
-	Window::Destroy();
 
 	//Show console reason before exit
 	if (error) {
@@ -39,10 +40,6 @@ void Quit(bool error = false, const std::string &reason = "") {
 //    for the SceneManager to display
 void Initialize()
 {
-	//Initialise the Window
-	if (!Window::Initialise("Game Technologies", 1280, 800, false))
-		Quit(true, "Window failed to initialise!");
-
 	//Initialize Renderer
 	GraphicsPipeline::Instance();
 
@@ -62,7 +59,7 @@ void PrintStatusEntries()
 	//Print Engine Options
 	NCLDebug::AddStatusEntry(status_colour_header, "NCLTech Settings");
 	NCLDebug::AddStatusEntry(status_colour, "     Physics Engine: %s (Press P to toggle)", PhysicsEngine::Instance()->IsPaused() ? "Paused  " : "Enabled ");
-	NCLDebug::AddStatusEntry(status_colour, "     Monitor V-Sync: %s (Press V to toggle)", GraphicsPipeline::Instance()->GetVsyncEnabled() ? "Enabled " : "Disabled");
+	//NCLDebug::AddStatusEntry(status_colour, "     Monitor V-Sync: %s (Press V to toggle)", GraphicsPipeline::Instance()->GetVsyncEnabled() ? "Enabled " : "Disabled");
 	NCLDebug::AddStatusEntry(status_colour, "");
 
 	//Print Current Scene Name
@@ -95,8 +92,8 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
 		PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_V))
-		GraphicsPipeline::Instance()->SetVsyncEnabled(!GraphicsPipeline::Instance()->GetVsyncEnabled());
+	//if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_V))
+	//	GraphicsPipeline::Instance()->SetVsyncEnabled(!GraphicsPipeline::Instance()->GetVsyncEnabled());
 
 	uint sceneIdx = SceneManager::Instance()->GetCurrentSceneIndex();
 	uint sceneMax = SceneManager::Instance()->SceneCount();
@@ -124,7 +121,7 @@ int main()
 {
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
-	GraphicsPipeline::Instance()->SetVsyncEnabled(false);
+	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 
 	Window::GetWindow().GetTimer()->GetTimedMS();
 

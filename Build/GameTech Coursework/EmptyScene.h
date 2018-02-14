@@ -65,8 +65,8 @@ public:
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
-			Vector3(0.0f, -1.5f, 0.0f),
-			Vector3(40.0f, 1.0f, 40.0f),
+			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
 			true,
 			0.0f,
 			true,

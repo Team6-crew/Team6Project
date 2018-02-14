@@ -1,5 +1,15 @@
 #include "OBJMesh.h"
 #include "NCLDebug.h"
+
+#include <SOIL.h>
+
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
+
+using std::string;
+using namespace nclgl::Maths;
+
 #ifdef WEEK_2_CODE
 /*
 OBJ files look generally something like this:
@@ -21,6 +31,8 @@ f vert index / tex index / norm index  vert index / tex index / norm index  vert
 OBJ files can also be split up into a number of submeshes, making loading them
 in even more annoying. 
 */
+
+
 bool	OBJMesh::LoadOBJMesh(std::string filename)	{
 	NCLDebug::Log("Loading Mesh: %s", filename.c_str());
 
@@ -33,9 +45,9 @@ bool	OBJMesh::LoadOBJMesh(std::string filename)	{
 	/*
 	Stores the loaded in vertex attributes
 	*/
-	std::vector<Vector2>inputTexCoords;
-	std::vector<Vector3>inputVertices;
-	std::vector<Vector3>inputNormals;
+	std::vector<nclgl::Maths::Vector2>inputTexCoords;
+	std::vector<nclgl::Maths::Vector3>inputVertices;
+	std::vector<nclgl::Maths::Vector3>inputNormals;
 
 	/*
 	SubMeshes temporarily get kept in here
@@ -257,7 +269,7 @@ automatically be used by this overloaded function. Once 'this' has been drawn,
 all of the children of 'this' will be drawn
 */
 void OBJMesh::Draw() {
-	Mesh::Draw();
+	OGLMesh::Draw();
 	for(unsigned int i = 0; i < children.size(); ++i) {
 		children.at(i)->Draw();
 	}
@@ -268,7 +280,7 @@ void	OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 		return;
 	}
 
-	map <string, MTLInfo>::iterator i = materials.find(mtlType);
+	std::map <std::string, MTLInfo>::iterator i = materials.find(mtlType);
 
 	if(i != materials.end()) {
 		if(!i->second.diffuse.empty())	{

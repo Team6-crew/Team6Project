@@ -1,5 +1,6 @@
 #include "OcTree.h"
 
+using namespace nclgl::Maths;
 
 std::vector<OcTree*> OcTree::leaves = std::vector<OcTree*>();
 bool OcTree::isActive = false;

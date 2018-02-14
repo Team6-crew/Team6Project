@@ -1,6 +1,7 @@
 #include "PhysicsNode.h"
 #include "PhysicsEngine.h"
 
+using namespace nclgl::Maths;
 
 void PhysicsNode::IntegrateForVelocity(float dt)
 {
