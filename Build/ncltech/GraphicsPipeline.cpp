@@ -32,6 +32,10 @@ GraphicsPipeline::GraphicsPipeline()
 
 	fullscreenQuad = Mesh::GenerateQuad();
 	trailQuad = Mesh::GenerateQuad();
+	minimap = Mesh::GenerateQuad();
+	
+	tempProj = projMatrix;
+	tempView = viewMatrix;
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
@@ -68,6 +72,7 @@ GraphicsPipeline::GraphicsPipeline()
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "error";
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	minimap->SetTexture(gr_tex);
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -264,62 +269,62 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
-	for (int i = 0; i <cameras.size(); i++) {
+	for (int i = 0; i < cameras.size(); i++) {
 		camera = cameras[i];
 		projViewMatrix = projViewMatrices[i];
 
-	//Build World Transforms
-	// - Most scene objects will probably end up being static, so we really should only be updating
-	//   modelMatrices for objects (and their children) who have actually moved since last frame
-	RenderNode * ground = NULL;
-	for (RenderNode* node : allNodes) {
-		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
-		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
-			ground = (*node->GetChildIteratorStart());
+		//Build World Transforms
+		// - Most scene objects will probably end up being static, so we really should only be updating
+		//   modelMatrices for objects (and their children) who have actually moved since last frame
+		RenderNode * ground = NULL;
+		for (RenderNode* node : allNodes) {
+			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+			if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+				ground = (*node->GetChildIteratorStart());
+			}
 		}
-	}
 
 
-	GameLogic::Instance()->calculatePaintPercentage();
-	
-	SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
-	
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
-	glViewport(0, 0, 2048, 2048);
+		GameLogic::Instance()->calculatePaintPercentage();
 
-	glUseProgram(shaderTrail->GetProgram());
-	glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "num_players") ,GameLogic::Instance()->getNumPlayers());
-	for (int i = 0; i <GameLogic::Instance()->getNumPlayers(); i++) {
-		string arr = "players[" + to_string(i) + "].";
-		float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColor();
-		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
-		if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
-			trailColor = Vector3(0.0f, 1.0f, 0.0f);
+		SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+
+
+		glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
+		glViewport(0, 0, 2048, 2048);
+
+		glUseProgram(shaderTrail->GetProgram());
+		glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "num_players"), GameLogic::Instance()->getNumPlayers());
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			string arr = "players[" + to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColor();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+				trailColor = Vector3(0.0f, 1.0f, 0.0f);
+			}
+			glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_x").c_str()), pos_x);
+			glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_z").c_str()), pos_z);
+			glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "rad").c_str()), rad);
+			glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "trailColor").c_str()), 1, (float*)&trailColor);
+
 		}
-		glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_x").c_str()), pos_x);
-		glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_z").c_str()), pos_z);
-		glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "rad").c_str()), rad);
-		glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(),(arr + "trailColor").c_str()), 1, (float*)&trailColor);
-
-	}
-
-	
-	trailQuad->Draw();
-	ground->GetMesh()->SetTexture(gr_tex);
-	
-
-	//Build Transparent/Opaque Renderlists
-	BuildAndSortRenderLists();
-
-	//NCLDebug - Build render lists
-	NCLDebug::_BuildRenderLists();
 
 
-	//Build shadowmaps
+		trailQuad->Draw();
+		ground->GetMesh()->SetTexture(gr_tex);
+
+
+		//Build Transparent/Opaque Renderlists
+		BuildAndSortRenderLists();
+
+		//NCLDebug - Build render lists
+		NCLDebug::_BuildRenderLists();
+
+
+		//Build shadowmaps
 		BuildShadowTransforms();
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex, 0);
@@ -332,20 +337,20 @@ void GraphicsPipeline::RenderScene()
 
 		RenderAllObjects(true,
 			[&](RenderNode* node)
-			{
-				glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
-			}
+		{
+			glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
+		}
 		);
-	
-	
 
 
-	//Render scene to screen fbo
+
+
+		//Render scene to screen fbo
 		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 		glViewport(0, 0, screenTexWidth, screenTexHeight);
 		glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		
+
 		glUseProgram(shaderForwardLighting->GetProgram());
 		glUniformMatrix4fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, (float*)&projViewMatrix);
 		glUniform1i(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uDiffuseTex"), 0);
@@ -365,10 +370,10 @@ void GraphicsPipeline::RenderScene()
 		GLint uColor = glGetUniformLocation(shaderForwardLighting->GetProgram(), "uColor");
 		RenderAllObjects(false,
 			[&](RenderNode* node)
-			{
-				glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
-				glUniform4fv(uColor, 1, (float*)&node->GetColor());
-			}
+		{
+			glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
+			glUniform4fv(uColor, 1, (float*)&node->GetColor());
+		}
 		);
 
 		// Render Screen Picking ID's
@@ -382,93 +387,126 @@ void GraphicsPipeline::RenderScene()
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-	
 
 
-	//Downsample and present to screen
+
+		//Downsample and present to screen
+
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glEnable(GL_SCISSOR_TEST);
-
-		AdjustViewport(i);
-	
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glDisable(GL_SCISSOR_TEST);
-
-		float superSamples = (float)(numSuperSamples);
-		glUseProgram(shaderPresentToWindow->GetProgram());
-		glUniform1i(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uColorTex"), 0);
-		glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uGammaCorrection"), gammaCorrection);
-		glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uNumSuperSamples"), superSamples);
-		glUniform2f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uSinglepixel"), 1.f / screenTexWidth, 1.f / screenTexHeight);
 		
-		fullscreenQuad->SetTexture(screenTexColor);
-			
-		fullscreenQuad->Draw();
+		for (int j = 0; j < 2; j++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glEnable(GL_SCISSOR_TEST);
+			AdjustViewport(i,j);
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+			glDisable(GL_SCISSOR_TEST);
 
-		//NCLDEBUG - Text Elements (aliased)
-		NCLDebug::_RenderDebugClipSpace();
-		NCLDebug::_ClearDebugLists();
+			float superSamples = (float)(numSuperSamples);
+			glUseProgram(shaderPresentToWindow->GetProgram());
+			glUniform1i(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uColorTex"), 0);
+			glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uGammaCorrection"), gammaCorrection);
+			glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uNumSuperSamples"), superSamples);
+			glUniform2f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uSinglepixel"), 1.f / screenTexWidth, 1.f / screenTexHeight);
+
+			fullscreenQuad->SetTexture(screenTexColor);
+
+			if (j == 0) {
+
+				fullscreenQuad->Draw();
+			}
+			else {
+				tempProj = projMatrix;
+				tempView = viewMatrix;
+				projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+				viewMatrix.ToIdentity();
+				minimap->Draw();
+				projMatrix = tempProj;
+				viewMatrix = tempView;
+			}
+
+			//NCLDEBUG - Text Elements (aliased)
+			NCLDebug::_RenderDebugClipSpace();
+			NCLDebug::_ClearDebugLists();
 		}
-		
+
 		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	
+	}
 
 	OGLRenderer::SwapBuffers();
 }
 
-void GraphicsPipeline::AdjustViewport(int i) {
-	if (GameLogic::Instance()->getNumPlayers() == 1) {
-		glViewport(0, 0, width, height);
+void GraphicsPipeline::AdjustViewport(int i, int j) {
+	int num_p = GameLogic::Instance()->getNumPlayers();
+	if (j == 0) {
+		if (num_p == 1) {
+			glViewport(0, 0, width, height);
+		}
+		else if (num_p == 2) {
+			projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, ((float)width) / ((float)height / 2.0f), PROJ_FOV);
+			if (i == 0) {
+				glViewport(0, height / 2, width, height / 2);
+				glScissor(0, height / 2, width, height / 2);
+			}
+			else {
+				glViewport(0, 0, width, height / 2);
+				glScissor(0, 0, width, height / 2);
+			}
+		}
+		else if (num_p == 3) {
+			if (i == 0) {
+				glViewport(0, height / 2, width / 2, height / 2);
+				glScissor(0, height / 2, width / 2, height / 2);
+			}
+			else if (i == 1) {
+				glViewport(0, 0, width / 2, height / 2);
+				glScissor(0, 0, width / 2, height / 2);
+			}
+			else {
+				glViewport(width / 2, 0, width / 2, height / 2);
+				glScissor(width / 2, 0, width / 2, height / 2);
+			}
+		}
+		else if (num_p == 4) {
+			if (i == 0) {
+				glViewport(0, height / 2, width / 2, height / 2);
+				glScissor(0, height / 2, width / 2, height / 2);
+			}
+			else if (i == 1) {
+				glViewport(width / 2, height / 2, width / 2, height / 2);
+				glScissor(width / 2, height / 2, width / 2, height / 2);
+			}
+			else if (i == 2) {
+				glViewport(0, 0, width / 2, height / 2);
+				glScissor(0, 0, width / 2, height / 2);
+			}
+			else {
+				glViewport(width / 2, 0, width / 2, height / 2);
+				glScissor(width / 2, 0, width / 2, height / 2);
+			}
+		}
 	}
-	else if (GameLogic::Instance()->getNumPlayers() == 2) {
-		projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, ((float)width) / ((float)height/2.0f), PROJ_FOV);
-		if (i == 0) {
-			glViewport(0, height / 2, width, height/2);
-			glScissor(0, height / 2, width, height/2);
+	else {
+		if (num_p == 1) {
+			glScissor(4 * width / 5, 0, width / 5, width / 5);
+			glViewport(4 * width / 5, 0, width / 5, width / 5);
 		}
-		else {
-			glViewport(0, 0, width, height / 2);
-			glScissor(0, 0, width, height / 2);
+		else if (num_p == 2) {
+			glScissor(4 * width / 5, height/2 - width/10, width / 5, width / 5);
+			glViewport(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
 		}
-	}
-	if (GameLogic::Instance()->getNumPlayers() == 3) {
-		if (i == 0) {
-			glViewport(width/4, height/2, width / 2, height / 2);
-			glScissor(width / 4, height / 2, width / 2, height / 2);
-		}
-		else if (i == 1) {
-			glViewport(0, 0, width / 2, height / 2);
-			glScissor(0, 0, width / 2, height / 2);
-		}
-		else {
-			glViewport(width / 2, 0, width / 2, height/2);
-			glScissor(width / 2, 0, width / 2, height/2);
-		}
-	}
-	if (GameLogic::Instance()->getNumPlayers() == 4) {
-		if (i == 0) {
-			glViewport(0, height / 2, width / 2, height / 2);
-			glScissor(0, height / 2, width / 2, height / 2);
-		}
-		else if (i == 1) {
+		else if (num_p == 3) {
 			glViewport(width / 2, height / 2, width / 2, height / 2);
 			glScissor(width / 2, height / 2, width / 2, height / 2);
 		}
-		else if (i == 2) {
-			glViewport(0, 0, width / 2, height / 2);
-			glScissor(0, 0, width / 2, height / 2);
-		}
-		else {
-			glViewport(width / 2, 0, width / 2, height / 2);
-			glScissor(width / 2, 0, width / 2, height / 2);
+		else if (num_p == 4) {
+			glScissor(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
+			glViewport(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
 		}
 	}
-
 }
 
 void GraphicsPipeline::Resize(int x, int y)

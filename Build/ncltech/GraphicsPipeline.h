@@ -131,7 +131,7 @@ protected:
 	void RecursiveAddToRenderLists(RenderNode* node);
 	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNode*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
-	void AdjustViewport(int i);
+	void AdjustViewport(int i, int j);
 
 protected:
 	Matrix4 projViewMatrix;
@@ -190,9 +190,8 @@ protected:
 
 	float paint_perc;
 
-	
-	//Matrix4 viewMatrix1;
-	//Matrix4 projViewMatrix1;
-	//Matrix4 viewMatrix2;
-	//Matrix4 projViewMatrix2;
+	//Minimap
+	Mesh* minimap;
+	Matrix4 tempProj;
+	Matrix4 tempView;
 };
