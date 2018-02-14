@@ -5,7 +5,7 @@
 #include "CommonMeshes.h"
 #include "ScreenPicker.h"
 #include <nclgl\OBJMesh.h>
-#include <nclgl\RenderNode.h>
+#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
@@ -24,9 +24,9 @@ Player::Player(const std::string& name,
 
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
-	RenderNode* rnode = new RenderNode();
+	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNode* dummy = new RenderNode(CommonMeshes::Sphere(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 

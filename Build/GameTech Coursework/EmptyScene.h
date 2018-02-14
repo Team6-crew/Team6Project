@@ -48,12 +48,12 @@ public:
 		player1->SetPhysics(player1->Physics());*/
 
 		player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(0.0f, 1.f, 0.0f),
 			1.0f,
 			true,
 			1.0f,
 			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		player1->SetPhysics(player1->Physics());
 
 		//Add player to scene
@@ -71,7 +71,7 @@ public:
 			0.0f,
 			true,
 			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
@@ -86,12 +86,12 @@ public:
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));*/
 		SpeedPickup* pickup = new SpeedPickup("pickup",
-			Vector3(10.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
 			true,
 			0.0f,
 			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
@@ -107,7 +107,8 @@ public:
 		GameObject *pickup = FindGameObject("pickup");
 		rotation = 0.1f;
 		if(pickup)
-		(*pickup->Render()->GetChildIteratorStart())->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
+		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
+			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
 		player1->move();
 
