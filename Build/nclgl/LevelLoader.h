@@ -21,8 +21,8 @@ class LevelLoader
 	{
 		std::string name;
 		Type		type;
-		Vector3		position;
-		Vector3		scale;
+		nclgl::Maths::Vector3		position;
+		nclgl::Maths::Vector3		scale;
 		float		inverseMass;
 		float		rotationDegrees;
 	};
