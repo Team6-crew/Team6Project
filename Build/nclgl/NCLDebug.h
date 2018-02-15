@@ -77,7 +77,7 @@ function as it will include the filename and linenumber it was triggered on with
 #define STATUS_TEXT_SIZE	16
 #define STATUS_TEXT_FONT    "Calibri"
 
-#define LOG_OUTPUT_FILE_ENABLED
+#define LOG_OUTPUT_FILE_DISABLED
 #define LOG_OUTPUT_FILE     "program_output.txt"
 
 enum TextAlignment
