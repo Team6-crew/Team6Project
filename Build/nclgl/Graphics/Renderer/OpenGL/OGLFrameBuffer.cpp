@@ -39,11 +39,17 @@ OGLFrameBuffer::OGLFrameBuffer(std::vector<TextureBase*> colourTex, TextureBase*
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-OGLFrameBuffer::OGLFrameBuffer(TextureBase* depthTex)
+OGLFrameBuffer::OGLFrameBuffer(TextureBase* depthTex, bool colour)
 {
 	glGenFramebuffers(1, &bufferID);
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferID);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, static_cast<OGLTextureArray*>(depthTex)->GetID(), 0);
+	if (colour) {
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, static_cast<OGLTextureArray*>(depthTex)->GetID(), 0);
+	}
+	else {
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, static_cast<OGLTextureArray*>(depthTex)->GetID(), 0);
+	}
+
 	glDrawBuffers(0, GL_NONE);
 
 	//Validate our framebuffer

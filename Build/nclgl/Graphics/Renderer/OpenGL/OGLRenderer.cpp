@@ -58,6 +58,7 @@ void OGLRenderer::SwapBuffers()
 {
 	::SwapBuffers(deviceContext);
 }
+
 void OGLRenderer::RenderObject(RenderNode* obj)
 {
 	wglDeleteContext(renderContext);
@@ -159,7 +160,21 @@ void	OGLRenderer::SetViewPort(int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
-
+void	OGLRenderer::SetViewPort(int startx, int starty, int width, int height)
+{
+	glViewport(startx, starty, width, height);
+}
+void	OGLRenderer::Scissor(int startx, int starty, int width, int height)
+{
+	glScissor(startx, starty, width, height);
+}
+void OGLRenderer::SetScissor(bool on)
+{
+	if (on)
+		glEnable(GL_SCISSOR_TEST);
+	else
+		glDisable(GL_SCISSOR_TEST);
+}
 void	OGLRenderer::Clear(Renderer::Clear clearType)
 {
 	switch (clearType)

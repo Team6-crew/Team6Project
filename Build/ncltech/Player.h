@@ -29,9 +29,9 @@ public:
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
 
-	Vector3 getRelativePosition() { return relative_position; 	}
+	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; 	}
 
-	void setRelativePosition(Vector3 rel_pos) {relative_position = rel_pos;	}
+	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) {relative_position = rel_pos;	}
 
 	float getRadius() { return rad; }
 
@@ -47,7 +47,7 @@ private:
 
 	RenderNodeBase* camera_transform;
 	Camera* camera;
-	Vector3 relative_position;
+	nclgl::Maths::Vector3 relative_position;
 	float speed;
 
 	bool canjump = 1;

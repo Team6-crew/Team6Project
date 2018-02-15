@@ -107,8 +107,8 @@ protected:
 	std::vector<RenderNodeBase*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
 	std::vector<Camera*> cameras;
-	std::vector<Matrix4> viewMatrices;
-	std::vector<Matrix4> projViewMatrices;
+	std::vector<nclgl::Maths::Matrix4> viewMatrices;
+	std::vector<nclgl::Maths::Matrix4> projViewMatrices;
 
 	MeshBase* trailQuad;
 
@@ -121,6 +121,6 @@ protected:
 
 	//Minimap
 	MeshBase* minimap;
-	Matrix4 tempProj;
-	Matrix4 tempView;
+	nclgl::Maths::Matrix4 tempProj;
+	nclgl::Maths::Matrix4 tempView;
 };

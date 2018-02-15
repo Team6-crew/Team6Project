@@ -4,17 +4,17 @@ GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 	rad = 0.01f;
-	colours[0] = Vector4(1.0f, 0.0f, 0.69f, 1.0f);
-	colours[1] = Vector4(0.3f, 1.0f, 1.0f, 1.0f);
-	colours[2] = Vector4(1.0f, 0.68f, 0.33f, 1.0f);
-	colours[3] = Vector4(0.0f, 1.0f, 0.02f, 1.0f);
+	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
+	colours[1] = nclgl::Maths::Vector4(0.3f, 1.0f, 1.0f, 1.0f);
+	colours[2] = nclgl::Maths::Vector4(1.0f, 0.68f, 0.33f, 1.0f);
+	colours[3] = nclgl::Maths::Vector4(0.0f, 1.0f, 0.02f, 1.0f);
 	
 }
 
 void GameLogic::addPlayers(int num_players) {
 	for (int i = 0; i < num_players; i++) {
 		Player * player = new Player("Player_"+i,
-			Vector3(3.0f*i, 1.f, 3.0f*i),
+			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
 			1.0f,
 			true,
 			1.0f,
@@ -40,15 +40,15 @@ void GameLogic::calculatePaintPercentage() {
 	
 
 	for (int i = 0; i < players.size(); i++) {
-		Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
-		Vector3 position = players[i]->Physics()->GetPosition();
+		nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
+		nclgl::Maths::Vector3 position = players[i]->Physics()->GetPosition();
 		rad = (rand() % 100)*0.0001f;
 
 		players[i]->setRadius(rad);
 		posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 		posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-		players[i]->setRelativePosition(Vector3(posX, position.y, posZ));
+		players[i]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
 		for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
 			for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {

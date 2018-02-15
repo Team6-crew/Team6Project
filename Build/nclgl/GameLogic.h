@@ -3,7 +3,7 @@
 #include <nclgl\Definitions.h>
 #include <ncltech\SceneManager.h>
 #include <ncltech\Scene.h>
-
+#include <vector>
 class GameLogic : public TSingleton<GameLogic> {
 
 public:
@@ -24,6 +24,6 @@ private:
 	float paint_perc;
 	float posX, posZ;
 	float rad;
-	vector <Player*> players;
-	Vector4 colours[4];
+	std::vector <Player*> players;
+	nclgl::Maths::Vector4 colours[4];
 };

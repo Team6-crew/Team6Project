@@ -43,23 +43,8 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
-		player1->SetPhysics(player1->Physics());*/
 
-		player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		player1->SetPhysics(player1->Physics());
 
-		//Add player to scene
-		this->AddGameObject(player1);
-		//Also add body which is used for camera manipulation
-		this->AddGameObject(player1->getBody());
-
-		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
@@ -69,24 +54,12 @@ public:
 			0.0f,
 			true,
 			false,
-			Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		GLuint trail = SOIL_load_OGL_texture(
-			TEXTUREDIR"trail.jpg",
-			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->SetTexture(trail);
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
-			"pickup",
-			Vector3(10.0f, 1.f, 0.0f),
-			Vector3(0.6f, 0.2f, 0.2f),
-			true,
-			0.0f,
-			true,
-			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));*/
+		
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
@@ -105,7 +78,7 @@ public:
 	virtual void OnUpdateScene(float dt) override
 	{
 		Scene::OnUpdateScene(dt);
-		NCLDebug::AddHUD(Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + to_string(Score));
+		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
 		rotation = 0.1f;
 		if(pickup)

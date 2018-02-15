@@ -157,7 +157,7 @@ void OGLShader::SetUniform(const std::string& name, const Vector2& vec)
 	glUniform2fv(GetUniformLocation(name), 1, (float*)& vec);
 }
 
-void OGLShader::SetUniform(const std::string& name, const Vector3& vec)
+void OGLShader::SetUniform(const std::string& name, const nclgl::Maths::Vector3& vec)
 {
 	glUniform3fv(GetUniformLocation(name), 1, (float*)& vec);
 }
