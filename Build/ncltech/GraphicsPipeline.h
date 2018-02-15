@@ -2,7 +2,7 @@
 
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
-#include <nclgl\RenderNode.h>
+#include <nclgl/Graphics/Renderer/RenderNodeBase.h>
 #include <nclgl\Definitions.h>
 #include <vector>
 #include <nclgl\Graphics\RenderConstants.h>
@@ -76,7 +76,7 @@ protected:
 	ShaderBase* shaderShadow;
 	ShaderBase* shaderForwardLighting;
 
-	Shader* shaderTrail;
+	ShaderBase* shaderTrail;
 
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
@@ -110,17 +110,17 @@ protected:
 	std::vector<Matrix4> viewMatrices;
 	std::vector<Matrix4> projViewMatrices;
 
-	Mesh* trailQuad;
+	MeshBase* trailQuad;
 
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 
-	GLuint gr_tex;
-	GLuint TrailBuffer;
+	TextureBase* gr_tex;
+	FrameBufferBase* TrailBuffer;
 
 	float paint_perc;
 
 	//Minimap
-	Mesh* minimap;
+	MeshBase* minimap;
 	Matrix4 tempProj;
 	Matrix4 tempView;
 };

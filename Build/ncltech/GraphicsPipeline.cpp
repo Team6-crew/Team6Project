@@ -39,11 +39,11 @@ GraphicsPipeline::GraphicsPipeline()
 	LoadShaders();
 	NCLDebug::_LoadShaders();
 	
-	trailQuad = Mesh::GenerateQuad();
-	minimap = Mesh::GenerateQuad();
+	trailQuad = OGLMesh::GenerateQuad();
+	minimap = OGLMesh::GenerateQuad();
 	
-	tempProj = projMatrix;
-	tempView = viewMatrix;
+	tempProj = renderer->GetProjMatrix();
+	tempView = renderer->GetViewMatrix();
 	fullscreenQuad = OGLMesh::GenerateQuad();
 
 	renderer->SetDefaultSettings();
@@ -51,7 +51,7 @@ GraphicsPipeline::GraphicsPipeline()
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
 	InitializeDefaults();
-	Resize(width, height);
+	
 
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
@@ -123,15 +123,11 @@ void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 
 void GraphicsPipeline::LoadShaders()
 {
-	shaderTrail = new Shader(
+	shaderTrail = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/testfrag.glsl");
-	if (!shaderTrail->LinkProgram())
-	{
-		NCLERROR("Could not link shader: TRAIL");
-	}
+	
 
-	shaderPresentToWindow = new Shader(
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
@@ -180,11 +176,8 @@ void GraphicsPipeline::UpdateScene(float dt)
 	for (int i = 0; i < cameras.size(); i++) {
 		cameras[i]->HandleKeyboard(dt);
 		viewMatrices[i] = cameras[i]->BuildViewMatrix();
-		projViewMatrices[i] = projMatrix * viewMatrices[i];
+		projViewMatrices[i] = renderer->GetProjMatrix() * viewMatrices[i];
 	}
-	camera->HandleKeyboard(dt);
-	renderer->SetViewMatrix(camera->BuildViewMatrix());
-	projViewMatrix = renderer->GetProjMatrix() * renderer->GetViewMatrix();
 
 	NCLDebug::_SetDebugDrawData(
 		renderer->GetProjMatrix(),
@@ -203,8 +196,8 @@ void GraphicsPipeline::RenderScene()
 		//Build World Transforms
 		// - Most scene objects will probably end up being static, so we really should only be updating
 		//   modelMatrices for objects (and their children) who have actually moved since last frame
-		RenderNode * ground = NULL;
-		for (RenderNode* node : allNodes) {
+		RenderNodeBase * ground = NULL;
+		for (RenderNodeBase* node : allNodes) {
 			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 			if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
 				ground = (*node->GetChildIteratorStart());
@@ -223,11 +216,11 @@ void GraphicsPipeline::RenderScene()
 		glUseProgram(shaderTrail->GetProgram());
 		glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "num_players"), GameLogic::Instance()->getNumPlayers());
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
-			string arr = "players[" + to_string(i) + "].";
+			std::string arr = "players[" + std::to_string(i) + "].";
 			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
 			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
 			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
-			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColor();
+			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
 			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
 				trailColor = Vector3(0.0f, 1.0f, 0.0f);
