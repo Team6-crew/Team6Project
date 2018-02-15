@@ -79,6 +79,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Launchpad.cpp" />
+    <ClCompile Include="Portal_B.cpp" />
+    <ClCompile Include="Portal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NCLDebug.h">
@@ -175,5 +177,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Launchpad.h" />
+    <ClInclude Include="Portal_B.h" />
+    <ClInclude Include="Portal.h" />
   </ItemGroup>
 </Project>

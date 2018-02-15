@@ -175,6 +175,23 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		canjump = false;
 		return false;
 	}
+	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
+	{
+		GameObject *portal = FindGameObject("portal_b");
+		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
+	{
+
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
+	{
+
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
+	{
+
+	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;
