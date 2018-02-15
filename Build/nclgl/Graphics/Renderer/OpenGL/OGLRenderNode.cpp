@@ -21,8 +21,11 @@ OGLRenderNode::~OGLRenderNode(void)	{
 
 void OGLRenderNode::Draw()
 {
-	if (this->mesh)
-		this->mesh->Draw();
+	if (mesh)
+	{
+		mesh->Draw();
+	}
+		
 }
 
 void	OGLRenderNode::Update(float msec)	 {
