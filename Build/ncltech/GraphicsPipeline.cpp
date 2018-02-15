@@ -12,6 +12,9 @@
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
+#include "Player.h"
+#include "SceneManager.h"
+#include <nclgl\GameLogic.h>
 
 using namespace nclgl::Maths;
 
@@ -29,29 +32,57 @@ GraphicsPipeline::GraphicsPipeline()
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, shadowTex(NULL)
+	, TrailBuffer(NULL)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
 	LoadShaders();
 	NCLDebug::_LoadShaders();
-
+	
+	trailQuad = Mesh::GenerateQuad();
+	minimap = Mesh::GenerateQuad();
+	
+	tempProj = projMatrix;
+	tempView = viewMatrix;
 	fullscreenQuad = OGLMesh::GenerateQuad();
 
 	renderer->SetDefaultSettings();
 
-
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
-	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.f);
 	InitializeDefaults();
+	Resize(width, height);
+
+	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
+	paint_perc = 0.0f;
+	
+	glGenFramebuffers(1, &TrailBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
+
+	glGenTextures(1, &gr_tex);
+	glBindTexture(GL_TEXTURE_2D, gr_tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2048, 2048, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, gr_tex, 0);
+
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "error";
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	minimap->SetTexture(gr_tex);
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
 
 GraphicsPipeline::~GraphicsPipeline()
-{
+{  
 	SAFE_DELETE(camera);
+	for (int i = 0; i < cameras.size(); i++) {
+		SAFE_DELETE(cameras[i]);
+	}
 	
 	SAFE_DELETE(fullscreenQuad);
 
@@ -92,6 +123,15 @@ void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 
 void GraphicsPipeline::LoadShaders()
 {
+	shaderTrail = new Shader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/testfrag.glsl");
+	if (!shaderTrail->LinkProgram())
+	{
+		NCLERROR("Could not link shader: TRAIL");
+	}
+
+	shaderPresentToWindow = new Shader(
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
@@ -137,6 +177,11 @@ void GraphicsPipeline::UpdateScene(float dt)
 	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 		camera->HandleMouse(dt);
 
+	for (int i = 0; i < cameras.size(); i++) {
+		cameras[i]->HandleKeyboard(dt);
+		viewMatrices[i] = cameras[i]->BuildViewMatrix();
+		projViewMatrices[i] = projMatrix * viewMatrices[i];
+	}
 	camera->HandleKeyboard(dt);
 	renderer->SetViewMatrix(camera->BuildViewMatrix());
 	projViewMatrix = renderer->GetProjMatrix() * renderer->GetViewMatrix();
@@ -147,8 +192,60 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->GetPosition());
 }
 
+
+
 void GraphicsPipeline::RenderScene()
 {
+	for (int i = 0; i < cameras.size(); i++) {
+		camera = cameras[i];
+		projViewMatrix = projViewMatrices[i];
+
+		//Build World Transforms
+		// - Most scene objects will probably end up being static, so we really should only be updating
+		//   modelMatrices for objects (and their children) who have actually moved since last frame
+		RenderNode * ground = NULL;
+		for (RenderNode* node : allNodes) {
+			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+			if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+				ground = (*node->GetChildIteratorStart());
+			}
+		}
+
+
+		GameLogic::Instance()->calculatePaintPercentage();
+
+		SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+
+
+		glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
+		glViewport(0, 0, 2048, 2048);
+
+		glUseProgram(shaderTrail->GetProgram());
+		glUniform1i(glGetUniformLocation(shaderTrail->GetProgram(), "num_players"), GameLogic::Instance()->getNumPlayers());
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			string arr = "players[" + to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColor();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+				trailColor = Vector3(0.0f, 1.0f, 0.0f);
+			}
+			glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_x").c_str()), pos_x);
+			glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "pos_z").c_str()), pos_z);
+			glUniform1f(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "rad").c_str()), rad);
+			glUniform3fv(glGetUniformLocation(shaderTrail->GetProgram(), (arr + "trailColor").c_str()), 1, (float*)&trailColor);
+
+		}
+
+
+		trailQuad->Draw();
+		ground->GetMesh()->SetTexture(gr_tex);
+
+
+		//Build Transparent/Opaque Renderlists
+		BuildAndSortRenderLists();
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
@@ -158,11 +255,11 @@ void GraphicsPipeline::RenderScene()
 	//Build Transparent/Opaque Renderlists
 	BuildAndSortRenderLists();
 
-	//NCLDebug - Build render lists
-	NCLDebug::_BuildRenderLists();
+		//NCLDebug - Build render lists
+		NCLDebug::_BuildRenderLists();
 
 
-	//Build shadowmaps
+		//Build shadowmaps
 		BuildShadowTransforms();
 		shadowFBO->Activate();
 		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -172,11 +269,32 @@ void GraphicsPipeline::RenderScene()
 		shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
 
 		RenderAllObjects(true,
+			[&](RenderNode* node)
+		{
+			glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
+		}
 			[&](RenderNodeBase* node)
 			{
 				shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
 			}
 		);
+
+
+
+
+		//Render scene to screen fbo
+		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+		glViewport(0, 0, screenTexWidth, screenTexHeight);
+		glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderForwardLighting->GetProgram());
+		glUniformMatrix4fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, (float*)&projViewMatrix);
+		glUniform1i(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uDiffuseTex"), 0);
+		glUniform3fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uCameraPos"), 1, (float*)&camera->GetPosition());
+		glUniform3fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uAmbientColor"), 1, (float*)&ambientColor);
+		glUniform3fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uLightDirection"), 1, (float*)&lightDirection);
+		glUniform1fv(glGetUniformLocation(shaderForwardLighting->GetProgram(), "uSpecularFactor"), 1, &specularFactor);
 
 	//Render scene to screen fbo
 		screenFBO->Activate();
@@ -198,6 +316,11 @@ void GraphicsPipeline::RenderScene()
 		shadowTex->Bind(2);
 
 		RenderAllObjects(false,
+			[&](RenderNode* node)
+		{
+			glUniformMatrix4fv(uModelMtx, 1, GL_FALSE, (float*)&node->GetWorldTransform());
+			glUniform4fv(uColor, 1, (float*)&node->GetColor());
+		}
 			[&](RenderNodeBase* node)
 			{
 				shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
@@ -216,14 +339,46 @@ void GraphicsPipeline::RenderScene()
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-	
 
 
+
+		//Downsample and present to screen
+
+		
+		
+		for (int j = 0; j < 2; j++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glEnable(GL_SCISSOR_TEST);
+			AdjustViewport(i,j);
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+			glDisable(GL_SCISSOR_TEST);
 	//Downsample and present to screen
 		renderer->BindScreenFramebuffer();
 		renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
 		renderer->Clear(Renderer::COLOUR_DEPTH);
 
+			float superSamples = (float)(numSuperSamples);
+			glUseProgram(shaderPresentToWindow->GetProgram());
+			glUniform1i(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uColorTex"), 0);
+			glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uGammaCorrection"), gammaCorrection);
+			glUniform1f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uNumSuperSamples"), superSamples);
+			glUniform2f(glGetUniformLocation(shaderPresentToWindow->GetProgram(), "uSinglepixel"), 1.f / screenTexWidth, 1.f / screenTexHeight);
+
+			fullscreenQuad->SetTexture(screenTexColor);
+
+			if (j == 0) {
+
+				fullscreenQuad->Draw();
+			}
+			else {
+				tempProj = projMatrix;
+				tempView = viewMatrix;
+				projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
+				viewMatrix.ToIdentity();
+				minimap->Draw();
+				projMatrix = tempProj;
+				viewMatrix = tempView;
+			}
 		float superSamples = (float)(numSuperSamples);
 		shaderPresentToWindow->Activate();
 		shaderPresentToWindow->SetUniform("uColorTex", 0);
@@ -233,11 +388,94 @@ void GraphicsPipeline::RenderScene()
 		fullscreenQuad->SetTexture(screenTexColor);
 		fullscreenQuad->Draw();
 
+			//NCLDEBUG - Text Elements (aliased)
+			NCLDebug::_RenderDebugClipSpace();
+			NCLDebug::_ClearDebugLists();
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	}
+
+	OGLRenderer::SwapBuffers();
 		//NCLDEBUG - Text Elements (aliased)
 		NCLDebug::_RenderDebugClipSpace();
 		NCLDebug::_ClearDebugLists();
 	
 		renderer->SwapBuffers();
+}
+
+void GraphicsPipeline::AdjustViewport(int i, int j) {
+	int num_p = GameLogic::Instance()->getNumPlayers();
+	if (j == 0) {
+		if (num_p == 1) {
+			glViewport(0, 0, width, height);
+		}
+		else if (num_p == 2) {
+			projMatrix = Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, ((float)width) / ((float)height / 2.0f), PROJ_FOV);
+			if (i == 0) {
+				glViewport(0, height / 2, width, height / 2);
+				glScissor(0, height / 2, width, height / 2);
+			}
+			else {
+				glViewport(0, 0, width, height / 2);
+				glScissor(0, 0, width, height / 2);
+			}
+		}
+		else if (num_p == 3) {
+			if (i == 0) {
+				glViewport(0, height / 2, width / 2, height / 2);
+				glScissor(0, height / 2, width / 2, height / 2);
+			}
+			else if (i == 1) {
+				glViewport(0, 0, width / 2, height / 2);
+				glScissor(0, 0, width / 2, height / 2);
+			}
+			else {
+				glViewport(width / 2, 0, width / 2, height / 2);
+				glScissor(width / 2, 0, width / 2, height / 2);
+			}
+		}
+		else if (num_p == 4) {
+			if (i == 0) {
+				glViewport(0, height / 2, width / 2, height / 2);
+				glScissor(0, height / 2, width / 2, height / 2);
+			}
+			else if (i == 1) {
+				glViewport(width / 2, height / 2, width / 2, height / 2);
+				glScissor(width / 2, height / 2, width / 2, height / 2);
+			}
+			else if (i == 2) {
+				glViewport(0, 0, width / 2, height / 2);
+				glScissor(0, 0, width / 2, height / 2);
+			}
+			else {
+				glViewport(width / 2, 0, width / 2, height / 2);
+				glScissor(width / 2, 0, width / 2, height / 2);
+			}
+		}
+	}
+	else {
+		if (num_p == 1) {
+			glScissor(4 * width / 5, 0, width / 5, width / 5);
+			glViewport(4 * width / 5, 0, width / 5, width / 5);
+		}
+		else if (num_p == 2) {
+			glScissor(4 * width / 5, height/2 - width/10, width / 5, width / 5);
+			glViewport(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
+		}
+		else if (num_p == 3) {
+			glViewport(width / 2, height / 2, width / 2, height / 2);
+			glScissor(width / 2, height / 2, width / 2, height / 2);
+		}
+		else if (num_p == 4) {
+			glScissor(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
+			glViewport(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
+		}
+	}
 }
 
 void GraphicsPipeline::Resize(int x, int y)
@@ -387,4 +625,13 @@ void GraphicsPipeline::BuildShadowTransforms()
 		shadowProj[i] = Matrix4::Orthographic(bb._max.z, bb._min.z, bb._min.x, bb._max.x, bb._max.y, bb._min.y);
 		shadowProjView[i] = shadowProj[i] * shadowViewMtx;
 	}
+}
+
+Camera* GraphicsPipeline::CreateNewCamera() {
+	Camera* cam = new Camera();
+	cameras.push_back(cam);
+	viewMatrices.push_back(cam->BuildViewMatrix());
+	projViewMatrices.push_back(projMatrix);
+	cam->SetPitch(-20.0f);
+	return cam;
 }

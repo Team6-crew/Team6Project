@@ -177,5 +177,11 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="Definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
