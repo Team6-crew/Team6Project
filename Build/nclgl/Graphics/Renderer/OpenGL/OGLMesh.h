@@ -38,9 +38,16 @@ enum MeshBuffer {
 	MAX_BUFFER
 };
 
-class Vector2;
-class Vector3;
-class Vector4;
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Vector2;
+		class Vector3;
+		class Vector4;
+	}
+}
+
 
 class OGLMesh	: public MeshBase {
 public:
@@ -88,7 +95,12 @@ public:
 	void	GenerateTangents();
 
 	//Helper function for GenerateTangents
-	Vector3 GenerateTangent(const Vector3 &a,const Vector3 &b,const Vector3 &c,const Vector2 &ta,const Vector2 &tb,const Vector2 &tc);
+	nclgl::Maths::Vector3 GenerateTangent(const nclgl::Maths::Vector3 &a, 
+										  const nclgl::Maths::Vector3 &b, 
+										  const nclgl::Maths::Vector3 &c, 
+										  const nclgl::Maths::Vector2 &ta, 
+										  const nclgl::Maths::Vector2 &tb, 
+										  const nclgl::Maths::Vector2 &tc);
 
 	//VAO for this mesh
 	GLuint	arrayObject;
@@ -115,15 +127,15 @@ public:
 	//we need access to the vertex data for skinning per frame...
 
 	//Pointer to vertex position attribute data (badly named...?)
-	Vector3*		vertices;
+	nclgl::Maths::Vector3*		vertices;
 	//Pointer to vertex colour attribute data
-	Vector4*		colours;
+	nclgl::Maths::Vector4*		colours;
 	//Pointer to vertex texture coordinate attribute data
-	Vector2*		textureCoords;
+	nclgl::Maths::Vector2*		textureCoords;
 	//Pointer to vertex normals attribute data
-	Vector3*		normals;
+	nclgl::Maths::Vector3*		normals;
 	//Pointer to vertex tangents attribute data
-	Vector3*		tangents;
+	nclgl::Maths::Vector3*		tangents;
 	//Pointer to vertex indices attribute data
 	unsigned int*	indices;
 };

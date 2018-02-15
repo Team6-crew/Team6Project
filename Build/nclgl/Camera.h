@@ -20,12 +20,12 @@ _-_-_-_-_-_-_-""  ""
 class Camera {
 public:
 	Camera(void) {
-		position = Vector3(0.0f, 0.0f, 0.0f);
+		position = nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f);
 		yaw = 0.0f;
 		pitch = 0.0f;
 	};
 
-	Camera(float pitch, float yaw, Vector3 position) {
+	Camera(float pitch, float yaw, nclgl::Maths::Vector3 position) {
 		this->pitch = pitch;
 		this->yaw = yaw;
 		this->position = position;
@@ -38,12 +38,12 @@ public:
 
 	//Builds a view matrix for the current camera variables, suitable for sending straight
 	//to a vertex shader (i.e it's already an 'inverse camera matrix').
-	Matrix4 BuildViewMatrix();
+	nclgl::Maths::Matrix4 BuildViewMatrix();
 
 	//Gets position in world space
-	inline const Vector3& GetPosition() const { return position; }
+	inline const nclgl::Maths::Vector3& GetPosition() const { return position; }
 	//Sets position in world space
-	void	SetPosition(const Vector3& val) { position = val; }
+	void	SetPosition(const nclgl::Maths::Vector3& val) { position = val; }
 
 	//Gets yaw, in degrees
 	float	GetYaw()   const { return yaw; }
@@ -56,7 +56,7 @@ public:
 	void	SetPitch(float p) { pitch = p; }
 
 protected:
-	float	yaw;
-	float	pitch;
-	Vector3 position;
+	float				  yaw;
+	float				  pitch;
+	nclgl::Maths::Vector3 position;
 };

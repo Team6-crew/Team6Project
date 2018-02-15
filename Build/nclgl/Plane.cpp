@@ -1,15 +1,17 @@
 #include "Plane.h"
 
+using namespace nclgl::Maths;
+
 Plane::Plane(const Vector3& normal, float distance, bool normalise) {
 	if (normalise) {
 		float length = sqrt(Vector3::Dot(normal, normal));
-		
-		this -> normal = normal / length;
-		this -> distance = distance / length;
+
+		this->normal = normal / length;
+		this->distance = distance / length;
 	}
 	else {
-		this -> normal = normal;
-		this -> distance = distance;
+		this->normal = normal;
+		this->distance = distance;
 	}
 }
 
@@ -28,3 +30,4 @@ bool Plane::PointInPlane(const Vector3& position) const {
 
 	return true;
 }
+

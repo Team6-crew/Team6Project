@@ -4,12 +4,9 @@
 #include <nclgl\NCLDebug.h>
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
-#include <ncltech\Player.h>
 #include "EmptyScene.h"
 
-#include <iostream>
-#include <fstream>
-
+using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
@@ -115,22 +112,7 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
 
-	Vector3 pos;
-	std::vector<Vector3> posList;
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
-	{
-		pos = Player::getBall()->Physics()->GetPosition();
-		std::ofstream myfile;
-		myfile.open("..pos.txt", std::ios_base::app);
-		std::cout << pos << "\n";
-
-		if (myfile.is_open())
-		{
-			myfile << pos << "\n";
-			myfile.close();
-		}
-	}
 }
 
 

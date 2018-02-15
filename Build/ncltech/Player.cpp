@@ -3,6 +3,8 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 GameObject* Player::ball;
 
+using namespace nclgl::Maths;
+
 Player::Player()
 {   
 	speed = 20.0f;

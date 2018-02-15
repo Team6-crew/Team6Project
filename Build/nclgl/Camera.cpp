@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+using namespace nclgl::Maths;
 /*
 Polls the camera for keyboard / mouse movement.
 Should be done once per frame! Pass it the msec since

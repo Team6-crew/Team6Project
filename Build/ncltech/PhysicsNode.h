@@ -51,7 +51,7 @@ typedef std::function<bool(PhysicsNode* this_obj, PhysicsNode* colliding_obj)> P
 //Callback function called whenever this physicsnode's world transform is updated
 //Params:
 //	const Matrix4& transform - New World transform of the physics node
-typedef std::function<void(const Matrix4& transform)> PhysicsUpdateCallback;
+typedef std::function<void(const nclgl::Maths::Matrix4& transform)> PhysicsUpdateCallback;
 
 
 class GameObject;
@@ -66,7 +66,7 @@ public:
 		, orientation(0.0f, 0.0f, 0.0f, 1.0f)
 		, angVelocity(0.0f, 0.0f, 0.0f)
 		, torque(0.0f, 0.0f, 0.0f)
-		, invInertia(Matrix3::ZeroMatrix)
+		, invInertia(nclgl::Maths::Matrix3::ZeroMatrix)
 		, collisionShape(NULL)
 		, friction(0.5f)
 		, elasticity(0.9f)
@@ -95,19 +95,19 @@ public:
 	inline float				GetElasticity()				const { return elasticity; }
 	inline float				GetFriction()				const { return friction; }
 
-	inline const Vector3&		GetPosition()				const { return position; }
-	inline const Vector3&		GetLinearVelocity()			const { return linVelocity; }
-	inline const Vector3&		GetForce()					const { return force; }
-	inline float				GetInverseMass()			const { return invMass; }
+	inline const nclgl::Maths::Vector3&		GetPosition()				const { return position; }
+	inline const nclgl::Maths::Vector3&		GetLinearVelocity()			const { return linVelocity; }
+	inline const nclgl::Maths::Vector3&		GetForce()					const { return force; }
+	inline float							GetInverseMass()			const { return invMass; }
 
-	inline const Quaternion&	GetOrientation()			const { return orientation; }
-	inline const Vector3&		GetAngularVelocity()		const { return angVelocity; }
-	inline const Vector3&		GetTorque()					const { return torque; }
-	inline const Matrix3&		GetInverseInertia()			const { return invInertia; }
+	inline const nclgl::Maths::Quaternion&	GetOrientation()			const { return orientation; }
+	inline const nclgl::Maths::Vector3&		GetAngularVelocity()		const { return angVelocity; }
+	inline const nclgl::Maths::Vector3&		GetTorque()					const { return torque; }
+	inline const nclgl::Maths::Matrix3&		GetInverseInertia()			const { return invInertia; }
 
-	inline CollisionShape*		GetCollisionShape()			const { return collisionShape; }
+	inline CollisionShape*					GetCollisionShape()			const { return collisionShape; }
 
-	const Matrix4&				GetWorldSpaceTransform()    const { return worldTransform; }
+	const nclgl::Maths::Matrix4&			GetWorldSpaceTransform()    const { return worldTransform; }
 
 
 	inline float				GetColRadius()				const { return colRadius; }
@@ -121,15 +121,15 @@ public:
 	inline void SetElasticity(float elasticityCoeff)				{ elasticity = elasticityCoeff; }
 	inline void SetFriction(float frictionCoeff)					{ friction = frictionCoeff; }
 
-	inline void SetPosition(const Vector3& v)						{ position = v; FireOnUpdateCallback(); }
-	inline void SetLinearVelocity(const Vector3& v)					{ linVelocity = v; }
-	inline void SetForce(const Vector3& v)							{ force = v; }
-	inline void SetInverseMass(const float& v)						{ invMass = v; }
+	inline void SetPosition(const nclgl::Maths::Vector3& v)							{ position = v; FireOnUpdateCallback(); }
+	inline void SetLinearVelocity(const nclgl::Maths::Vector3& v)					{ linVelocity = v; }
+	inline void SetForce(const nclgl::Maths::Vector3& v)							{ force = v; }
+	inline void SetInverseMass(const float& v)										{ invMass = v; }
 
-	inline void SetOrientation(const Quaternion& v)					{ orientation = v; FireOnUpdateCallback(); }
-	inline void SetAngularVelocity(const Vector3& v)				{ angVelocity = v; }
-	inline void SetTorque(const Vector3& v)							{ torque = v; }
-	inline void SetInverseInertia(const Matrix3& v)					{ invInertia = v; }
+	inline void SetOrientation(const nclgl::Maths::Quaternion& v)					{ orientation = v; FireOnUpdateCallback(); }
+	inline void SetAngularVelocity(const nclgl::Maths::Vector3& v)					{ angVelocity = v; }
+	inline void SetTorque(const nclgl::Maths::Vector3& v)							{ torque = v; }
+	inline void SetInverseInertia(const nclgl::Maths::Matrix3& v)					{ invInertia = v; }
 
 	inline void SetIsSoft(bool s) { soft = s; }
 
@@ -182,22 +182,22 @@ protected:
 
 	//Useful parameters
 	GameObject*				parent;
-	Matrix4					worldTransform;
+	nclgl::Maths::Matrix4					worldTransform;
 	PhysicsUpdateCallback	onUpdateCallback;
 
 
 //Added in Tutorial 2
 	//<---------LINEAR-------------->
-	Vector3		position;
-	Vector3		linVelocity;
-	Vector3		force;
+	nclgl::Maths::Vector3		position;
+	nclgl::Maths::Vector3		linVelocity;
+	nclgl::Maths::Vector3		force;
 	float		invMass;
 
 	//<----------ANGULAR-------------->
-	Quaternion  orientation;
-	Vector3		angVelocity;
-	Vector3		torque;
-	Matrix3     invInertia;
+	nclgl::Maths::Quaternion  orientation;
+	nclgl::Maths::Vector3		angVelocity;
+	nclgl::Maths::Vector3		torque;
+	nclgl::Maths::Matrix3     invInertia;
 
 
 //Added in Tutorial 4/5

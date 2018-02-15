@@ -20,8 +20,8 @@ with graphics frustum culling by using both AABB and bounding sphere's inside Sc
 
 struct BoundingBox
 {
-	Vector3 _min;
-	Vector3 _max;
+	nclgl::Maths::Vector3 _min;
+	nclgl::Maths::Vector3 _max;
 
 
 	//Initialize _min to max possible value and vice versa to force the first value incorporated to always be used for both min and max points.
@@ -32,7 +32,7 @@ struct BoundingBox
 
 	//Expand the boundingbox to fit a given point. 
 	//  If no points have been set yet, both _min and _max will equal the point provided.
-	void ExpandToFit(const Vector3& point)
+	void ExpandToFit(const nclgl::Maths::Vector3& point)
 	{
 		_min.x = min(_min.x, point.x);
 		_min.y = min(_min.y, point.y);
@@ -43,18 +43,18 @@ struct BoundingBox
 	}
 
 	//Transform the given AABB (Axis Aligned Bounding Box) and returns a new AABB that encapsulates the new rotated bounding box.
-	BoundingBox Transform(const Matrix4& mtx)
+	BoundingBox Transform(const nclgl::Maths::Matrix4& mtx)
 	{
 		BoundingBox bb;
-		bb.ExpandToFit(mtx * Vector3(_min.x, _min.y, _min.z));
-		bb.ExpandToFit(mtx * Vector3(_max.x, _min.y, _min.z));
-		bb.ExpandToFit(mtx * Vector3(_min.x, _max.y, _min.z));
-		bb.ExpandToFit(mtx * Vector3(_max.x, _max.y, _min.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_min.x, _min.y, _min.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_max.x, _min.y, _min.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_min.x, _max.y, _min.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_max.x, _max.y, _min.z));
 
-		bb.ExpandToFit(mtx * Vector3(_min.x, _min.y, _max.z));
-		bb.ExpandToFit(mtx * Vector3(_max.x, _min.y, _max.z));
-		bb.ExpandToFit(mtx * Vector3(_min.x, _max.y, _max.z));
-		bb.ExpandToFit(mtx * Vector3(_max.x, _max.y, _max.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_min.x, _min.y, _max.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_max.x, _min.y, _max.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_min.x, _max.y, _max.z));
+		bb.ExpandToFit(mtx * nclgl::Maths::Vector3(_max.x, _max.y, _max.z));
 		return bb;
 	}
 };

@@ -7,6 +7,8 @@
 #include <omp.h>
 #include <algorithm>
 
+using namespace nclgl::Maths;
+
 OcTree* PhysicsEngine::octree = NULL;
 WorldPartition* PhysicsEngine::worldPartition = NULL;
 

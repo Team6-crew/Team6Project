@@ -2,6 +2,8 @@
 
 #include "../../Matrix4.h"
 
+using namespace nclgl::Maths;
+
 RenderNodeBase::RenderNodeBase()
 {
 }

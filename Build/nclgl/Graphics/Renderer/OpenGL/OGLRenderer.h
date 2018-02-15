@@ -8,6 +8,7 @@ class Window;
 
 #include "../../../Matrix4.h"
 
+
 class OGLRenderer : public RenderBase
 {
 public:
@@ -19,14 +20,14 @@ public:
 
 	void Resize(int x, int y) override;
 
-	Matrix4	GetViewMatrix() override;
-	Matrix4 GetProjMatrix() override;
-	void 	SetViewMatrix(Matrix4& mat) override;
-	void	SetProjMatrix(Matrix4& mat) override;
+	nclgl::Maths::Matrix4	GetViewMatrix() override;
+	nclgl::Maths::Matrix4 GetProjMatrix() override;
+	void 	SetViewMatrix(nclgl::Maths::Matrix4& mat) override;
+	void	SetProjMatrix(nclgl::Maths::Matrix4& mat) override;
 
 	void	SetViewPort(int width, int height) override;
 	void	Clear(Renderer::Clear clearType) override;
-	void	SetClearColour(Vector3& vec) override;
+	void	SetClearColour(nclgl::Maths::Vector3& vec) override;
 
 	void	BindScreenFramebuffer() override;
 
@@ -46,8 +47,8 @@ protected:
 
 
 protected:
-	Matrix4 viewMatrix;
-	Matrix4 projMatrix;
+	nclgl::Maths::Matrix4 viewMatrix;
+	nclgl::Maths::Matrix4 projMatrix;
 
 private:
 	// OpenGL version

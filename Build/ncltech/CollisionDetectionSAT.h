@@ -42,13 +42,13 @@ Description:
 struct CollisionData
 {
 	//The direction of collision from obj1 to obj2
-	Vector3		_normal;
+	nclgl::Maths::Vector3		_normal;
 
 	//The amount the objects penetrate eachother (negative overlap distance)
 	float		_penetration;
 
 	//The point on obj1 where they overlap
-	Vector3		_pointOnPlane;
+	nclgl::Maths::Vector3		_pointOnPlane;
 };
 
 class CollisionDetectionSAT
@@ -77,11 +77,11 @@ protected:
 //<---- SAT ---->
 	//Add a new possible colliding axis
 	// - This only inserts the axis if it is not a duplicate of pre-existing collision axis
-	bool AddPossibleCollisionAxis(Vector3 axis);
+	bool AddPossibleCollisionAxis(nclgl::Maths::Vector3 axis);
 
 	// This will evaluate the given axis working out if the the two objects
 	// are indeed colliding in this direction.
-	bool CheckCollisionAxis(const Vector3& axis, CollisionData& coldata);
+	bool CheckCollisionAxis(const nclgl::Maths::Vector3& axis, CollisionData& coldata);
 	
 private:
 	//Physics Nodes
@@ -93,7 +93,7 @@ private:
 	const CollisionShape*	cshapeB;
 
 	//Collision Axes
-	std::vector<Vector3>	possibleColAxes;
+	std::vector<nclgl::Maths::Vector3>	possibleColAxes;
 
 	//Collision Data
 	bool					areColliding;

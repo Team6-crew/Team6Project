@@ -3,7 +3,7 @@
 #include <nclgl\Graphics\MeshBase.h>
 
 using std::vector;
-
+using namespace nclgl::Maths;
 
 OGLRenderNode::OGLRenderNode(MeshBase* mesh, Vector4 colour) :
 	RenderNodeBase()

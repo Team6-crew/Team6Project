@@ -106,8 +106,8 @@ public:
 	inline float GetUpdateTimestep() const { return updateTimestep; }
 	inline void SetUpdateTimestep(float updateTimestep) { updateTimestep = updateTimestep; }
 
-	inline const Vector3& GetGravity() const	{ return gravity; }
-	inline void SetGravity(const Vector3& g)	{ gravity = g; }
+	inline const nclgl::Maths::Vector3& GetGravity() const	{ return gravity; }
+	inline void SetGravity(const nclgl::Maths::Vector3& g)	{ gravity = g; }
 
 	inline float GetDampingFactor() const		{ return dampingFactor; }
 	inline void  SetDampingFactor(float d)		{ dampingFactor = d; }
@@ -118,7 +118,7 @@ public:
 
 	static inline WorldPartition* GetWorldPartition() { return worldPartition; }
 
-	void PrintPerformanceTimers(const Vector4& color)
+	void PrintPerformanceTimers(const nclgl::Maths::Vector4& color)
 	{
 		perfUpdate.PrintOutputToStatusEntry(color,		"    Integration :");
 		perfBroadphase.PrintOutputToStatusEntry(color,	"    Broadphase  :");
@@ -150,8 +150,8 @@ protected:
 	float		updateTimestep, updateRealTimeAccum;
 	uint		debugDrawFlags;
 
-	Vector3		gravity;
-	float		dampingFactor;
+	nclgl::Maths::Vector3		gravity;
+	float						dampingFactor;
 
 	
 	static OcTree* octree;

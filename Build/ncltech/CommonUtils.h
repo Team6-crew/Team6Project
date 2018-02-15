@@ -21,69 +21,70 @@ Description:
 
 namespace CommonUtils
 {
-	void DragableObjectCallback(GameObject* obj, float dt, const Vector3& newWsPos, const Vector3& wsMovedAmount, bool stopDragging);
+	void DragableObjectCallback(GameObject* obj, float dt, const nclgl::Maths::Vector3& newWsPos, 
+								const nclgl::Maths::Vector3& wsMovedAmount, bool stopDragging);
 
-	void SelectableObjectCallBack(GameObject* obj, Vector3* pos);
+	void SelectableObjectCallBack(GameObject* obj, nclgl::Maths::Vector3* pos);
 
 	//Generates a unique color based on scalar parameter in the range of 0-1.
 	// - Works off HSV color format, in this case Saturation and Value are 100% and Hue is dependant on 'scalar'
-	Vector4 GenColor(float scalar, float alpha = 1.0f);
+	nclgl::Maths::Vector4 GenColor(float scalar, float alpha = 1.0f);
 
 	//Similar as above, but full HSV rather than just hue
 	// - All hsv values range from 0-1 (including hue!)
-	Vector4 GenHSVColor(const Vector3& hsv, float alpha = 1.0f);
+	nclgl::Maths::Vector4 GenHSVColor(const nclgl::Maths::Vector3& hsv, float alpha = 1.0f);
 
 	//Generates a default Sphere object with the parameters specified.
 	GameObject* BuildSphereObject(
 		const std::string& name,
-		const Vector3& pos,
+		const nclgl::Maths::Vector3& pos,
 		float radius,
 		bool physics_enabled = false,
 		float inverse_mass = 0.0f,			//requires physics_enabled = true
 		bool collidable = true,				//requires physics_enabled = true
 		bool dragable = true,
-		const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Generates a default Cuboid object with the parameters specified
 	GameObject* BuildCuboidObject(
 		const std::string& name,
-		const Vector3& pos,
-		const Vector3& halfdims,
+		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& halfdims,
 		bool physics_enabled = false,
 		float inverse_mass = 0.0f,			//requires physics_enabled = true
 		bool collidable = true,				//requires physics_enabled = true
 		bool dragable = true,
-		const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Generates a default Cuboid object with the parameters specified
 	GameObject* BuildMazeNode(
 		const std::string& name,
-		const Vector3& pos,
-		const Vector3& halfdims,
-		Vector3* select_pos,
+		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& halfdims,
+		nclgl::Maths::Vector3* select_pos,
 		float inverse_mass = 0.0f,			//requires physics_enabled = true
 		bool collidable = true,				//requires physics_enabled = true
 		bool selectable = true,
-		const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	GameObject* BuildCuboidObjectNoTexture(
 		const std::string& name,
-		const Vector3& pos,
-		const Vector3& halfdims,
+		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& halfdims,
 		bool physics_enabled = false,
 		float inverse_mass = 0.0f,			//requires physics_enabled = true
 		bool collidable = true,				//requires physics_enabled = true
 		bool dragable = true,
-		const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	
 	//For soft objects
 	GameObject* BuildNonRenderObject(
 		const std::string& name,
-		const Vector3& pos,
+		const nclgl::Maths::Vector3& pos,
 		float radius,
 		bool physics_enabled = false,
 		float inverse_mass = 0.0f,			//requires physics_enabled = true
 		bool collidable = true,				//requires physics_enabled = true
 		bool dragable = true,
-		const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 };
