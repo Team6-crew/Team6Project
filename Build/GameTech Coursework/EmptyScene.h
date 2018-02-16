@@ -36,7 +36,7 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		GameLogic::Instance()->addPlayers(1);
+		GameLogic::Instance()->addPlayers(4);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
@@ -49,7 +49,7 @@ public:
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
-			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
+			nclgl::Maths::Vector3(WORLD_SIZE, 1.0f, WORLD_SIZE),
 			true,
 			0.0f,
 			true,

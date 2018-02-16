@@ -55,39 +55,12 @@ GraphicsPipeline::GraphicsPipeline()
 
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
-	
-	//glGenFramebuffers(1, &TrailBuffer);
-	//glBindFramebuffer(GL_FRAMEBUFFER, TrailBuffer);
-
-	//glGenTextures(1, &gr_tex);
-	//glBindTexture(GL_TEXTURE_2D, gr_tex);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2048, 2048, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, gr_tex, 0);
-
-	//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	//glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
-	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	//	std::cout << "error";
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//minimap->SetTexture(gr_tex);
 
 	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
-	gr_tex->Bind();
-	gr_tex->SetTextureFiltering(true);
 
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, depth);
 
-	//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	//glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
-	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	//	std::cout << "error";
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	minimap->SetTexture(gr_tex);
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
@@ -243,13 +216,12 @@ void GraphicsPipeline::RenderScene()
 			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
 			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-			shaderTrail->SetUniform((arr + "trailColor").c_str(), (float*)&trailColor);
-		}
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
 
+		}
 
 		trailQuad->Draw();
 		ground->GetMesh()->SetTexture(gr_tex);
-
 
 		//Build Transparent/Opaque Renderlists
 		BuildAndSortRenderLists();
@@ -264,7 +236,6 @@ void GraphicsPipeline::RenderScene()
 
 		//NCLDebug - Build render lists
 		NCLDebug::_BuildRenderLists();
-
 
 		//Build shadowmaps
 		BuildShadowTransforms();
@@ -282,9 +253,6 @@ void GraphicsPipeline::RenderScene()
 			shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
 		}
 		);
-
-
-
 
 		//Render scene to screen fbo
 		screenFBO->Activate();

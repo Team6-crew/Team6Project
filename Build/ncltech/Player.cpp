@@ -139,13 +139,13 @@ void Player::move(float dt) {
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = dt*100.0f;
+		rotation = dt*110.0f;
 		camera->SetYaw(yaw + rotation);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		rotation = -dt*100.0f;
+		rotation = -dt*110.0f;
 		camera->SetYaw(yaw + rotation);
 	}
 
