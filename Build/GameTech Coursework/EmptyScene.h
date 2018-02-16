@@ -4,8 +4,11 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
+#include <nclgl\AI\BallAI.h>
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
+
+StateMachine* AIStateMachine;
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -18,9 +21,11 @@ public:
 	{
 	}
 
+	BallAI* AIBall;
 	virtual ~EmptyScene()
 	{
 		delete player1;
+		delete AIBall;
 	}
 
 	//WorldPartition *wsp;
@@ -31,11 +36,12 @@ public:
 	
 		
 		player1 = new Player();
+		AIBall = new BallAI();
 		//Who doesn't love finding some common ground?
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
-			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
+			nclgl::Maths::Vector3(80.0f, 1.0f, 80.0f),
 			true,
 			0.0f,
 			true,
@@ -58,7 +64,8 @@ public:
 		//Add player to scene
 		this->AddGameObject(player1->getBall());	
 		this->AddGameObject(player1->getBody());	
-		
+		this->AddGameObject(AIBall->getBall());
+
 		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L);
 
 		//add world part
@@ -71,6 +78,7 @@ public:
 		Scene::OnUpdateScene(dt);
 		
 		player1->move();
+		AIBall->move();
 
 	}
 };

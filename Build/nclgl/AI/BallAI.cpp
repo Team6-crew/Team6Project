@@ -1,32 +1,29 @@
 #pragma once
 #include "BallAI.h"
-#include "Player.h"
+#include "ncltech\Player.h"
 #include <math.h>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <ncltech\StateMachine.h>
+#include <nclgl\AI\StateMachine.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <algorithm> //used for remove
 #include "RoamingState.h"
-float maxVel = 20.0f;
+float maxVel = 5.0f;
 
 using namespace std;
 
-State* roamingState;
-StateMachine * AIStateMachine;
+GameObject* BallAI::AIBall;
 
+State* roamingState;
+
+using namespace nclgl::Maths;
 
 BallAI::BallAI()
 {
-	
-	
-	AIStateMachine = new StateMachine(AIBall);
-	AIStateMachine->setDefaultState(RoamingState::GetInstance());
-
-	AIBall = CommonUtils::BuildSphereObject("ball",
-		Vector3(20.0f, 2.0f, -20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
+	AIBall = CommonUtils::BuildSphereObject("AIball",
+		nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
 		1.0f,				//Half dimensions
 		true,									//Has Physics Object
 		1.0f,									//Mass
@@ -35,50 +32,8 @@ BallAI::BallAI()
 		CommonUtils::GenColor(1.f, 1.f));
 
 	AIBall->setDynamic(true);
-	//std::ifstream myReadFile;
-	//myReadFile.open("../pos.txt");
-	//string line;
-
-	//float xQ;
-	//float yQ;
-	//float zQ;
-	//Vector3 pos;
-	//int nodes = 0;
-
-	//if (myReadFile.is_open())
-	//{
-	//	while (!myReadFile.eof())
-	//	{
-	//		string vector3;
-	//		getline(myReadFile, line);
-	//		remove(line.begin(), line.end(), ' '); //remove any spaces
-	//		getline(myReadFile, vector3, '(');
-	//		string x;
-	//		getline(myReadFile, x, ',');
-	//		string y;
-	//		getline(myReadFile, y, ',');
-	//		string z;
-	//		getline(myReadFile, z, ')');
-
-	//		if (myReadFile.eof())
-	//			break;
-
-	//		std::string::size_type sz;
-
-	//		xQ = std::stof(x, &sz);
-	//		yQ = std::stof(y, &sz);
-	//		zQ = std::stof(z, &sz);
-
-	//		
-
-	//		pos = (Vector3(xQ, yQ, zQ));
-	//		setNodes(pos);
-	//		++nodes;
-	//		cout << "Node " << nodes << " added \n";
-	//	}
-	//	myReadFile.close();
-	//}
-
+	AIStateMachine = new StateMachine(AIBall);
+	AIStateMachine->setCurrentState(AIStateMachine,RoamingState::GetInstance());
 }
 
 
@@ -88,9 +43,9 @@ BallAI::~BallAI()
 }
 
 
-Vector3 BallAI::seek(Vector3 TargetPos)
+Vector3 BallAI::seek(nclgl::Maths::Vector3 TargetPos)
 {
-	Vector3 DesVelo = ((TargetPos - AIBall->Physics()->GetPosition()).Normalise() * maxVel);
+	nclgl::Maths::Vector3 DesVelo = ((TargetPos - AIBall->Physics()->GetPosition()).Normalise() * maxVel);
 
 	return(DesVelo - AIBall->Physics()->GetLinearVelocity());
 }
@@ -100,17 +55,17 @@ Vector3 BallAI::followPath()
 	//following a path created by a collection of nodes. You can make your own path by pressing 1 when playing.
 	//This will print a vector3 to screen and add it to a txt file. This file is read before run time
 	//Give it a shot and add as many nodes as you would like
-	std::vector<Vector3> nodesList = getNodes();
+	std::vector<nclgl::Maths::Vector3> nodesList = getNodes();
 	goal = nodesList[CurrentNode];
 
-	Vector3 ballPos = AIBall->Physics()->GetPosition();
+	nclgl::Maths::Vector3 ballPos = AIBall->Physics()->GetPosition();
 	// Switch to length square
 	float distanceToGoal = (ballPos - goal).Length();
 
 	if (distanceToGoal <= 10)
 	{
-		cout << "Changing to Node" << CurrentNode << "\n";
-		Vector3 Node = goal;
+		cout << "Changing to Node " << CurrentNode << " at " << goal << "\n";
+		nclgl::Maths::Vector3 Node = goal;
 		CurrentNode++;
 		nodesList.erase(nodesList.begin()); //delete the first node
 		setNodes(Node); //adds it back to the list
@@ -139,8 +94,8 @@ void BallAI::chasePlayer()
 
 void BallAI::move()
 {
-	AIStateMachine->setCurrentState(roamingState);
-	//AIBall->Physics()->SetForce(followPath());
+	AIStateMachine->getCurrentState()->update(AIStateMachine,AIBall);
+//	AIBall->Physics()->SetForce(followPath());
 
 
 }

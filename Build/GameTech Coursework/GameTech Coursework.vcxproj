@@ -19,14 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\ncltech\BallAI.cpp" />
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\ncltech\BallAI.h" />
-    <ClInclude Include="..\ncltech\RoamingState.h" />
-    <ClInclude Include="ChasingState.h" />
-    <ClInclude Include="EmptyScene.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1A5C2647-CADD-49B7-861E-4B1339EDCD84}</ProjectGuid>
