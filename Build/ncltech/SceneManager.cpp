@@ -73,8 +73,12 @@ void SceneManager::JumpToScene(int idx)
 	//Initialize new scene
 	PhysicsEngine::Instance()->SetDefaults();
 	GraphicsPipeline::Instance()->InitializeDefaults();
-	LevelLoader loader;
-	loader.BuildLevel("SimpleLevel.txt", scene);
+	if (idx == 1)
+	{
+		LevelLoader loader;
+		loader.BuildLevel("SimpleLevel.txt", scene);
+	}
+
 	scene->OnInitializeScene();	
 	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
 }

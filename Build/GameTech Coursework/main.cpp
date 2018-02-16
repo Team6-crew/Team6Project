@@ -47,11 +47,10 @@ void Initialize()
 	PhysicsEngine::Instance();
 
 	//Enqueue All Scenes
-	
+	SceneManager::Instance()->EnqueueScene(new EmptyScene("TestScene"));
 	Scene* levelOne = new Scene("LevelOne");
-	SceneManager::Instance()->EnqueueScene(levelOne);
-	Scene* emptyScene = new EmptyScene("Test");
-	SceneManager::Instance()->EnqueueScene(emptyScene);
+	SceneManager::Instance()->EnqueueScene(levelOne);	
+
 	
 }
 

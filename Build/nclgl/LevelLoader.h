@@ -19,12 +19,14 @@ class LevelLoader
 {
 	struct MapObject
 	{
-		std::string name;
+		std::string name;		
 		Type		type;
 		nclgl::Maths::Vector3		position;
 		nclgl::Maths::Vector3		scale;
 		float		inverseMass;
+		nclgl::Maths::Vector3 rotAxis;
 		float		rotationDegrees;
+		nclgl::Maths::Vector4       colour;
 	};
 
 public:

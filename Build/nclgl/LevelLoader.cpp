@@ -44,10 +44,10 @@ void LevelLoader::AddMapObject(const std::string& line)
 	MapObject obj;
 
 	ss >> obj.name;
-
+		
 	std::string temp;
 	ss >> temp;
-	obj.type = StringToType(temp);
+	obj.type = StringToType(temp);    
 
 	float x, y, z;
 	ss >> x >> y >> z;
@@ -57,7 +57,17 @@ void LevelLoader::AddMapObject(const std::string& line)
 	obj.scale = nclgl::Maths::Vector3(x, y, z);
 
 	ss >> obj.inverseMass;
-	ss >> obj.rotationDegrees;
+
+    float r, g, b, a; 
+	ss >> r >> g >> b >> a;
+	obj.colour = nclgl::Maths::Vector4(r, g, b, a); 
+	ss >> x >> y >> z;
+
+	obj.rotAxis = nclgl::Maths::Vector3(x, y, z);
+
+	obj.rotationDegrees;
+
+	
 
 	mapObjects.push_back(obj);
 }
@@ -96,7 +106,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.inverseMass,
 				true,
 				false,
-				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+				object.colour);
 
 			scene->AddGameObject(geometry);
 			break;
@@ -109,7 +119,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.inverseMass,
 				true,
 				false,
-				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+				object.colour);
 
 			scene->AddGameObject(geometry);
 			break;
@@ -123,8 +133,8 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.inverseMass,
 				true,
 				false,
-				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f),
-				nclgl::Maths::Vector3(0.0f, 1.0f, 0.0f),
+				object.colour,
+				object.rotAxis,
 				object.rotationDegrees
 				);
 
@@ -132,7 +142,6 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 			break;
 		}
 	}
-
 	scene->OnInitializeScene();
 	mapObjects.clear();
 }
