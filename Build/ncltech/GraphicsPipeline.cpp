@@ -76,10 +76,11 @@ GraphicsPipeline::GraphicsPipeline()
 	//minimap->SetTexture(gr_tex);
 
 	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
-	//gr_tex->Bind();
+	gr_tex->Bind();
 	gr_tex->SetTextureFiltering(true);
 
-	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, true);
+	TextureBase* depth = NULL;
+	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, depth);
 
 	//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	//glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers

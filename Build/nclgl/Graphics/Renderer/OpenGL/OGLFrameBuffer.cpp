@@ -9,7 +9,9 @@ OGLFrameBuffer::OGLFrameBuffer(TextureBase* colourTex, TextureBase* depthTex)
 	glGenFramebuffers(1, &bufferID);
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferID);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, static_cast<OGLTexture*>(colourTex)->GetID(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, static_cast<OGLTexture*>(depthTex)->GetID(), 0);
+	if (depthTex) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, static_cast<OGLTexture*>(depthTex)->GetID(), 0);
+	}
 
 	//Validate our framebuffer
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
