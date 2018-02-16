@@ -30,7 +30,7 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 
 	if (type == COLOUR)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 	}
 	else if (type == DEPTH)
 	{

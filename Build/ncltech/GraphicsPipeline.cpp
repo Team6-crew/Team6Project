@@ -76,17 +76,17 @@ GraphicsPipeline::GraphicsPipeline()
 	//minimap->SetTexture(gr_tex);
 
 	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
-	gr_tex->Bind();
+	//gr_tex->Bind();
 	gr_tex->SetTextureFiltering(true);
 
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, true);
 
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+	//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	//glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "error";
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	//	std::cout << "error";
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	minimap->SetTexture(gr_tex);
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
@@ -339,9 +339,6 @@ void GraphicsPipeline::RenderScene()
 			renderer->Clear(Renderer::COLOUR_DEPTH);
 			renderer->SetScissor(FALSE);
 			//Downsample and present to screen
-			renderer->BindScreenFramebuffer();
-			renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
-			renderer->Clear(Renderer::COLOUR_DEPTH);
 
 			float superSamples = (float)(numSuperSamples);
 			shaderPresentToWindow->Activate();
@@ -350,7 +347,6 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 			fullscreenQuad->SetTexture(screenTexColor);
-
 
 			if (j == 0) {
 
@@ -379,10 +375,6 @@ void GraphicsPipeline::RenderScene()
 
 
 	}
-
-	
-		
-	
 		renderer->SwapBuffers();
 }
 
