@@ -5,7 +5,8 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
-
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -122,7 +123,8 @@ int main()
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
-
+	AudioEngineBase* sound = AudioFactory::Instance()->MakeAudioEngine();
+	sound->PlaySound2D(SOUNDSDIR"WonderfulLights.ogg", true);
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop

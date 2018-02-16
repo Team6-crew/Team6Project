@@ -22,6 +22,8 @@
     <Text Include="CHANGELIST.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Audio\AudioEngineBase.cpp" />
+    <ClCompile Include="Audio\AudioFactory.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
@@ -59,9 +61,12 @@
     <ClCompile Include="Graphics\ShaderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
     <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
+    <ClCompile Include="Audio\Windows\WinAudio.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio\AudioEngineBase.h" />
+    <ClInclude Include="Audio\AudioFactory.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="common.h" />
@@ -108,6 +113,7 @@
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
+    <ClInclude Include="Audio\Windows\WinAudio.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -196,6 +202,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN_OGL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ExternalLibs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
