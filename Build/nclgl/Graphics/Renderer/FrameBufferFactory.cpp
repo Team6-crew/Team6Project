@@ -25,9 +25,9 @@ FrameBufferBase* FrameBufferFactory::MakeFramebuffer(std::vector<TextureBase*> c
 	#endif
 }
 
-FrameBufferBase* FrameBufferFactory::MakeFramebuffer(TextureBase* depthTex)
+FrameBufferBase* FrameBufferFactory::MakeFramebuffer(TextureBase* depthTex, bool colour)
 {
 	#ifdef WIN_OGL
-		return new OGLFrameBuffer(depthTex);
+		return new OGLFrameBuffer(depthTex, colour);
 	#endif
 }

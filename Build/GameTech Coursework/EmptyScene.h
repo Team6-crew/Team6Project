@@ -10,15 +10,14 @@
 
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
+#include <nclgl/GameLogic.h>
 
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
 public:
-	Player* getPlayer() { return player1; }
-
-	Player* player1;
+	
 	float rotation = 0.0f;
 	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
@@ -37,54 +36,30 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		/*player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-
-		player1->SetPhysics(player1->Physics());*/
-
-		player1 = new Player("player",
-			nclgl::Maths::Vector3(0.0f, 1.f, 0.0f),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		player1->SetPhysics(player1->Physics());
-
+		GameLogic::Instance()->addPlayers(4);
 		//Add player to scene
-		this->AddGameObject(player1);
-		//Also add body which is used for camera manipulation
-		this->AddGameObject(player1->getBody());
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
+			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+		}
 
-		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+
+
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
-			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
+			nclgl::Maths::Vector3(WORLD_SIZE, 1.0f, WORLD_SIZE),
 			true,
 			0.0f,
 			true,
 			false,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-
-		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
-			"pickup",
-			Vector3(10.0f, 1.f, 0.0f),
-			Vector3(0.6f, 0.2f, 0.2f),
-			true,
-			0.0f,
-			true,
-			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));*/
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
+		
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
@@ -103,14 +78,16 @@ public:
 	virtual void OnUpdateScene(float dt) override
 	{
 		Scene::OnUpdateScene(dt);
-
+		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
 		rotation = 0.1f;
 		if(pickup)
 		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
 			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
-		player1->move();
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			GameLogic::Instance()->getPlayer(i)->move(dt);
+		}
 
 	}
 };

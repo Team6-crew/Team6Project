@@ -25,12 +25,9 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	SetTextureFiltering();
-	SetTextureWrapping();
-
 	if (type == COLOUR)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	}
 	else if (type == DEPTH)
 	{
@@ -41,6 +38,9 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 		std::cout << "Inappropriate texture type" << std::endl;
 		assert(false);
 	}
+
+	SetTextureFiltering();
+	SetTextureWrapping();
 }
 
 OGLTexture::~OGLTexture()

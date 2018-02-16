@@ -13,7 +13,7 @@
 #define SHADOWMAP_SIZE 4096
 
 
-#define PROJ_FAR      50.0f			//Can see for 50m - setting this too far really hurts shadow quality as they attempt to cover the entirety of the view frustum
+#define PROJ_FAR      150.0f			//Can see for 50m - setting this too far really hurts shadow quality as they attempt to cover the entirety of the view frustum
 #define PROJ_NEAR     0.1f			//Nearest object @ 10cm
 #define PROJ_FOV      45.0f			//45 degree field of view
 
