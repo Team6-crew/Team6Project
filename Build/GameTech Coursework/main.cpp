@@ -163,7 +163,11 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-		if (Window::GetWindow().GetTimer()->GetMS() > 10000)
+		if (Window::GetWindow().GetTimer()->GetMS() > 5000)
+		{
+			sound->SetVolume(0.1f);
+		}
+		if (Window::GetWindow().GetTimer()->GetMS() > 12000)
 		{
 			sound->StopBackgroundSound();
 		}

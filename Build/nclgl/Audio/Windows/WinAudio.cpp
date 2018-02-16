@@ -5,6 +5,8 @@ using namespace irrklang;
 
 #include <iostream>
 
+#include <nclgl\common.h>
+
 WinAudio::WinAudio()
 {
 	soundEngine = createIrrKlangDevice();
@@ -61,4 +63,14 @@ void WinAudio::StopAllSounds()
 		soundEngine->stopAllSounds();
 	}
 
+}
+
+
+void WinAudio::SetVolume(float volume)
+{
+	volume = min(1.0, max(volume, 0.0f));
+	if (soundEngine)
+	{
+		soundEngine->setSoundVolume(volume);
+	}
 }
