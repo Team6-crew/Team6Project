@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+GameObject* Player::ball;
 
 using namespace nclgl::Maths;
 
@@ -53,12 +54,12 @@ void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, 
 void Player::move() {
 
 	
-	Vector3 ball_pos = ball->Physics()->GetPosition();
-	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
+	Vector3 ballPos = ball->Physics()->GetPosition();
+	Vector3 forward = (camera->GetPosition() - ballPos).Normalise();
 
 	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
-	worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
+	worldTr.SetPositionVector(ballPos + Vector3(0, 2, 0));
 	
 	bodyRenderNode->SetTransform(worldTr);
 

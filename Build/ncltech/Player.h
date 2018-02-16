@@ -8,7 +8,7 @@ public:
 	~Player();
 
 	GameObject* getBody() { return body; }
-	GameObject* getBall() { return ball; }
+	static GameObject* getBall() { return ball; }
 
 
 	void move();
@@ -18,8 +18,7 @@ public:
 	void setSpeed(float sp) { speed = sp; }
 
 private:
-
-	GameObject* ball;
+	static GameObject* ball;
 	GameObject* body;
 	GameObject* cube;
 

@@ -5,7 +5,10 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include "iostream"
+#include "fstream"
 
+using namespace std;
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -112,7 +115,24 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
 
+	Vector3 pos;
+	std::vector<Vector3> posList;
 
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+	{
+		pos = Player::getBall()->Physics()->GetPosition();
+		std::ofstream myfile;
+		myfile.open("pos.txt", std::ios_base::app);
+		cout << pos << "\n";
+
+		if (myfile.is_open())
+		{
+			myfile << pos << "\n";
+			myfile.close();
+		}
+
+
+	}
 }
 
 
@@ -126,7 +146,8 @@ int main()
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
-	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_X)) {
+	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_X)) 
+{
 		//Start Timing
 		
 		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
@@ -161,7 +182,7 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-	
+		
 
 		{
 			//Forces synchronisation if vsync is disabled
@@ -180,4 +201,4 @@ int main()
 	//Cleanup
 	Quit();
 	return 0;
-}
+};

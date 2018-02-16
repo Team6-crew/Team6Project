@@ -21,9 +21,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="EmptyScene.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1A5C2647-CADD-49B7-861E-4B1339EDCD84}</ProjectGuid>
     <RootNamespace>GameTechCoursework</RootNamespace>
