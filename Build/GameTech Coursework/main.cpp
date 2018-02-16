@@ -124,7 +124,7 @@ int main()
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 	AudioEngineBase* sound = AudioFactory::Instance()->MakeAudioEngine();
-	sound->PlaySound2D(SOUNDSDIR"WonderfulLights.ogg", true);
+	sound->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
@@ -163,7 +163,10 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-	
+		if (Window::GetWindow().GetTimer()->GetMS() > 10000)
+		{
+			sound->StopBackgroundSound();
+		}
 
 		{
 			//Forces synchronisation if vsync is disabled
@@ -173,7 +176,6 @@ int main()
 		}
 		timer_render.EndTimingSection();
 
-		
 
 		//Finish Timing
 		timer_total.EndTimingSection();		
