@@ -80,6 +80,8 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
+    <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="LevelWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -177,5 +179,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="LevelWriter.h" />
   </ItemGroup>
 </Project>

@@ -1,23 +1,77 @@
 #include "Player.h"
+#include "CommonUtils.h"
+#include "SphereCollisionShape.h"
+#include "CuboidCollisionShape.h"
+#include "CommonMeshes.h"
+#include "ScreenPicker.h"
+#include <nclgl\OBJMesh.h>
+#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <functional>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
 using namespace nclgl::Maths;
 
-Player::Player()
+Player::Player(const std::string& name,
+	const Vector3& pos,
+	float radius,
+	bool physics_enabled,
+	float inverse_mass,
+	bool collidable,
+	const Vector4& color)
 {   
 	speed = 20.0f;
-	ball = CommonUtils::BuildSphereObject("ball",
-		Vector3(0.0f, 1.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
-		1.0f,				//Half dimensions
-		true,									//Has Physics Object
-		1.0f,									//Mass
-		true,									//Has Collision Shape
-		true,									//Dragable by the user
-		CommonUtils::GenColor(0.45f, 0.5f));
 
-	ball->setDynamic(true);
-	
+	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
+	// and a parent node that will contain the world transform/physics transform
+	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
+
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
+	rnode->AddChild(dummy);
+
+	rnode->SetTransform(Matrix4::Translation(pos));
+	rnode->SetBoundingRadius(radius);
+
+	PhysicsNode* pnode = NULL;
+	if (physics_enabled)
+	{
+		pnode = new PhysicsNode();
+		pnode->SetPosition(pos);
+		pnode->SetInverseMass(inverse_mass);
+		pnode->SetColRadius(radius);
+		pnode->SetElasticity(0.2f);
+
+		if (!collidable)
+		{
+			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
+			pnode->SetInverseInertia(SphereCollisionShape(radius).BuildInverseInertia(inverse_mass));
+		}
+		else
+		{
+			CollisionShape* pColshape = new SphereCollisionShape(radius);
+			pnode->SetCollisionShape(pColshape);
+			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
+		}
+	}
+
+	friendlyName = name;
+	renderNode = rnode;
+	physicsNode = pnode;
+
+	RegisterPhysicsToRenderTransformCallback();
+
+	tag = Tags::TPlayer;
+
+	physicsNode->SetOnCollisionCallback(
+		std::bind(
+			&Player::collisionCallback,		// Function to call
+			this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+			std::placeholders::_1,
+			std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+	);
+
+	setDynamic(true);
 
 	body = CommonUtils::BuildCuboidObject("body",
 		Vector3(0.0f, 2.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
@@ -43,18 +97,20 @@ Player::~Player()
 
 }
 
-void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right) {
+void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump) {
 	move_up = up;
 	move_down = down;
 	move_left = left;
 	move_right = right;
+	move_jump = jump;
 }
 
 void Player::move() {
 
 	
-	Vector3 ball_pos = ball->Physics()->GetPosition();
+	Vector3 ball_pos = physicsNode->GetPosition();
 	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
+	Vector3 jump(0, 20, 0);
 
 	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
@@ -65,35 +121,57 @@ void Player::move() {
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
 
-	ball->Physics()->SetForce(Vector3(0, 0, 0));
+	physicsNode->SetForce(Vector3(0, 0, 0));
 
 	float rotation = 0.0f;
 
 	if (Window::GetKeyboard()->KeyDown(move_up))
 	{
-		ball->Physics()->SetForce(-forward * speed);
+		physicsNode->SetForce(-forward * speed);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
-	{
-		ball->Physics()->SetForce(forward * speed);
+	{   
+		forward.y = -forward.y;
+		physicsNode->SetForce(forward * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = 0.5f;
+		rotation = 0.4f;
 		camera->SetYaw(yaw + rotation);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		rotation = -0.5f;
+		rotation = -0.4f;
 		camera->SetYaw(yaw + rotation);
 	}
 
-
+	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
+	{  
+		if (canjump == true) {
+			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
+			canjump = false;
+		}
+		
+	}
 
 	bodyRenderNode->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
 
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 
 }
+
+bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
+	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+		Pickup* pickup = (Pickup*)otherNode->GetParent();
+		pickup->effect(this);
+		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		return false;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TGround))
+	{ 
+		canjump = true;
+	}
+	return true;
+};

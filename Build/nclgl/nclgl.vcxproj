@@ -30,6 +30,8 @@
     <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="LevelWriter.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
@@ -73,6 +75,8 @@
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="LevelWriter.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />
@@ -225,6 +229,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN_OGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

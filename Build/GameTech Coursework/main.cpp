@@ -47,7 +47,10 @@ void Initialize()
 	PhysicsEngine::Instance();
 
 	//Enqueue All Scenes
-	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
+	SceneManager::Instance()->EnqueueScene(new EmptyScene("TestScene"));
+	Scene* levelOne = new Scene("LevelOne");
+	SceneManager::Instance()->EnqueueScene(levelOne);	
+
 	
 }
 
@@ -111,8 +114,6 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
-
-
 }
 
 

@@ -87,4 +87,16 @@ namespace CommonUtils
 		bool collidable = true,				//requires physics_enabled = true
 		bool dragable = true,
 		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	GameObject* BuildRampObject(
+		const std::string& name,
+		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& halfdims,
+		bool physics_enabled = true,
+		float inverse_mass = 0.0f,			//requires physics_enabled = true
+		bool collidable = true,				//requires physics_enabled = true
+		bool dragable = true,
+		const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+		const nclgl::Maths::Vector3& axis = nclgl::Maths::Vector3(0.0f, 1.0f, 0.0f),
+		float degrees = 45.0f);
 };

@@ -1,52 +1,67 @@
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragSuperSample.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexShadow.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/Common/EmptyFragment.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechGeomShadow.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexFull.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragForwardRender.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/PointVertex.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/PointFragment.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/PointGeometry.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/Vertex.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/Fragment.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/LineGeometry.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/VertexColOnly.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/Fragment.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/TextVertex.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/TextFragment.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/TextGeometry.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Shader:
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexPicker.glsl
-[09:47:18]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragScreenPicker_nsightfix.glsl
-[09:47:18]     -> Linking Shader: Success!
-[09:47:18] 
-[09:47:18] Loading Mesh: ../../Data/Meshes/cube.obj
-[09:47:18] 
-[09:47:18] Loading Mesh: ../../Data/Meshes/sphere.obj
-[09:47:18] 
-[09:47:18] [SceneManager] - Enqueued scene: "Team Project"
-[09:47:18] 
-[09:47:18] [SceneManager] - Scene switched to: "Team Project"
-[09:47:23] [SceneManager] Closing scene manager
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragSuperSample.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexShadow.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/Common/EmptyFragment.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechGeomShadow.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexFull.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragForwardRender.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/PointVertex.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/PointFragment.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/PointGeometry.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/Vertex.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/Fragment.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/LineGeometry.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/VertexColOnly.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/Fragment.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/TextVertex.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/TextFragment.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/DebugShaders/TextGeometry.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:41] Loading Shader:
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexPicker.glsl
+[15:55:41]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragScreenPicker_nsightfix.glsl
+[15:55:41]     -> Linking Shader: Success!
+[15:55:41] 
+[15:55:42] Loading Mesh: ../../Data/Meshes/cube.obj
+[15:55:42] 
+[15:55:42] Loading Mesh: ../../Data/Meshes/sphere.obj
+[15:55:42] 
+[15:55:42] [SceneManager] - Enqueued scene: "TestScene"
+[15:55:42] 
+[15:55:42] [SceneManager] - Scene switched to: "TestScene"
+[15:55:42] [SceneManager] - Enqueued scene: "LevelOne"
+[15:55:44] [SceneManager] - Exiting scene -
+[15:55:44] 
+[15:55:44] Loading Mesh: ../../Data/Meshes/ramp.obj
+[15:55:44] 
+[15:55:44] Loading Mesh: ../../Data/Meshes/ramp.obj
+[15:55:44] 
+[15:55:44] Loading Mesh: ../../Data/Meshes/ramp.obj
+[15:55:44] 
+[15:55:44] Loading Mesh: ../../Data/Meshes/ramp.obj
+[15:55:44] 
+[15:55:44] Loading Mesh: ../../Data/Meshes/ramp.obj
+[15:55:44] 
+[15:55:44] Loading Mesh: ../../Data/Meshes/ramp.obj
+[15:55:44] 
+[15:55:44] [SceneManager] - Scene switched to: "LevelOne"
