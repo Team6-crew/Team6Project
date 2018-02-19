@@ -391,7 +391,7 @@ GameObject* CommonUtils::BuildRampObject(
 
 		if (!collidable)
 		{
-			pnode->SetInverseInertia(CuboidCollisionShape(halfdims).BuildInverseInertia(inverse_mass));
+			pnode->SetInverseInertia(CuboidCollisionShape(halfdims).BuildInverseInertia(inverse_mass)); // CHANGE TO RAMP COLLISION SHAPE
 		}
 		else
 		{

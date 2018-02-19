@@ -15,7 +15,8 @@ void CommonMeshes::InitializeMeshes()
 	if (m_pCube == NULL)
 	{
 
-		m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"checkerboard.tga");
+		//m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"checkerboard.tga");
+		m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Blank.tga");
 		m_pCheckerboardTex->SetTextureFiltering(true);
 		m_pCheckerboardTex->SetTextureWrapping(true);
 

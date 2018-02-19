@@ -1,18 +1,13 @@
 #include "LevelLoader.h"
-
 #include <fstream>
 #include <sstream>
-
 #include <ncltech\Scene.h>
-
-using namespace std;
-
 #include <ncltech\CommonUtils.h>
+using namespace std;
 
 LevelLoader::LevelLoader()
 {
 }
-
 
 LevelLoader::~LevelLoader()
 {
@@ -65,9 +60,7 @@ void LevelLoader::AddMapObject(const std::string& line)
 
 	obj.rotAxis = nclgl::Maths::Vector3(x, y, z);
 
-	obj.rotationDegrees;
-
-	
+	obj.rotationDegrees;	
 
 	mapObjects.push_back(obj);
 }
@@ -135,8 +128,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				false,
 				object.colour,
 				object.rotAxis,
-				object.rotationDegrees
-				);
+				object.rotationDegrees);
 
 			scene->AddGameObject(geometry);
 			break;

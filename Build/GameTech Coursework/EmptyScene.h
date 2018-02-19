@@ -1,5 +1,4 @@
 #pragma once
-
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
@@ -73,8 +72,53 @@ public:
 			false,
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 
-		this->AddGameObject(ground);
+		GameObject* topwall = CommonUtils::BuildCuboidObject(
+			"TopWall",
+			nclgl::Maths::Vector3(0.0f, -1.5f, -19.5f),
+			nclgl::Maths::Vector3(20.0f, 10.0f, 1.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		GameObject* backwall = CommonUtils::BuildCuboidObject(
+			"BackWall",
+			nclgl::Maths::Vector3(0.0f, -1.5f, 19.5f),
+			nclgl::Maths::Vector3(20.0f, 10.0f, 1.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		GameObject* rightwall = CommonUtils::BuildCuboidObject(
+			"RightWall",
+			nclgl::Maths::Vector3(19.5f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 10.0f, 20.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		GameObject* leftwall = CommonUtils::BuildCuboidObject(
+			"LeftWall",
+			nclgl::Maths::Vector3(-19.5f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 10.0f, 20.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		this->AddGameObject(ground);		
 		ground->SetTag(Tags::TGround);
+		
+		this->AddGameObject(topwall);
+		this->AddGameObject(backwall);
+		this->AddGameObject(rightwall);
+		this->AddGameObject(leftwall);
 
 		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"pickup",

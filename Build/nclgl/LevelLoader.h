@@ -2,7 +2,6 @@
 #include <string>
 #include <nclgl\Vector3.h>
 #include <nclgl\Vector4.h>
-
 #include <vector>
 
 
