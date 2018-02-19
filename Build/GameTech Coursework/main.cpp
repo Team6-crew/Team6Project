@@ -6,6 +6,7 @@
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
 #include "MainMenu.h"
+
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
 
@@ -40,7 +41,7 @@ void Quit(bool error = false, const std::string &reason = "") {
 void Initialize()
 {
 	//Initialise the Window
-	if (!Window::Initialise("Game Technologies", 1280, 800, false))
+	if (!Window::Initialise("Game Technologies", 1280, 720, false))
 		Quit(true, "Window failed to initialise!");
 
 	//Initialize Renderer
@@ -50,43 +51,42 @@ void Initialize()
 	PhysicsEngine::Instance();
 
 	//Enqueue All Scenes
+	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
-	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu", GraphicsPipeline::Instance()));
-	//SceneManager::Instance()->EnqueueScene(new EmptyScene("GameTech #3 - More peace and quiet"));*/
 	
 }
 
 // Print Debug Info
 //  - Prints a list of status entries to the top left
 //    hand corner of the screen each frame.
-void PrintStatusEntries()
-{
-	//Print Engine Options
-	NCLDebug::AddStatusEntry(status_colour_header, "NCLTech Settings");
-	NCLDebug::AddStatusEntry(status_colour, "     Physics Engine: %s (Press P to toggle)", PhysicsEngine::Instance()->IsPaused() ? "Paused  " : "Enabled ");
-	NCLDebug::AddStatusEntry(status_colour, "     Monitor V-Sync: %s (Press V to toggle)", GraphicsPipeline::Instance()->GetVsyncEnabled() ? "Enabled " : "Disabled");
-	NCLDebug::AddStatusEntry(status_colour, "");
-
-	//Print Current Scene Name
-	NCLDebug::AddStatusEntry(status_colour_header, "[%d/%d]: %s",
-		SceneManager::Instance()->GetCurrentSceneIndex() + 1,
-		SceneManager::Instance()->SceneCount(),
-		SceneManager::Instance()->GetCurrentScene()->GetSceneName().c_str()
-		);
-	NCLDebug::AddStatusEntry(status_colour, "     \x01 T/Y to cycle or R to reload scene");
-
-	//Print Performance Timers
-	NCLDebug::AddStatusEntry(status_colour, "     FPS: %5.2f  (Press G for %s info)", 1000.f / timer_total.GetAvg(), show_perf_metrics ? "less" : "more");
-	if (show_perf_metrics)
-	{
-		timer_total.PrintOutputToStatusEntry(status_colour, "          Total Time     :");
-		timer_update.PrintOutputToStatusEntry(status_colour, "          Scene Update   :");
-		timer_physics.PrintOutputToStatusEntry(status_colour, "          Physics Update :");
-		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
-	}
-	NCLDebug::AddStatusEntry(status_colour, "");
-	
-}
+//void PrintStatusEntries()
+//{
+//	//Print Engine Options
+//	NCLDebug::AddStatusEntry(status_colour_header, "NCLTech Settings");
+//	NCLDebug::AddStatusEntry(status_colour, "     Physics Engine: %s (Press P to toggle)", PhysicsEngine::Instance()->IsPaused() ? "Paused  " : "Enabled ");
+//	NCLDebug::AddStatusEntry(status_colour, "     Monitor V-Sync: %s (Press V to toggle)", GraphicsPipeline::Instance()->GetVsyncEnabled() ? "Enabled " : "Disabled");
+//	NCLDebug::AddStatusEntry(status_colour, "");
+//
+//	//Print Current Scene Name
+//	NCLDebug::AddStatusEntry(status_colour_header, "[%d/%d]: %s",
+//		SceneManager::Instance()->GetCurrentSceneIndex() + 1,
+//		SceneManager::Instance()->SceneCount(),
+//		SceneManager::Instance()->GetCurrentScene()->GetSceneName().c_str()
+//		);
+//	NCLDebug::AddStatusEntry(status_colour, "     \x01 T/Y to cycle or R to reload scene");
+//
+//	//Print Performance Timers
+//	NCLDebug::AddStatusEntry(status_colour, "     FPS: %5.2f  (Press G for %s info)", 1000.f / timer_total.GetAvg(), show_perf_metrics ? "less" : "more");
+//	if (show_perf_metrics)
+//	{
+//		timer_total.PrintOutputToStatusEntry(status_colour, "          Total Time     :");
+//		timer_update.PrintOutputToStatusEntry(status_colour, "          Scene Update   :");
+//		timer_physics.PrintOutputToStatusEntry(status_colour, "          Physics Update :");
+//		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
+//	}
+//	NCLDebug::AddStatusEntry(status_colour, "");
+//	
+//}
 
 
 // Process Input
@@ -96,7 +96,7 @@ void PrintStatusEntries()
 void HandleKeyboardInputs()
 {
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
-		PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+		//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_V))
 		GraphicsPipeline::Instance()->SetVsyncEnabled(!GraphicsPipeline::Instance()->GetVsyncEnabled());
@@ -132,7 +132,7 @@ int main()
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
-	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_X)) {
+	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
 		
 		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
@@ -143,7 +143,7 @@ int main()
 		timer_render.UpdateRealElapsedTime(dt);
 
 		//Print Status Entries
-		PrintStatusEntries();
+		//PrintStatusEntries();
 
 		//Handle Keyboard Inputs
 		HandleKeyboardInputs();

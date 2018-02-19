@@ -74,8 +74,8 @@ function as it will include the filename and linenumber it was triggered on with
 #define LOG_TEXT_SIZE  		12
 #define LOG_TEXT_FONT       "Verdana"
 
-#define STATUS_TEXT_SIZE	16
-#define STATUS_TEXT_FONT    "Calibri"
+#define STATUS_TEXT_SIZE	60.f
+#define STATUS_TEXT_FONT    "Castellar"
 
 #define LOG_OUTPUT_FILE_ENABLED
 #define LOG_OUTPUT_FILE     "program_output.txt"
@@ -154,13 +154,14 @@ public:
 	//Draw Text WorldSpace (pos given here in worldspace)
 	static void DrawTextWs(const Vector3& pos, const float font_size, const TextAlignment alignment, const Vector4 color, const std::string text, ...); ///See "printf" for usage manual
 	static void DrawTextWsNDT(const Vector3& pos, const float font_size, const TextAlignment alignment, const Vector4 color, const std::string text, ...); ///See "printf" for usage manual
-
+	
 																																							//Draw Text (pos is assumed to be pre-multiplied by projMtx * viewMtx at this point)
 	static void DrawTextCs(const Vector4& pos, const float font_size, const std::string& text, const TextAlignment alignment = TEXTALIGN_LEFT, const Vector4 color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Add a status entry at the top left of the screen (Cleared each frame)
 	static void AddStatusEntry(const Vector4& color, const std::string text, ...); ///See "printf" for usuage manual
-
+	
+	static void AddHUD(const Vector4& color, const std::string text, ...);
 																					//Add a log entry at the bottom left - persistent until scene reset
 	static void Log(const Vector3& color, const std::string text, ...); ///See "printf" for usuage manual
 	static void Log(const std::string text, ...); //Default Text Color
@@ -250,6 +251,8 @@ protected:
 
 	static GLuint	g_glLogFontTex;
 	static GLuint	g_glDefaultFontTex;
+
+
 };
 
 

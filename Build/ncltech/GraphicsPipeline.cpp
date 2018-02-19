@@ -3,7 +3,6 @@
 #include "BoundingBox.h"
 #include <nclgl\NCLDebug.h>
 #include <algorithm>
-#include "../GameTech Coursework/TextMesh.h"
 GraphicsPipeline::GraphicsPipeline()
 	: OGLRenderer(Window::GetWindow())
 	, camera(new Camera())
@@ -25,7 +24,7 @@ GraphicsPipeline::GraphicsPipeline()
 	LoadShaders();
 	NCLDebug::_LoadShaders();
 
-	fullscreenQuad = Mesh::GenerateQuad();
+	fullscreenQuad = Mesh::GenerateQuad(); // used for full screen text
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
@@ -154,8 +153,8 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		};
 
 		//Color Texture
-		if (!screenTexColor) glGenTextures(1, &screenTexColor);
-		glBindTexture(GL_TEXTURE_2D, screenTexColor);
+		if (!screenTexColor) glGenTextures(1, &screenTexColor); // if zero, generate texture
+		glBindTexture(GL_TEXTURE_2D, screenTexColor); // whatever happens to a texture will happen to that texture
 		SetTextureDefaults();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, screenTexWidth, screenTexHeight, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
@@ -476,33 +475,4 @@ void GraphicsPipeline::BuildShadowTransforms()
 	}
 
 
-}
-
-void GraphicsPipeline::drawtex(const std::string &text, const Vector3 &position, const float size, const bool perspective)
-{
-	Font*	basicFont = NULL;
-	
-	//Create a new temporary TextMesh, using our line of text and our font
-	TextMesh* mesh = new TextMesh(text, *basicFont);
-
-	//This just does simple matrix setup to render in either perspective or
-	//orthographic mode, there's nothing here that's particularly tricky.
-	if (perspective) {
-		modelMatrix = Matrix4::Translation(position) * Matrix4::Scale(Vector3(size, size, 1));
-		viewMatrix = camera->BuildViewMatrix();
-		projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
-	}
-	else {
-		//In ortho mode, we subtract the y from the height, so that a height of 0
-		//is at the top left of the screen, which is more intuitive
-		//(for me anyway...)
-		modelMatrix = Matrix4::Translation(Vector3(position.x, height - position.y, position.z)) * Matrix4::Scale(Vector3(size, size, 1));
-		viewMatrix.ToIdentity();
-		projMatrix = Matrix4::Orthographic(-1.0f, 1.0f, (float)width, 0.0f, (float)height, 0.0f);
-	}
-	//Either way, we update the matrices, and draw the mesh
-	UpdateShaderMatrices();
-	mesh->Draw();
-
-	delete mesh; //Once it's drawn, we don't need it anymore!
 }

@@ -86,8 +86,6 @@ public:
 	//Add/Remove Render objects to renderable object lists
 	void AddRenderNode(RenderNode* node);
 	void RemoveRenderNode(RenderNode* node);
-	
-
 
 
 	//Called by main game loop
@@ -113,7 +111,6 @@ public:
 	inline Vector3& GetLightDirection() { return lightDirection; }
 	inline float& GetSpecularFactor() { return specularFactor; }
 	inline GLuint& GetShadowTex() { return shadowTex; }
-	void drawtex(const std::string &text, const Vector3 &position, const float size = 10.0f, const bool perspective = false);
 
 protected:
 	GraphicsPipeline();

@@ -3,23 +3,87 @@
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\OcTree.h>
-#include "TextMesh.h"
 #include "../nclgl/OGLRenderer.h"
-#include "RendererUI.h"
+#include "../ncltech/ScreenPicker.h"
+#include "../nclgl/Menu.h"
 
-//Fully striped back scene to use as a template for new scenes.
+#include <ncltech\GameObject.h>
+#include <ncltech\CommonMeshes.h>
+#include <ncltech\CommonUtils.h>
+
+
 class MainMenu : public Scene
 {
 public:
-	RenderNode * cam;
-	RenderNode * text;
-	GraphicsPipeline* gp;
-	Shader* currentShader;
-	Font*	basicFont;	//A font! a basic one...
-	MainMenu(const std::string& friendly_name, GraphicsPipeline * GP)
+	
+	MainMenu(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
-		gp = GP;
+		// Start Screen - Main Menu
+		mainMenu = new Menu();
+		mainMenu->visible = true;
+		mainMenu->AddMenuItem("Single Player");
+		mainMenu->AddMenuItem("MultiPlayer");
+		mainMenu->AddMenuItem("Options");
+		mainMenu->AddMenuItem("Exit");
+		activeMenu = mainMenu;
+
+		// Multi Player Menu
+		multiPlayerMenu = new Menu();
+		multiPlayerMenu->visible = false;
+		multiPlayerMenu->AddMenuItem("Split Screen");
+		multiPlayerMenu->AddMenuItem("Host LAN Server");
+		multiPlayerMenu->AddMenuItem("Join LAN Server");
+		multiPlayerMenu->AddMenuItem("Back");
+
+		// Options Menu
+		optionsMenu = new Menu();
+		optionsMenu->visible = false;
+		optionsMenu->AddMenuItem("Resolution");
+		optionsMenu->AddMenuItem("Sound");
+		optionsMenu->AddMenuItem("Controls");
+		optionsMenu->AddMenuItem("Back");
+		optionsMenu->setSelection(0);
+
+		// Resolution Menu
+		resolutionMenu = new Menu();
+		resolutionMenu->visible = false;
+		resolutionMenu->AddMenuItem("1920 x 1080");
+		resolutionMenu->AddMenuItem("1600 x 900");
+		resolutionMenu->AddMenuItem("1366 x 768");
+		resolutionMenu->AddMenuItem("1280 x 720");
+		resolutionMenu->AddMenuItem("Back");
+		resolutionMenu->setSelection(0);
+
+		// Sound Menu
+		soundMenu = new Menu();
+		soundMenu->visible = false;
+		soundMenu->AddMenuItem("Volume");
+		soundMenu->AddMenuItem("Back");
+
+		// Controls Menu
+		controlsMenu = new Menu();
+		controlsMenu->visible = false;
+		controlsMenu->AddMenuItem("Player 1 Controls");
+		controlsMenu->AddMenuItem("Player 2 Controls");
+		controlsMenu->AddMenuItem("Player 3 Controls");
+		controlsMenu->AddMenuItem("Player 4 Controls");
+		controlsMenu->AddMenuItem("Back");
+
+		//Background
+		tex = SOIL_load_OGL_texture(
+			TEXTUREDIR"target.tga",
+			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
 	}
 
 	virtual ~MainMenu()
@@ -29,105 +93,203 @@ public:
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		currentShader = new Shader(SHADERDIR"TexturedVertex.glsl", SHADERDIR"TexturedFragment.glsl");
-
-		//if (!currentShader->LinkProgram()) {
-		//	return;
-		//}
-		/*
-		Just makes a new 'font', a struct containing a texture (of the tahoma font)
-		and how many characters across each axis the font contains. (look at the
-		font texture in paint.net if you don't quite 'get' this)
-		*/
-		basicFont = new Font(SOIL_load_OGL_texture(TEXTUREDIR"tahoma.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_COMPRESS_TO_DXT), 16, 16);
-
-		//The font is not alpha blended! It has a black background.
-		//but that doesn't matter, we can fiddle blend func to do 
-		//'additive blending', meaning black won't show up ;)
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-		//init = true;
-		cam = new RenderNode();
-		text = new RenderNode();
 		
+		cam = new RenderNode();
 		cam->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
-
-		glUseProgram(currentShader->GetProgram());	//Enable the shader...
-													//And turn on texture unit 0
-		glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
-
-		//Render function to encapsulate our font rendering!
-		gp->drawtex("This is orthographic text!", Vector3(0, 0, 0), 16.0f, false);
-		//drawtex("This is perspective text!!!!", Vector3(0, 0, -1000), 64.0f, true);
-
-		glUseProgram(0);	//That's everything!
-
-		//SwapBuffers();
+		
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
+
 		Scene::OnUpdateScene(dt);
 		Camera * camera = GraphicsPipeline::Instance()->GetCamera();
 
 		float yaw = camera->GetYaw();
 		float pitch = camera->GetPitch();
 
+		pitch = 60.0f;
+
 		float rotation = 0.0f;
 
 		float power = 15.0f;
 
-		if (Window::GetKeyboard()->KeyDown(KEYBOARD_I))
-		{
+
+		//Show Menus
+		if (activeMenu == mainMenu) {
+			mainMenu->ShowMenu();
+		}
+		else if (activeMenu == optionsMenu) {
+			optionsMenu->ShowMenu();
+		}
+		else if (activeMenu == resolutionMenu) {
+			resolutionMenu->ShowMenu();
+		}
+		else if (activeMenu == controlsMenu) {
+			controlsMenu->ShowMenu();
+		}
+		else if (activeMenu == soundMenu) {
+			soundMenu->ShowMenu();
+		}
+		else if (activeMenu == multiPlayerMenu) {
+			multiPlayerMenu->ShowMenu();
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KEYBOARD_K))
+		//Navigate choices
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
 		{
-		}
-		if (Window::GetKeyboard()->KeyDown(KEYBOARD_J))
-		{
-			rotation = 0.5f;
-			camera->SetYaw(yaw + rotation);
+			activeMenu->MoveUp();
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KEYBOARD_L))
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN))
 		{
-			rotation = -0.5f;
-			camera->SetYaw(yaw + rotation);
+			activeMenu->MoveDown();
 		}
 
-		camera->SetPosition(cam->GetWorldTransform().GetPositionVector());
+
+		//Change Menus
+		if (activeMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			if (activeMenu == mainMenu) {
+				SceneManager::Instance()->JumpToScene("Team Project");
+			}
+			else if (activeMenu == multiPlayerMenu) {
+				cout << "Split-Screen set.";
+			}
+			else if (activeMenu == optionsMenu) {
+				activeMenu = resolutionMenu;
+			}
+			else if (activeMenu == resolutionMenu) {
+				cout << "1920 x 1080 set.";
+			}
+			else if (activeMenu == soundMenu) {
+				cout << "volume set.";
+			}
+			else if (activeMenu == controlsMenu) {
+				cout << "Player 1 controls set.";
+			}
+
+		}
+
+		if (activeMenu->getSelection() == 1 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			if (activeMenu == mainMenu) {
+				activeMenu = multiPlayerMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == multiPlayerMenu) {
+				cout << "Host LAN server set.";
+			}
+			else if (activeMenu == optionsMenu) {
+				activeMenu = soundMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == resolutionMenu) {
+				cout << "1600 x 900 set.";
+			}
+			else if (activeMenu == soundMenu) {
+				activeMenu = optionsMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == controlsMenu) {
+				cout << "Player 2 controls set.";
+			}
+		}
+
+		if (activeMenu->getSelection() == 2 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			if (activeMenu == mainMenu) {
+				activeMenu = optionsMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == multiPlayerMenu) {
+				cout << "Join LAN server set.";
+			}
+			else if (activeMenu == optionsMenu) {
+				activeMenu = controlsMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == resolutionMenu) {
+				cout << "1366 x 768 set.";
+			}
+			else if (activeMenu == controlsMenu) {
+				cout << "Player 3 controls set.";
+			}
+		}
+
+		if (activeMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			if (activeMenu == mainMenu) {
+				exit(0);
+			}
+			else if (activeMenu == multiPlayerMenu) {
+				activeMenu = mainMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == optionsMenu) {
+				activeMenu = mainMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == resolutionMenu) {
+				cout << "1280 x 720 set.";
+			}
+			else if (activeMenu == controlsMenu) {
+				cout << "Player 4 controls set.";
+			}
+		}
+
+		if (activeMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			if (activeMenu == resolutionMenu) {
+				activeMenu = optionsMenu;
+				activeMenu->setSelection(0);
+			}
+			else if (activeMenu == controlsMenu) {
+				activeMenu = optionsMenu;
+				activeMenu->setSelection(0);
+			}
+		}
+		
+		//GameObject* target1 = CommonUtils::BuildCuboidObject(
+		//	"Target1",										// Optional: Name
+		//	Vector3(0.0f, 2.0f, -3.5f),						// Position
+		//	Vector3(15.0f, 10.0f, 1.0f),					// Half-Dimensions
+		//	false,											// Physics Enabled?
+		//	0.0f,											// Physical Mass (must have physics enabled)
+		//	false,											// Physically Collidable (has collision shape)
+		//	false,											// Dragable by user?
+		//	Vector4(0.0f, 0.0f, 0.0f, 1.0f));				// Render color
+		//this->AddGameObject(target1);
+		//(*target1->Render()->GetChildIteratorStart())->GetMesh()->SetTexture(tex);
+
+
+		//backgroundMesh = Mesh::GenerateQuad();
+		//backgroundMesh = new Mesh(*image);
+		//backgroundMesh->SetTexture(tex);
+
+		RenderNode* background = new RenderNode();
+		background->SetMesh(backgroundMesh);
+		background->SetTransform(Matrix4::Translation(Vector3(0.0f, 2.0f, -3.5f)) * Matrix4::Scale(Vector3(1.0f, 1.0f, 1.0f)));
+		background->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		this->AddGameObject(new GameObject("Target", background, NULL));
+
 	}
+private:
+	GLuint	tex;
 
-	//void GraphicsPipeline::Instance() drawText(const std::string &text, const Vector3 &position, const float size, const bool perspective) {
-	//	//Create a new temporary TextMesh, using our line of text and our font
-	//	TextMesh* mesh = new TextMesh(text, *basicFont);
+	Mesh* backgroundMesh;
 
-	//	//This just does simple matrix setup to render in either perspective or
-	//	//orthographic mode, there's nothing here that's particularly tricky.
-	//	if (perspective) {
-	//		modelMatrix = Matrix4::Translation(position) * Matrix4::Scale(Vector3(size, size, 1));
-	//		viewMatrix = camera->BuildViewMatrix();
-	//		projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
-	//	}
-	//	else {
-	//		//In ortho mode, we subtract the y from the height, so that a height of 0
-	//		//is at the top left of the screen, which is more intuitive
-	//		//(for me anyway...)
-	//		modelMatrix = Matrix4::Translation(Vector3(position.x, height - position.y, position.z)) * Matrix4::Scale(Vector3(size, size, 1));
-	//		viewMatrix.ToIdentity();
-	//		projMatrix = Matrix4::Orthographic(-1.0f, 1.0f, (float)width, 0.0f, (float)height, 0.0f);
-	//	}
-	//	//Either way, we update the matrices, and draw the mesh
-	//	UpdateShaderMatrices();
-	//	mesh->Draw();
+	RenderNode * cam;
+	RenderNode * backTexture;
 
-	//	delete mesh; //Once it's drawn, we don't need it anymore!
-	//}
+	// Menus definition
+	Menu * mainMenu;
+	Menu * optionsMenu;
+	Menu * resolutionMenu;
+	Menu * soundMenu;
+	Menu * multiPlayerMenu;
+	Menu * controlsMenu;
+	Menu * activeMenu;
 };
-
-
 
