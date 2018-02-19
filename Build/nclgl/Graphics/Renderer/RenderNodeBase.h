@@ -1,5 +1,5 @@
 #pragma once
-
+#include <ncltech\Tags.h>
 #include <vector>
 
 namespace nclgl
@@ -22,7 +22,8 @@ public:
 
 	virtual void	Update(float msec);
 	virtual void	Draw() = 0;
-
+	inline bool     HasTag(Tags t) { return t == tag; }
+	void SetTag(Tags t) { tag = t; }
 	// Transforms
 	virtual void							SetTransform(const nclgl::Maths::Matrix4 &matrix) = 0;
 	virtual const nclgl::Maths::Matrix4&	GetTransform() const = 0;
@@ -60,7 +61,7 @@ public:
 protected:
 	std::vector<RenderNodeBase*> children;
 	RenderNodeBase*	parent = nullptr;
-
+	Tags tag;
 	MeshBase*	mesh;
 
 	float		boundingRadius = 100.0f;

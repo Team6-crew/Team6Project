@@ -1,4 +1,5 @@
 #include "PhysicsEngine.h"
+
 #include "GameObject.h"
 #include "CollisionDetectionSAT.h"
 #include <nclgl\NCLDebug.h>
@@ -6,6 +7,10 @@
 #include <set>
 #include <omp.h>
 #include <algorithm>
+#include <ncltech\Scene.h>
+#include <GameTech Coursework\EmptyScene.h>
+#include <ncltech/Pickup.h>
+#include "Tags.h"
 
 using namespace nclgl::Maths;
 
@@ -116,7 +121,16 @@ void PhysicsEngine::Update(float deltaTime)
 
 
 void PhysicsEngine::UpdatePhysics()
-{
+{   
+
+	//Objects to be deleted before this frame's collision check starts
+	//This is because we cannot delete the pickup object in player collision callback, 
+	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
+	for (int i = 0; i < objectsToDelete.size(); i++) {
+		delete objectsToDelete[i];
+	}
+	objectsToDelete.clear();
+
 	for (Manifold* m : manifolds)
 	{
 		delete m;
@@ -149,34 +163,34 @@ void PhysicsEngine::UpdatePhysics()
 		BroadPhaseCollisionsOcTree();
 	}
 	//creates collision pairs when using world partitioning
-	else if (worldPartition->isEnabled()) {
-		broadphaseColPairs.clear();
-		for (int i = 0; i < physicsNodes.size(); i++) {
-			PhysicsNode *pnodeA, *pnodeB;
-			if (physicsNodes[i]->getDynamic()) {
-				vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
-				for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
-					pnodeA = physicsNodes[i];
-					pnodeB = possibleColliders.at(k);
+	//else if (worldPartition->isEnabled()) {
+	//	broadphaseColPairs.clear();
+	//	for (int i = 0; i < physicsNodes.size(); i++) {
+	//		PhysicsNode *pnodeA, *pnodeB;
+	//		if (physicsNodes[i]->getDynamic()) {
+	//			vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
+	//			for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
+	//				pnodeA = physicsNodes[i];
+	//				pnodeB = possibleColliders.at(k);
 
-					if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
+	//				if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
 
-					//Check they both atleast have collision shapes
-					if (pnodeA->GetCollisionShape() != NULL
-						&& pnodeB->GetCollisionShape() != NULL)
-					{
-						if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
-							CollisionPair cp;
-							cp.pObjectA = pnodeA;
-							cp.pObjectB = pnodeB;
-							broadphaseColPairs.push_back(cp);
-						}
-					}
+	//				//Check they both atleast have collision shapes
+	//				if (pnodeA->GetCollisionShape() != NULL
+	//					&& pnodeB->GetCollisionShape() != NULL)
+	//				{
+	//					if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
+	//						CollisionPair cp;
+	//						cp.pObjectA = pnodeA;
+	//						cp.pObjectB = pnodeB;
+	//						broadphaseColPairs.push_back(cp);
+	//					}
+	//				}
 
-				}
-			}
-		}
-	}
+	//			}
+	//		}
+	//	}
+	//}
 
 	//vector<PhysicsNode*> possibleCollisions = wsp->getPossibleCollisions(this->FindGameObject("object that is moving")->physicsNode);
 	else {
@@ -244,6 +258,7 @@ bool PhysicsEngine::SphereSphereInterface(PhysicsNode* obj1, PhysicsNode* obj2, 
 void PhysicsEngine::BroadPhaseCollisions()
 {
 	broadphaseColPairs.clear();
+
 
 	PhysicsNode *pnodeA, *pnodeB;
 	//	The broadphase needs to build a list of all potentially colliding objects in the world,
@@ -378,14 +393,14 @@ void PhysicsEngine::NarrowPhaseCollisions()
 				}
 
 
-				//bool okA = cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
-				//bool okB = cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);
+				bool okA = cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
+				bool okB = cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);
 				//Check to see if any of the objects have a OnCollision callback that dont want the objects to physically collide
-				cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
-				cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);
+				/*cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
+				cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);*/
 
-				//if (okA && okB)
-				//{
+				if (okA && okB)
+				{
 					/* TUTORIAL 5 CODE */
 
 					// Build full collision manifold that will also handle the
@@ -408,7 +423,7 @@ void PhysicsEngine::NarrowPhaseCollisions()
 					}
 					else
 						delete manifold;
-				//}
+				}
 
 			}
 		}

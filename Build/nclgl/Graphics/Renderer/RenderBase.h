@@ -43,12 +43,13 @@ public:
 	virtual void					SetProjMatrix(nclgl::Maths::Matrix4& mat) = 0;
 
 	virtual void	SetViewPort(int width, int height) = 0;
+	virtual void	SetViewPort(int startx, int starty, int width, int height) = 0;
 	virtual void	Clear(Renderer::Clear clearType) = 0;
 	virtual void	SetClearColour(nclgl::Maths::Vector3& colour) = 0;
 
 	virtual void	BindScreenFramebuffer() = 0;
-
-
+	virtual void	Scissor(int startx, int starty, int width, int height) = 0;
+	virtual void	SetScissor(bool on) = 0;
 	virtual void	SetScreenCulling(Renderer::Culling type) = 0;
 	virtual void	SetDefaultSettings() = 0;
 

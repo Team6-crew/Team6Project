@@ -18,7 +18,7 @@ std::vector<PhysicsNode*> WorldPartition::getPossibleCollisions(PhysicsNode * no
 	std::set<PhysicsNode*> set(possibleCollisions.begin(), possibleCollisions.end());
 	if (set.find(node) != set.end()) {
 		set.erase(set.find(node));
-	}	
+	}
 	possibleCollisions.clear();
 	possibleCollisions.insert(possibleCollisions.end(),set.begin(), set.end());
 
