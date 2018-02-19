@@ -12,15 +12,12 @@ public:
 	~BallAI();
 	std::vector<nclgl::Maths::Vector3> getNodes() { return Nodes; }
 	void setNodes(nclgl::Maths::Vector3 Node) { Nodes.push_back(Node); }
-	nclgl::Maths::Vector3 seek(nclgl::Maths::Vector3 TargetPos);
-	nclgl::Maths::Vector3 followPath();
-	void chasePlayer();
 	static GameObject* getBall() {return AIBall;}
-
 	void move();
-
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
+
+	
 
 private:
 	static GameObject* AIBall;
@@ -29,5 +26,6 @@ private:
 	std::vector<nclgl::Maths::Vector3> Nodes;
 	float speed;
 	StateMachine* AIStateMachine;
+
 };
 

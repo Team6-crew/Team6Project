@@ -37,6 +37,7 @@ public:
 		
 		player1 = new Player();
 		AIBall = new BallAI();
+
 		//Who doesn't love finding some common ground?
 		this->AddGameObject(CommonUtils::BuildCuboidObject(
 			"Ground",

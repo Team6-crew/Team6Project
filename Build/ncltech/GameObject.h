@@ -21,6 +21,9 @@ position/orientation each frame.
 #include <vector>
 #include <functional>
 #include <nclgl\Graphics\Renderer\RenderNodeBase.h>
+#include <string.h>
+
+using namespace std;
 
 class Scene;
 class PhysicsEngine;
@@ -141,6 +144,21 @@ public:
 public:
 	PhysicsNode * physicsNode;
 
+	//location getters and setters
+	void setName(std::string n) { name = n; };
+	std::string getName() { return name; };
+	nclgl::Maths::Vector3 getLocation() { return location; };
+	void setLocation(nclgl::Maths::Vector3 loc) { location = loc; };
+	float getHalfDimentions() { return halfDimentions; };
+	void setHalfDimentions(float half) { halfDimentions = half; };
+	bool getHasPhysics() { return hasPhysics; };
+	void setHasPhysics(bool Physics) { hasPhysics = Physics; };
+	void setMass(bool m) { m = mass; };
+	float getMass() { return mass; };
+	void setCollidable(bool coll) { collidable = coll; };
+	bool getCollidable() { return collidable; };
+	void setDragable(bool drag) { dragable = drag; };
+	bool getDragable() { return dragable; };
 	
 	
 protected:
@@ -150,5 +168,15 @@ protected:
 
 	//Components
 	RenderNodeBase*					renderNode;
+
+private:
+	//location information
+	string name;
+	nclgl::Maths::Vector3 location;
+	float halfDimentions;
+	bool hasPhysics;
+	float mass;
+	bool collidable;
+	bool dragable;
 
 };

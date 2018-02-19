@@ -18,7 +18,6 @@ bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
 
-
 // Program Deconstructor
 //  - Releases all global components and memory
 //  - Optionally prints out an error message and
@@ -130,8 +129,45 @@ void HandleKeyboardInputs()
 			myfile << pos << "\n";
 			myfile.close();
 		}
+	}
+	string name;
+	Vector3 position;
+	float half;
+	bool physics;
+	float mass;
+	bool collide;
+	bool drag;
 
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_F1))
+	{
+		name = BallAI::getBall()->getName();
+		position = BallAI::getBall()->Physics()->GetPosition();
+		half = BallAI::getBall()->getHalfDimentions();
+		physics = BallAI::getBall()->getHasPhysics();
+		mass = BallAI::getBall()->getMass();
+		collide = BallAI::getBall()->getCollidable();
+		drag = BallAI::getBall()->getDragable();
 
+		std::ofstream myfile;
+		myfile.open("test.txt", std::ios_base::app);
+		/*cout << position << "\n";
+		cout << std::to_string(half) << "\n";
+		std::cout << std::boolalpha << physics << "\n";
+		cout << mass << "\n";
+		cout << collide << "\n";
+		cout << drag << "\n";*/
+
+		if (myfile.is_open())
+		{
+			myfile << name << " ";
+			myfile << position << " ";
+			myfile << std::to_string(half) << " ";
+			myfile << std::to_string(physics) << " ";
+			myfile << std::to_string(mass) << " ";
+			myfile << std::to_string(collide) << " ";
+			myfile << std::to_string(drag) << "\n";
+			myfile.close();
+		}
 	}
 }
 
