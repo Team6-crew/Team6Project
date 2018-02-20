@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include <nclgl\Vector3.h>
+
 namespace irrklang
 {
 	class ISoundEngine;
@@ -23,6 +25,13 @@ public:
 	void StopAllSounds() override;
 	// A volume of 0.0 is minimum and 1.0 is maximum. Values outside this range are clamped
 	void SetVolume(float volume) override;
+
+	void Update(float dt) override;
+
+	void PlaySound3D(const std::string& fileName, 
+					 const nclgl::Maths::Vector3& position) override;
+	void SetListenerPosition(const nclgl::Maths::Vector3& position,
+		const nclgl::Maths::Vector3& facing) override;
 
 protected:
 	irrklang::ISoundEngine * soundEngine = nullptr;

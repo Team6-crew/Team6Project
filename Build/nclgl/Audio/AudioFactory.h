@@ -10,7 +10,10 @@ class AudioFactory : public TSingleton<AudioFactory>
 	friend class TSingleton<AudioFactory>;
 
 public:
-	AudioEngineBase*	 MakeAudioEngine();
+	// Don't want to make a new audio engine every time
+	//AudioEngineBase*	 MakeAudioEngine();
+	
+	AudioEngineBase*	 GetAudioEngine();
 private:
 	AudioFactory();
 	~AudioFactory();

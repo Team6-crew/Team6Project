@@ -7,6 +7,7 @@
 #include "EmptyScene.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
+
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -113,7 +114,11 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
 
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
 
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_W));
+		//AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 }
 
 
@@ -123,8 +128,10 @@ int main()
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
-	AudioEngineBase* sound = AudioFactory::Instance()->MakeAudioEngine();
-	sound->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+	AudioEngineBase* sound = AudioFactory::Instance()->GetAudioEngine();
+	sound->PlaySound2D(SOUNDSDIR"Intro.wav", false);
+
+
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
@@ -163,9 +170,12 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-		if (Window::GetWindow().GetTimer()->GetMS() > 5000)
+		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
+
+		if (Window::GetWindow().GetTimer()->GetMS() > 7000)
 		{
-			sound->SetVolume(0.1f);
+			sound->SetVolume(1.0f);
+
 		}
 		if (Window::GetWindow().GetTimer()->GetMS() > 12000)
 		{

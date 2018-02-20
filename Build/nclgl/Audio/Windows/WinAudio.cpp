@@ -6,6 +6,9 @@ using namespace irrklang;
 #include <iostream>
 
 #include <nclgl\common.h>
+#include <ncltech\GraphicsPipeline.h>
+
+using namespace nclgl::Maths;
 
 WinAudio::WinAudio()
 {
@@ -15,8 +18,6 @@ WinAudio::WinAudio()
 		std::cout << "Error starting up Irrklang Engine" << std::endl;
 		return;
 	}
-		
-
 }
 
 
@@ -36,10 +37,6 @@ void WinAudio::PlaySound2D(const std::string& fileName, bool looping)
 
 void WinAudio::SetBackgroundSound(const std::string& fileName)
 {
-	if (background)
-	{
-		delete background;
-	}
 	if (soundEngine)
 	{
 		background = soundEngine->play2D(fileName.c_str(), true, false, true);
@@ -73,4 +70,27 @@ void WinAudio::SetVolume(float volume)
 	{
 		soundEngine->setSoundVolume(volume);
 	}
+}
+
+void WinAudio::PlaySound3D(const std::string& fileName, const Vector3& position)
+{
+	if (soundEngine)
+	{
+		soundEngine->play3D(fileName.c_str(), vec3df(position.x, position.y, position.z));
+	}
+}
+
+void WinAudio::SetListenerPosition(const Vector3& position, const Vector3& facing)
+{
+	if (soundEngine)
+	{
+		soundEngine->setListenerPosition(irrklang::vec3df(position.x, position.y, position.z),
+			irrklang::vec3df(facing.x, facing.y, facing.z));
+	}
+}
+
+void WinAudio::Update(float dt)
+{
+	SetListenerPosition(GraphicsPipeline::Instance()->GetCamera()->GetPosition(),
+					   GraphicsPipeline::Instance()->GetCamera()->GetFacingDirection());
 }

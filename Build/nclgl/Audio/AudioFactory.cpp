@@ -12,10 +12,18 @@ AudioFactory::~AudioFactory()
 {
 }
 
-AudioEngineBase*	AudioFactory::MakeAudioEngine()
+//AudioEngineBase*	AudioFactory::MakeAudioEngine()
+//{
+//#ifdef WIN_OGL
+//	return new WinAudio();
+//#endif // WIN_OGL
+//
+//}
+
+AudioEngineBase*	AudioFactory::GetAudioEngine()
 {
 #ifdef WIN_OGL
-	return new WinAudio();
+	static AudioEngineBase* engine = new WinAudio();
+	return engine;
 #endif // WIN_OGL
-
 }

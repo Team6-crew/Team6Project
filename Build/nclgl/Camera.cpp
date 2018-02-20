@@ -80,3 +80,8 @@ Matrix4 Camera::BuildViewMatrix() {
 		Matrix4::Rotation(-yaw, Vector3(0, 1, 0)) *
 		Matrix4::Translation(-position);
 };
+
+Vector3 Camera::GetFacingDirection()
+{
+	return nclgl::Maths::Vector3(sin(yaw)* cos(pitch), sin(pitch), -cos(yaw) * cos(pitch)).Normalise();
+}
