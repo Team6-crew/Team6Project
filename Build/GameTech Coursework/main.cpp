@@ -5,10 +5,7 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
-#include "iostream"
-#include "fstream"
 
-using namespace std;
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -17,6 +14,7 @@ const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
 bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
+
 
 // Program Deconstructor
 //  - Releases all global components and memory
@@ -49,7 +47,10 @@ void Initialize()
 	PhysicsEngine::Instance();
 
 	//Enqueue All Scenes
-	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
+	SceneManager::Instance()->EnqueueScene(new EmptyScene("TestScene"));
+	Scene* levelOne = new Scene("LevelOne");
+	SceneManager::Instance()->EnqueueScene(levelOne);	
+
 	
 }
 
@@ -113,62 +114,6 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
-
-	Vector3 pos;
-	std::vector<Vector3> posList;
-
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
-	{
-		pos = Player::getBall()->Physics()->GetPosition();
-		std::ofstream myfile;
-		myfile.open("pos.txt", std::ios_base::app);
-		cout << pos << "\n";
-
-		if (myfile.is_open())
-		{
-			myfile << pos << "\n";
-			myfile.close();
-		}
-	}
-	string name;
-	Vector3 position;
-	float half;
-	bool physics;
-	float mass;
-	bool collide;
-	bool drag;
-
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_F1))
-	{
-		name = BallAI::getBall()->getName();
-		position = BallAI::getBall()->Physics()->GetPosition();
-		half = BallAI::getBall()->getHalfDimentions();
-		physics = BallAI::getBall()->getHasPhysics();
-		mass = BallAI::getBall()->getMass();
-		collide = BallAI::getBall()->getCollidable();
-		drag = BallAI::getBall()->getDragable();
-
-		std::ofstream myfile;
-		myfile.open("test.txt", std::ios_base::app);
-		/*cout << position << "\n";
-		cout << std::to_string(half) << "\n";
-		std::cout << std::boolalpha << physics << "\n";
-		cout << mass << "\n";
-		cout << collide << "\n";
-		cout << drag << "\n";*/
-
-		if (myfile.is_open())
-		{
-			myfile << name << " ";
-			myfile << position << " ";
-			myfile << std::to_string(half) << " ";
-			myfile << std::to_string(physics) << " ";
-			myfile << std::to_string(mass) << " ";
-			myfile << std::to_string(collide) << " ";
-			myfile << std::to_string(drag) << "\n";
-			myfile.close();
-		}
-	}
 }
 
 
@@ -182,8 +127,7 @@ int main()
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
-	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_X)) 
-{
+	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_X)) {
 		//Start Timing
 		
 		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
@@ -218,7 +162,7 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-		
+	
 
 		{
 			//Forces synchronisation if vsync is disabled
@@ -237,4 +181,4 @@ int main()
 	//Cleanup
 	Quit();
 	return 0;
-};
+}

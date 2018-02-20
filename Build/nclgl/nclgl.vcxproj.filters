@@ -7,9 +7,6 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{bc4f75d2-6e13-4f20-9178-8aacb5961ae9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI">
-      <UniqueIdentifier>{f600f5e3-d700-4e43-ab91-8a0423af73b4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CHANGELIST.txt" />
@@ -83,18 +80,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
-    <ClCompile Include="AI\BallAI.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\ChasingState.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\RoamingState.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="StateMachine.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
+    <ClCompile Include="LevelLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -192,26 +178,6 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
-    <ClInclude Include="AI\AIObject.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\BallAI.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\ChasingState.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\RoamingState.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\State.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\StateMachine.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\Messenger.h">
-      <Filter>AI</Filter>
-    </ClInclude>
+    <ClInclude Include="LevelLoader.h" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #include "PhysicsEngine.h"
+
 #include "GameObject.h"
 #include "CollisionDetectionSAT.h"
 #include <nclgl\NCLDebug.h>
@@ -6,6 +7,10 @@
 #include <set>
 #include <omp.h>
 #include <algorithm>
+#include <ncltech\Scene.h>
+#include <GameTech Coursework\EmptyScene.h>
+#include <ncltech/Pickup.h>
+#include "Tags.h"
 
 using namespace nclgl::Maths;
 
@@ -116,7 +121,16 @@ void PhysicsEngine::Update(float deltaTime)
 
 
 void PhysicsEngine::UpdatePhysics()
-{
+{   
+
+	//Objects to be deleted before this frame's collision check starts
+	//This is because we cannot delete the pickup object in player collision callback, 
+	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
+	for (int i = 0; i < objectsToDelete.size(); i++) {
+		delete objectsToDelete[i];
+	}
+	objectsToDelete.clear();
+
 	for (Manifold* m : manifolds)
 	{
 		delete m;
@@ -244,6 +258,7 @@ bool PhysicsEngine::SphereSphereInterface(PhysicsNode* obj1, PhysicsNode* obj2, 
 void PhysicsEngine::BroadPhaseCollisions()
 {
 	broadphaseColPairs.clear();
+
 
 	PhysicsNode *pnodeA, *pnodeB;
 	//	The broadphase needs to build a list of all potentially colliding objects in the world,
@@ -378,14 +393,14 @@ void PhysicsEngine::NarrowPhaseCollisions()
 				}
 
 
-				//bool okA = cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
-				//bool okB = cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);
+				bool okA = cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
+				bool okB = cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);
 				//Check to see if any of the objects have a OnCollision callback that dont want the objects to physically collide
-				cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
-				cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);
+				/*cp.pObjectA->FireOnCollisionEvent(cp.pObjectA, cp.pObjectB);
+				cp.pObjectB->FireOnCollisionEvent(cp.pObjectB, cp.pObjectA);*/
 
-				//if (okA && okB)
-				//{
+				if (okA && okB)
+				{
 					/* TUTORIAL 5 CODE */
 
 					// Build full collision manifold that will also handle the
@@ -408,7 +423,7 @@ void PhysicsEngine::NarrowPhaseCollisions()
 					}
 					else
 						delete manifold;
-				//}
+				}
 
 			}
 		}
