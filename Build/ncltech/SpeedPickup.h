@@ -1,6 +1,10 @@
 #pragma once
 #include "Pickup.h"
 
+class Pickup;
+class SpeedPickup;
+
+static SpeedPickup * speed1;
 
 class SpeedPickup : public Pickup
 {
@@ -13,9 +17,11 @@ public:
 		bool collidable,
 		const nclgl::Maths::Vector4& color);
 	~SpeedPickup();
+	static SpeedPickup* getPickup(int a) { if (a == 1) return speed1; };
 	
 	virtual void effect(Player* player);
-	
+
+private:
 
 };
 

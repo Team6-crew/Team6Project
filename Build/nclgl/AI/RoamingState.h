@@ -8,6 +8,7 @@
 #include <iostream>
 #include <nclgl\Vector3.h>
 #include <vector>
+
 class GameObject;
 class StateMachine;
 

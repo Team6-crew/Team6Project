@@ -10,6 +10,7 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <algorithm> //used for remove
 #include "RoamingState.h"
+#include <nclgl\CollectandUsePickupState.h>
 float maxVel = 5.0f;
 
 using namespace std;
@@ -22,11 +23,11 @@ using namespace nclgl::Maths;
 
 BallAI::BallAI()
 {
+	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
 	
 
-
 	AIBall = CommonUtils::BuildSphereObject("AIball",
-		nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
+		location,	//Position leading to 0.25 meter overlap on faces, and more on diagonals
 		1.0f,				//Half dimensions
 		true,									//Has Physics Object
 		1.0f,									//Mass
@@ -35,7 +36,7 @@ BallAI::BallAI()
 		CommonUtils::GenColor(1.f, 1.f));
 
 	AIBall->setName("Test");
-	AIBall->setLocation(nclgl::Maths::Vector3(20.0f, 2.0f, -20.0));
+	AIBall->setLocation(location);
 	AIBall->setHalfDimentions(1.0f);
 	AIBall->setHasPhysics(true);
 	AIBall->setMass(1.1f);
@@ -43,7 +44,7 @@ BallAI::BallAI()
 	AIBall->setDragable(false);
 	AIBall->setDynamic(true);
 	AIStateMachine = new StateMachine(AIBall);
-	AIStateMachine->setCurrentState(AIStateMachine,RoamingState::GetInstance());
+	AIStateMachine->setCurrentState(AIStateMachine,CollectandUsePickupState::GetInstance());
 }
 
 

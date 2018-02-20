@@ -26,6 +26,7 @@
     <ClCompile Include="AI\ChasingState.cpp" />
     <ClCompile Include="AI\RoamingState.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CollectandUsePickupState.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="AI\StateMachine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
+    <ClInclude Include="CollectandUsePickupState.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
     <ClInclude Include="Graphics\FrameBufferBase.h" />

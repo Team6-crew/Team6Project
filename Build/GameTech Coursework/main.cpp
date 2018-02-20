@@ -5,6 +5,8 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include "iostream"
+#include "fstream"
 
 using namespace nclgl::Maths;
 
@@ -114,6 +116,23 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
+
+	Vector3 pos;
+	std::vector<Vector3> posList;
+
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+	{
+		pos = Player::getPlayer(1)->Physics()->GetPosition();
+		std::ofstream myfile;
+		myfile.open("pos.txt", std::ios_base::app);
+		cout << pos << "\n";
+
+		if (myfile.is_open())
+		{
+			myfile << pos << "\n";
+			myfile.close();
+		}
+	}
 }
 
 

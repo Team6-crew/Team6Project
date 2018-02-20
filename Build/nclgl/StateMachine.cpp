@@ -9,7 +9,8 @@ void StateMachine::setCurrentState(StateMachine* sOwner, State* newState)
 			{
 				currentState->exit(sOwner, stateOwner);
 			}
-
+			previousState = currentState;
+			sOwner->setPreviousState(previousState);
 			currentState = newState;
 			newState->enter(sOwner, stateOwner);
 

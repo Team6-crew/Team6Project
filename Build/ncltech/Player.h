@@ -4,6 +4,11 @@
 #include <ncltech\Pickup.h>
 
 class Pickup;
+
+class Player;
+
+static Player * player1;
+
 class Player : public GameObject
 {
 public:
@@ -29,13 +34,14 @@ public:
 	void setSpeed(float sp) { speed = sp; }
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
-
+	static Player* getPlayer(int a) { if (a == 1) return player1; else return nullptr; }
 	
 
 private:
 
-	GameObject* body;
-	GameObject* cube;
+
+	GameObject * body;
+	GameObject * cube;
 
 	RenderNodeBase* camera_transform;
 	Camera* camera;

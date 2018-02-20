@@ -8,8 +8,6 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 
-#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
-
 using namespace nclgl::Maths;
 
 Player::Player(const std::string& name,

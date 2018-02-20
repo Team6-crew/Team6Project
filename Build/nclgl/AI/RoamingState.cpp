@@ -76,7 +76,7 @@ nclgl::Maths::Vector3 RoamingState::seek(GameObject* owner, nclgl::Maths::Vector
 nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner, GameObject* owner)
 {
 	nclgl::Maths::Vector3 ballPos = BallAI::getBall()->Physics()->GetPosition();
-	nclgl::Maths::Vector3 playerPos = Player::getBall()->Physics()->GetPosition();
+	nclgl::Maths::Vector3 playerPos = Player::getPlayer(1)->Physics()->GetPosition();
 	// Switch to length square
 	nclgl::Maths::Vector3 goal = nodesList[CurrentNode];
 	float distanceToPlayer = (ballPos - playerPos).Length();

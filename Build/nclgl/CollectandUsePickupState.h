@@ -1,17 +1,20 @@
 #pragma once
-#include "State.h"
-#include "Messenger.h"
+#include "nclgl\AI\State.h"
 #include "ncltech\Player.h"
 #include <ncltech\GameObject.h>
 #include <iostream>
-class StateMachine;
+#include <nclgl\AI\State.h>
+
 class GameObject;
-class ChasingState : public State
+class StateMachine;
+
+
+class CollectandUsePickupState: public State
 {
 public:
 	static State * GetInstance()
 	{
-		static ChasingState theInstance;
+		static CollectandUsePickupState theInstance;
 		return &theInstance;
 	}
 
@@ -21,9 +24,6 @@ public:
 	virtual void exit(StateMachine* sOwner, GameObject* owner);
 private:
 	float maxVel = 20;
-
-	State* collectAndUsePickupState;
-	State* roamingState;
 };
 
 

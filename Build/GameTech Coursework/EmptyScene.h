@@ -4,7 +4,8 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
-
+#include <nclgl\AI\BallAI.h>
+#include <nclgl\AI\StateMachine.h>
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
 
@@ -16,9 +17,7 @@
 class EmptyScene : public Scene
 {
 public:
-	Player* getPlayer() { return player1; }
-
-	Player* player1;
+	BallAI * AIBall;
 	float rotation = 0.0f;
 	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
@@ -27,7 +26,8 @@ public:
 
 	virtual ~EmptyScene()
 	{
-		delete player1;
+		delete AIBall;
+		delete speed1;
 	}
 
 	//WorldPartition *wsp;
@@ -35,17 +35,9 @@ public:
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-	
 		
-		/*player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-
-		player1->SetPhysics(player1->Physics());*/
+		AIBall = new BallAI();
+		this->AddGameObject(AIBall->getBall());
 
 		player1 = new Player("player",
 			nclgl::Maths::Vector3(0.0f, 1.f, 0.0f),
@@ -66,7 +58,7 @@ public:
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
-			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
+			nclgl::Maths::Vector3(160.0f, 1.0f, 160.0f),
 			true,
 			0.0f,
 			true,
@@ -76,24 +68,18 @@ public:
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
 
-		/*this->AddGameObject(CommonUtils::BuildCuboidObject(
-			"pickup",
-			Vector3(10.0f, 1.f, 0.0f),
-			Vector3(0.6f, 0.2f, 0.2f),
-			true,
-			0.0f,
-			true,
-			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));*/
-		SpeedPickup* pickup = new SpeedPickup("pickup",
-			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
+		nclgl::Maths::Vector3 sp1location = nclgl::Maths::Vector3(30.0f, 1.f, 30.0f);
+
+			speed1 = new SpeedPickup("pickup",
+			sp1location,
 			0.5f,
 			true,
 			0.0f,
 			true,
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup->SetPhysics(pickup->Physics());
-		this->AddGameObject(pickup);
+		speed1->SetPhysics(speed1->Physics());
+		this->AddGameObject(speed1);
+		speed1->getPickup(1)->setLocation(sp1location); //have to get the pickup so we don't get a memory exception
 
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
@@ -111,6 +97,7 @@ public:
 			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
 		player1->move();
+		AIBall->move();
 
 	}
 };

@@ -18,11 +18,13 @@ public:
 	GameObject* getOwner(int a) { if(a == 1) return stateOwner; }
 	void setDefaultState(State* dState) { currentState = dState; }
 	void setCurrentState(StateMachine* sOwner, State* newState);
+	void setPreviousState(State* pState) { previousState = pState; }
 	State* getPreviousState() { return previousState; }
 
 private:
 	State * roamingState;
 	State * chasingState;
+	State * collectAndUsePickupState;
 	State * currentState = nullptr;
 	State * previousState;
 	StateMachine* machineOwner;
