@@ -183,7 +183,7 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C)) {
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
 		minimap->ReplaceTexture(circle_tex);
 	}
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
