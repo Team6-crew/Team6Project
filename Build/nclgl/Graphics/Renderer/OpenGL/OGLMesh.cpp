@@ -19,7 +19,7 @@ OGLMesh::OGLMesh(void)	{
 		bufferObject[i] = 0;
 	}
 
-	texture		 = 0;
+	//texture		 = 0;
 	numVertices  = 0;
 	type		 = GL_TRIANGLES;
 
@@ -96,26 +96,35 @@ OGLMesh::~OGLMesh(void)	{
 }
 
 
-GLuint activeArrayHack = 0;
-GLuint activeTexture1Hack = 0;
-GLuint activeTexture2Hack = 0;
+
+
 void OGLMesh::Draw()	{
+	int Texture_num = GL_TEXTURE0;
+	int k = 0;
+	GLuint tex_end = NULL;
 	//if (activeTexture1Hack != texture)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		activeTexture1Hack = texture;
+	{	
+	for (std::vector<GLuint>::iterator it = texture.begin(); it != texture.end(); ++it) {
+		glActiveTexture(GL_TEXTURE0+k);
+		glBindTexture(GL_TEXTURE_2D, *it);
+		tex_end = *it;
+		k++;
+	}
+	for (int d = k; d < 2; d++) {
+		glActiveTexture(GL_TEXTURE0 + d);
+		glBindTexture(GL_TEXTURE_2D, tex_end);
+	}
+	k = 2;
 	}
 	//if (activeTexture2Hack != texture)
 	{
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0 + k);
 		glBindTexture(GL_TEXTURE_2D, bumpTexture);
-		activeTexture2Hack = texture;
+
 	}
 	//if (activeArrayHack != arrayObject)
 	{
 		glBindVertexArray(arrayObject);
-		activeArrayHack = arrayObject;
 	}
 
 	if (bufferObject[INDEX_BUFFER]) {
@@ -644,6 +653,15 @@ void OGLMesh::SetTexture(TextureBase* texture)
 {
 	//TODO: Can we avoid this cast?
 	// Dynamic is safer but slower if static cast fails have big problems anyway
-	this->texture = static_cast<OGLTexture*>(texture)->GetID();
+	this->texture.push_back(static_cast<OGLTexture*>(texture)->GetID());
 	//TODO: Don't actually need texture here is for OBJMesh??
+}
+
+void OGLMesh::ReplaceTexture(TextureBase* texture) {
+	if (this->texture.size() == 0) {
+		this->texture.push_back(static_cast<OGLTexture*>(texture)->GetID());
+	}
+	else {
+		this->texture[0] = static_cast<OGLTexture*>(texture)->GetID();
+	}
 }
