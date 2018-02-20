@@ -51,6 +51,8 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 	
+	// Move this once main menu is hooked up
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
 // Print Debug Info
@@ -116,9 +118,6 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
-
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_W));
-		//AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 }
 
 
@@ -128,8 +127,7 @@ int main()
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
-	AudioEngineBase* sound = AudioFactory::Instance()->GetAudioEngine();
-	sound->PlaySound2D(SOUNDSDIR"Intro.wav", false);
+	
 
 
 	Window::GetWindow().GetTimer()->GetTimedMS();
@@ -170,17 +168,22 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
+		// Update Audio
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
 
 		if (Window::GetWindow().GetTimer()->GetMS() > 7000)
 		{
-			sound->SetVolume(1.0f);
+			// Can remove this static bool once main menu is hooked up
+			static bool hasSound = false;
+			if (!hasSound)
+			{
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
+			// Remove once hooked up main menu
+			hasSound = true;
+		}
 
-		}
-		if (Window::GetWindow().GetTimer()->GetMS() > 12000)
-		{
-			sound->StopBackgroundSound();
-		}
+		// Remove this once main menu is hooked up
 
 		{
 			//Forces synchronisation if vsync is disabled
@@ -189,6 +192,7 @@ int main()
 		//	glClientWaitSync(glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, NULL), GL_SYNC_FLUSH_COMMANDS_BIT, 1000000);
 		}
 		timer_render.EndTimingSection();
+
 
 
 		//Finish Timing

@@ -37,10 +37,13 @@ void WinAudio::PlaySound2D(const std::string& fileName, bool looping)
 
 void WinAudio::SetBackgroundSound(const std::string& fileName)
 {
-	if (soundEngine)
-	{
-		background = soundEngine->play2D(fileName.c_str(), true, false, true);
-	}
+
+		if (soundEngine)
+		{
+			StopBackgroundSound();
+			background = soundEngine->play2D(fileName.c_str(), true, false, true);
+		}
+
 
 }
 
