@@ -33,7 +33,7 @@ void Menu::ShowMenu()
 	float cs_size_x = 0;
 	float cs_size_y = 60.f / ss.y * 2.0f;
 
-	const Vector4 log_background_highlight(0.3f, 0.2f, 0.1f, 0.5f);
+	const Vector4 log_background_highlight(0.0f, 0.0f, 1.0f, 1.0f);
 
 	for (std::vector<string>::iterator it = Items.begin(); it != Items.end(); ++it)
 	{

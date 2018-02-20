@@ -173,8 +173,9 @@ public:
 		else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
 			pauseMenu->visible = false;
-			SceneManager::Instance()->JumpToScene("Main Menu");
 			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+			SceneManager::Instance()->JumpToScene("Main Menu");
+			
 		}
 		else if (pauseMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{

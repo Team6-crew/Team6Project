@@ -268,11 +268,11 @@ public:
 		//backgroundMesh = new Mesh(*image);
 		//backgroundMesh->SetTexture(tex);
 
-		RenderNode* background = new RenderNode();
-		background->SetMesh(backgroundMesh);
-		background->SetTransform(Matrix4::Translation(Vector3(0.0f, 2.0f, -3.5f)) * Matrix4::Scale(Vector3(1.0f, 1.0f, 1.0f)));
-		background->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		this->AddGameObject(new GameObject("Target", background, NULL));
+		//RenderNode* background = new RenderNode();
+		//background->SetMesh(backgroundMesh);
+		//background->SetTransform(Matrix4::Translation(Vector3(0.0f, 2.0f, -3.5f)) * Matrix4::Scale(Vector3(1.0f, 1.0f, 1.0f)));
+		//background->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		//this->AddGameObject(new GameObject("Target", background, NULL));
 
 	}
 private:

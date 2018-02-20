@@ -75,7 +75,7 @@ function as it will include the filename and linenumber it was triggered on with
 #define LOG_TEXT_FONT       "Verdana"
 
 #define STATUS_TEXT_SIZE	60.f
-#define STATUS_TEXT_FONT    "Castellar"
+#define STATUS_TEXT_FONT    "Verdana"
 
 #define LOG_OUTPUT_FILE_ENABLED
 #define LOG_OUTPUT_FILE     "program_output.txt"
