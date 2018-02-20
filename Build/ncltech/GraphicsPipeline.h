@@ -2,6 +2,9 @@
 
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
+#include <nclgl/Graphics/Renderer/RenderNodeBase.h>
+#include <nclgl\Definitions.h>
+#include <vector>
 #include <nclgl\Graphics\RenderConstants.h>
 
 #include <GL/glew.h>
@@ -39,6 +42,8 @@ public:
 	//Utils
 	inline Camera* GetCamera() { return camera; }
 
+	Camera* CreateNewCamera();
+
 protected:
 	GraphicsPipeline();
 	virtual ~GraphicsPipeline();
@@ -51,6 +56,7 @@ protected:
 	void RecursiveAddToRenderLists(RenderNodeBase* node);
 	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNodeBase*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
+	void AdjustViewport(int i, int j);
 
 protected:
 
@@ -69,6 +75,8 @@ protected:
 	ShaderBase* shaderPresentToWindow;
 	ShaderBase* shaderShadow;
 	ShaderBase* shaderForwardLighting;
+
+	ShaderBase* shaderTrail;
 
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
@@ -91,9 +99,28 @@ protected:
 	//Common
 	MeshBase* fullscreenQuad;
 	Camera* camera;
+	/*Camera* camera1;
+	Camera* camera2;*/
 	bool isVsyncEnabled;
 	std::vector<RenderNodeBase*> allNodes;
 
 	std::vector<RenderNodeBase*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
+	std::vector<Camera*> cameras;
+	std::vector<nclgl::Maths::Matrix4> viewMatrices;
+	std::vector<nclgl::Maths::Matrix4> projViewMatrices;
+
+	MeshBase* trailQuad;
+
+	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
+
+	TextureBase* gr_tex;
+	FrameBufferBase* TrailBuffer;
+
+	float paint_perc;
+
+	//Minimap
+	MeshBase* minimap;
+	nclgl::Maths::Matrix4 tempProj;
+	nclgl::Maths::Matrix4 tempView;
 };

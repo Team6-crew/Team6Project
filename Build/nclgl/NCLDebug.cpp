@@ -332,6 +332,31 @@ void NCLDebug::AddStatusEntry(const Vector4& color, const std::string text, ...)
 	}
 }
 
+void NCLDebug::AddHUD(const Vector4& color, const std::string text, ...)
+{
+	if (g_StatusVisible)
+	{
+		const Vector2 ss = Window::GetWindow().GetScreenSize();
+		float cs_size_x = STATUS_TEXT_SIZE / ss.x * 2.0f;
+		float cs_size_y = STATUS_TEXT_SIZE / ss.y * 2.0f;
+
+		va_list args;
+		va_start(args, text);
+
+		char buf[1024];
+		int needed = vsnprintf_s(buf, 1023, _TRUNCATE, text.c_str(), args);
+		va_end(args);
+
+		int length = (needed < 0) ? 1024 : needed;
+
+		std::string formatted_text = std::string(buf, (size_t)length);
+
+		DrawTextCs(Vector4(-1.0f + cs_size_x * 0.5f, 1.0f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), STATUS_TEXT_SIZE, formatted_text, TEXTALIGN_LEFT, color);
+		g_NumStatusEntries++;
+		g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
+	}
+}
+
 
 //Log
 void NCLDebug::AddLogEntry(const Vector3& color, const std::string& text)
@@ -574,7 +599,7 @@ void NCLDebug::_BuildTextBackgrounds()
 	};
 	
 
-	auto DrawBox_status = [&](Vector3 A, Vector3 B, Vector3 C, Vector3 D, Vector4 col)
+	/*auto DrawBox_status = [&](Vector3 A, Vector3 B, Vector3 C, Vector3 D, Vector4 col)
 	{
 		centre = invProjView * C;
 		last = invProjView * D;
@@ -590,7 +615,7 @@ void NCLDebug::_BuildTextBackgrounds()
 			NextTri(invProjView * Vector3(B.x + round_offset.x - rounded_offset_x, B.y - round_offset.y + rounded_offset_y, 0.0f), col);
 		}
 		NextTri(invProjView * A, col);
-	};
+	};*/
 
 	const float minimise_size = 0.05f;
 	Vector4 log_background_col(0.1f, 0.1f, 0.1f, 0.5f);
@@ -608,13 +633,13 @@ void NCLDebug::_BuildTextBackgrounds()
 			float btm_y = 1 - g_NumStatusEntries * cs_size_y - cs_size_y;
 			float max_x = -1 + cs_size_x + g_MaxStatusEntryWidth;
 
-			DrawBox_status(
+			/*DrawBox_status(
 				Vector3(max_x, 1, 0.0f),
 				Vector3(max_x, btm_y, 0.0f),
 				Vector3(-1, 1, 0),
 				Vector3(-1, btm_y, 0),
 				log_background_col
-			);
+			);*/
 
 
 			//Is MouseOver?
@@ -651,13 +676,13 @@ void NCLDebug::_BuildTextBackgrounds()
 				g_StatusVisible = true;
 		}
 
-		DrawBox_status(
+		/*DrawBox_status(
 			Vector3(-1.f + cs_size.x * 1.2f, 1, 0.0f),
 			Vector3(-1.f + cs_size.x * 1.2f, 1.f - cs_size.y * 1.2f, 0.0f),
 			Vector3(-1, 1, 0),
 			Vector3(-1, 1.f - cs_size.y * 1.2f, 0),
 			col
-		);
+		);*/
 
 		DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, 1.f - cs_size.y * 0.6f, -1.f, 1.f), STATUS_TEXT_SIZE, "Status");
 	}

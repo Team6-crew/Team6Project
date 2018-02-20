@@ -183,5 +183,11 @@
     <ClInclude Include="Audio\AudioFactory.h" />
     <ClInclude Include="Audio\AudioEngineBase.h" />
     <ClInclude Include="Audio\Windows\WinAudio.h" />
+    <ClInclude Include="Definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
