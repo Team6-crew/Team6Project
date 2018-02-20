@@ -3,7 +3,6 @@
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\OcTree.h>
-#include "../nclgl/OGLRenderer.h"
 #include "../ncltech/ScreenPicker.h"
 #include "../nclgl/Menu.h"
 
@@ -11,6 +10,12 @@
 #include <ncltech\CommonMeshes.h>
 #include <ncltech\CommonUtils.h>
 
+#include <nclgl\Graphics\TextureBase.h>
+#include <nclgl\Graphics\Renderer\RenderNodeBase.h>
+#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <nclgl\Graphics\Renderer\TextureFactory.h>
+#include <nclgl\Graphics\MeshBase.h>
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 
 class MainMenu : public Scene
 {
@@ -19,6 +24,8 @@ public:
 	MainMenu(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
+		//std::cout << glGetError() << std::endl;
+
 		// Start Screen - Main Menu
 		mainMenu = new Menu();
 		mainMenu->visible = true;
@@ -71,18 +78,9 @@ public:
 		controlsMenu->AddMenuItem("Back");
 
 		//Background
-		tex = SOIL_load_OGL_texture(
-			TEXTUREDIR"target.tga",
-			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
-
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		//tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"target.tga");
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		//glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
 
@@ -93,9 +91,9 @@ public:
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		
-		cam = new RenderNode();
-		cam->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
+		GraphicsPipeline::Instance()->CreateNewCamera();
+		cam = RenderNodeFactory::Instance()->MakeRenderNode();
+		cam->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
 		
 	}
 
@@ -152,73 +150,79 @@ public:
 		if (activeMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
 			if (activeMenu == mainMenu) {
+				
+				GraphicsPipeline::Instance()->ChangeScene();
 				SceneManager::Instance()->JumpToScene("Team Project");
+				
+				//activeMenu->setSelection(-1);
+				activeMenu = NULL;
+				
 			}
 			else if (activeMenu == multiPlayerMenu) {
-				cout << "Split-Screen set.";
+				std::cout << "Split-Screen set.";
 			}
 			else if (activeMenu == optionsMenu) {
 				activeMenu = resolutionMenu;
 			}
 			else if (activeMenu == resolutionMenu) {
-				cout << "1920 x 1080 set.";
+				std::cout << "1920 x 1080 set.";
 			}
 			else if (activeMenu == soundMenu) {
-				cout << "volume set.";
+				std::cout << "volume set.";
 			}
 			else if (activeMenu == controlsMenu) {
-				cout << "Player 1 controls set.";
+				std::cout << "Player 1 controls set.";
 			}
 
 		}
 
-		if (activeMenu->getSelection() == 1 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		else if (activeMenu->getSelection() == 1 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
 			if (activeMenu == mainMenu) {
 				activeMenu = multiPlayerMenu;
 				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == multiPlayerMenu) {
-				cout << "Host LAN server set.";
+				std::cout << "Host LAN server set.";
 			}
 			else if (activeMenu == optionsMenu) {
 				activeMenu = soundMenu;
 				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == resolutionMenu) {
-				cout << "1600 x 900 set.";
+				std::cout << "1600 x 900 set.";
 			}
 			else if (activeMenu == soundMenu) {
 				activeMenu = optionsMenu;
 				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == controlsMenu) {
-				cout << "Player 2 controls set.";
+				std::cout << "Player 2 controls set.";
 			}
 		}
 
-		if (activeMenu->getSelection() == 2 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		else if (activeMenu->getSelection() == 2 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
 			if (activeMenu == mainMenu) {
 				activeMenu = optionsMenu;
 				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == multiPlayerMenu) {
-				cout << "Join LAN server set.";
+				std::cout << "Join LAN server set.";
 			}
 			else if (activeMenu == optionsMenu) {
 				activeMenu = controlsMenu;
 				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == resolutionMenu) {
-				cout << "1366 x 768 set.";
+				std::cout << "1366 x 768 set.";
 			}
 			else if (activeMenu == controlsMenu) {
-				cout << "Player 3 controls set.";
+				std::cout << "Player 3 controls set.";
 			}
 		}
 
-		if (activeMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		else if (activeMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
 			if (activeMenu == mainMenu) {
 				exit(0);
@@ -232,14 +236,14 @@ public:
 				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == resolutionMenu) {
-				cout << "1280 x 720 set.";
+				std::cout << "1280 x 720 set.";
 			}
 			else if (activeMenu == controlsMenu) {
-				cout << "Player 4 controls set.";
+				std::cout << "Player 4 controls set.";
 			}
 		}
 
-		if (activeMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		else if (activeMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
 			if (activeMenu == resolutionMenu) {
 				activeMenu = optionsMenu;
@@ -276,12 +280,12 @@ public:
 
 	}
 private:
-	GLuint	tex;
+	TextureBase*	tex;
 
-	Mesh* backgroundMesh;
+	OGLMesh* backgroundMesh;
 
-	RenderNode * cam;
-	RenderNode * backTexture;
+	RenderNodeBase * cam;
+	RenderNodeBase * backTexture;
 
 	// Menus definition
 	Menu * mainMenu;

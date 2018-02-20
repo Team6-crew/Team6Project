@@ -63,11 +63,12 @@ GraphicsPipeline::GraphicsPipeline()
 
 	minimap->SetTexture(gr_tex);
 	Resize(renderer->GetWidth(), renderer->GetHeight());
+	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"basketball.png");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
 {  
-	SAFE_DELETE(camera);
+	//SAFE_DELETE(camera);
 	for (int i = 0; i < cameras.size(); i++) {
 		SAFE_DELETE(cameras[i]);
 	}
@@ -173,11 +174,106 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->GetPosition());
 }
 
+void GraphicsPipeline::RenderMenu() {
+	//Build World Transforms
+	// - Most scene objects will probably end up being static, so we really should only be updating
+	//   modelMatrices for objects (and their children) who have actually moved since last frame
+	//for (RenderNodeBase* node : allNodes)
+	//	node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
+							//Build Transparent/Opaque Renderlists
+
+
+	BuildAndSortRenderLists();
+
+	//NCLDebug - Build render lists
+	NCLDebug::_BuildRenderLists();
+
+
+	//Build shadowmaps
+	//BuildShadowTransforms();
+	shadowFBO->Activate();
+	renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+	renderer->Clear(Renderer::DEPTH);
+
+	shaderShadow->Activate();
+	shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+
+	RenderAllObjects(true,
+		[&](RenderNodeBase* node)
+	{
+		shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
+	}
+	);
+
+	//Render scene to screen fbo
+	screenFBO->Activate();
+	renderer->SetViewPort(screenTexWidth, screenTexHeight);
+	renderer->SetClearColour(backgroundColor);
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+
+	shaderForwardLighting->Activate();
+	shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
+	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+	shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
+	shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
+	shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
+	shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
+	shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+	shaderForwardLighting->SetUniform("uShadowTex", 2);
+	shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
+
+	shadowTex->Bind(2);
+
+	RenderAllObjects(false,
+		[&](RenderNodeBase* node)
+	{
+		shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
+		shaderForwardLighting->SetUniform("uColor", node->GetColour());
+	}
+	);
+
+	// Render Screen Picking ID's
+	// - This needs to be somewhere before we lose our depth buffer
+	//   BUT at the moment that means our screen picking is super sampled and rendered at 
+	//   a much higher resolution. Which is silly.
+	ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
+
+	screenFBO->Activate();
+	renderer->SetViewPort(screenTexWidth, screenTexHeight);
+	//NCLDEBUG - World Debug Data (anti-aliased)		
+	NCLDebug::_RenderDebugDepthTested();
+	NCLDebug::_RenderDebugNonDepthTested();
+
+
+
+	//Downsample and present to screen
+	renderer->BindScreenFramebuffer();
+	renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+
+	float superSamples = (float)(numSuperSamples);
+	shaderPresentToWindow->Activate();
+	shaderPresentToWindow->SetUniform("uColorTex", 0);
+	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+	 
+	fullscreenQuad->SetTexture(temp_tex);
+	fullscreenQuad->Draw();
+
+	//NCLDEBUG - Text Elements (aliased)
+	NCLDebug::_RenderDebugClipSpace();
+	NCLDebug::_ClearDebugLists();
+	
+	renderer->SwapBuffers();
+	
+}
 
 void GraphicsPipeline::RenderScene()
 {
 	for (int i = 0; i < cameras.size(); i++) {
+		//int i = k - 1;
 		camera = cameras[i];
 		projViewMatrix = projViewMatrices[i];
 
@@ -231,8 +327,6 @@ void GraphicsPipeline::RenderScene()
 		for (RenderNodeBase* node : allNodes)
 			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
-		//Build Transparent/Opaque Renderlists
-		BuildAndSortRenderLists();
 
 		//NCLDebug - Build render lists
 		NCLDebug::_BuildRenderLists();
@@ -290,6 +384,7 @@ void GraphicsPipeline::RenderScene()
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
+
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
@@ -337,14 +432,11 @@ void GraphicsPipeline::RenderScene()
 			NCLDebug::_RenderDebugClipSpace();
 			NCLDebug::_ClearDebugLists();
 		}
-		screenFBO->Activate();
-
-		renderer->Clear(Renderer::COLOUR_DEPTH);
-		renderer->BindScreenFramebuffer();
 
 
-	}
 		renderer->SwapBuffers();
+	}
+		
 }
 
 void GraphicsPipeline::AdjustViewport(int i, int j) {
@@ -575,4 +667,14 @@ Camera* GraphicsPipeline::CreateNewCamera() {
 	projViewMatrices.push_back(renderer->GetProjMatrix());
 	cam->SetPitch(-20.0f);
 	return cam;
+}
+
+void GraphicsPipeline::ChangeScene() {
+	renderer->SwapBuffers();
+	cameras.clear();
+	screenFBO->Activate();
+	NCLDebug::_ClearDebugLists();
+	NCLDebug::_ReleaseShaders();
+	renderer->BindScreenFramebuffer();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
 }

@@ -7,6 +7,7 @@
 #include "EmptyScene.h"
 #include "MainMenu.h"
 
+
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -50,6 +51,8 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
+
+
 	
 }
 
@@ -92,7 +95,8 @@ void Initialize()
 //    cycling through scenes.
 void HandleKeyboardInputs()
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
+
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P));
 		//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 
 	//if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_V))
@@ -100,6 +104,7 @@ void HandleKeyboardInputs()
 
 	uint sceneIdx = SceneManager::Instance()->GetCurrentSceneIndex();
 	uint sceneMax = SceneManager::Instance()->SceneCount();
+
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Y))
 		SceneManager::Instance()->JumpToScene((sceneIdx + 1) % sceneMax);
 
@@ -114,6 +119,7 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
+
 
 
 }
@@ -162,8 +168,17 @@ int main()
 		//Render Scene
 		timer_render.BeginTimingSection();
 		GraphicsPipeline::Instance()->UpdateScene(dt);
-		GraphicsPipeline::Instance()->RenderScene();
 
+		if (SceneManager::Instance()->GetCurrentSceneIndex() == 0)
+		{
+			GraphicsPipeline::Instance()->RenderMenu();
+		}
+		else
+		{
+			GraphicsPipeline::Instance()->RenderScene();
+		}
+
+		
 	
 
 		{

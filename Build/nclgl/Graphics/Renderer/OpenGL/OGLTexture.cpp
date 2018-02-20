@@ -63,6 +63,7 @@ void OGLTexture::LoadTexture(const std::string& filepath)
 		std::cout << filepath << " " << SOIL_last_result() << std::endl;
 	}
 	loadSuccess = bool(textureID);
+
 }
 
 void OGLTexture::SetTextureFiltering(bool nearest)

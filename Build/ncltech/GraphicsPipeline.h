@@ -38,12 +38,12 @@ public:
 	// - Naming convention from oglrenderer
 	void UpdateScene(float dt);
 	void RenderScene();
-
+	void RenderMenu();
 	//Utils
 	inline Camera* GetCamera() { return camera; }
 
 	Camera* CreateNewCamera();
-
+	void ChangeScene();
 protected:
 	GraphicsPipeline();
 	virtual ~GraphicsPipeline();
@@ -98,6 +98,7 @@ protected:
 
 	//Common
 	MeshBase* fullscreenQuad;
+
 	Camera* camera;
 	/*Camera* camera1;
 	Camera* camera2;*/
@@ -116,7 +117,7 @@ protected:
 
 	TextureBase* gr_tex;
 	FrameBufferBase* TrailBuffer;
-
+	TextureBase* temp_tex;
 	float paint_perc;
 
 	//Minimap

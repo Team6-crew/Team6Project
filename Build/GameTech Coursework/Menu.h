@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NCLDebug.h"
+#include <nclgl\NCLDebug.h>
 #include "../ncltech/SceneManager.h"
 
 #include <string>
