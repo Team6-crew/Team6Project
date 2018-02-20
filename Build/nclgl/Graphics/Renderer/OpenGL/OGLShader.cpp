@@ -188,7 +188,6 @@ GLint OGLShader::GetUniformLocation(string name)
 	if (location < 0)
 	{
 		cout << "Uniform " << name << " does not exist" << endl;
-		assert(false);
 	}
 	return location;
 }

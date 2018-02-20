@@ -77,7 +77,7 @@ protected:
 	ShaderBase* shaderForwardLighting;
 
 	ShaderBase* shaderTrail;
-
+	ShaderBase* shaderCircle;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -115,8 +115,9 @@ protected:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 
 	TextureBase* gr_tex;
+	TextureBase* circle_tex;
 	FrameBufferBase* TrailBuffer;
-
+	FrameBufferBase* CircleBuffer;
 	float paint_perc;
 
 	//Minimap

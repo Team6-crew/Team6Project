@@ -57,11 +57,14 @@ GraphicsPipeline::GraphicsPipeline()
 	paint_perc = 0.0f;
 
 	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
-
+	circle_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048, 2048);
+	
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, depth);
+	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(circle_tex, depth);
 
 	minimap->SetTexture(gr_tex);
+
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
 
@@ -115,6 +118,9 @@ void GraphicsPipeline::LoadShaders()
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/testfrag.glsl");
 	
+	shaderCircle = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/circlefrag.glsl");
 
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
@@ -177,6 +183,12 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
+		minimap->ReplaceTexture(circle_tex);
+	}
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
+		minimap->ReplaceTexture(gr_tex);
+	}
 	for (int i = 0; i < cameras.size(); i++) {
 		camera = cameras[i];
 		projViewMatrix = projViewMatrices[i];
@@ -195,7 +207,7 @@ void GraphicsPipeline::RenderScene()
 
 		GameLogic::Instance()->calculatePaintPercentage();
 
-		SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+		SceneManager::Instance()->GetCurrentScene()->Score = (*GameLogic::Instance()->getPaintPerc())[0];
 
 		TrailBuffer->Activate();
 		renderer->SetViewPort(2048, 2048);
@@ -210,9 +222,7 @@ void GraphicsPipeline::RenderScene()
 			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
 			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
 			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
-			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
-				trailColor = Vector3(0.0f, 1.0f, 0.0f);
-			}
+			
 			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
 			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
@@ -222,6 +232,25 @@ void GraphicsPipeline::RenderScene()
 
 		trailQuad->Draw();
 		ground->GetMesh()->SetTexture(gr_tex);
+
+
+		CircleBuffer->Activate();
+		renderer->SetViewPort(2048, 2048);
+		shaderCircle->Activate();
+		shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+		float sum_score = 0.0f;
+		float angle = 0.0f;
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
+		}
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers()-1; i++) {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			angle += 2*PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
+			shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		}
+
+		trailQuad->Draw();
+
 
 		//Build Transparent/Opaque Renderlists
 		BuildAndSortRenderLists();
@@ -262,7 +291,11 @@ void GraphicsPipeline::RenderScene()
 
 		shaderForwardLighting->Activate();
 		shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
-		shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+
+		shaderForwardLighting->SetUniform("uDiffuseTex0", 0);
+		shaderForwardLighting->SetUniform("uDiffuseTex1", 1);
+
+
 		shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
@@ -315,7 +348,7 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-			fullscreenQuad->SetTexture(screenTexColor);
+			fullscreenQuad->ReplaceTexture(screenTexColor);
 
 			if (j == 0) {
 
