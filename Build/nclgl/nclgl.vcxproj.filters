@@ -80,12 +80,6 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
-    <ClCompile Include="LevelLoader.cpp" />
-    <ClCompile Include="AI\BallAI.cpp" />
-    <ClCompile Include="AI\ChasingState.cpp" />
-    <ClCompile Include="AI\RoamingState.cpp" />
-    <ClCompile Include="StateMachine.cpp" />
-    <ClCompile Include="CollectandUsePickupState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -183,14 +177,11 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
-    <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="AI\AIObject.h" />
-    <ClInclude Include="AI\BallAI.h" />
-    <ClInclude Include="AI\ChasingState.h" />
-    <ClInclude Include="AI\Messenger.h" />
-    <ClInclude Include="AI\RoamingState.h" />
-    <ClInclude Include="AI\State.h" />
-    <ClInclude Include="AI\StateMachine.h" />
-    <ClInclude Include="CollectandUsePickupState.h" />
+    <ClInclude Include="Definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

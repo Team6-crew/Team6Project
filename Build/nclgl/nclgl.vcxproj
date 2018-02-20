@@ -30,6 +30,7 @@
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="HeightMap.cpp" />
@@ -79,9 +80,11 @@
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="CollectandUsePickupState.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="Definitions.h" />
+	<ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
     <ClInclude Include="Graphics\FrameBufferBase.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
     <ClInclude Include="HeightMap.h" />

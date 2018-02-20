@@ -4,11 +4,6 @@
 #include <ncltech\Pickup.h>
 
 class Pickup;
-
-class Player;
-
-static Player * player1;
-
 class Player : public GameObject
 {
 public:
@@ -26,32 +21,39 @@ public:
 	GameObject* getBody() { return body; }
 
 
-
-	void move();
+	void move(float dt);
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump);
 
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
-	static Player* getPlayer(int a) { if (a == 1) return player1; else return nullptr; }
-	
 
+	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; 	}
+
+	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) {relative_position = rel_pos;	}
+
+	float getRadius() { return rad; }
+
+	void setRadius(float radius) { rad = radius; }
+
+	void setCamera(Camera* c) { camera = c; }
+
+	Camera* getCamera() { return camera; }
 private:
 
-
-	GameObject * body;
-	GameObject * cube;
+	GameObject* body;
+	GameObject* cube;
 
 	RenderNodeBase* camera_transform;
 	Camera* camera;
-
+	nclgl::Maths::Vector3 relative_position;
 	float speed;
 
 	bool canjump = 1;
 
 	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
 	
-	
+	float rad;
 };
 

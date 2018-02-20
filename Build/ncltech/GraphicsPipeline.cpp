@@ -12,6 +12,9 @@
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
+#include "Player.h"
+#include "SceneManager.h"
+#include <nclgl\GameLogic.h>
 
 using namespace nclgl::Maths;
 
@@ -29,29 +32,45 @@ GraphicsPipeline::GraphicsPipeline()
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, shadowTex(NULL)
+	, TrailBuffer(NULL)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
 	LoadShaders();
 	NCLDebug::_LoadShaders();
-
+	
+	trailQuad = OGLMesh::GenerateQuad();
+	minimap = OGLMesh::GenerateQuad();
+	
+	tempProj = renderer->GetProjMatrix();
+	tempView = renderer->GetViewMatrix();
 	fullscreenQuad = OGLMesh::GenerateQuad();
 
 	renderer->SetDefaultSettings();
 
-
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
-	camera->SetPosition(Vector3(0.0f, 10.0f, 15.0f));
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.f);
 	InitializeDefaults();
+	
+
+	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
+	paint_perc = 0.0f;
+
+	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
+
+	TextureBase* depth = NULL;
+	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, depth);
+
+	minimap->SetTexture(gr_tex);
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
 
 GraphicsPipeline::~GraphicsPipeline()
-{
+{  
 	SAFE_DELETE(camera);
+	for (int i = 0; i < cameras.size(); i++) {
+		SAFE_DELETE(cameras[i]);
+	}
 	
 	SAFE_DELETE(fullscreenQuad);
 
@@ -92,6 +111,11 @@ void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 
 void GraphicsPipeline::LoadShaders()
 {
+	shaderTrail = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/testfrag.glsl");
+	
+
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
@@ -125,7 +149,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 
 	//Construct our Shadow Maps and Shadow UBO
 	shadowTex = TextureFactory::Instance()->MakeTexture(Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
-	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex);
+	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex, false);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
@@ -137,9 +161,11 @@ void GraphicsPipeline::UpdateScene(float dt)
 	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 		camera->HandleMouse(dt);
 
-	camera->HandleKeyboard(dt);
-	renderer->SetViewMatrix(camera->BuildViewMatrix());
-	projViewMatrix = renderer->GetProjMatrix() * renderer->GetViewMatrix();
+	for (int i = 0; i < cameras.size(); i++) {
+		cameras[i]->HandleKeyboard(dt);
+		viewMatrices[i] = cameras[i]->BuildViewMatrix();
+		projViewMatrices[i] = renderer->GetProjMatrix() * viewMatrices[i];
+	}
 
 	NCLDebug::_SetDebugDrawData(
 		renderer->GetProjMatrix(),
@@ -147,22 +173,71 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->GetPosition());
 }
 
+
+
 void GraphicsPipeline::RenderScene()
 {
-	//Build World Transforms
-	// - Most scene objects will probably end up being static, so we really should only be updating
-	//   modelMatrices for objects (and their children) who have actually moved since last frame
-	for (RenderNodeBase* node : allNodes)
-		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
-	
-	//Build Transparent/Opaque Renderlists
-	BuildAndSortRenderLists();
+	for (int i = 0; i < cameras.size(); i++) {
+		camera = cameras[i];
+		projViewMatrix = projViewMatrices[i];
 
-	//NCLDebug - Build render lists
-	NCLDebug::_BuildRenderLists();
+		//Build World Transforms
+		// - Most scene objects will probably end up being static, so we really should only be updating
+		//   modelMatrices for objects (and their children) who have actually moved since last frame
+		RenderNodeBase * ground = NULL;
+		for (RenderNodeBase* node : allNodes) {
+			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+			if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+				ground = (*node->GetChildIteratorStart());
+			}
+		}
 
 
-	//Build shadowmaps
+		GameLogic::Instance()->calculatePaintPercentage();
+
+		SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+
+		TrailBuffer->Activate();
+		renderer->SetViewPort(2048, 2048);
+
+		shaderTrail->Activate();
+		shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+				trailColor = Vector3(0.0f, 1.0f, 0.0f);
+			}
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+
+		}
+
+		trailQuad->Draw();
+		ground->GetMesh()->SetTexture(gr_tex);
+
+		//Build Transparent/Opaque Renderlists
+		BuildAndSortRenderLists();
+		//Build World Transforms
+		// - Most scene objects will probably end up being static, so we really should only be updating
+		//   modelMatrices for objects (and their children) who have actually moved since last frame
+		for (RenderNodeBase* node : allNodes)
+			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+
+		//Build Transparent/Opaque Renderlists
+		BuildAndSortRenderLists();
+
+		//NCLDebug - Build render lists
+		NCLDebug::_BuildRenderLists();
+
+		//Build shadowmaps
 		BuildShadowTransforms();
 		shadowFBO->Activate();
 		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -172,13 +247,14 @@ void GraphicsPipeline::RenderScene()
 		shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
 
 		RenderAllObjects(true,
+
 			[&](RenderNodeBase* node)
-			{
-				shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
-			}
+		{
+			shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
+		}
 		);
 
-	//Render scene to screen fbo
+		//Render scene to screen fbo
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		renderer->SetClearColour(backgroundColor);
@@ -198,11 +274,12 @@ void GraphicsPipeline::RenderScene()
 		shadowTex->Bind(2);
 
 		RenderAllObjects(false,
+
 			[&](RenderNodeBase* node)
-			{
-				shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
-				shaderForwardLighting->SetUniform("uColor", node->GetColour());
-			}
+		{
+			shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
+			shaderForwardLighting->SetUniform("uColor", node->GetColour());
+		}
 		);
 
 		// Render Screen Picking ID's
@@ -216,28 +293,130 @@ void GraphicsPipeline::RenderScene()
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-	
 
 
-	//Downsample and present to screen
-		renderer->BindScreenFramebuffer();
-		renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+
+		//Downsample and present to screen
+
+
+
+		for (int j = 0; j < 2; j++) {
+			renderer->BindScreenFramebuffer();
+			
+			renderer->SetScissor(TRUE);
+			AdjustViewport(i, j);
+			renderer->Clear(Renderer::COLOUR_DEPTH);
+			renderer->SetScissor(FALSE);
+			//Downsample and present to screen
+
+			float superSamples = (float)(numSuperSamples);
+			shaderPresentToWindow->Activate();
+			shaderPresentToWindow->SetUniform("uColorTex", 0);
+			shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+			fullscreenQuad->SetTexture(screenTexColor);
+
+			if (j == 0) {
+
+				fullscreenQuad->Draw();
+			}
+			else {
+				tempProj = renderer->GetProjMatrix();
+				tempView = renderer->GetViewMatrix();
+				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
+				renderer->GetViewMatrix().ToIdentity();
+
+				minimap->Draw();
+				renderer->SetProjMatrix(tempProj);
+				renderer->SetViewMatrix(tempView);
+			}
+
+
+			//NCLDEBUG - Text Elements (aliased)
+			NCLDebug::_RenderDebugClipSpace();
+			NCLDebug::_ClearDebugLists();
+		}
+		screenFBO->Activate();
+
 		renderer->Clear(Renderer::COLOUR_DEPTH);
+		renderer->BindScreenFramebuffer();
 
-		float superSamples = (float)(numSuperSamples);
-		shaderPresentToWindow->Activate();
-		shaderPresentToWindow->SetUniform("uColorTex", 0);
-		shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
-		shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
-		shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-		fullscreenQuad->SetTexture(screenTexColor);
-		fullscreenQuad->Draw();
 
-		//NCLDEBUG - Text Elements (aliased)
-		NCLDebug::_RenderDebugClipSpace();
-		NCLDebug::_ClearDebugLists();
-	
+	}
 		renderer->SwapBuffers();
+}
+
+void GraphicsPipeline::AdjustViewport(int i, int j) {
+	float width = renderer->GetWidth();
+	float height = renderer->GetHeight();
+	int num_p = GameLogic::Instance()->getNumPlayers();
+	if (j == 0) {
+		if (num_p == 1) {
+			renderer->SetViewPort(width, height);
+		}
+		else if (num_p == 2) {
+			renderer->SetProjMatrix(Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, ((float)width) / ((float)height / 2.0f), PROJ_FOV));
+			if (i == 0) {
+				renderer->SetViewPort(0, height / 2, width, height / 2);
+				renderer->Scissor(0, height / 2, width, height / 2);
+			}
+			else {
+				renderer->SetViewPort(0, 0, width, height / 2);
+				renderer->Scissor(0, 0, width, height / 2);
+			}
+		}
+		else if (num_p == 3) {
+			if (i == 0) {
+				renderer->SetViewPort(0, height / 2, width / 2, height / 2);
+				renderer->Scissor(0, height / 2, width / 2, height / 2);
+			}
+			else if (i == 1) {
+				renderer->SetViewPort(0, 0, width / 2, height / 2);
+				renderer->Scissor(0, 0, width / 2, height / 2);
+			}
+			else {
+				renderer->SetViewPort(width / 2, 0, width / 2, height / 2);
+				renderer->Scissor(width / 2, 0, width / 2, height / 2);
+			}
+		}
+		else if (num_p == 4) {
+			if (i == 0) {
+				renderer->SetViewPort(0, height / 2, width / 2, height / 2);
+				renderer->Scissor(0, height / 2, width / 2, height / 2);
+			}
+			else if (i == 1) {
+				renderer->SetViewPort(width / 2, height / 2, width / 2, height / 2);
+				renderer->Scissor(width / 2, height / 2, width / 2, height / 2);
+			}
+			else if (i == 2) {
+				renderer->SetViewPort(0, 0, width / 2, height / 2);
+				renderer->Scissor(0, 0, width / 2, height / 2);
+			}
+			else {
+				renderer->SetViewPort(width / 2, 0, width / 2, height / 2);
+				renderer->Scissor(width / 2, 0, width / 2, height / 2);
+			}
+		}
+	}
+	else {
+		if (num_p == 1) {
+			renderer->Scissor(4 * width / 5, 0, width / 5, width / 5);
+			renderer->SetViewPort(4 * width / 5, 0, width / 5, width / 5);
+		}
+		else if (num_p == 2) {
+			renderer->Scissor(4 * width / 5, height/2 - width/10, width / 5, width / 5);
+			renderer->SetViewPort(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
+		}
+		else if (num_p == 3) {
+			renderer->SetViewPort(width / 2, height / 2, width / 2, height / 2);
+			renderer->Scissor(width / 2, height / 2, width / 2, height / 2);
+		}
+		else if (num_p == 4) {
+			renderer->Scissor(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
+			renderer->SetViewPort(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
+		}
+	}
 }
 
 void GraphicsPipeline::Resize(int x, int y)
@@ -387,4 +566,13 @@ void GraphicsPipeline::BuildShadowTransforms()
 		shadowProj[i] = Matrix4::Orthographic(bb._max.z, bb._min.z, bb._min.x, bb._max.x, bb._max.y, bb._min.y);
 		shadowProjView[i] = shadowProj[i] * shadowViewMtx;
 	}
+}
+
+Camera* GraphicsPipeline::CreateNewCamera() {
+	Camera* cam = new Camera();
+	cameras.push_back(cam);
+	viewMatrices.push_back(cam->BuildViewMatrix());
+	projViewMatrices.push_back(renderer->GetProjMatrix());
+	cam->SetPitch(-20.0f);
+	return cam;
 }
