@@ -22,10 +22,10 @@ _-_-_-_-_-_-_-""  ""
 *//////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "..\nclgl\RenderNode.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLRenderNode.h>
 #include "..\nclgl\OBJMesh.h"
 
-class CubeRobot : public RenderNode	{
+class CubeRobot : public OGLRenderNode	{
 public:
 	CubeRobot(void);
 	virtual ~CubeRobot(void){};
@@ -48,12 +48,12 @@ public:
 protected:
 	static Mesh* cube;
 	//These are just handy pointers to the limbs, to make animating them easier
-	RenderNode*head;
+	RenderNodeBase*head;
 
-	RenderNode*leftArm;
-	RenderNode*rightArm;
+	RenderNodeBase*leftArm;
+	RenderNodeBase*rightArm;
 
-	RenderNode*leftLeg;
-	RenderNode*rightLeg;
+	RenderNodeBase*leftLeg;
+	RenderNodeBase*rightLeg;
 };
 

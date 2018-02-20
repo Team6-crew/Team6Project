@@ -15,7 +15,6 @@ uniform float		uSpecularFactor;
 
 uniform sampler2DArrayShadow uShadowTex;
 uniform vec2  		uShadowSinglePixel;
-uniform float 		uNormalizedFarPlanes[SHADOWMAP_NUM - 1]; 
 uniform mat4 		uShadowTransform[SHADOWMAP_NUM];
 
 in Vertex	{

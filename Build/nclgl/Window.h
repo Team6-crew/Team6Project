@@ -13,7 +13,8 @@ Description:Creates and handles the Window, including the initialisation of the 
 #include <stdio.h>
 #include <fcntl.h>
 
-#include "OGLRenderer.h"
+#include "../nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h"
+
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "GameTimer.h"
@@ -50,14 +51,14 @@ public:
 	void	LockMouseToWindow(bool lock);
 	void	ShowOSPointer(bool show);
 
-	Vector2	GetScreenSize() { return size; };
+	nclgl::Maths::Vector2	GetScreenSize() { return size; };
 
 	static Keyboard*	GetKeyboard() { return keyboard; }
 	static Mouse*		GetMouse() { return mouse; }
 
 	//Mouse class stores relative position, and this returns exact position relative to the top left of the window
 	//	returns true if the mouse is within the bounds of the window or false otherwise
-	bool GetMouseScreenPos(Vector2* out_pos);
+	bool GetMouseScreenPos(nclgl::Maths::Vector2* out_pos);
 
 	void SetCursorStyle(CursorStyle style);
 
@@ -85,8 +86,8 @@ protected:
 	bool				lockMouse;
 	bool				showMouse;
 
-	Vector2				position;
-	Vector2				size;
+	nclgl::Maths::Vector2				position;
+	nclgl::Maths::Vector2				size;
 
 	float				elapsedMS;
 

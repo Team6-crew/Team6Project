@@ -2,14 +2,25 @@
 
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
+#include <ncltech\Player.h>
 #include <ncltech\OcTree.h>
+
+#include <ncltech\Tags.h>
+#include <ncltech\SpeedPickup.h>
+
+#include <ncltech\WorldPartition.h>
+#include <algorithm>
+#include <nclgl/GameLogic.h>
+
+
 #include "MainMenu.h"
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
 public:
-
-	EmptyScene(const std::string& friendly_name)
+	
+	float rotation = 0.0f;
+	EmptyScene(const std::string& friendly_name) 
 		: Scene(friendly_name)
 	{
 		// Pause Menu
@@ -25,48 +36,52 @@ public:
 
 	virtual ~EmptyScene()
 	{
+		delete player1;
 	}
+
+	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-		OcTree *space = new OcTree(new AABB(Vector3(0, 20, 0), 20));
+	
+		
+		GameLogic::Instance()->addPlayers(4);
+		//Add player to scene
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
+			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+		}
+
+
 
 		//Who doesn't love finding some common ground?
-		this->AddGameObject(CommonUtils::BuildCuboidObject(
+		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
-			Vector3(0.0f, -1.5f, 0.0f),
-			Vector3(20.0f, 1.0f, 20.0f),
+			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(WORLD_SIZE, 1.0f, WORLD_SIZE),
 			true,
 			0.0f,
 			true,
 			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		
+		this->AddGameObject(ground);
+		ground->SetTag(Tags::TGround);
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
+		
+		SpeedPickup* pickup = new SpeedPickup("pickup",
+			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup->SetPhysics(pickup->Physics());
+		this->AddGameObject(pickup);
 
-		this->AddGameObject(CommonUtils::BuildSphereObject("ball",
-			Vector3(0.0f, 1.0f, 0.0f),				//Position leading to 0.25 meter overlap on faces, and more on diagonals
-			1.0f,									//Half dimensions
-			true,									//Has Physics Object
-			1.0f,									//Mass
-			true,									//Has Collision Shape
-			true,									//Dragable by the user
-			CommonUtils::GenColor(0.45f, 0.5f)));	//Color
-
-		this->AddGameObject(CommonUtils::BuildCuboidObject("body",
-			Vector3(0.0f, 2.0f, 0.0f),				//Position leading to 0.25 meter overlap on faces, and more on diagonals
-			Vector3(0.5, 0.5, 0.5),					//Half dimensions
-			false,									//Has Physics Object
-			0.0f,									//Mass
-			false,									//Has Collision Shape
-			false,									//Dragable by the user
-			CommonUtils::GenColor(0.45f, 0.5f)));	//Color
-
-		cam = new RenderNode();
-		cam->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
-		body = FindGameObject("body");
-		ball = FindGameObject("ball");
-		(*body->Render()->GetChildIteratorStart())->AddChild(cam);
-		(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+		//add world part
+		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
 
 

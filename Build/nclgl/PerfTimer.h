@@ -96,7 +96,7 @@ public:
 
 	// Utility function to output the current performance data to the NCLDebug status
 	// Must be called once per frame in order to be shown.
-	void PrintOutputToStatusEntry(const Vector4& colour, const std::string& name)
+	void PrintOutputToStatusEntry(const nclgl::Maths::Vector4& colour, const std::string& name)
 	{
 		NCLDebug::AddStatusEntry(colour, "%s%5.2fms [max:%5.2fms, min:%5.2fms]", name.c_str(), GetAvg(), GetHigh(), GetLow());
 	}

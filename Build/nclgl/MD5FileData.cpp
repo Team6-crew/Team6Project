@@ -1,9 +1,17 @@
 #include "MD5FileData.h"
+
+
+#include <SOIL.h>
+
+using std::string;
+
 #ifdef USE_MD5MESH
 #ifdef WEEK_2_CODE
 /*
 http://www.modwiki.net/wiki/MD5MESH_%28file_format%29
 */
+
+
 
 /*
 This is the actual matrix data that will be used for the space
@@ -617,7 +625,7 @@ We keep all of the animations for a particular mesh inside a map, sorted
 by its name - we can search and get an animation using this function, 
 bearing in mind it will return NULL if the specified anim cannot be found.
 */
-MD5Anim*	MD5FileData::GetAnim(const string &name) const {
+MD5Anim*	MD5FileData::GetAnim(const std::string &name) const {
 	std::map<std::string, MD5Anim*>::const_iterator i = animations.find(name);
 
 	if(i != animations.end()) {
@@ -626,7 +634,7 @@ MD5Anim*	MD5FileData::GetAnim(const string &name) const {
 	return NULL;
 }
 
-int			MD5FileData::GetIndexForJointName(const string &name) const {
+int			MD5FileData::GetIndexForJointName(const std::string &name) const {
 	for (unsigned int i = 0; i < jointNames.size(); ++i) {
 		if (jointNames[i] == name) {
 			return i;

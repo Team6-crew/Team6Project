@@ -45,6 +45,7 @@ Description:
 #include <vector>
 #include <mutex>
 #include "OcTree.h"
+#include "WorldPartition.h"
 
 
 //Number of jacobi iterations to apply in order to
@@ -93,6 +94,8 @@ public:
 	//Debug draw all physics objects, manifolds and constraints
 	void DebugRender();
 
+	void DeleteNextFrame(GameObject* obj) { objectsToDelete.push_back(obj); }
+
 
 
 	//Getters / Setters 
@@ -105,8 +108,8 @@ public:
 	inline float GetUpdateTimestep() const { return updateTimestep; }
 	inline void SetUpdateTimestep(float updateTimestep) { updateTimestep = updateTimestep; }
 
-	inline const Vector3& GetGravity() const	{ return gravity; }
-	inline void SetGravity(const Vector3& g)	{ gravity = g; }
+	inline const nclgl::Maths::Vector3& GetGravity() const	{ return gravity; }
+	inline void SetGravity(const nclgl::Maths::Vector3& g)	{ gravity = g; }
 
 	inline float GetDampingFactor() const		{ return dampingFactor; }
 	inline void  SetDampingFactor(float d)		{ dampingFactor = d; }
@@ -115,7 +118,9 @@ public:
 
 	static inline OcTree* GetOcTree()  { return octree; }
 
-	void PrintPerformanceTimers(const Vector4& color)
+	static inline WorldPartition* GetWorldPartition() { return worldPartition; }
+
+	void PrintPerformanceTimers(const nclgl::Maths::Vector4& color)
 	{
 		perfUpdate.PrintOutputToStatusEntry(color,		"    Integration :");
 		perfBroadphase.PrintOutputToStatusEntry(color,	"    Broadphase  :");
@@ -147,15 +152,18 @@ protected:
 	float		updateTimestep, updateRealTimeAccum;
 	uint		debugDrawFlags;
 
-	Vector3		gravity;
-	float		dampingFactor;
+	nclgl::Maths::Vector3		gravity;
+	float						dampingFactor;
 
 	
 	static OcTree* octree;
+	static WorldPartition* worldPartition;
 
 	std::vector<CollisionPair>  broadphaseColPairs;
 
 	std::vector<PhysicsNode*>	physicsNodes;
+
+	std::vector<GameObject*> objectsToDelete;
 
 	std::vector<Constraint*>	constraints;		// Misc constraints applying to one or more physics objects e.g our DistanceConstraint
 	std::vector<Manifold*>		manifolds;			// Contact constraints between pairs of objects
@@ -164,4 +172,6 @@ protected:
 	PerfTimer perfBroadphase;
 	PerfTimer perfNarrowphase;
 	PerfTimer perfSolver;
+
+	int worldSize = 30;
 };

@@ -34,10 +34,10 @@ struct HullFace;
 struct HullVertex
 {
 	HullVertex() : _idx(0), _pos(0.0f, 0.0f, 0.0f) {}
-	HullVertex(int idx, Vector3 pos) : _idx(idx), _pos(pos) {}
+	HullVertex(int idx, nclgl::Maths::Vector3 pos) : _idx(idx), _pos(pos) {}
 
 	int _idx;
-	Vector3 _pos;
+	nclgl::Maths::Vector3 _pos;
 	std::vector<int> _enclosing_edges;
 	std::vector<int> _enclosing_faces;
 };
@@ -53,7 +53,7 @@ struct HullEdge
 struct HullFace
 {
 	int _idx;
-	Vector3 _normal;
+	nclgl::Maths::Vector3 _normal;
 	std::vector<int> _vert_ids;
 	std::vector<int> _edge_ids;
 	std::vector<int> _adjoining_face_ids;
@@ -65,14 +65,14 @@ public:
 	Hull();
 	~Hull();
 
-	void DebugDraw(const Matrix4& transform);
+	void DebugDraw(const nclgl::Maths::Matrix4& transform);
 	void Clear();
 
 
-	int AddVertex(const Vector3& v);
+	int AddVertex(const nclgl::Maths::Vector3& v);
 
-	int AddFace(const Vector3& _normal, int nVerts, const int* verts);
-	int AddFace(const Vector3& _normal, const std::vector<int>& vert_ids)		{ AddFace(_normal, (int)vert_ids.size(), &vert_ids[0]); }
+	int AddFace(const nclgl::Maths::Vector3& _normal, int nVerts, const int* verts);
+	int AddFace(const nclgl::Maths::Vector3& _normal, const std::vector<int>& vert_ids)		{ AddFace(_normal, (int)vert_ids.size(), &vert_ids[0]); }
 
 	
 	void RemoveFace(int faceidx);
@@ -91,7 +91,7 @@ public:
 	size_t GetNumFaces()					{ return m_vFaces.size(); }
 
 
-	void GetMinMaxVerticesInAxis(const Vector3& local_axis, int* out_min_vert, int* out_max_vert);
+	void GetMinMaxVerticesInAxis(const nclgl::Maths::Vector3& local_axis, int* out_min_vert, int* out_max_vert);
 
 	int ConstructNewEdge(int parent_face_idx, int vert_start, int vert_end); //Called by AddFace
 	

@@ -9,6 +9,8 @@ Mouse*Window::mouse = NULL;
 //GameTimer*Window::timer		= NULL;
 HCURSOR Window::cursor[CURSOR_STYLE_MAX];
 
+using namespace nclgl::Maths;
+
 bool Window::Initialise(std::string title, int sizeX, int sizeY, bool fullScreen) {
 	window = new Window(title, sizeX, sizeY, fullScreen);
 

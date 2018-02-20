@@ -144,9 +144,13 @@
     <ClCompile Include="OcTree.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsNode.cpp" />
+    <ClCompile Include="Pickup.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenPicker.cpp" />
+    <ClCompile Include="SpeedPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="WorldPartition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
@@ -161,16 +165,21 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
+    <ClInclude Include="Pickup.h" />
+    <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="Tags.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="Manifold.h" />
     <ClInclude Include="NetworkBase.h" />
     <ClInclude Include="OcTree.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsNode.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScreenPicker.h" />
     <ClInclude Include="SphereCollisionShape.h" />
+    <ClInclude Include="WorldPartition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

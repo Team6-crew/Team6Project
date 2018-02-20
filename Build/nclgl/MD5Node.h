@@ -30,11 +30,11 @@ _-_-_-_-_-_-_-""  ""
 #ifdef USE_MD5MESH
 #ifdef WEEK_2_CODE
 #pragma once
-#include "RenderNode.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLRenderNode.h>
 #include "MD5FileData.h"
 #include "MD5Mesh.h"
 
-class MD5Node : public RenderNode	{
+class MD5Node : public OGLRenderNode	{
 public:
 	MD5Node(const MD5FileData &ofType);
 	~MD5Node(void);
@@ -53,17 +53,17 @@ public:
 	void	PlayAnim(std::string name);	
 
 
-	bool	GetParentLocalOrientation(const string&name, Quaternion &t);
-	bool	GetParentWorldOrientation(const string&name, Quaternion &t);
+	bool	GetParentLocalOrientation(const std::string&name, Quaternion &t);
+	bool	GetParentWorldOrientation(const std::string&name, Quaternion &t);
 
-	bool	GetParentLocalTransform(const string&name, Matrix4 &t);
-	bool	GetParentWorldTransform(const string&name, Matrix4 &t);
+	bool	GetParentLocalTransform(const std::string&name, Matrix4 &t);
+	bool	GetParentWorldTransform(const std::string&name, Matrix4 &t);
 
-	bool	GetJointLocalTransform(const string&name, Matrix4 &t);
-	bool	SetJointLocalTransform(const string &name, Matrix4 &t);
+	bool	GetJointLocalTransform(const std::string&name, Matrix4 &t);
+	bool	SetJointLocalTransform(const std::string &name, Matrix4 &t);
 
-	bool	GetJointWorldTransform(const string&name, Matrix4 &t);
-	bool	SetJointWorldTransform(const string &name, Matrix4 &t);
+	bool	GetJointWorldTransform(const std::string&name, Matrix4 &t);
+	bool	SetJointWorldTransform(const std::string &name, Matrix4 &t);
 
 	MD5Skeleton* GetSkeleton() {
 		return &currentSkeleton;

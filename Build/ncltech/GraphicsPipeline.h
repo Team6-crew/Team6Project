@@ -1,80 +1,27 @@
 #pragma once
-#include <nclgl\OGLRenderer.h>
+
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
-#include <nclgl\RenderNode.h>
+#include <nclgl/Graphics/Renderer/RenderNodeBase.h>
+#include <nclgl\Definitions.h>
+#include <vector>
+#include <nclgl\Graphics\RenderConstants.h>
 
-//---------------------------
-//------ Base Renderer ------
-//---------------------------
-//------ Use this as a base for incorporating your own graphics
-//
-//class GraphicsPipeline : public TSingleton<GraphicsPipeline>, OGLRenderer
-//{
-//	friend class TSingleton<GraphicsPipeline>;
-//
-//public:
-//	//Set all defaults
-//	// - Called each time a scene is swapped in/reset, so should reset camera position etc
-//	void InitializeDefaults();
-//
-//	//Add/Remove Render objects to renderable object lists
-//	void AddRenderNode(RenderNode* node);
-//	void RemoveRenderNode(RenderNode* node);
-//
-//
-//
-//
-//	//Called by main game loop
-//	// - Naming convention from oglrenderer
-//	void UpdateScene(float dt);
-//	void RenderScene();
-//
-//
-//
-//	//Utils
-//	inline Camera* GetCamera();
-//
-//protected:
-//	GraphicsPipeline() : OGLRenderer(Window::GetWindow()) {}
-//	virtual ~GraphicsPipeline() {}
-//
-//protected:
-//};
+#include <GL/glew.h>
+
+#include <vector>
+
+class FrameBufferBase;
+class ShaderBase;
+class RenderBase;
+class RenderNodeBase;
+class MeshBase;
+class TextureBase;
+
+typedef std::pair<RenderNodeBase*, float> TransparentPair;
 
 
-
-
-//-------------------
-// Default Implementation
-//-----------------------
-// This is a GameTech module, not graphics. This default renderer
-// should be good enough for all physics and AI madness you want 
-// to mess around with.
-
-
-
-//Number of cascading shadow maps 
-// - As we don't have the ability to set shadow defines, any changes here also need to be
-//   mirrored inside "TechFragForwardRender.glsl" and "TechGeomShadow.glsl" shaders.
-#define SHADOWMAP_NUM 4			
-
-//Size of the shadows maps in pixels
-// - With a size of 4096x4096 (and 4 shadowmaps) using 32bit floats this
-//   currently results in shadows using up 256MB of space. Which is quite alot,
-//   but also currently the only potentially memory sensitive thing we do in this 
-//   renderer so it's fine.
-#define SHADOWMAP_SIZE 4096
-
-
-#define PROJ_FAR      50.0f			//Can see for 50m - setting this too far really hurts shadow quality as they attempt to cover the entirety of the view frustum
-#define PROJ_NEAR     0.1f			//Nearest object @ 10cm
-#define PROJ_FOV      45.0f			//45 degree field of view
-
-typedef std::pair<RenderNode*, float> TransparentPair;
-
-
-class GraphicsPipeline : public TSingleton<GraphicsPipeline>, OGLRenderer
+class GraphicsPipeline : public TSingleton<GraphicsPipeline>
 {
 	friend class TSingleton<GraphicsPipeline>;
 
@@ -84,86 +31,96 @@ public:
 	void InitializeDefaults();
 	
 	//Add/Remove Render objects to renderable object lists
-	void AddRenderNode(RenderNode* node);
-	void RemoveRenderNode(RenderNode* node);
-
+	void AddRenderNode(RenderNodeBase* node);
+	void RemoveRenderNode(RenderNodeBase* node);
 
 	//Called by main game loop
 	// - Naming convention from oglrenderer
-	virtual void UpdateScene(float dt) override;
-	virtual void RenderScene() override;
-	
-
+	void UpdateScene(float dt);
+	void RenderScene();
 
 	//Utils
 	inline Camera* GetCamera() { return camera; }
-	inline bool GetVsyncEnabled() const { return isVsyncEnabled; }
-	inline void SetVsyncEnabled(bool enabled) { wglSwapIntervalEXT((isVsyncEnabled = enabled) ? 1 : 0); }
 
-	inline Matrix4& GetProjMtx() { return projMatrix; }
-	inline Matrix4& GetViewMtx() { return viewMatrix; }
-
-	inline Matrix4& GetShadowViewMtx() { return shadowViewMtx; }
-	inline Matrix4* GetShadowProjMatrices() { return shadowProj; }
-	inline Matrix4* GetShadowProjViewMatrices() { return shadowProjView; }
-
-	inline Vector3& GetAmbientColor() { return ambientColor; }
-	inline Vector3& GetLightDirection() { return lightDirection; }
-	inline float& GetSpecularFactor() { return specularFactor; }
-	inline GLuint& GetShadowTex() { return shadowTex; }
+	Camera* CreateNewCamera();
 
 protected:
 	GraphicsPipeline();
 	virtual ~GraphicsPipeline();
 
-	virtual void Resize(int x, int y) override; //Called by window when it is resized
+	void Resize(int x, int y); //Called by window when it is resized
 
 	void LoadShaders();
 	void UpdateAssets(int width, int height);
 	void BuildAndSortRenderLists();
-	void RecursiveAddToRenderLists(RenderNode* node);
-	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNode*)> perObjectFunc = NULL);
+	void RecursiveAddToRenderLists(RenderNodeBase* node);
+	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNodeBase*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
-	
+	void AdjustViewport(int i, int j);
 
 protected:
-	Matrix4 projViewMatrix;
 
-	//Render FBO
-	GLuint				screenTexWidth, screenTexHeight;
-	GLuint				screenFBO;
-	GLuint				screenTexColor;
-	GLuint				screenTexDepth;
+	RenderBase* renderer = nullptr;
+
+
+	nclgl::Maths::Matrix4 projViewMatrix;
+
+	FrameBufferBase*	renderFBO;
+	uint				screenTexWidth, screenTexHeight;
+	FrameBufferBase*	screenFBO;
+	TextureBase*		screenTexColor;
+	TextureBase*		screenTexDepth;
 
 	//Shaders
-	Shader* shaderPresentToWindow;
-	Shader* shaderShadow;
-	Shader* shaderForwardLighting;
+	ShaderBase* shaderPresentToWindow;
+	ShaderBase* shaderShadow;
+	ShaderBase* shaderForwardLighting;
+
+	ShaderBase* shaderTrail;
 
 	//Render Params
-	Vector3	ambientColor;
-	float	gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
-	Vector3	lightDirection;
-	Vector3 backgroundColor;
-	float	specularFactor;
-	uint	numSuperSamples;
+	nclgl::Maths::Vector3	ambientColor;
+	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
+	nclgl::Maths::Vector3	lightDirection;
+	nclgl::Maths::Vector3	backgroundColor;
+	float					specularFactor;
+	uint					numSuperSamples;
 
 
 	//Shadowmaps
-	float	sceneBoundingRadius; ///Approx based on scene contents
-	GLuint	shadowFBO;
-	GLuint	shadowTex;
-	Matrix4	shadowProj[SHADOWMAP_NUM];
-	Matrix4	shadowViewMtx;
-	Matrix4	shadowProjView[SHADOWMAP_NUM];
-	float   normalizedFarPlanes[SHADOWMAP_NUM - 1];
+	float								sceneBoundingRadius; ///Approx based on scene contents
+	FrameBufferBase*					shadowFBO;
+	TextureBase*						shadowTex;
+	nclgl::Maths::Matrix4				shadowProj[SHADOWMAP_NUM];
+	nclgl::Maths::Matrix4				shadowViewMtx;
+	nclgl::Maths::Matrix4				shadowProjView[SHADOWMAP_NUM];
+	float								normalizedFarPlanes[SHADOWMAP_NUM - 1];
 
 	//Common
-	Mesh* fullscreenQuad;
+	MeshBase* fullscreenQuad;
 	Camera* camera;
+	/*Camera* camera1;
+	Camera* camera2;*/
 	bool isVsyncEnabled;
-	std::vector<RenderNode*> allNodes;
+	std::vector<RenderNodeBase*> allNodes;
 
-	std::vector<RenderNode*> renderlistOpaque;
+	std::vector<RenderNodeBase*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
+	std::vector<Camera*> cameras;
+	std::vector<nclgl::Maths::Matrix4> viewMatrices;
+	std::vector<nclgl::Maths::Matrix4> projViewMatrices;
+
+	MeshBase* trailQuad;
+
+	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
+
+	TextureBase* gr_tex;
+	FrameBufferBase* TrailBuffer;
+
+	float paint_perc;
+
+	//Minimap
+	MeshBase* minimap;
+	nclgl::Maths::Matrix4 tempProj;
+	nclgl::Maths::Matrix4 tempView;
 };

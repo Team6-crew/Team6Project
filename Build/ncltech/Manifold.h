@@ -32,17 +32,17 @@ struct ContactPoint
 	float	b_term;
 
 	//Collision Normal and Penetration depth
-	Vector3 colNormal;
-	float	colPenetration;
+	nclgl::Maths::Vector3 colNormal;
+	float				  colPenetration;
 
-	Vector3 relPosA;			//Position relative to objectA
-	Vector3 relPosB;			//Position relative to objectB
+	nclgl::Maths::Vector3 relPosA;			//Position relative to objectA
+	nclgl::Maths::Vector3 relPosB;			//Position relative to objectB
 
 	//Solver - Total force added this frame
 	// - Used to clamp contact constraint over the course of the entire solver
 	//   to expected bounds.
-	float   sumImpulseContact;
-	Vector3 sumImpulseFriction;
+	float				  sumImpulseContact;
+	nclgl::Maths::Vector3 sumImpulseFriction;
 };
 
 
@@ -57,7 +57,8 @@ public:
 	void Initiate(PhysicsNode* nodeA, PhysicsNode* nodeB);
 
 	//Called whenever a new collision contact between A & B are found
-	void AddContact(const Vector3& globalOnA, const Vector3& globalOnB, const Vector3& _normal, const float& _penetration);	
+	void AddContact(const nclgl::Maths::Vector3& globalOnA, const nclgl::Maths::Vector3& globalOnB, 
+					const nclgl::Maths::Vector3& _normal, const float& _penetration);
 
 	//Sequentially solves each contact constraint
 	void ApplyImpulse();
