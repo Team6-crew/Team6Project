@@ -21,6 +21,17 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EmptyScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nclgl\nclgl.vcxproj">
+      <Project>{98d6b51b-cb0a-4389-adc6-24082b967c3f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ncltech\ncltech.vcxproj">
+      <Project>{ab4196e5-2488-4514-b4c2-00eafc468a1d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1A5C2647-CADD-49B7-861E-4B1339EDCD84}</ProjectGuid>
     <RootNamespace>GameTechCoursework</RootNamespace>

@@ -50,8 +50,8 @@ void Initialize()
 
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("TestScene"));
-	Scene* levelOne = new Scene("LevelOne");
-	SceneManager::Instance()->EnqueueScene(levelOne);	
+	//Scene* levelOne = new Scene("LevelOne");
+	//SceneManager::Instance()->EnqueueScene(levelOne);	
 
 	
 }
@@ -122,7 +122,7 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 	{
-		pos = Player::getPlayer(1)->Physics()->GetPosition();
+		pos = GameLogic::Instance()->getPlayer(1)->Physics()->GetPosition();
 		std::ofstream myfile;
 		myfile.open("pos.txt", std::ios_base::app);
 		cout << pos << "\n";

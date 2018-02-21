@@ -115,7 +115,6 @@ void GraphicsPipeline::LoadShaders()
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/testfrag.glsl");
 	
-
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
@@ -201,7 +200,7 @@ void GraphicsPipeline::RenderScene()
 		renderer->SetViewPort(2048, 2048);
 
 		shaderTrail->Activate();
-		shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+		shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers());
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			std::string arr = "players[" + std::to_string(i) + "].";
@@ -209,6 +208,28 @@ void GraphicsPipeline::RenderScene()
 			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
 			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
 			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+				trailColor = Vector3(0.0f, 1.0f, 0.0f);
+			}
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+
+		}
+		trailQuad->Draw();
+		ground->GetMesh()->SetTexture(gr_tex);
+
+		int PlayersPlusAIPlayers = GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumPlayers();
+
+		for (int i = GameLogic::Instance()->getNumPlayers(); i < PlayersPlusAIPlayers; i++) {
+			int j = GameLogic::Instance()->getNumAIPlayers() - 1;
+			std::string arr = "players[" + std::to_string(j) + "].";
+			float pos_x = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getAIPlayer(j)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getAIPlayer(j)->getBall()->Render()->GetChildIteratorStart())->GetColour();
 			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
 				trailColor = Vector3(0.0f, 1.0f, 0.0f);

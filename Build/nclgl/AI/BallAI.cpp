@@ -19,12 +19,14 @@ GameObject* BallAI::AIBall;
 
 State* roamingState;
 
+
 using namespace nclgl::Maths;
 
 BallAI::BallAI()
 {
-	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
 	
+	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
+	nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(255.0f,255.0f, 255.0f, 1.0f);
 
 	AIBall = CommonUtils::BuildSphereObject("AIball",
 		location,	//Position leading to 0.25 meter overlap on faces, and more on diagonals
@@ -33,7 +35,7 @@ BallAI::BallAI()
 		1.0f,									//Mass
 		true,									//Has Collision Shape
 		false,									//Dragable by the user
-		CommonUtils::GenColor(1.f, 1.f));
+		colour);
 
 	AIBall->setName("Test");
 	AIBall->setLocation(location);
@@ -44,7 +46,7 @@ BallAI::BallAI()
 	AIBall->setDragable(false);
 	AIBall->setDynamic(true);
 	AIStateMachine = new StateMachine(AIBall);
-	AIStateMachine->setCurrentState(AIStateMachine,CollectandUsePickupState::GetInstance());
+	AIStateMachine->setCurrentState(AIStateMachine,RoamingState::GetInstance());
 }
 
 

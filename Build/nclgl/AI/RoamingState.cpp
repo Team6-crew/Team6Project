@@ -5,6 +5,7 @@
 #include <nclgl\AI\StateMachine.h>
 #include <nclgl\AI\ChasingState.h>
 #include <string>
+#include <nclgl/GameLogic.h>
 
 using std::string;
 
@@ -75,22 +76,35 @@ nclgl::Maths::Vector3 RoamingState::seek(GameObject* owner, nclgl::Maths::Vector
 
 nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner, GameObject* owner)
 {
-	nclgl::Maths::Vector3 ballPos = BallAI::getBall()->Physics()->GetPosition();
-	nclgl::Maths::Vector3 playerPos = Player::getPlayer(1)->Physics()->GetPosition();
+	int numOfPlayers = GameLogic::Instance()->getNumPlayers();
+	float closestPlayer = 100000000.0f;
+	nclgl::Maths::Vector3 AIBallPos = BallAI::getBall()->Physics()->GetPosition();
+
+	for (int i = 0; i < numOfPlayers; i++)
+	{
+		nclgl::Maths::Vector3 playerBallPos = GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition();
+		
+		float distanceToPlayer = (playerBallPos - AIBallPos).Length();
+
+		if (distanceToPlayer < closestPlayer)
+		{
+			closestPlayer = distanceToPlayer;
+		}
+
+	}
 	// Switch to length square
 	nclgl::Maths::Vector3 goal = nodesList[CurrentNode];
-	float distanceToPlayer = (ballPos - playerPos).Length();
 
-	if (distanceToPlayer <= 10)
+	if (closestPlayer <= 10)
 	{
 		sOwner->setCurrentState(sOwner, ChasingState::GetInstance());
 
 	}
-	if (distanceToPlayer >= 11)
+	if (closestPlayer >= 11)
 	{
 		vector<nclgl::Maths::Vector3> nodesList = getNodes();
 		
-		float distanceToGoal = (ballPos - goal).Length();
+		float distanceToGoal = (AIBallPos - goal).Length();
 		if (distanceToGoal <= 20)
 		{
 			std::cout << "Changing to Node" << CurrentNode << "\n";

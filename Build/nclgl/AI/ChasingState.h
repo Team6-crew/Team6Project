@@ -22,7 +22,7 @@ public:
 private:
 	float maxVel = 20;
 
-	State* collectAndUsePickupState;
+	//State* collectAndUsePickupState;
 	State* roamingState;
 };
 

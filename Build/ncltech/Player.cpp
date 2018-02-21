@@ -89,6 +89,7 @@ Player::Player(const std::string& name,
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+
 }
 
 
