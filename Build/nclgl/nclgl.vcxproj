@@ -64,7 +64,6 @@
     <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
     <ClCompile Include="Audio\Windows\WinAudio.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -116,7 +115,6 @@
     <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
     <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />

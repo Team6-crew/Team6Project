@@ -86,7 +86,6 @@
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -195,6 +194,5 @@
     </ClInclude>
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="ShaderManager.h" />
   </ItemGroup>
 </Project>
