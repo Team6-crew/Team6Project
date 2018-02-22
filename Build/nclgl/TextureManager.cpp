@@ -14,7 +14,7 @@ TextureManager::~TextureManager()
 	}
 }
 
-TextureBase * TextureManager::get(std::string &name)
+TextureBase * TextureManager::getTexture(std::string &name)
 {
 	if (textureMap.count(name) == 0) {
 		TextureBase* newTexture = TextureFactory::Instance()->MakeTexture(name);

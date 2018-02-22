@@ -24,6 +24,7 @@ WinAudio::WinAudio()
 WinAudio::~WinAudio()
 {
 	soundEngine->drop();
+	SAFE_DELETE(background);
 }
 
 void WinAudio::PlaySound2D(const std::string& fileName, bool looping)
@@ -32,7 +33,6 @@ void WinAudio::PlaySound2D(const std::string& fileName, bool looping)
 	{
 		soundEngine->play2D(fileName.c_str(), looping);
 	}
-	
 }
 
 void WinAudio::SetBackgroundSound(const std::string& fileName)
