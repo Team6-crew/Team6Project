@@ -71,7 +71,7 @@ public:
 
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
 	void	SetTexture(TextureBase* texture)	override;
-	void	ReplaceTexture(TextureBase* texture)	override;
+	void	ReplaceTexture(TextureBase* texture, int pos)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
 	GLuint  GetTexture(int n)			{return texture[n];}
 
