@@ -114,8 +114,6 @@ protected:
 
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 
-	TextureBase* gr_tex;
-	TextureBase* circle_tex;
 	FrameBufferBase* TrailBuffer;
 	FrameBufferBase* CircleBuffer;
 	float paint_perc;

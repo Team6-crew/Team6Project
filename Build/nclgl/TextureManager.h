@@ -13,6 +13,7 @@ public:
 	~TextureManager();
 
 	TextureBase* get(std::string &name);
+	TextureBase* makeTexture(std::string& name, Texture::Type &type, int& a, int& b);
 private:
 	std::unordered_map<std::string, TextureBase*> textureMap;
 };

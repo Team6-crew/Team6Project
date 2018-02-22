@@ -59,14 +59,14 @@ GraphicsPipeline::GraphicsPipeline()
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 
-	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
-	circle_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048, 2048);
+	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
+	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
 	
 	TextureBase* depth = NULL;
-	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, depth);
-	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(circle_tex, depth);
+	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("gr_tex"), depth);
+	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("circle_tex"), depth);
 
-	minimap->SetTexture(gr_tex);
+	minimap->SetTexture(ResourceManager::Instance()->get("gr_tex"));
 
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
@@ -186,10 +186,10 @@ void GraphicsPipeline::UpdateScene(float dt)
 void GraphicsPipeline::RenderScene()
 {
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
-		minimap->ReplaceTexture(circle_tex);
+		minimap->ReplaceTexture(ResourceManager::Instance()->get("circle_tex"));
 	}
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
-		minimap->ReplaceTexture(gr_tex);
+		minimap->ReplaceTexture(ResourceManager::Instance()->get("gr_tex"));
 	}
 	for (int i = 0; i < cameras.size(); i++) {
 		camera = cameras[i];
@@ -233,7 +233,7 @@ void GraphicsPipeline::RenderScene()
 		}
 
 		trailQuad->Draw();
-		ground->GetMesh()->SetTexture(gr_tex);
+		ground->GetMesh()->SetTexture(ResourceManager::Instance()->get("gr_tex"));
 
 
 		CircleBuffer->Activate();
