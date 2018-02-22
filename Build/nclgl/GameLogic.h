@@ -18,6 +18,7 @@ public:
 	float getRadius() { return rad;  }
 	int getNumPlayers() { return players.size(); }
 	Player* getPlayer(int num_player) { return players[num_player]; }
+	void clearPlayers() { players.clear(); }
 
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];

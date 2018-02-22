@@ -83,6 +83,9 @@
     <ClCompile Include="Audio\AudioFactory.cpp" />
     <ClCompile Include="Audio\AudioEngineBase.cpp" />
     <ClCompile Include="Audio\Windows\WinAudio.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -189,5 +192,7 @@
     <ClInclude Include="GameLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
 </Project>

@@ -68,8 +68,6 @@ protected:
 	FrameBufferBase*	renderFBO;
 	uint				screenTexWidth, screenTexHeight;
 	FrameBufferBase*	screenFBO;
-	TextureBase*		screenTexColor;
-	TextureBase*		screenTexDepth;
 
 	//Shaders
 	ShaderBase* shaderPresentToWindow;
@@ -90,7 +88,6 @@ protected:
 	//Shadowmaps
 	float								sceneBoundingRadius; ///Approx based on scene contents
 	FrameBufferBase*					shadowFBO;
-	TextureBase*						shadowTex;
 	nclgl::Maths::Matrix4				shadowProj[SHADOWMAP_NUM];
 	nclgl::Maths::Matrix4				shadowViewMtx;
 	nclgl::Maths::Matrix4				shadowProjView[SHADOWMAP_NUM];
@@ -114,8 +111,6 @@ protected:
 
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 
-	TextureBase* gr_tex;
-	TextureBase* circle_tex;
 	FrameBufferBase* TrailBuffer;
 	FrameBufferBase* CircleBuffer;
 	float paint_perc;
