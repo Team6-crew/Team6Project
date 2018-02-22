@@ -12,13 +12,7 @@
     <Text Include="CHANGELIST.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NCLDebug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CubeRobot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
@@ -39,28 +33,10 @@
     <ClCompile Include="Matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MD5Anim.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MD5FileData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MD5Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MD5Node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OBJMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OGLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
@@ -69,21 +45,51 @@
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
     <ClCompile Include="RenderNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Launchpad.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderFactory.cpp" />
+    <ClCompile Include="Graphics\RenderConstants.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderNodeBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
+    <ClCompile Include="Graphics\MeshBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\RenderNodeFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\FrameBufferBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
+    <ClCompile Include="Graphics\TextureBase.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
+    <ClCompile Include="Graphics\ShaderBase.cpp" />
+    <ClCompile Include="NCLDebug.cpp" />
+    <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
+    <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
+    <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="LevelWriter.cpp" />
+
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NCLDebug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -91,9 +97,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CubeRobot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
@@ -120,37 +123,16 @@
     <ClInclude Include="Matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MD5Anim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MD5FileData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MD5Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MD5Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OBJMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OGLRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Quaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
@@ -168,12 +150,46 @@
     <ClInclude Include="TSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PerfTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
     <ClInclude Include="Launchpad.h" />
+
+    <ClInclude Include="Graphics\Renderer\RenderBase.h" />
+    <ClInclude Include="Graphics\RenderConstants.h" />
+    <ClInclude Include="Graphics\Renderer\RenderNodeBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
+    <ClInclude Include="Graphics\MeshBase.h" />
+    <ClInclude Include="Graphics\Renderer\RenderNodeFactory.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\FrameBufferBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
+    <ClInclude Include="Graphics\TextureBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
+    <ClInclude Include="Graphics\ShaderBase.h" />
+    <ClInclude Include="NCLDebug.h" />
+    <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
+    <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
+    <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="LevelWriter.h" />
+
   </ItemGroup>
 </Project>

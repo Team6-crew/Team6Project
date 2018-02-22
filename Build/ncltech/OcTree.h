@@ -16,7 +16,7 @@ public:
 	}
 
 	float getHalfDim() { return boundary->halfdim; }
-	Vector3 getCenter() { return boundary->center; }
+	nclgl::Maths::Vector3 getCenter() { return boundary->center; }
 
 	bool insert(PhysicsNode* p);
 	 	

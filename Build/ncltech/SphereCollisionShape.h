@@ -37,27 +37,27 @@ public:
 	virtual void DebugDraw() const override;
 
 	// Build Inertia Matrix for rotational mass
-	virtual Matrix3 BuildInverseInertia(float invMass) const override;
+	virtual nclgl::Maths::Matrix3 BuildInverseInertia(float invMass) const override;
 
 
 	// Generic Collision Detection Routines
 	//  - Used in CollisionDetectionSAT to identify if two shapes overlap
 	virtual void GetCollisionAxes(
 		const PhysicsNode* otherObject,
-		std::vector<Vector3>& out_axes) const override;
+		std::vector<nclgl::Maths::Vector3>& out_axes) const override;
 
-	virtual Vector3 GetClosestPoint(const Vector3& point) const override;
+	virtual nclgl::Maths::Vector3 GetClosestPoint(const nclgl::Maths::Vector3& point) const override;
 
 	virtual void GetMinMaxVertexOnAxis(
-		const Vector3& axis,
-		Vector3& out_min,
-		Vector3& out_max) const override;
+		const nclgl::Maths::Vector3& axis,
+		nclgl::Maths::Vector3& out_min,
+		nclgl::Maths::Vector3& out_max) const override;
 	
 	virtual void GetIncidentReferencePolygon(
-		const Vector3& axis,
-		std::list<Vector3>& out_face,
-		Vector3& out_normal,
-		std::vector<Plane>& out_adjacent_planes) const override;
+		const nclgl::Maths::Vector3& axis,
+		std::list<nclgl::Maths::Vector3>& out_face,
+		nclgl::Maths::Vector3& out_normal,
+		std::vector<nclgl::Maths::Plane>& out_adjacent_planes) const override;
 
 protected:
 	float	m_Radius;

@@ -83,7 +83,7 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #include "Vector3.h"
 #include "Vector2.h"
-#include "Mesh.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include "ChildMeshInterface.h"
 
 #define OBJOBJECT		"object"	//the current line of the obj file defines the start of a new material
@@ -120,13 +120,13 @@ struct OBJSubMesh {
 	std::vector<int> normIndices;
 
 	int indexOffset;
-	string mtlType;
-	string mtlSrc;
+	std::string mtlType;
+	std::string mtlSrc;
 };
 
 struct MTLInfo {
-	string bump;
-	string diffuse;
+	std::string bump;
+	std::string diffuse;
 
 	GLuint bumpNum;
 	GLuint diffuseNum;
@@ -138,7 +138,7 @@ struct MTLInfo {
 	//this is all we care about...
 };
 
-class OBJMesh : public Mesh, public ChildMeshInterface	{
+class OBJMesh : public OGLMesh, public ChildMeshInterface	{
 public:
 	OBJMesh(void){};
 	OBJMesh(std::string filename){LoadOBJMesh(filename);};
@@ -148,11 +148,11 @@ public:
 	virtual void Draw();
 
 protected:
-	void	SetTexturesFromMTL(string &mtlFile, string &mtlType);
+	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType);
 
 	void	FixTextures(MTLInfo &info);
 
-	map <string, MTLInfo> materials;
+	std::map <std::string, MTLInfo> materials;
 };
 
 #endif

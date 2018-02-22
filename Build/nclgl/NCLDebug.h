@@ -65,10 +65,13 @@ function as it will include the filename and linenumber it was triggered on with
 #include "Matrix3.h"
 #include "Vector4.h"
 #include "Vector3.h"
-#include "Shader.h"
+
 #include <vector>
 #include <mutex>
 #include <deque>
+#include <string>
+
+#include <GL/glew.h>
 
 #define MAX_LOG_SIZE		12
 #define LOG_TEXT_SIZE  		12
@@ -95,21 +98,24 @@ enum TextAlignment
 
 #define NCLLOG(str, ...) NCLDebug::Log(str, __VA_ARGS__)
 
+class ShaderBase;
+
 
 
 typedef struct
 {
-	Vector4		color;
+	nclgl::Maths::Vector4		color;
 	std::string text;
 } LogEntry;
 
 typedef struct 
 {
-	std::vector<Vector4> _vPoints;
-	std::vector<Vector4> _vThickLines;
-	std::vector<Vector4> _vHairLines;
-	std::vector<Vector4> _vTris;
+	std::vector<nclgl::Maths::Vector4> _vPoints;
+	std::vector<nclgl::Maths::Vector4> _vThickLines;
+	std::vector<nclgl::Maths::Vector4> _vHairLines;
+	std::vector<nclgl::Maths::Vector4> _vTris;
 } DebugDrawList;
+
 
 
 class NCLDebug
@@ -119,50 +125,50 @@ public:
 
 
 	//Draw Point (circle)
-	static void DrawPoint(const Vector3& pos, float point_radius, const Vector3& color);
-	static void DrawPoint(const Vector3& pos, float point_radius, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	static void DrawPointNDT(const Vector3& pos, float point_radius, const Vector3& color);
-	static void DrawPointNDT(const Vector3& pos, float point_radius, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawPoint(const nclgl::Maths::Vector3& pos, float point_radius, const nclgl::Maths::Vector3& color);
+	static void DrawPoint(const nclgl::Maths::Vector3& pos, float point_radius, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawPointNDT(const nclgl::Maths::Vector3& pos, float point_radius, const nclgl::Maths::Vector3& color);
+	static void DrawPointNDT(const nclgl::Maths::Vector3& pos, float point_radius, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Draw Line with a given thickness 
-	static void DrawThickLine(const Vector3& start, const Vector3& end, float line_width, const Vector3& color);
-	static void DrawThickLine(const Vector3& start, const Vector3& end, float line_width, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	static void DrawThickLineNDT(const Vector3& start, const Vector3& end, float line_width, const Vector3& color);
-	static void DrawThickLineNDT(const Vector3& start, const Vector3& end, float line_width, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawThickLine(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, float line_width, const nclgl::Maths::Vector3& color);
+	static void DrawThickLine(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, float line_width, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawThickLineNDT(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, float line_width, const nclgl::Maths::Vector3& color);
+	static void DrawThickLineNDT(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, float line_width, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Draw line with thickness of 1 screen pixel regardless of distance from camera
-	static void DrawHairLine(const Vector3& start, const Vector3& end, const Vector3& color);
-	static void DrawHairLine(const Vector3& start, const Vector3& end, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	static void DrawHairLineNDT(const Vector3& start, const Vector3& end, const Vector3& color);
-	static void DrawHairLineNDT(const Vector3& start, const Vector3& end, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawHairLine(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, const nclgl::Maths::Vector3& color);
+	static void DrawHairLine(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawHairLineNDT(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, const nclgl::Maths::Vector3& color);
+	static void DrawHairLineNDT(const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Draw Matrix (x,y,z axis at pos)
-	static void DrawMatrix(const Matrix4& transform_mtx);
-	static void DrawMatrix(const Matrix3& rotation_mtx, const Vector3& position);
-	static void DrawMatrixNDT(const Matrix4& transform_mtx);
-	static void DrawMatrixNDT(const Matrix3& rotation_mtx, const Vector3& position);
+	static void DrawMatrix(const nclgl::Maths::Matrix4& transform_mtx);
+	static void DrawMatrix(const nclgl::Maths::Matrix3& rotation_mtx, const nclgl::Maths::Vector3& position);
+	static void DrawMatrixNDT(const nclgl::Maths::Matrix4& transform_mtx);
+	static void DrawMatrixNDT(const nclgl::Maths::Matrix3& rotation_mtx, const nclgl::Maths::Vector3& position);
 
 	//Draw Triangle 
-	static void DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	static void DrawTriangleNDT(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawTriangle(const nclgl::Maths::Vector3& v0, const nclgl::Maths::Vector3& v1, const nclgl::Maths::Vector3& v2, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawTriangleNDT(const nclgl::Maths::Vector3& v0, const nclgl::Maths::Vector3& v1, const nclgl::Maths::Vector3& v2, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Draw Polygon (Renders as a triangle fan, so verts must be arranged in order)
-	static void DrawPolygon(int n_verts, const Vector3* verts, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	static void DrawPolygonNDT(int n_verts, const Vector3* verts, const Vector4& color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawPolygon(int n_verts, const nclgl::Maths::Vector3* verts, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawPolygonNDT(int n_verts, const nclgl::Maths::Vector3* verts, const nclgl::Maths::Vector4& color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 
 	//Draw Text WorldSpace (pos given here in worldspace)
-	static void DrawTextWs(const Vector3& pos, const float font_size, const TextAlignment alignment, const Vector4 color, const std::string text, ...); ///See "printf" for usage manual
-	static void DrawTextWsNDT(const Vector3& pos, const float font_size, const TextAlignment alignment, const Vector4 color, const std::string text, ...); ///See "printf" for usage manual
+	static void DrawTextWs(const nclgl::Maths::Vector3& pos, const float font_size, const TextAlignment alignment, const nclgl::Maths::Vector4 color, const std::string text, ...); ///See "printf" for usage manual
+	static void DrawTextWsNDT(const nclgl::Maths::Vector3& pos, const float font_size, const TextAlignment alignment, const nclgl::Maths::Vector4 color, const std::string text, ...); ///See "printf" for usage manual
 
 																																							//Draw Text (pos is assumed to be pre-multiplied by projMtx * viewMtx at this point)
-	static void DrawTextCs(const Vector4& pos, const float font_size, const std::string& text, const TextAlignment alignment = TEXTALIGN_LEFT, const Vector4 color = Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	static void DrawTextCs(const nclgl::Maths::Vector4& pos, const float font_size, const std::string& text, const TextAlignment alignment = TEXTALIGN_LEFT, const nclgl::Maths::Vector4 color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Add a status entry at the top left of the screen (Cleared each frame)
-	static void AddStatusEntry(const Vector4& color, const std::string text, ...); ///See "printf" for usuage manual
+	static void AddStatusEntry(const nclgl::Maths::Vector4& color, const std::string text, ...); ///See "printf" for usuage manual
 
 																					//Add a log entry at the bottom left - persistent until scene reset
-	static void Log(const Vector3& color, const std::string text, ...); ///See "printf" for usuage manual
+	static void Log(const nclgl::Maths::Vector3& color, const std::string text, ...); ///See "printf" for usuage manual
 	static void Log(const std::string text, ...); //Default Text Color
 
 												  //Add an error using default error formatting - use "NCLERROR("error description", <printf params>) to automatically call this function and fill in the required params
@@ -183,9 +189,9 @@ public:
 	static void _RenderDebugClipSpace();		//Text (probably don't want this anti-aliased)
 
 	static void _SetDebugDrawData(
-		const Matrix4& projMtx,
-		const Matrix4& viewMtx,
-		const Vector3& camera_pos
+		const nclgl::Maths::Matrix4& projMtx,
+		const nclgl::Maths::Matrix4& viewMtx,
+		const nclgl::Maths::Vector3& camera_pos
 	)
 	{
 		g_ProjMtx = projMtx;
@@ -202,12 +208,12 @@ public:
 
 protected:
 	//Actual functions managing data parsing to save code bloat - called by public functions
-	static void GenDrawPoint(bool ndt, const Vector3& pos, float point_radius, const Vector4& color);
-	static void GenDrawThickLine(bool ndt, const Vector3& start, const Vector3& end, float line_width, const Vector4& color);
-	static void GenDrawHairLine(bool ndt, const Vector3& start, const Vector3& end, const Vector4& color);
-	static void GenDrawTriangle(bool ndt, const Vector3& v0, const Vector3& v1, const Vector3& v2, const Vector4& color);
+	static void GenDrawPoint(bool ndt, const nclgl::Maths::Vector3& pos, float point_radius, const nclgl::Maths::Vector4& color);
+	static void GenDrawThickLine(bool ndt, const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, float line_width, const nclgl::Maths::Vector4& color);
+	static void GenDrawHairLine(bool ndt, const nclgl::Maths::Vector3& start, const nclgl::Maths::Vector3& end, const nclgl::Maths::Vector4& color);
+	static void GenDrawTriangle(bool ndt, const nclgl::Maths::Vector3& v0, const nclgl::Maths::Vector3& v1, const nclgl::Maths::Vector3& v2, const nclgl::Maths::Vector4& color);
 
-	static void AddLogEntry(const Vector3& color, const std::string& text);
+	static void AddLogEntry(const nclgl::Maths::Vector3& color, const std::string& text);
 
 	static void _SortRenderLists();
 	static void _BuildTextBackgrounds();
@@ -219,10 +225,10 @@ protected:
 	static GLuint _GenerateFontBitmap(const char* font_name, int font_size, bool bold, bool italic, bool underline);
 
 protected:
-	static Vector3	g_CameraPosition;
-	static Matrix4  g_ProjMtx;
-	static Matrix4  g_ViewMtx;
-	static Matrix4  g_ProjViewMtx;
+	static nclgl::Maths::Vector3	g_CameraPosition;
+	static nclgl::Maths::Matrix4  g_ProjMtx;
+	static nclgl::Maths::Matrix4  g_ViewMtx;
+	static nclgl::Maths::Matrix4  g_ProjViewMtx;
 	static int g_NumStatusEntries;
 	static float g_MaxStatusEntryWidth;
 	static std::deque<LogEntry> g_vLogEntries;
@@ -231,25 +237,23 @@ protected:
 	static bool g_StatusVisible;
 	static bool g_LogVisible;
 
-	static std::vector<Vector4> g_vChars;
+	static std::vector<nclgl::Maths::Vector4> g_vChars;
 	static uint g_vCharsLogStart;
 	static FILE*  g_vOutLogFile;
 
 	static DebugDrawList g_DrawList[2];			//Depth-Tested		(Transparent - Opaque)
 	static DebugDrawList g_DrawListNDT[2];		//Not Depth-Tested	(Transparent - Opaque)
 
-	static Shader*	g_pShaderPoints;
-	static Shader*	g_pShaderLines;
-	static Shader*	g_pShaderHairLines;
-	static Shader*	g_pShaderText;
+	static ShaderBase*	g_pShaderPoints;
+	static ShaderBase*	g_pShaderLines;
+	static ShaderBase*	g_pShaderHairLines;
+	static ShaderBase*	g_pShaderText;
 
 	static GLuint	g_glArr, g_glBuf;
 	static uint		g_glBufOffsets[9];
 	static GLuint   g_glBufCapacity;
-	static Vector4* g_glBufPtr;
+	static nclgl::Maths::Vector4* g_glBufPtr;
 
 	static GLuint	g_glLogFontTex;
 	static GLuint	g_glDefaultFontTex;
 };
-
-

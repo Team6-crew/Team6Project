@@ -18,9 +18,14 @@ _-_-_-_-_-_-_-""  ""
 
 #pragma once
 
-#include "OGLRenderer.h"
+#include <nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h>
+#include <nclgl\Graphics\MeshBase.h>
+
 #include <vector>
 
+
+
+#include <GL/glew.h>
 //A handy enumerator, to determine which member of the bufferObject array
 //holds which data
 enum MeshBuffer {
@@ -33,28 +38,39 @@ enum MeshBuffer {
 	MAX_BUFFER
 };
 
-class Mesh	{
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Vector2;
+		class Vector3;
+		class Vector4;
+	}
+}
+
+
+class OGLMesh	: public MeshBase {
 public:
 	friend class MD5Mesh;
-	Mesh(void);
-	Mesh(const Mesh& rhs);
-	virtual ~Mesh(void);
+	OGLMesh(void);
+	OGLMesh(const OGLMesh& rhs);
+	virtual ~OGLMesh(void);
 
-	virtual void Draw();
+	void Draw() override;
 
 	//Generates a single triangle, with RGB colours
-	static Mesh*	GenerateTriangle();
+	static OGLMesh*	GenerateTriangle();
 
-	static Mesh*	GenerateCone(float segments);
-	static Mesh*	TestTriangle(float texRotation);
-	static Mesh*	TestQuad(float texRotation);
+	static OGLMesh*	GenerateCone(float segments);
+	static OGLMesh*	TestTriangle(float texRotation);
+	static OGLMesh*	TestQuad(float texRotation);
 
 	//Generates a single white quad, going from -1 to 1 on the x and z axis.
-	static Mesh*	GenerateQuad();
-	static Mesh*	GenerateQuadAlt();
+	static OGLMesh*	GenerateQuad();
+	static OGLMesh*	GenerateQuadAlt();
 
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
-	void	SetTexture(GLuint tex)	{texture = tex;}
+	void	SetTexture(TextureBase* texture)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
 	GLuint  GetTexture()			{return texture;}
 
@@ -79,7 +95,12 @@ public:
 	void	GenerateTangents();
 
 	//Helper function for GenerateTangents
-	Vector3 GenerateTangent(const Vector3 &a,const Vector3 &b,const Vector3 &c,const Vector2 &ta,const Vector2 &tb,const Vector2 &tc);
+	nclgl::Maths::Vector3 GenerateTangent(const nclgl::Maths::Vector3 &a, 
+										  const nclgl::Maths::Vector3 &b, 
+										  const nclgl::Maths::Vector3 &c, 
+										  const nclgl::Maths::Vector2 &ta, 
+										  const nclgl::Maths::Vector2 &tb, 
+										  const nclgl::Maths::Vector2 &tc);
 
 	//VAO for this mesh
 	GLuint	arrayObject;
@@ -106,15 +127,15 @@ public:
 	//we need access to the vertex data for skinning per frame...
 
 	//Pointer to vertex position attribute data (badly named...?)
-	Vector3*		vertices;
+	nclgl::Maths::Vector3*		vertices;
 	//Pointer to vertex colour attribute data
-	Vector4*		colours;
+	nclgl::Maths::Vector4*		colours;
 	//Pointer to vertex texture coordinate attribute data
-	Vector2*		textureCoords;
+	nclgl::Maths::Vector2*		textureCoords;
 	//Pointer to vertex normals attribute data
-	Vector3*		normals;
+	nclgl::Maths::Vector3*		normals;
 	//Pointer to vertex tangents attribute data
-	Vector3*		tangents;
+	nclgl::Maths::Vector3*		tangents;
 	//Pointer to vertex indices attribute data
 	unsigned int*	indices;
 };

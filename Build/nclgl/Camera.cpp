@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+using namespace nclgl::Maths;
 /*
 Polls the camera for keyboard / mouse movement.
 Should be done once per frame! Pass it the msec since
@@ -34,7 +35,7 @@ void Camera::HandleMouse(float dt)
 
 void Camera::HandleKeyboard(float dt)
 {
-	float speed = 3.5f * dt;	//3.5m per second
+	float speed = 20.0f * dt;	//20m per second
 
 
 								//Bounds check the pitch, to be between straight up and straight down ;)

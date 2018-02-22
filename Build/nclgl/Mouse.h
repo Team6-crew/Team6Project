@@ -40,9 +40,9 @@ public:
 	bool	DoubleClicked(MouseButtons button);
 
 	//Get how much this mouse has moved since last frame
-	Vector2	GetRelativePosition();
+	nclgl::Maths::Vector2	GetRelativePosition();
 	//Get the window position of the mouse pointer
-	Vector2 GetAbsolutePosition();
+	nclgl::Maths::Vector2 GetAbsolutePosition();
 
 	//Determines the maximum amount of ms that can pass between
 	//2 mouse presses while still counting as a 'double click'
@@ -82,11 +82,11 @@ protected:
 	void			SetAbsolutePositionBounds(unsigned int maxX, unsigned int maxY);
 
 	//Current mouse absolute position
-	Vector2		absolutePosition;
+	nclgl::Maths::Vector2		absolutePosition;
 	//Current mouse absolute position maximum bounds
-	Vector2		absolutePositionBounds;
+	nclgl::Maths::Vector2		absolutePositionBounds;
 	//How much as the mouse moved since the last raw packet?
-	Vector2		relativePosition;
+	nclgl::Maths::Vector2		relativePosition;
 	//Current button down state for each button
 	bool		buttons[MOUSE_MAX];
 	//Current button held state for each button

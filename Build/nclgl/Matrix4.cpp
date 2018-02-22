@@ -1,5 +1,7 @@
 #include "Matrix4.h"
 
+using namespace nclgl::Maths;
+
 Matrix4::Matrix4(void)	{
 	ToIdentity();
 }

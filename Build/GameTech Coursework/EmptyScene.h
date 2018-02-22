@@ -1,5 +1,4 @@
 #pragma once
-
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
@@ -48,12 +47,12 @@ public:
 		player1->SetPhysics(player1->Physics());*/
 
 		player1 = new Player("player",
-			Vector3(0.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(0.0f, 1.f, 0.0f),
 			1.0f,
 			true,
 			1.0f,
 			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		player1->SetPhysics(player1->Physics());
 
 		//Add player to scene
@@ -66,16 +65,61 @@ public:
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
-			Vector3(0.0f, -1.5f, 0.0f),
-			Vector3(40.0f, 1.0f, 40.0f),
+			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
 			true,
 			0.0f,
 			true,
 			false,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 
-		this->AddGameObject(ground);
+		GameObject* topwall = CommonUtils::BuildCuboidObject(
+			"TopWall",
+			nclgl::Maths::Vector3(0.0f, -1.5f, -19.5f),
+			nclgl::Maths::Vector3(20.0f, 10.0f, 1.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		GameObject* backwall = CommonUtils::BuildCuboidObject(
+			"BackWall",
+			nclgl::Maths::Vector3(0.0f, -1.5f, 19.5f),
+			nclgl::Maths::Vector3(20.0f, 10.0f, 1.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		GameObject* rightwall = CommonUtils::BuildCuboidObject(
+			"RightWall",
+			nclgl::Maths::Vector3(19.5f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 10.0f, 20.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		GameObject* leftwall = CommonUtils::BuildCuboidObject(
+			"LeftWall",
+			nclgl::Maths::Vector3(-19.5f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 10.0f, 20.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+
+		this->AddGameObject(ground);		
 		ground->SetTag(Tags::TGround);
+		
+		this->AddGameObject(topwall);
+		this->AddGameObject(backwall);
+		this->AddGameObject(rightwall);
+		this->AddGameObject(leftwall);
 
 		//add a killzone to remove the object out of ground
 		GameObject* killzone = CommonUtils::BuildCuboidObject(
@@ -121,12 +165,12 @@ public:
 			false,
 			Vector4(0.2f, 0.5f, 1.0f, 1.0f)));*/
 		SpeedPickup* pickup = new SpeedPickup("pickup",
-			Vector3(10.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
 			true,
 			0.0f,
 			true,
-			Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
@@ -153,7 +197,8 @@ public:
 		GameObject *pickup = FindGameObject("pickup");
 		rotation = 0.1f;
 		if(pickup)
-		(*pickup->Render()->GetChildIteratorStart())->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
+		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
+			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		
 		player1->move();
 

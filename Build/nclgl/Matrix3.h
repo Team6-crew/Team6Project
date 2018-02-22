@@ -6,7 +6,7 @@ Description:
 
 A slightly more complete Matrix3 implementation. should provide enough functionality
 for the Game Technologies section of the course. It is still by no means fast or
-optimal however, so you should still be thinking about how it could be made better. 
+optimal however, so you should still be thinking about how it could be made better.
 
 *//////////////////////////////////////////////////////////////////////////////
 
@@ -14,9 +14,18 @@ optimal however, so you should still be thinking about how it could be made bett
 
 #include "Vector3.h"
 
-class Matrix4;
 
-class Matrix3
+
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Matrix3;
+		class Matrix4;
+	}
+}
+
+class nclgl::Maths::Matrix3
 {
 public:
 
@@ -34,7 +43,7 @@ public:
 		float b1, float b2, float b3,
 		float c1, float c2, float c3);
 
-	Matrix3(const Matrix4& mat44);
+	Matrix3(const Matrix4& mat4);
 
 	~Matrix3(void);
 
@@ -100,22 +109,30 @@ public:
 	};
 };
 
-Matrix3& operator+=(Matrix3& a, const Matrix3& rhs);
-Matrix3& operator-=(Matrix3& a, const Matrix3& rhs);
+namespace nclgl
+{
+	namespace Maths
+	{
+		Matrix3& operator+=(Matrix3& a, const Matrix3& rhs);
+		Matrix3& operator-=(Matrix3& a, const Matrix3& rhs);
 
-Matrix3 operator+(const Matrix3& a, const Matrix3& rhs);
-Matrix3 operator-(const Matrix3& a, const Matrix3& rhs);
-Matrix3 operator*(const Matrix3& a, const Matrix3& rhs);
+		Matrix3 operator+(const Matrix3& a, const Matrix3& rhs);
+		Matrix3 operator-(const Matrix3& a, const Matrix3& rhs);
+		Matrix3 operator*(const Matrix3& a, const Matrix3& rhs);
 
 
-Matrix3& operator+=(Matrix3& a, const float b);
-Matrix3& operator-=(Matrix3& a, const float b);
-Matrix3& operator*=(Matrix3& a, const float b);
-Matrix3& operator/=(Matrix3& a, const float b);
+		Matrix3& operator+=(Matrix3& a, const float b);
+		Matrix3& operator-=(Matrix3& a, const float b);
+		Matrix3& operator*=(Matrix3& a, const float b);
+		Matrix3& operator/=(Matrix3& a, const float b);
 
-Matrix3 operator+(const Matrix3& a, const float b);
-Matrix3 operator-(const Matrix3& a, const float b);
-Matrix3 operator*(const Matrix3& a, const float b);
-Matrix3 operator/(const Matrix3& a, const float b);
+		Matrix3 operator+(const Matrix3& a, const float b);
+		Matrix3 operator-(const Matrix3& a, const float b);
+		Matrix3 operator*(const Matrix3& a, const float b);
+		Matrix3 operator/(const Matrix3& a, const float b);
 
-Vector3 operator*(const Matrix3& a, const Vector3& b);
+		Vector3 operator*(const Matrix3& a, const Vector3& b);
+	}
+}
+
+

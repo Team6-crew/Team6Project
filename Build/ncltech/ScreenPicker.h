@@ -34,9 +34,24 @@ which can be extended (with the new physics collision shapes) to provide an accu
 
 #pragma once
 #include <nclgl\TSingleton.h>
-#include <nclgl\RenderNode.h>
-#include <nclgl\Shader.h>
+#include <nclgl\common.h> //uint
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
+#include <vector>
+#include <nclgl\Vector4.h>
+#include <nclgl\Matrix4.h>
+
+class ShaderBase;
+class RenderNodeBase;
+
+namespace nclgl
+{
+	namespace Maths
+	{
+		class Vector3;
+		class Vector2;
+	}
+}
+
 
 //Our texture only stores 16bit unsigned shorts, so has a hard limit on the number of values it can store. 
 //  Hopefully you will never be able to trigger this value though. 
@@ -49,13 +64,14 @@ which can be extended (with the new physics collision shapes) to provide an accu
 //  new_pos			- The new world space position of the dragged object
 //  pos_change		- The amount (in world space) the object has been moved since the last frame
 //  isStopClicking	- Set to true if the object is about to be released (OnMouseUp) and should stop any dragging behaviour
-typedef std::function<void(float dt, const Vector3& new_pos, const Vector3& pos_change, bool isStopClicking)> OnMouseDownCallback;
+typedef std::function<void(float dt, const nclgl::Maths::Vector3& new_pos, 
+						   const nclgl::Maths::Vector3& pos_change, bool isStopClicking)> OnMouseDownCallback;
 
 
 //In the screen picker we need to store a couple of extra bits of information about the render nodes.
 typedef struct
 {
-	RenderNode*			_renderNode;
+	RenderNodeBase*			_renderNode;
 	OnMouseDownCallback _callback;
 } PickerNode;
 
@@ -78,7 +94,6 @@ typedef struct
 
 typedef unsigned short ushort;
 
-
 class ScreenPicker : public TSingleton<ScreenPicker>
 {
 	friend class TSingleton<ScreenPicker>;
@@ -88,10 +103,10 @@ public:
 
 	//Add object to list of 'clickable' objects to be tested 
 	// - Optional callback which if set will be called each frame while the RenderNode is pressed/held
-	void RegisterNodeForMouseCallback(RenderNode* node, OnMouseDownCallback callback = NULL);
+	void RegisterNodeForMouseCallback(RenderNodeBase* node, OnMouseDownCallback callback = NULL);
 
 	//Remove object from the list of 'clickable' objects
-	void UnregisterNodeForMouseCallback(RenderNode* node);
+	void UnregisterNodeForMouseCallback(RenderNodeBase* node);
 
 
 
@@ -99,8 +114,8 @@ public:
 protected:
 	//Called by ScreenRenderer
 	void ClearAllObjects();
-	void RenderPickingScene(const Matrix4& projViewMtx,
-		const Matrix4& invProjViewMtx,
+	void RenderPickingScene(const nclgl::Maths::Matrix4& projViewMtx,
+		const nclgl::Maths::Matrix4& invProjViewMtx,
 		GLuint depthTex,
 		uint depthTexWidth,
 		uint depthTexHeight);
@@ -116,8 +131,8 @@ protected:
 	void HandleObjectMouseHover(PickerNode* target);
 	void HandleObjectMouseLeave();
 	void HandleObjectMouseDown(PickerNode* target);
-	void HandleObjectMouseUp(float dt, Vector3& clip_space);
-	void HandleObjectMouseMove(float dt, Vector3& clip_space);
+	void HandleObjectMouseUp(float dt, nclgl::Maths::Vector3& clip_space);
+	void HandleObjectMouseMove(float dt, nclgl::Maths::Vector3& clip_space);
 
 	//Pseodo Protected
 
@@ -125,7 +140,7 @@ protected:
 	virtual ~ScreenPicker();
 
 protected:
-	void SamplePickerFBO(const Vector2& mouse_pos, ushort& out_idx, float& out_depth);
+	void SamplePickerFBO(const nclgl::Maths::Vector2& mouse_pos, ushort& out_idx, float& out_depth);
 
 protected:
 
@@ -133,20 +148,20 @@ protected:
 	std::vector<PickerNode> m_AllRegisteredObjects;
 
 	//Current State
-	Vector4			m_CurrentObjectBaseColor;
-	PickerNode*		m_pCurrentlyHoverObject;
-	PickerNode*		m_pCurrentlyHeldObject;
+	nclgl::Maths::Vector4			m_CurrentObjectBaseColor;
+	PickerNode*						m_pCurrentlyHoverObject;
+	PickerNode*						m_pCurrentlyHeldObject;
 
 	//Cached data to allow world-space movement computation
-	Vector3			m_ObjOffset;
-	float			m_OldDepth;
-	Vector3			m_OldWorldSpacePos;
+	nclgl::Maths::Vector3			m_ObjOffset;
+	float							m_OldDepth;
+	nclgl::Maths::Vector3			m_OldWorldSpacePos;
 
 	//clip-space to world-space transform
-	Matrix4			m_invViewProjMtx;
+	nclgl::Maths::Matrix4			m_invViewProjMtx;
 
 	//Shader
-	Shader* m_pShaderPicker;
+	ShaderBase* m_pShaderPicker;
 
 	//Framebuffer
 	int		m_TexWidth;

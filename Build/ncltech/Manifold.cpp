@@ -4,6 +4,8 @@
 #include "PhysicsEngine.h"
 #include <algorithm>
 
+using namespace nclgl::Maths;
+
 Manifold::Manifold() 
 	: pnodeA(NULL)
 	, pnodeB(NULL)

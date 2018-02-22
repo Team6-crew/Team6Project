@@ -12,10 +12,12 @@ Description:
 *//////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <nclgl\Mesh.h>
+#include <nclgl\Graphics\MeshBase.h>
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
 
 class Scene;
+
+class TextureBase;
 
 class CommonMeshes
 {
@@ -26,15 +28,15 @@ public:
 	// e.g RenderNode* cube_copy = new RenderNode(*CommonMeshes::Cube());
 
 	//Cube
-	static Mesh* Cube()			{ return m_pCube; }
+	static MeshBase* Cube()			{ return m_pCube; }
 
 	//Sphere
-	static Mesh* Sphere()		{ return m_pSphere; }
+	static MeshBase* Sphere()		{ return m_pSphere; }
 
 
 
 	//PhysicsEngine Checkerboard - Hidden here for reasons of laziness
-	static const GLuint CheckerboardTex()   { return m_pCheckerboardTex; }
+	//static const GLuint CheckerboardTex()   { return m_pCheckerboardTex; }
 
 
 protected:
@@ -43,8 +45,8 @@ protected:
 	static void ReleaseMeshes();
 
 protected:
-	static Mesh* m_pCube;
-	static Mesh* m_pSphere;
+	static MeshBase* m_pCube;
+	static MeshBase* m_pSphere;
 
-	static GLuint m_pCheckerboardTex;
+	static TextureBase* m_pCheckerboardTex;
 };
