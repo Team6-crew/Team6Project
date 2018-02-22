@@ -8,7 +8,9 @@ GameLogic::GameLogic() {
 	colours[1] = nclgl::Maths::Vector4(0.3f, 1.0f, 1.0f, 1.0f);
 	colours[2] = nclgl::Maths::Vector4(1.0f, 0.68f, 0.33f, 1.0f);
 	colours[3] = nclgl::Maths::Vector4(0.0f, 1.0f, 0.02f, 1.0f);
-	
+
+	setnumAI(0);
+	setnumOfPlayersMp(0);
 }
 
 void GameLogic::addPlayers(int num_players) {

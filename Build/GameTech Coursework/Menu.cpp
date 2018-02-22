@@ -3,7 +3,7 @@
 using namespace nclgl::Maths;
 using namespace std;
 
-Menu::Menu() :selection(0)
+Menu::Menu() :selection(0), Submenu_active(0)
 {
 
 }
@@ -40,7 +40,7 @@ void Menu::ShowMenu()
 
 	for (std::vector<string>::iterator it = Items.begin(); it != Items.end(); ++it)
 	{
-		Vector4 color = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+		Vector4 color = Vector4(1.0f, 1.0f, 1.0f, 0.5f);
 
 		if (selection == g_NumStatusEntries) 
 		{
@@ -57,4 +57,10 @@ int Menu::getSelection() {
 }
 void Menu::setSelection(int sel) {
 	selection = sel;
+}
+
+void Menu::replaceMenuItem(int position, string item) {
+	if (Items.size() > position) {
+		Items[position] = item;
+	}
 }

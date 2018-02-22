@@ -19,6 +19,13 @@ public:
 	int getNumPlayers() { return players.size(); }
 	Player* getPlayer(int num_player) { return players[num_player]; }
 
+	// split screen ui integration
+	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
+	void setnumAI(int nAI) { numAI = nAI; };
+
+	int getnumOfPlayersMp(void) { return numOfPlayersMp; };
+	int getnumAI(void) { return numAI; };
+
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	float paint_perc;
@@ -26,4 +33,9 @@ private:
 	float rad;
 	std::vector <Player*> players;
 	nclgl::Maths::Vector4 colours[4];
+
+	// split screen ui integration
+	int numOfPlayersMp;
+	int numAI;
+
 };

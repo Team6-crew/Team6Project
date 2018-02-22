@@ -4,7 +4,7 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\OcTree.h>
 #include "../ncltech/ScreenPicker.h"
-#include "../nclgl/Menu.h"
+#include "Menu.h"
 
 #include <ncltech\GameObject.h>
 #include <ncltech\CommonMeshes.h>
@@ -20,11 +20,16 @@
 class MainMenu : public Scene
 {
 public:
-	
+	int numOfPlayers;
+	int numOfAi;
+
+
 	MainMenu(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
 		//std::cout << glGetError() << std::endl;
+		numOfPlayers = 0;
+		numOfAi = 0;
 
 		// Start Screen - Main Menu
 		mainMenu = new Menu();
@@ -42,6 +47,22 @@ public:
 		multiPlayerMenu->AddMenuItem("Host LAN Server");
 		multiPlayerMenu->AddMenuItem("Join LAN Server");
 		multiPlayerMenu->AddMenuItem("Back");
+
+		// Split Screen Menu
+		splitScreenMenu = new Menu();
+		splitScreenMenu->visible = false;
+		splitScreenMenu->AddMenuItem("< Player 1 - Press 1 >");
+		splitScreenMenu->AddMenuItem("< Player 2 - Press 2 >");
+		splitScreenMenu->AddMenuItem("< Player 3 - Press 3 >");
+		splitScreenMenu->AddMenuItem("< Player 4 - Press 4 >");
+		splitScreenMenu->AddMenuItem("Start Game");
+		splitScreenMenu->AddMenuItem("Back");
+
+		//addPlayerMenu = new Menu();
+		//addPlayerMenu->visible = false;
+		//addPlayerMenu->AddMenuItem("Add Human Player");
+		//addPlayerMenu->AddMenuItem("Add AI Player");
+		//addPlayerMenu->AddMenuItem("Back");
 
 		// Options Menu
 		optionsMenu = new Menu();
@@ -77,10 +98,6 @@ public:
 		controlsMenu->AddMenuItem("Player 4 Controls");
 		controlsMenu->AddMenuItem("Back");
 
-		//Background
-		//tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"target.tga");
-		//glGenerateMipmap(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
 
@@ -115,24 +132,8 @@ public:
 
 
 		//Show Menus
-		if (activeMenu == mainMenu) {
-			mainMenu->ShowMenu();
-		}
-		else if (activeMenu == optionsMenu) {
-			optionsMenu->ShowMenu();
-		}
-		else if (activeMenu == resolutionMenu) {
-			resolutionMenu->ShowMenu();
-		}
-		else if (activeMenu == controlsMenu) {
-			controlsMenu->ShowMenu();
-		}
-		else if (activeMenu == soundMenu) {
-			soundMenu->ShowMenu();
-		}
-		else if (activeMenu == multiPlayerMenu) {
-			multiPlayerMenu->ShowMenu();
-		}
+		activeMenu->ShowMenu();
+
 
 		//Navigate choices
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
@@ -145,7 +146,28 @@ public:
 			activeMenu->MoveDown();
 		}
 
-
+		if (activeMenu == splitScreenMenu) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+			{
+				numOfPlayers += 1;
+				activeMenu->replaceMenuItem(0, "Player 1 Ready");
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
+			{
+				numOfPlayers += 1;
+				activeMenu->replaceMenuItem(1, "Player 2 Ready");
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
+			{
+				numOfPlayers += 1;
+				activeMenu->replaceMenuItem(2, "Player 3 Ready");
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
+			{
+				numOfPlayers += 1;
+				activeMenu->replaceMenuItem(3, "Player 4 Ready");
+			}
+		}
 		//Change Menus
 		if (activeMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 		{
@@ -159,7 +181,8 @@ public:
 				
 			}
 			else if (activeMenu == multiPlayerMenu) {
-				std::cout << "Split-Screen set.";
+				activeMenu = splitScreenMenu;
+				activeMenu->setSelection(0);
 			}
 			else if (activeMenu == optionsMenu) {
 				activeMenu = resolutionMenu;
@@ -173,6 +196,7 @@ public:
 			else if (activeMenu == controlsMenu) {
 				std::cout << "Player 1 controls set.";
 			}
+			
 
 		}
 
@@ -199,6 +223,9 @@ public:
 			else if (activeMenu == controlsMenu) {
 				std::cout << "Player 2 controls set.";
 			}
+			else if (activeMenu == splitScreenMenu) {
+				std::cout << "3 Players.";
+			}
 		}
 
 		else if (activeMenu->getSelection() == 2 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
@@ -219,6 +246,9 @@ public:
 			}
 			else if (activeMenu == controlsMenu) {
 				std::cout << "Player 3 controls set.";
+			}
+			else if (activeMenu == splitScreenMenu) {
+				std::cout << "4 Players.";
 			}
 		}
 
@@ -241,6 +271,9 @@ public:
 			else if (activeMenu == controlsMenu) {
 				std::cout << "Player 4 controls set.";
 			}
+			else if (activeMenu == splitScreenMenu) {
+				activeMenu = multiPlayerMenu;
+			}
 		}
 
 		else if (activeMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
@@ -253,31 +286,18 @@ public:
 				activeMenu = optionsMenu;
 				activeMenu->setSelection(0);
 			}
+			else if (activeMenu == splitScreenMenu) {
+				GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Team Project");
+				
+				activeMenu = NULL;
+			}
 		}
-		
-		//GameObject* target1 = CommonUtils::BuildCuboidObject(
-		//	"Target1",										// Optional: Name
-		//	Vector3(0.0f, 2.0f, -3.5f),						// Position
-		//	Vector3(15.0f, 10.0f, 1.0f),					// Half-Dimensions
-		//	false,											// Physics Enabled?
-		//	0.0f,											// Physical Mass (must have physics enabled)
-		//	false,											// Physically Collidable (has collision shape)
-		//	false,											// Dragable by user?
-		//	Vector4(0.0f, 0.0f, 0.0f, 1.0f));				// Render color
-		//this->AddGameObject(target1);
-		//(*target1->Render()->GetChildIteratorStart())->GetMesh()->SetTexture(tex);
-
-
-		//backgroundMesh = Mesh::GenerateQuad();
-		//backgroundMesh = new Mesh(*image);
-		//backgroundMesh->SetTexture(tex);
-
-		//RenderNode* background = new RenderNode();
-		//background->SetMesh(backgroundMesh);
-		//background->SetTransform(Matrix4::Translation(Vector3(0.0f, 2.0f, -3.5f)) * Matrix4::Scale(Vector3(1.0f, 1.0f, 1.0f)));
-		//background->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//this->AddGameObject(new GameObject("Target", background, NULL));
-
+		else if (activeMenu->getSelection() == 5 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			activeMenu = multiPlayerMenu;
+		}
 	}
 private:
 	TextureBase*	tex;
@@ -294,6 +314,10 @@ private:
 	Menu * soundMenu;
 	Menu * multiPlayerMenu;
 	Menu * controlsMenu;
+	Menu * splitScreenMenu;
+	Menu * addPlayerMenu;
+
 	Menu * activeMenu;
+	Menu * activeSubmenu;
 };
 

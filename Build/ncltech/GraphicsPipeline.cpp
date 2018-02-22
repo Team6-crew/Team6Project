@@ -63,7 +63,7 @@ GraphicsPipeline::GraphicsPipeline()
 
 	minimap->SetTexture(gr_tex);
 	Resize(renderer->GetWidth(), renderer->GetHeight());
-	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"basketball.png");
+	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
