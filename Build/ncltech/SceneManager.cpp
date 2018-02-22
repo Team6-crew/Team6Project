@@ -3,6 +3,7 @@
 #include "CommonMeshes.h"
 #include <nclgl\NCLDebug.h>
 #include "GraphicsPipeline.h"
+#include "../nclgl/GameLogic.h"
 
 SceneManager::SceneManager() 
 	: m_SceneIdx(NULL)
@@ -63,6 +64,7 @@ void SceneManager::JumpToScene(int idx)
 		NCLLOG("[SceneManager] - Exiting scene -");
 		scene->OnCleanupScene();
 		PhysicsEngine::Instance()->RemoveAllPhysicsObjects();	
+		GameLogic::Instance()->clearPlayers();
 	}
 
 	m_SceneIdx = idx;
