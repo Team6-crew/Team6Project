@@ -12,6 +12,8 @@
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 #include "Player.h"
 #include "SceneManager.h"
 #include <nclgl\GameLogic.h>

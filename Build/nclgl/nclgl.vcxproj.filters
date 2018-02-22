@@ -80,6 +80,9 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
+    <ClCompile Include="Audio\AudioFactory.cpp" />
+    <ClCompile Include="Audio\AudioEngineBase.cpp" />
+    <ClCompile Include="Audio\Windows\WinAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -177,6 +180,9 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="Audio\AudioFactory.h" />
+    <ClInclude Include="Audio\AudioEngineBase.h" />
+    <ClInclude Include="Audio\Windows\WinAudio.h" />
     <ClInclude Include="Definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>

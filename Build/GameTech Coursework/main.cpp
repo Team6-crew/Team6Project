@@ -5,6 +5,8 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -49,6 +51,8 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 	
+	// Move this once main menu is hooked up
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
 // Print Debug Info
@@ -112,7 +116,8 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
 
-
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
 }
 
 
@@ -122,6 +127,8 @@ int main()
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
+	
+
 
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
@@ -161,7 +168,22 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-	
+		// Update Audio
+		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
+
+		if (Window::GetWindow().GetTimer()->GetMS() > 7000)
+		{
+			// Can remove this static bool once main menu is hooked up
+			static bool hasSound = false;
+			if (!hasSound)
+			{
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
+			// Remove once hooked up main menu
+			hasSound = true;
+		}
+
+		// Remove this once main menu is hooked up
 
 		{
 			//Forces synchronisation if vsync is disabled
@@ -171,7 +193,7 @@ int main()
 		}
 		timer_render.EndTimingSection();
 
-		
+
 
 		//Finish Timing
 		timer_total.EndTimingSection();		
