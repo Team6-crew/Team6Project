@@ -434,9 +434,9 @@ void GraphicsPipeline::RenderScene()
 		}
 
 
-		renderer->SwapBuffers();
-	}
 		
+	}
+	renderer->SwapBuffers();
 }
 
 void GraphicsPipeline::AdjustViewport(int i, int j) {
