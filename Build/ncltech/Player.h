@@ -29,6 +29,7 @@ public:
 
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
+	void equipWeapon();
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
 
@@ -49,6 +50,7 @@ private:
 	GameObject* cube;
 
 	RenderNodeBase* camera_transform;
+	RenderNodeBase* equippedItem;
 	Camera* camera;
 	nclgl::Maths::Vector3 relative_position;
 	float speed;

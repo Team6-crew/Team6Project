@@ -96,6 +96,9 @@
     <ClInclude Include="WorldPartition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WeaponPickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Memory Management\MemoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -171,6 +174,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Memory Management\HeapMemory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponPickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

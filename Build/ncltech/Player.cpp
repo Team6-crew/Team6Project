@@ -23,7 +23,7 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
-
+	equippedItem = NULL;
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
@@ -92,7 +92,7 @@ Player::Player(const std::string& name,
 	camera_transform->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
-	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+	//(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
 }
 
 
@@ -143,12 +143,17 @@ void Player::move(float dt) {
 	{
 		rotation = dt*110.0f;
 		camera->SetYaw(yaw + rotation);
+
+		std::cout << bodyRenderNode->GetWorldTransform().GetPositionVector().x << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().y << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().z << std::endl;
+
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_right))
 	{
 		rotation = -dt*110.0f;
 		camera->SetYaw(yaw + rotation);
+
+		std::cout << bodyRenderNode->GetWorldTransform().GetPositionVector().x << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().y << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().z << std::endl;
 	}
 
 	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
@@ -160,11 +165,20 @@ void Player::move(float dt) {
 		
 	}
 
-	bodyRenderNode->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
+	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(rotation, Vector3(0, 1, 0)));
 
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 
 }
+
+void Player::equipWeapon() {
+	equippedItem = RenderNodeFactory::Instance()->MakeRenderNode(new OBJMesh(MESHDIR"cube.obj"), Vector4(1,0,0,1));
+	equippedItem->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -7.0f, 0.0f)));
+
+	(*body->Render()->GetChildIteratorStart())->AddChild(equippedItem);
+}
+
+
 
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
