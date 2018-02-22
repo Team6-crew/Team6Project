@@ -9,7 +9,6 @@
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\TextureBase.h>
-#include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
 #include <nclgl\Audio\AudioFactory.h>
@@ -27,14 +26,11 @@ GraphicsPipeline::GraphicsPipeline()
 	, screenTexWidth(0)
 	, screenTexHeight(0)
 	, screenFBO(NULL)
-	, screenTexColor(NULL)
-	, screenTexDepth(NULL)
 	, shaderPresentToWindow(NULL)
 	, shaderShadow(NULL)
 	, shaderForwardLighting(NULL)
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
-	, shadowTex(NULL)
 	, TrailBuffer(NULL)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
@@ -148,16 +144,16 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
 		//Color Texture
-		screenTexColor = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexColor",Texture::COLOUR, screenTexWidth, screenTexHeight);
 		//Depth Texture
-		screenTexDepth = TextureFactory::Instance()->MakeTexture(Texture::DEPTH, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexDepth",Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
-		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
+		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("screenTexColor"), ResourceManager::Instance()->get("screenTexDepth"));
 	}
-
+	
 	//Construct our Shadow Maps and Shadow UBO
-	shadowTex = TextureFactory::Instance()->MakeTexture(Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
-	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex, false);
+	ResourceManager::Instance()->MakeTexture("shadowTex",Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("shadowTex"), false);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
@@ -306,7 +302,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uShadowTex", 2);
 		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
-		shadowTex->Bind(2);
+		ResourceManager::Instance()->get("shadowTex")->Bind(2);
 
 		RenderAllObjects(false,
 
@@ -321,7 +317,7 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
+		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->get("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -350,7 +346,7 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-			fullscreenQuad->ReplaceTexture(screenTexColor);
+			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->get("screenTexColor"));
 
 			if (j == 0) {
 

@@ -68,8 +68,6 @@ protected:
 	FrameBufferBase*	renderFBO;
 	uint				screenTexWidth, screenTexHeight;
 	FrameBufferBase*	screenFBO;
-	TextureBase*		screenTexColor;
-	TextureBase*		screenTexDepth;
 
 	//Shaders
 	ShaderBase* shaderPresentToWindow;
@@ -90,7 +88,6 @@ protected:
 	//Shadowmaps
 	float								sceneBoundingRadius; ///Approx based on scene contents
 	FrameBufferBase*					shadowFBO;
-	TextureBase*						shadowTex;
 	nclgl::Maths::Matrix4				shadowProj[SHADOWMAP_NUM];
 	nclgl::Maths::Matrix4				shadowViewMtx;
 	nclgl::Maths::Matrix4				shadowProjView[SHADOWMAP_NUM];
