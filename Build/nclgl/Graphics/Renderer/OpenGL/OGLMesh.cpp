@@ -657,11 +657,11 @@ void OGLMesh::SetTexture(TextureBase* texture)
 	//TODO: Don't actually need texture here is for OBJMesh??
 }
 
-void OGLMesh::ReplaceTexture(TextureBase* texture) {
-	if (this->texture.size() == 0) {
+void OGLMesh::ReplaceTexture(TextureBase* texture, int pos) {
+	if (this->texture.size() < pos+1) {
 		this->texture.push_back(static_cast<OGLTexture*>(texture)->GetID());
 	}
 	else {
-		this->texture[0] = static_cast<OGLTexture*>(texture)->GetID();
+		this->texture[pos] = static_cast<OGLTexture*>(texture)->GetID();
 	}
 }
