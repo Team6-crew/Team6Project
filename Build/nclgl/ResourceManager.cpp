@@ -11,9 +11,9 @@ ResourceManager::~ResourceManager()
 {
 }
 
-TextureBase * ResourceManager::get(std::string name)
+TextureBase * ResourceManager::getTexture(std::string name)
 {
-	return textureManager.getTexture(name);
+	return textureManager.get(name);
 }
 
 TextureBase * ResourceManager::MakeTexture(std::string name, Texture::Type type, int a, int b)

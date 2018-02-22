@@ -59,10 +59,10 @@ GraphicsPipeline::GraphicsPipeline()
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
 	
 	TextureBase* depth = NULL;
-	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("gr_tex"), depth);
-	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("circle_tex"), depth);
+	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
+	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
 
-	minimap->SetTexture(ResourceManager::Instance()->get("gr_tex"));
+	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
@@ -148,12 +148,12 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		//Depth Texture
 		ResourceManager::Instance()->MakeTexture("screenTexDepth",Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
-		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("screenTexColor"), ResourceManager::Instance()->get("screenTexDepth"));
+		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("screenTexColor"), ResourceManager::Instance()->getTexture("screenTexDepth"));
 	}
 	
 	//Construct our Shadow Maps and Shadow UBO
 	ResourceManager::Instance()->MakeTexture("shadowTex",Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
-	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->get("shadowTex"), false);
+	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("shadowTex"), false);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
@@ -182,10 +182,10 @@ void GraphicsPipeline::UpdateScene(float dt)
 void GraphicsPipeline::RenderScene()
 {
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
-		minimap->ReplaceTexture(ResourceManager::Instance()->get("circle_tex"));
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	}
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
-		minimap->ReplaceTexture(ResourceManager::Instance()->get("gr_tex"));
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 	}
 	for (int i = 0; i < cameras.size(); i++) {
 		camera = cameras[i];
@@ -229,7 +229,7 @@ void GraphicsPipeline::RenderScene()
 		}
 
 		trailQuad->Draw();
-		ground->GetMesh()->SetTexture(ResourceManager::Instance()->get("gr_tex"));
+		ground->GetMesh()->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 
 
 		CircleBuffer->Activate();
@@ -302,7 +302,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uShadowTex", 2);
 		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
-		ResourceManager::Instance()->get("shadowTex")->Bind(2);
+		ResourceManager::Instance()->getTexture("shadowTex")->Bind(2);
 
 		RenderAllObjects(false,
 
@@ -317,7 +317,7 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->get("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
+		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -346,7 +346,7 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->get("screenTexColor"));
+			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("screenTexColor"));
 
 			if (j == 0) {
 

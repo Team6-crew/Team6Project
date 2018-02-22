@@ -15,7 +15,7 @@ void CommonMeshes::InitializeMeshes()
 {
 	if (m_pCube == NULL)
 	{
-		m_pCheckerboardTex = ResourceManager::Instance()->get(TEXTUREDIR"checkerboard.tga");
+		m_pCheckerboardTex = ResourceManager::Instance()->getTexture(TEXTUREDIR"checkerboard.tga");
 		m_pCheckerboardTex->SetTextureFiltering(true);
 		m_pCheckerboardTex->SetTextureWrapping(true);
 
