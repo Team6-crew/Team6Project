@@ -21,4 +21,9 @@ TextureBase * ResourceManager::MakeTexture(std::string name, Texture::Type type,
 	return textureManager.makeTexture(name, type, a, b);
 }
 
+ShaderBase * ResourceManager::getShader(std::string vertex, std::string fragment, std::string geometry)
+{
+	return shaderManager.get(vertex,fragment,geometry);
+}
+
 
