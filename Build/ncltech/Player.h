@@ -43,6 +43,28 @@ public:
 
 	void setCamera(Camera* c) { camera = c; }
 
+	void increaseSensitivity(float dt) {
+		sensitivity += dt * 4;
+		if (sensitivity > 3.0f) sensitivity = 3.0f;
+	}
+
+	void decreaseSensitivity(float dt) {
+		sensitivity -= dt * 4;
+		if (sensitivity < -3.0f) sensitivity = -3.0f;
+	}
+
+	void resetCamera(float dt) {
+		if (sensitivity > 0) {
+			sensitivity -= dt * 6;
+			if (sensitivity < 0.0f) sensitivity = 0.0f;
+		}
+		else if (sensitivity < 0) {
+			sensitivity += dt * 6;
+			if (sensitivity > 0.0f) sensitivity = 0.0f;
+		}
+
+	}
+
 	Camera* getCamera() { return camera; }
 private:
 
@@ -58,6 +80,8 @@ private:
 	bool canjump = 1;
 
 	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
+
+	float sensitivity;
 	
 	float rad;
 };

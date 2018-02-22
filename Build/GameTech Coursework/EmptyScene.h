@@ -37,7 +37,7 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		GameLogic::Instance()->addPlayers(2);
+		GameLogic::Instance()->addPlayers(1);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));

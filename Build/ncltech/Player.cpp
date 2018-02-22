@@ -23,6 +23,7 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
+	sensitivity = 0.0f;
 	equippedItem = NULL;
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
@@ -128,6 +129,7 @@ void Player::move(float dt) {
 	physicsNode->SetForce(Vector3(0, 0, 0));
 
 	float rotation = 0.0f;
+	
 
 	if (Window::GetKeyboard()->KeyDown(move_up))
 	{
@@ -141,19 +143,21 @@ void Player::move(float dt) {
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = dt*110.0f;
-		camera->SetYaw(yaw + rotation);
-
-		std::cout << bodyRenderNode->GetWorldTransform().GetPositionVector().x << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().y << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().z << std::endl;
+		//rotation = dt*110.0f;
+		increaseSensitivity(dt);
+		camera->SetYaw(yaw + sensitivity);
+		
+	}
+	else if (Window::GetKeyboard()->KeyDown(move_right))
+	{
+		//rotation = -dt*110.0f;
+		decreaseSensitivity(dt);
+		camera->SetYaw(yaw + sensitivity);
 
 	}
-
-	if (Window::GetKeyboard()->KeyDown(move_right))
-	{
-		rotation = -dt*110.0f;
-		camera->SetYaw(yaw + rotation);
-
-		std::cout << bodyRenderNode->GetWorldTransform().GetPositionVector().x << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().y << " " << bodyRenderNode->GetWorldTransform().GetPositionVector().z << std::endl;
+	else {
+		resetCamera(dt);
+		camera->SetYaw(yaw + sensitivity);
 	}
 
 	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
@@ -165,7 +169,8 @@ void Player::move(float dt) {
 		
 	}
 
-	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(rotation, Vector3(0, 1, 0)));
+	std::cout << sensitivity << std::endl;
+	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
 
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 
