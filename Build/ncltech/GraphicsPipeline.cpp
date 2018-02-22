@@ -183,10 +183,10 @@ void GraphicsPipeline::RenderScene()
 {
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
 
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"));
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
 	}
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"));
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"),0);
 
 	}
 	RenderNodeBase * ground = NULL;
@@ -196,7 +196,7 @@ void GraphicsPipeline::RenderScene()
 			ground = (*node->GetChildIteratorStart());
 		}
 	}
-	ground->GetMesh()->ReplaceTexture(gr_tex, 1);
+	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
 	for (int i = 0; i < cameras.size(); i++) {
 		camera = cameras[i];
 		projViewMatrix = projViewMatrices[i];
@@ -234,9 +234,7 @@ void GraphicsPipeline::RenderScene()
 
 		trailQuad->Draw();
 
-		ground->GetMesh()->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
-
-
+	
 
 		CircleBuffer->Activate();
 		renderer->SetViewPort(2048, 2048);
@@ -353,7 +351,7 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 
-			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("screenTexColor"));
+			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("screenTexColor"),0);
 
 
 			if (j == 0) {
