@@ -7,7 +7,7 @@
 #include "EmptyScene.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
-
+#include <nclgl\ResourceManager.h>
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -27,6 +27,7 @@ void Quit(bool error = false, const std::string &reason = "") {
 	SceneManager::Release();
 	PhysicsEngine::Release();
 	GraphicsPipeline::Release();
+	ResourceManager::Release();
 
 	//Show console reason before exit
 	if (error) {

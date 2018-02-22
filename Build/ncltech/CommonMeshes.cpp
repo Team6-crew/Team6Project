@@ -4,6 +4,7 @@
 #include "../ExternalLibs/SOIL/include/SOIL.h" 
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
+#include <nclgl\ResourceManager.h>
 
 MeshBase*	  CommonMeshes::m_pCube		= NULL;
 MeshBase*	  CommonMeshes::m_pSphere	= NULL;
@@ -15,7 +16,8 @@ void CommonMeshes::InitializeMeshes()
 	if (m_pCube == NULL)
 	{
 
-		m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"checkerboard.tga");
+		//m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"checkerboard.tga");
+		m_pCheckerboardTex = ResourceManager::Instance()->get(TEXTUREDIR"checkerboard.tga");
 		m_pCheckerboardTex->SetTextureFiltering(true);
 		m_pCheckerboardTex->SetTextureWrapping(true);
 

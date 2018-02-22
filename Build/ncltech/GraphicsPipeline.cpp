@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "SceneManager.h"
 #include <nclgl\GameLogic.h>
+#include <nclgl\ResourceManager.h>
 
 using namespace nclgl::Maths;
 
@@ -72,7 +73,6 @@ GraphicsPipeline::GraphicsPipeline()
 
 GraphicsPipeline::~GraphicsPipeline()
 {  
-	SAFE_DELETE(camera);
 	for (int i = 0; i < cameras.size(); i++) {
 		SAFE_DELETE(cameras[i]);
 	}
