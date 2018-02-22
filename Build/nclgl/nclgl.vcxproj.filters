@@ -48,6 +48,11 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
+    <ClCompile Include="RenderNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Launchpad.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderFactory.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
@@ -82,6 +87,7 @@
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LevelWriter.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -147,6 +153,9 @@
     <ClInclude Include="PerfTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
+    <ClInclude Include="Launchpad.h" />
+
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
     <ClInclude Include="Graphics\Renderer\RenderNodeBase.h" />
@@ -181,5 +190,6 @@
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LevelWriter.h" />
+
   </ItemGroup>
 </Project>
