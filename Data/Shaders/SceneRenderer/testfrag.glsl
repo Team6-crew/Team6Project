@@ -14,7 +14,7 @@ in Vertex	{
 out vec4 OutFrag;
 void main(void)
 {
-	vec4 color = vec4 (1.0f, 1.0f, 1.0f, 0.0f);
+	vec4 color = vec4 (0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i=0; i<num_players; i++){
 		float in_circle = (IN.texCoord.x-players[i].pos_x)*(IN.texCoord.x-players[i].pos_x) + (IN.texCoord.y-players[i].pos_z)*(IN.texCoord.y-players[i].pos_z);
 		if (in_circle<(players[i].rad*players[i].rad) ){

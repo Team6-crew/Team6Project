@@ -15,7 +15,7 @@ public:
 	void addPlayers(int num_players);
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }
-	float getPaintPerc() { return paint_perc; }
+	std::vector<float> * getPaintPerc() { return &paint_perc; }
 	float getRadius() { return rad;  }
 	int getNumPlayers() { return players.size(); }
 	int getNumAIPlayers() { return aiPlayers.size(); }
@@ -25,10 +25,11 @@ public:
 
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
-	float paint_perc;
+	std::vector<float> paint_perc;
 	float posX, posZ;
 	float rad;
 	std::vector <Player*> players;
 	std::vector <BallAI*> aiPlayers;
 	nclgl::Maths::Vector4 colours[4];
+	float increment;
 };

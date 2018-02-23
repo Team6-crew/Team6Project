@@ -2,13 +2,13 @@
 #include "../ncltech/Player.h"
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
-	paint_perc = 0.0f;
+	
 	rad = 0.01f;
 	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
 	colours[1] = nclgl::Maths::Vector4(0.3f, 1.0f, 1.0f, 1.0f);
 	colours[2] = nclgl::Maths::Vector4(1.0f, 0.68f, 0.33f, 1.0f);
 	colours[3] = nclgl::Maths::Vector4(0.0f, 1.0f, 0.02f, 1.0f);
-	
+	increment = 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 }
 
 void GameLogic::addPlayers(int num_players) {
@@ -31,24 +31,25 @@ void GameLogic::addPlayers(int num_players) {
 		}
 		player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
 		players.push_back(player);
+		paint_perc.push_back(0.0f);
 	}
 	
 }
 
 
 void GameLogic::calculatePaintPercentage() {
+	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
 	
-
-	for (int i = 0; i < players.size(); i++) {
-		nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
-		nclgl::Maths::Vector3 position = players[i]->Physics()->GetPosition();
+	for (int k = 0; k < players.size(); k++) {
+		nclgl::Maths::Vector3 position = players[k]->Physics()->GetPosition();
+		
 		rad = (rand() % 100)*0.0001f;
 
-		players[i]->setRadius(rad);
+		players[k]->setRadius(rad);
 		posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 		posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-		players[i]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+		players[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
 		for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
 			for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
@@ -56,9 +57,13 @@ void GameLogic::calculatePaintPercentage() {
 				float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 				if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
 					if (world_paint[i][j] == 0) {
-						paint_perc += 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
+						paint_perc[k] += increment;
 					}
-					world_paint[i][j] = 1;
+					else if (world_paint[i][j] != k + 1) {
+						paint_perc[k] += increment;
+						paint_perc[world_paint[i][j]-1] -= increment;
+					}
+					world_paint[i][j] = k+1;
 				}
 			}
 		}

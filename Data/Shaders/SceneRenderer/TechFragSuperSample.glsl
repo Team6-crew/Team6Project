@@ -30,8 +30,8 @@ void main(void)	{
 	}
 	color = color / samples_taken;
 	
-	
 	//Inverse Gamma Ramp
 	color = pow(color, vec3(invGammaCorrection));
+
 	OutFrag = vec4(color, 1.0f);
 }

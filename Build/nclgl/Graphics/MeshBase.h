@@ -10,5 +10,6 @@ public:
 
 	virtual void Draw() = 0;
 	virtual void SetTexture(TextureBase* texture) = 0;
+	virtual void ReplaceTexture(TextureBase* texture) = 0;
 };
 
