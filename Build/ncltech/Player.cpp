@@ -93,7 +93,7 @@ Player::Player(const std::string& name,
 	camera_transform->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
-	//(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
 }
 
 
@@ -115,6 +115,9 @@ void Player::move(float dt) {
 	
 	Vector3 ball_pos = physicsNode->GetPosition();
 	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
+	forward = Vector3(forward.x, 0.0f, forward.z);
+	Vector3 up = Vector3(0, 1, 0);
+	Vector3 right = Vector3::Cross(forward, up);
 	Vector3 jump(0, 20, 0);
 
 	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
@@ -132,25 +135,25 @@ void Player::move(float dt) {
 	
 
 	if (Window::GetKeyboard()->KeyDown(move_up))
-	{
-		physicsNode->SetForce(-forward * speed);
+	{   
+		
+		physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
 	{   
-		forward.y = -forward.y;
-		physicsNode->SetForce(forward * speed);
+		physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
-	{
-		//rotation = dt*110.0f;
+	{   
+		physicsNode->SetForce(physicsNode->GetForce() + right * physicsNode->GetForce().Length() * 0.6f);
 		increaseSensitivity(dt);
 		camera->SetYaw(yaw + sensitivity);
 		
 	}
 	else if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		//rotation = -dt*110.0f;
+		physicsNode->SetForce(physicsNode->GetForce() - right * physicsNode->GetForce().Length() * 0.6f);
 		decreaseSensitivity(dt);
 		camera->SetYaw(yaw + sensitivity);
 
@@ -169,7 +172,6 @@ void Player::move(float dt) {
 		
 	}
 
-	std::cout << sensitivity << std::endl;
 	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
 
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
@@ -177,8 +179,8 @@ void Player::move(float dt) {
 }
 
 void Player::equipWeapon() {
-	equippedItem = RenderNodeFactory::Instance()->MakeRenderNode(new OBJMesh(MESHDIR"cube.obj"), Vector4(1,0,0,1));
-	equippedItem->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -7.0f, 0.0f)));
+	equippedItem = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), Vector4(1,0,0,1));
+	equippedItem->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedItem);
 }
@@ -189,7 +191,7 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
-		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))

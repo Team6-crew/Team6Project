@@ -43,6 +43,7 @@ Description:
 #include "SphereCollisionShape.h"
 #include "CuboidCollisionShape.h"
 #include <vector>
+#include <map>
 #include <mutex>
 #include "OcTree.h"
 #include "WorldPartition.h"
@@ -94,7 +95,7 @@ public:
 	//Debug draw all physics objects, manifolds and constraints
 	void DebugRender();
 
-	void DeleteNextFrame(GameObject* obj) { objectsToDelete.push_back(obj); }
+	void DeleteAfter(GameObject* obj, float time) { objectsToDelete.insert(std::pair<GameObject*, float>(obj, time)); }
 
 
 
@@ -163,7 +164,7 @@ protected:
 
 	std::vector<PhysicsNode*>	physicsNodes;
 
-	std::vector<GameObject*> objectsToDelete;
+	std::map<GameObject*, float> objectsToDelete;
 
 	std::vector<Constraint*>	constraints;		// Misc constraints applying to one or more physics objects e.g our DistanceConstraint
 	std::vector<Manifold*>		manifolds;			// Contact constraints between pairs of objects
@@ -174,4 +175,5 @@ protected:
 	PerfTimer perfSolver;
 
 	int worldSize = 30;
+
 };

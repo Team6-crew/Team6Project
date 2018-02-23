@@ -8,6 +8,7 @@
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
 #include <ncltech\WeaponPickup.h>
+#include <ncltech\StunWeaponPickup.h>
 
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
@@ -71,7 +72,7 @@ public:
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
-		WeaponPickup* pickup2 = new WeaponPickup("pickup",
+		StunWeaponPickup* pickup2 = new StunWeaponPickup("pickup2",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
 			nclgl::Maths::Vector3(0.5f, 0.5f, 1.5f),
 			true,

@@ -149,10 +149,13 @@
     <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenPicker.cpp" />
     <ClCompile Include="SpeedPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="StunProjectile.cpp" />
+    <ClCompile Include="StunWeaponPickup.cpp" />
     <ClCompile Include="WeaponPickup.cpp" />
     <ClCompile Include="WorldPartition.cpp" />
   </ItemGroup>
@@ -173,7 +176,10 @@
     <ClInclude Include="Memory Management\HeapFactory.h" />
     <ClInclude Include="Memory Management\MemoryManager.h" />
     <ClInclude Include="Pickup.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="StunProjectile.h" />
+    <ClInclude Include="StunWeaponPickup.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="Manifold.h" />

@@ -126,11 +126,17 @@ void PhysicsEngine::UpdatePhysics()
 	//Objects to be deleted before this frame's collision check starts
 	//This is because we cannot delete the pickup object in player collision callback, 
 	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
-	for (int i = 0; i < objectsToDelete.size(); i++) {
-		SceneManager::Instance()->GetCurrentScene()->RemoveGameObject(objectsToDelete[i]);
-		delete objectsToDelete[i];
+	std::map<GameObject*, float>::iterator it = objectsToDelete.begin();
+	
+	for (it = objectsToDelete.begin(); it != objectsToDelete.end();) {
+		if (it->second <= 0.0f) {
+			delete it->first;
+			objectsToDelete.erase(it++);
+		}
+		else it++;
 	}
-	objectsToDelete.clear();
+	
+
 
 	for (Manifold* m : manifolds)
 	{

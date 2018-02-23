@@ -99,6 +99,15 @@
     <ClInclude Include="WeaponPickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StunProjectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StunWeaponPickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Memory Management\MemoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -177,6 +186,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WeaponPickup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StunProjectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StunWeaponPickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
