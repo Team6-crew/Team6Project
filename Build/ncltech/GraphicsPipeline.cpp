@@ -184,6 +184,7 @@ void GraphicsPipeline::RenderScene()
 		// - Most scene objects will probably end up being static, so we really should only be updating
 		//   modelMatrices for objects (and their children) who have actually moved since last frame
 		RenderNodeBase * ground = NULL;
+
 		for (RenderNodeBase* node : allNodes) {
 			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 			if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
@@ -218,14 +219,13 @@ void GraphicsPipeline::RenderScene()
 			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
 
 		}
-		trailQuad->Draw();
-		ground->GetMesh()->SetTexture(gr_tex);
 
 		int PlayersPlusAIPlayers = GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumPlayers();
 
 		for (int i = GameLogic::Instance()->getNumPlayers(); i < PlayersPlusAIPlayers; i++) {
-			int j = GameLogic::Instance()->getNumAIPlayers() - 1;
-			std::string arr = "players[" + std::to_string(j) + "].";
+			int j = i - GameLogic::Instance()->getNumPlayers();
+	
+			std::string arr = "players[" + std::to_string(i) + "].";
 			float pos_x = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().x;
 			float pos_z = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().z;
 			float rad = GameLogic::Instance()->getAIPlayer(j)->getRadius();

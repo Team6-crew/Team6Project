@@ -164,7 +164,8 @@ void Player::move(float dt) {
 }
 
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
-	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+	if 
+		(otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
 		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
@@ -172,6 +173,10 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
+		canjump = true;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+	{
 		canjump = true;
 	}
 	return true;

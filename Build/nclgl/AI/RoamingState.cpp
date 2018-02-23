@@ -6,6 +6,8 @@
 #include <nclgl\AI\ChasingState.h>
 #include <string>
 #include <nclgl/GameLogic.h>
+#include <random>
+#include <time.h>
 
 using std::string;
 
@@ -15,8 +17,14 @@ using namespace nclgl::Maths;
 void RoamingState::enter(StateMachine * sOwner, GameObject * owner)
 {
 	{
+		int numOfPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers();
+		srand(time(NULL));
+		int AIChosenPath = rand() % numOfPlayers;
+		std::string path = to_string(AIChosenPath);
+
 		std::ifstream myReadFile;
-		myReadFile.open("../pos.txt");
+		myReadFile.open(path + "pos.txt");
+		cout <<owner->GetName()<<" using " <<path << "pos.txt\n";
 		string line;
 
 		float xQ;
@@ -25,7 +33,7 @@ void RoamingState::enter(StateMachine * sOwner, GameObject * owner)
 		nclgl::Maths::Vector3 pos;
 		int nodeNum = 0;
 		if (myReadFile.is_open())
-		{
+		{		
 			while (!myReadFile.eof())
 			{
 				string vector3;
@@ -78,7 +86,7 @@ nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner, GameObject*
 {
 	int numOfPlayers = GameLogic::Instance()->getNumPlayers();
 	float closestPlayer = 100000000.0f;
-	nclgl::Maths::Vector3 AIBallPos = BallAI::getBall()->Physics()->GetPosition();
+	nclgl::Maths::Vector3 AIBallPos = GameLogic::Instance()->getAIPlayer(0)->getBall()->Physics()->GetPosition();
 
 	for (int i = 0; i < numOfPlayers; i++)
 	{
@@ -95,12 +103,12 @@ nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner, GameObject*
 	// Switch to length square
 	nclgl::Maths::Vector3 goal = nodesList[CurrentNode];
 
-	if (closestPlayer <= 10)
+	if (closestPlayer <= 3)
 	{
 		sOwner->setCurrentState(sOwner, ChasingState::GetInstance());
 
 	}
-	if (closestPlayer >= 11)
+	if (closestPlayer >= 3.3)
 	{
 		vector<nclgl::Maths::Vector3> nodesList = getNodes();
 		

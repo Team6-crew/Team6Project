@@ -15,7 +15,7 @@ void ChasingState::update(StateMachine * sOwner, GameObject * owner)
 	int numOfPlayers = GameLogic::Instance()->getNumPlayers();
 	float closestPlayerDistance = 10000000000.0f;// std::numeric_limits<float>::max();
 	int closestPlayer = 0; /// so we can get the correct player
-	nclgl::Maths::Vector3 AIBallPos = BallAI::getBall()->Physics()->GetPosition();
+	nclgl::Maths::Vector3 AIBallPos = GameLogic::Instance()->getAIPlayer(0)->getBall()->Physics()->GetPosition();
 
 	for (int i = 0; i < numOfPlayers; i++)
 	{

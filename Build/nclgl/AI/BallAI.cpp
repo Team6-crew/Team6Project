@@ -6,6 +6,8 @@
 #include <fstream>
 #include <string>
 #include <nclgl\AI\StateMachine.h>
+#include <nclgl\GameLogic.h>
+#include <ncltech\CommonMeshes.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <algorithm> //used for remove
@@ -15,49 +17,125 @@ float maxVel = 5.0f;
 
 using namespace std;
 
-GameObject* BallAI::AIBall;
-
 State* roamingState;
 
 
 using namespace nclgl::Maths;
 
-BallAI::BallAI()
+BallAI::BallAI(const std::string& name,
+	const Vector3& pos,
+	float radius,
+	bool physics_enabled,
+	float inverse_mass,
+	bool collidable,
+	const Vector4& color)
 {
+	PhysicsNode* pnode = NULL;
+	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
+	// and a parent node that will contain the world transform/physics transform
+	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
+
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
+	rnode->AddChild(dummy);
+
+	if (physics_enabled)
+	{
+		pnode = new PhysicsNode();
+		pnode->SetPosition(pos);
+		pnode->SetInverseMass(inverse_mass);
+		pnode->SetColRadius(radius);
+		pnode->SetElasticity(0.2f);
+
+		if (!collidable)
+		{
+			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
+			pnode->SetInverseInertia(SphereCollisionShape(radius).BuildInverseInertia(inverse_mass));
+		}
+		else
+		{
+			CollisionShape* pColshape = new SphereCollisionShape(radius);
+			pnode->SetCollisionShape(pColshape);
+			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
+		}
+	}
+
+	tag = Tags::TPlayer;
+
+	rnode->SetTransform(Matrix4::Translation(pos));
+	rnode->SetBoundingRadius(radius);
+
+	friendlyName = name;
+	renderNode = rnode;
+	physicsNode = pnode;
+
 	
-	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
-	nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(255.0f,255.0f, 255.0f, 1.0f);
 
-	AIBall = CommonUtils::BuildSphereObject("AIball",
-		location,	//Position leading to 0.25 meter overlap on faces, and more on diagonals
-		1.0f,				//Half dimensions
-		true,									//Has Physics Object
-		1.0f,									//Mass
-		true,									//Has Collision Shape
-		false,									//Dragable by the user
-		colour);
+	physicsNode->SetOnCollisionCallback(
+		std::bind(
+			&BallAI::collisionCallback,		// Function to call
+			this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+			std::placeholders::_1,
+			std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+	);
+	setDynamic(true);
 
-	AIBall->setName("Test");
-	AIBall->setLocation(location);
-	AIBall->setHalfDimentions(1.0f);
-	AIBall->setHasPhysics(true);
-	AIBall->setMass(1.1f);
-	AIBall->setCollidable(true);
-	AIBall->setDragable(false);
-	AIBall->setDynamic(true);
-	AIStateMachine = new StateMachine(AIBall);
-	AIStateMachine->setCurrentState(AIStateMachine,RoamingState::GetInstance());
+	RegisterPhysicsToRenderTransformCallback();
+
 }
 
 
 BallAI::~BallAI()
 {
-	delete AIStateMachine;
+}
+
+void BallAI::addBallAIPlayers(int numBallAI)
+{
+	nclgl::Maths::Vector4 colours[4];
+	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
+	colours[1] = nclgl::Maths::Vector4(0.3f, 1.0f, 1.0f, 1.0f);
+	colours[2] = nclgl::Maths::Vector4(1.0f, 0.68f, 0.33f, 1.0f);
+	colours[3] = nclgl::Maths::Vector4(0.0f, 1.0f, 0.02f, 1.0f);
+
+	nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(255.0f, 255.0f, 255.0f, 1.0f);
+	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
+
+	for (int i = 0; i < numBallAI; i++)
+	{
+		BallAI * AIBall = new BallAI("AIPlayer " + i,
+			nclgl::Maths::Vector3(5.0f*(i + 2), 1.f, 5.0f*(i + 1)),
+			1.0f,
+			true,
+			1.0f,
+			true,
+			colours[i + GameLogic::Instance()->getNumPlayers()]);
+		AIBall->SetPhysics(AIBall->Physics());
+
+
+		GameLogic::Instance()->addAIPlayer(AIBall);
+		AIBall->AIStateMachine = new StateMachine(AIBall);
+
+		AIBall->AIStateMachine->setCurrentState(AIBall->AIStateMachine, RoamingState::GetInstance());
+	}
 }
 
 
 void BallAI::move()
 {
-	AIStateMachine->getCurrentState()->update(AIStateMachine,AIBall);
+	AIStateMachine->getCurrentState()->update(AIStateMachine,AIStateMachine->getOwner());
 
 }
+
+bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
+	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+		Pickup* pickup = (Pickup*)otherNode->GetParent();
+		//pickup->effect(this);
+		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		return false;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TGround))
+	{
+		
+	}
+	return true;
+};

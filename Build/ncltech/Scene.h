@@ -201,4 +201,5 @@ protected:
 	SceneUpdateMap				m_UpdateCallbacks;
 	Player * player1;
 	BallAI * AIBall;
+	
 };
