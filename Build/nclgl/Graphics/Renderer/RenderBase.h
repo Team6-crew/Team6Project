@@ -26,7 +26,7 @@ public:
 	virtual ~RenderBase();
 
 	virtual void SwapBuffers() = 0;
-	virtual void RenderObject(RenderNode* obj) = 0;
+	//virtual void RenderObject(RenderNode* obj) = 0;
 
 	// Resizes the rendering area to [x, y].
 	virtual void Resize(int x, int y) = 0;

@@ -96,10 +96,10 @@ void GraphicsPipeline::LoadShaders()
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
 		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
 
-	shaderShadow = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"SceneRenderer/TechVertexShadow.glsl",
-		SHADERDIR"Common/EmptyFragment.glsl",
-		SHADERDIR"SceneRenderer/TechGeomShadow.glsl");
+	//shaderShadow = ShaderFactory::Instance()->MakeShader(
+	//	SHADERDIR"SceneRenderer/TechVertexShadow.glsl",
+	//	SHADERDIR"Common/EmptyFragment.glsl",
+	//	SHADERDIR"SceneRenderer/TechGeomShadow.glsl");
 
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
@@ -163,20 +163,20 @@ void GraphicsPipeline::RenderScene()
 
 
 	//Build shadowmaps
-		BuildShadowTransforms();
-		shadowFBO->Activate();
-		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
-		renderer->Clear(Renderer::DEPTH);
+		//BuildShadowTransforms();
+		//shadowFBO->Activate();
+		//renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+		//renderer->Clear(Renderer::DEPTH);
 
-		shaderShadow->Activate();
-		shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+		//shaderShadow->Activate();
+		//shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
 
-		RenderAllObjects(true,
-			[&](RenderNodeBase* node)
-			{
-				shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
-			}
-		);
+		//RenderAllObjects(true,
+		//	[&](RenderNodeBase* node)
+		//	{
+		//		shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
+		//	}
+		//);
 
 	//Render scene to screen fbo
 		screenFBO->Activate();

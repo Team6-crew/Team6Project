@@ -58,10 +58,10 @@ void OGLRenderer::SwapBuffers()
 {
 	::SwapBuffers(deviceContext);
 }
-void OGLRenderer::RenderObject(RenderNode* obj)
-{
-	wglDeleteContext(renderContext);
-}
+//void OGLRenderer::RenderObject(RenderNode* obj)
+//{
+//	wglDeleteContext(renderContext);
+//}
 
 void OGLRenderer::Resize(int x, int y)
 {

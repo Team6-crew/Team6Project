@@ -16,7 +16,7 @@ public:
 	~OGLRenderer();
 
 	void SwapBuffers() override;
-	void RenderObject(RenderNode* obj) override;
+	//void RenderObject(RenderNode* obj) override;
 
 	void Resize(int x, int y) override;
 
