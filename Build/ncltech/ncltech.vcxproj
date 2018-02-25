@@ -138,8 +138,11 @@
     <ClCompile Include="CuboidCollisionShape.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
+    <ClCompile Include="Memory Management\HeapMemory.cpp" />
+    <ClCompile Include="Memory Management\HeapFactory.cpp" />
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="Manifold.cpp" />
+    <ClCompile Include="Memory Management\MemoryManager.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="OcTree.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
@@ -165,6 +168,9 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
+    <ClInclude Include="Memory Management\HeapMemory.h" />
+    <ClInclude Include="Memory Management\HeapFactory.h" />
+    <ClInclude Include="Memory Management\MemoryManager.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="SpeedPickup.h" />
     <ClInclude Include="Tags.h" />
