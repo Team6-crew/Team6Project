@@ -1,8 +1,40 @@
 #pragma once
-class PS4Texture
+
+
+#include <string>
+
+#include "PS4MemoryAware.h"
+#include "../../TextureBase.h"
+
+namespace Texture
+{
+	enum Type { COLOUR, DEPTH, DEPTH_ARRAY };
+}
+
+class PS4Texture : public PS4MemoryAware, public TextureBase
 {
 public:
 	PS4Texture();
+	PS4Texture(const std::string& filepath);
 	~PS4Texture();
-};
 
+	void SetCurrentGFXContext(sce::Gnmx::GnmxGfxContext* GFXContext);
+	void Bind(int textureUnit = 0);
+	void SetTextureFiltering(bool nearest = false) override;
+	void SetTextureWrapping(bool repeating = false) override;
+	sce::Gnm::Texture apiTexture;
+
+protected:
+
+	bool LoadTexture(const std::string& filepath) override;
+
+
+
+
+	sce::Gnmx::GnmxGfxContext*	currentGFXContext = nullptr;
+
+	sce::Gnm::Sampler trilinearSampler;
+
+	//bool repeating;
+	//bool 
+};

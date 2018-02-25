@@ -37,14 +37,14 @@ public:
 	void Draw() override;
 
 	void							SetTransform(const  nclgl::Maths::Matrix4 &matrix) override;
-	const  nclgl::Maths::Matrix4&	GetTransform() const override;
-	const  nclgl::Maths::Matrix4&	GetWorldTransform() const override;
+	const  nclgl::Maths::Matrix4 	GetTransform() const override;
+	const  nclgl::Maths::Matrix4 	GetWorldTransform() const override;
 	void							SetWorldTransform(const  nclgl::Maths::Matrix4 &matrix) override;
 
-	nclgl::Maths::Vector4&		GetColour() override;
+	nclgl::Maths::Vector4		GetColour() override;
 	void						SetColour(const  nclgl::Maths::Vector4 &c) override;
 
-	const  nclgl::Maths::Vector3&	GetModelScale()		const			override;
+	const  nclgl::Maths::Vector3	GetModelScale()		const			override;
 	void							SetModelScale(const  nclgl::Maths::Vector3 &s)		override;
 
 protected:

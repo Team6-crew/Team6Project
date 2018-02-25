@@ -3,6 +3,8 @@
 #include "OpenGL/OGLTexture.h"
 #include "OpenGL/OGLTextureArray.h"
 
+#include "PS4\PS4Texture.h"
+#include "PS4\PS4TextureArray.h"
 
 using namespace Texture;
 
@@ -20,6 +22,8 @@ TextureBase* TextureFactory::MakeTexture(const std::string& filepath)
 {
 	#ifdef WIN_OGL
 		return new OGLTexture(filepath);
+	#elif  PSTATION4
+		return new PS4Texture(filepath);
 	#endif 
 
 	
@@ -33,12 +37,16 @@ TextureBase* TextureFactory::MakeTexture(Texture::Type type, int a, int b)
 	case COLOUR:
 		#ifdef WIN_OGL
 			return new OGLTexture(type, a, b);
+		#elif PSTATION4
+			return new PS4Texture(type, a, b);
 		#endif 
 		break;
 	case DEPTH_ARRAY:
-#ifdef WIN_OGL
-		return new OGLTextureArray(type, a, b);
-#endif 
+	#ifdef WIN_OGL
+			return new OGLTextureArray(type, a, b);
+	#elif PSTATION4
+			return nullptr;
+	#endif 
 		break;
 
 		

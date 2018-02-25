@@ -1,7 +1,7 @@
 #include "ShaderFactory.h"
 
 #include <nclgl\Graphics\Renderer\OpenGL\OGLShader.h>
-
+#include <nclgl\Graphics\Renderer\PS4\PS4Shader.h>
 
 ShaderFactory::ShaderFactory()
 {
@@ -16,6 +16,8 @@ ShaderBase* ShaderFactory::MakeShader(std::string vertex, std::string fragment, 
 {
 #ifdef WIN_OGL
 	return new OGLShader(vertex, fragment, geometry);
+#elif PSTATION4
+	return new PS4Shader(vertex, fragment, geometry);
 #endif
 
 }

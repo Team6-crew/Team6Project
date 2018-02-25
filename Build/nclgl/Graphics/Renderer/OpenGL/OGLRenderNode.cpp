@@ -39,12 +39,12 @@ void			OGLRenderNode::SetTransform(const Matrix4 &matrix)
 	transform = matrix;
 }
 
-const Matrix4&	OGLRenderNode::GetTransform() const
+const Matrix4	OGLRenderNode::GetTransform() const
 {
 	return transform;
 }
 
-const Matrix4&	OGLRenderNode::GetWorldTransform() const
+const Matrix4	OGLRenderNode::GetWorldTransform() const
 {
 	return worldTransform;
 }
@@ -54,7 +54,7 @@ void			OGLRenderNode::SetWorldTransform(const Matrix4 &matrix)
 	worldTransform = matrix;
 }
 
-Vector4&		OGLRenderNode::GetColour()
+Vector4		OGLRenderNode::GetColour()
 {
 	return colour;
 }
@@ -64,7 +64,7 @@ void OGLRenderNode::SetModelScale(const Vector3 &s)
 	modelScale = s;
 }
 
-const Vector3& OGLRenderNode::GetModelScale() const
+const Vector3 OGLRenderNode::GetModelScale() const
 {
 	return modelScale;
 }

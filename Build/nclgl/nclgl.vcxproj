@@ -28,6 +28,8 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Matrix3.cpp" />
@@ -47,6 +49,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -70,6 +73,8 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keyboard.h" />
@@ -92,6 +97,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
@@ -159,8 +165,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)x64\$(Configuration);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\common\include\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\;$(SCE_ORBIS_SDK_DIR)\target\include;$(SCE_ORBIS_SDK_DIR)\target\include_common;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\;$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\api_gnm\toolkit;$(SolutionDir)x64\$(Configuration);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <ExecutablePath>$(SCE_ORBIS_SDK_DIR)\host_tools\bin;$(VCTargetsPath)\Platforms\ORBIS;$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -195,7 +202,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN_OGL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PSTATION4;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

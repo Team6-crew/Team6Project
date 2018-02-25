@@ -25,14 +25,14 @@ public:
 
 	// Transforms
 	virtual void							SetTransform(const nclgl::Maths::Matrix4 &matrix) = 0;
-	virtual const nclgl::Maths::Matrix4&	GetTransform() const = 0;
-	virtual const nclgl::Maths::Matrix4&	GetWorldTransform() const = 0;
+	virtual const nclgl::Maths::Matrix4		GetTransform() const = 0;
+	virtual const nclgl::Maths::Matrix4		GetWorldTransform() const = 0;
 	virtual void							SetWorldTransform(const nclgl::Maths::Matrix4 &matrix) = 0;
 
 	virtual void							SetModelScale(const nclgl::Maths::Vector3& scale) = 0;
-	virtual const nclgl::Maths::Vector3&	GetModelScale() const = 0;
+	virtual const nclgl::Maths::Vector3		GetModelScale() const = 0;
 
-	virtual nclgl::Maths::Vector4&			GetColour() = 0;
+	virtual nclgl::Maths::Vector4			GetColour() = 0;
 	virtual void							SetColour(const nclgl::Maths::Vector4 &c) = 0;
 
 	// Mesh

@@ -3,6 +3,7 @@
 #include <nclgl\Window.h>
 
 #include "OpenGL\OGLRenderer.h"
+#include "PS4\PS4Renderer.h"
 #include "../RenderConstants.h"
 
 #include <cassert>
@@ -31,6 +32,8 @@ RenderBase* RenderFactory::MakeRenderer()
 	{
 		return new OGLRenderer(Window::GetWindow());
 	}
+	#elif PSTATION4
+	return new PS4Renderer();
 	#endif
 
 	// "Unrecognised Render Build"

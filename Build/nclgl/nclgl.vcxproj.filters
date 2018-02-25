@@ -80,6 +80,9 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -177,5 +180,8 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
   </ItemGroup>
 </Project>
