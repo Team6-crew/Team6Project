@@ -25,14 +25,14 @@ void Heap::AddAllocation(std::size_t numBytes)
 	{
 		peakBytes = totalBytes;
 	}
-	std::cout << this->name << ": " << numAllocations << " " << totalBytes << std::endl;
+	//std::cout << this->name << ": " << numAllocations << " " << totalBytes << std::endl;
 }
 
 void Heap::RemoveAllocation(std::size_t numBytes)
 {
 	--numAllocations;
 	totalBytes -= numBytes;
-	std::cout << this->name << ": " << numAllocations << " " << totalBytes << std::endl;
+	//std::cout << this->name << ": " << numAllocations << " " << totalBytes << std::endl;
 }
 
 const char* Heap::GetName() const

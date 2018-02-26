@@ -27,4 +27,5 @@ struct AllocHeader
 {
 	Heap* heap;
 	int	  sizeBytes;
+	int	  signature;
 };
