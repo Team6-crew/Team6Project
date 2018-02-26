@@ -96,6 +96,9 @@
     <ClInclude Include="WorldPartition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Paintbomb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -153,6 +156,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldPartition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Paintbomp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
