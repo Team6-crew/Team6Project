@@ -4,6 +4,8 @@
 #include "OGLTextureArray.h"
 #include <nclgl\NCLDebug.h>
 
+DEFINE_HEAP(OGLFrameBuffer, "Graphics");
+
 OGLFrameBuffer::OGLFrameBuffer(TextureBase* colourTex, TextureBase* depthTex)
 {
 	glGenFramebuffers(1, &bufferID);

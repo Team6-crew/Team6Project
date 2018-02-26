@@ -206,5 +206,6 @@ int main()
 	HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
+	system("pause");
 	return 0;
 }

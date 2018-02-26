@@ -2,7 +2,7 @@
 #include <cstddef>
 class Heap
 {
-	static const int NAME_LENGTH = 10;
+	static const int NAME_LENGTH = 15;
 public:
 	Heap(const char* name = "");
 

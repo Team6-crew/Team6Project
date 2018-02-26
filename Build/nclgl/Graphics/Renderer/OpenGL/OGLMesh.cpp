@@ -12,6 +12,8 @@
 
 using namespace nclgl::Maths;
 
+DEFINE_HEAP(OGLMesh, "Graphics");
+
 OGLMesh::OGLMesh(void)	{
 	glGenVertexArrays(1, &arrayObject);
 	

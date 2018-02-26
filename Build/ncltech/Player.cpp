@@ -12,6 +12,8 @@
 
 using namespace nclgl::Maths;
 
+DEFINE_HEAP(Player, "GameObjects");
+
 Player::Player(const std::string& name,
 	const Vector3& pos,
 	float radius,

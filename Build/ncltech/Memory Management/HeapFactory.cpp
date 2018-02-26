@@ -56,10 +56,10 @@ Heap* HeapFactory::CreateHeap(const char* name)
 
 void HeapFactory::PrintDebugInfo()
 {
-	std::cout << std::setw(10) << std::left << "Heap"
-		<< std::setw(10) << std::left << "Bytes"
-		<< std::setw(10) << std::left << "Peak"
-		<< std::setw(10) << std::left << "Net Allocations"
+	std::cout << std::setw(15) << std::left << "Heap"
+		<< std::setw(15) << std::left << "Bytes"
+		<< std::setw(15) << std::left << "Peak"
+		<< std::setw(15) << std::left << "Net Allocations"
 		<< std::endl;
 	
 	for (int i = 0; i < MAX_HEAPS; ++i)
@@ -70,10 +70,10 @@ void HeapFactory::PrintDebugInfo()
 		}
 		else
 		{
-			std::cout << std::setw(10) << std::left << heapList[i].GetName() 
-					  << std::setw(10) << std::left << heapList[i].GetBytes() 
-					  << std::setw(10) << std::left << heapList[i].GetPeakBytes() 
-					  << std::setw(10) << std::left << heapList[i].GetNetAllocations() 
+			std::cout << std::setw(15) << std::left << heapList[i].GetName() 
+					  << std::setw(15) << std::left << heapList[i].GetBytes() 
+					  << std::setw(15) << std::left << heapList[i].GetPeakBytes() 
+					  << std::setw(15) << std::left << heapList[i].GetNetAllocations() 
 					  << std::endl;
 		}
 	}
