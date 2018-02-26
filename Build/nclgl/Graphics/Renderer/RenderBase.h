@@ -48,6 +48,8 @@ public:
 
 	virtual void	BindScreenFramebuffer() = 0;
 
+	virtual void	PrepareToRender() = 0;
+	virtual void	PostRender() = 0;
 
 	virtual void	SetScreenCulling(Renderer::Culling type) = 0;
 	virtual void	SetDefaultSettings() = 0;
