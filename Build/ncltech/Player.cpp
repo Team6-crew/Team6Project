@@ -202,19 +202,20 @@ bool Player::stun(float dt) {
 		stunDuration -= dt;
 		// CC
 		physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
-		// Shake
-		camera->SetYaw(camera->GetYaw() + 360.0f * 0.001f * ((rand()%200 - 100.0f)/100.0f));
-		camera->SetPitch(camera->GetPitch() + 360.0f * 0.001f * ((rand()%200 - 100.0f) / 100.0f));
+		if (stunDuration > 2.0f)
+		{	// Shake
+			camera->SetYaw(camera->GetYaw() + 360.0f * 0.001f * ((rand() % 200 - 100.0f) / 100.0f));
+			camera->SetPitch(camera->GetPitch() + 360.0f * 0.001f * ((rand() % 200 - 100.0f) / 100.0f));
+			return true;
+		}
+		else {
+			camera->SetYaw(tempYaw);
+			camera->SetPitch(tempPitch);
+		}
 		return true;
 	}
 	else {
-		if (stunEffect) {
-			stunEffect = false;
-			// Return to initial camera state
-			camera->SetYaw(tempYaw);
-			camera->SetPitch(tempPitch);
-			return false;
-		}
+		return false;
 	}
 }
 
