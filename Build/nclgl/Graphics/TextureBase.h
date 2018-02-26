@@ -3,6 +3,8 @@
 #include <nclgl\common.h> //uint
 #include <string>
 
+#include <ncltech\Memory Management\MemoryManager.h>
+
 namespace Texture
 {
 	enum Type { COLOUR, DEPTH, DEPTH_ARRAY };

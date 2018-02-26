@@ -29,9 +29,11 @@ _-_-_-_-_-_-_-""  ""
 #define SHADER_FRAGMENT 1
 #define SHADER_GEOMETRY 2
 
+#include <ncltech\Memory Management\MemoryManager.h>
 
 class OGLShader	: public ShaderBase
 {
+	DECLARE_HEAP;
 public:
 	OGLShader(std::string vertex, std::string fragment , std::string geometry = "");
 	~OGLShader(void);

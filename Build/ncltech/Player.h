@@ -3,9 +3,12 @@
 #include <ncltech\GameObject.h>
 #include <ncltech\Pickup.h>
 
+#include <ncltech\Memory Management\MemoryManager.h>
+
 class Pickup;
 class Player : public GameObject
 {
+	DECLARE_HEAP;
 public:
 
 	Player(const std::string& name,

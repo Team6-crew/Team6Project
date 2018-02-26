@@ -5,6 +5,8 @@ using namespace Texture;
 #include <iostream>
 #include <cassert>
 
+DEFINE_HEAP(OGLTextureArray, "Graphics");
+
 OGLTextureArray::OGLTextureArray(Type type, int dimensions, int numTextures)
 {
 	glGenTextures(1, &textureID);

@@ -2,6 +2,8 @@
 
 using namespace nclgl::Maths;
 
+DEFINE_HEAP(Matrix4, "Maths");
+
 Matrix4::Matrix4(void)	{
 	ToIdentity();
 }
