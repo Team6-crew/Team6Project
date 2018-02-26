@@ -19,9 +19,10 @@ public:
 	~PS4Texture();
 
 	void SetCurrentGFXContext(sce::Gnmx::GnmxGfxContext* GFXContext);
-	void Bind(int textureUnit = 0);
+	void Bind(int textureUnit = 0) override;
 	void SetTextureFiltering(bool nearest = false) override;
 	void SetTextureWrapping(bool repeating = false) override;
+
 	sce::Gnm::Texture apiTexture;
 
 protected:

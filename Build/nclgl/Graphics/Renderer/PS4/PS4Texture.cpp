@@ -92,11 +92,11 @@ void PS4Texture::Bind(int textureUnit)
 
 
 
-void SetTextureFiltering(bool nearest = false)
+void PS4Texture::SetTextureFiltering(bool nearest)
 {
 
 }
-void SetTextureWrapping(bool repeating = false)
+void PS4Texture::SetTextureWrapping(bool repeating)
 {
 
 }
