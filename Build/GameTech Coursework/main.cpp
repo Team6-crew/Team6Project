@@ -15,7 +15,7 @@ bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
 
-
+// Amazed if it works
 // Program Deconstructor
 //  - Releases all global components and memory
 //  - Optionally prints out an error message and
