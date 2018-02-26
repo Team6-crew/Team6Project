@@ -23,10 +23,10 @@ void GameLogic::addPlayers(int num_players) {
 		player->SetPhysics(player->Physics());
 		switch (i) {
 		case 0:
-			player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+			player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE, KEYBOARD_N);
 			break;
 		case 1:
-			player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0);
+			player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9);
 			break;
 		}
 		player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());

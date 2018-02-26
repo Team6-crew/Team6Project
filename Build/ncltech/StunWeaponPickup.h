@@ -1,5 +1,7 @@
 #pragma once
 #include "WeaponPickup.h"
+
+class Player;
 class StunWeaponPickup :
 	public WeaponPickup
 {

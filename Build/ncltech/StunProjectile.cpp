@@ -54,7 +54,7 @@ StunProjectile::StunProjectile(const std::string& name,
 	friendlyName = name;
 	renderNode = rnode;
 	physicsNode = pnode;
-
+	SetPhysics(physicsNode);
 	tag = Tags::TProjectile;
 
 	physicsNode->SetOnCollisionCallback(
@@ -79,6 +79,8 @@ StunProjectile::~StunProjectile()
 bool StunProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPlayer)) {
 		Player* player = (Player*)otherNode->GetParent();
+		player->setStunDuration(3.0f);
+		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
 	}
 	return true;
 };

@@ -7,7 +7,8 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
-
+#include <ncltech\StunProjectile.h>
+#include <ncltech\SceneManager.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
 using namespace nclgl::Maths;
@@ -23,8 +24,12 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
+	time = 0.0f;
+	stunDuration = 0.0f;
+
+	stunEffect = true;
 	sensitivity = 0.0f;
-	equippedItem = NULL;
+	equippedStunWeapon = NULL;
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
@@ -85,15 +90,20 @@ Player::Player(const std::string& name,
 		false,									//Dragable by the user
 		CommonUtils::GenColor(0.45f, 0.5f));
 
+	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	//camera = GraphicsPipeline::Instance()->GetCamera1();
 	camera = new Camera();
 	camera->SetYaw(0.f);
+	camera->SetPitch(-20.0f);
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+
+	tempPitch = camera->GetPitch();
+	tempYaw = camera->GetYaw();
 }
 
 
@@ -102,87 +112,121 @@ Player::~Player()
 
 }
 
-void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump) {
+void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
 	move_up = up;
 	move_down = down;
 	move_left = left;
 	move_right = right;
 	move_jump = jump;
+	move_shoot = shoot;
 }
 
 void Player::move(float dt) {
+	if (!stun(dt)) {
+		Vector3 ball_pos = physicsNode->GetPosition();
+		forward = (camera->GetPosition() - ball_pos).Normalise();
+		forward = Vector3(forward.x, 0.0f, forward.z);
 
-	
-	Vector3 ball_pos = physicsNode->GetPosition();
-	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
-	forward = Vector3(forward.x, 0.0f, forward.z);
-	Vector3 up = Vector3(0, 1, 0);
-	Vector3 right = Vector3::Cross(forward, up);
+
+		Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+		worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
+		bodyRenderNode->SetTransform(worldTr);
+
+		physicsNode->SetForce(Vector3(0, 0, 0));
+		handleInput(dt);
+
+		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
+		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
+	}
+
+
+}
+
+void Player::handleInput(float dt) {
 	Vector3 jump(0, 20, 0);
-
-	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
-	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
-	worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
-	
-	bodyRenderNode->SetTransform(worldTr);
-
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
-
-	physicsNode->SetForce(Vector3(0, 0, 0));
-
-	float rotation = 0.0f;
-	
+	Vector3 up = Vector3(0, 1, 0);
+	Vector3 right = Vector3::Cross(forward, up);
 
 	if (Window::GetKeyboard()->KeyDown(move_up))
-	{   
-		
+	{
 		physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
-	{   
+	{
 		physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
-	{   
+	{
 		physicsNode->SetForce(physicsNode->GetForce() + right * physicsNode->GetForce().Length() * 0.6f);
 		increaseSensitivity(dt);
 		camera->SetYaw(yaw + sensitivity);
-		
 	}
 	else if (Window::GetKeyboard()->KeyDown(move_right))
 	{
 		physicsNode->SetForce(physicsNode->GetForce() - right * physicsNode->GetForce().Length() * 0.6f);
 		decreaseSensitivity(dt);
 		camera->SetYaw(yaw + sensitivity);
-
 	}
 	else {
 		resetCamera(dt);
 		camera->SetYaw(yaw + sensitivity);
 	}
-
-	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
-	{  
+	if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
+	{
 		if (canjump == true) {
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
 			canjump = false;
 		}
-		
 	}
 
-	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
-
-	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
-
+	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
+	{
+		shoot();
+	}
 }
 
-void Player::equipWeapon() {
-	equippedItem = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), Vector4(1,0,0,1));
-	equippedItem->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+void Player::equipStunWeapon(Vector4 colour) {
+	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
-	(*body->Render()->GetChildIteratorStart())->AddChild(equippedItem);
+	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
+}
+
+bool Player::stun(float dt) {
+	if (stunDuration > 0.0f) {
+		stunEffect = true;
+		time += dt;
+		stunDuration -= dt;
+		// CC
+		physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
+		// Shake
+		camera->SetYaw(camera->GetYaw() + 360.0f * 0.001f * ((rand()%200 - 100.0f)/100.0f));
+		camera->SetPitch(camera->GetPitch() + 360.0f * 0.001f * ((rand()%200 - 100.0f) / 100.0f));
+		return true;
+	}
+	else {
+		if (stunEffect) {
+			stunEffect = false;
+			// Return to initial camera state
+			camera->SetYaw(tempYaw);
+			camera->SetPitch(tempPitch);
+			return false;
+		}
+	}
+}
+
+void Player::resetCamera(float dt) {
+	if (sensitivity > 0) {
+		sensitivity -= dt * 7;
+		if (sensitivity < 0.0f) sensitivity = 0.0f;
+	}
+	else if (sensitivity < 0) {
+		sensitivity += dt * 7;
+		if (sensitivity > 0.0f) sensitivity = 0.0f;
+	}
 }
 
 
@@ -200,3 +244,15 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	}
 	return true;
 };
+
+void Player::shoot() {
+	if (equippedStunWeapon) {
+		Vector3 up = Vector3(0, 1, 0);
+		Vector3 right = Vector3::Cross(forward, up);
+		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 5, 0) - right*1.5f;
+		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true,Vector4(1,0,0,1));
+		projectile->Physics()->SetLinearVelocity(-forward*30.0f);
+		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
+		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
+	}
+}
