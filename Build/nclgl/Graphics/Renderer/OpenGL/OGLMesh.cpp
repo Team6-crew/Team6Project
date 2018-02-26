@@ -76,11 +76,30 @@ OGLMesh::~OGLMesh(void)	{
 
 	//Later tutorial stuff
 	delete[]vertices;
-	delete[]indices;
-	delete[]textureCoords;
-	delete[]tangents;
-	delete[]normals;
-	delete[]colours;
+	if (indices)
+	{
+		delete[]indices;
+	}
+	if (textureCoords)
+	{
+		delete[]textureCoords;
+	}
+	
+	if (tangents)
+	{
+		delete[]tangents;
+	}
+	
+	if (normals)
+	{
+		delete[]normals;
+	}
+	
+	if (colours)
+	{
+		delete[]colours;
+	}
+	
 
 	Vector3 triPos[3] = {
 		Vector3(0.5f, -0.5f, 0),

@@ -29,6 +29,8 @@ void* operator new(std::size_t size);
 public:\
 static void* operator new(std::size_t size); \
 static void operator delete(void* memory); \
+static void* operator new[](std::size_t size); \
+static void operator delete[](void* memory); \
 private:\
 static Heap* heap;
 
@@ -46,4 +48,16 @@ void* classType::operator new(std::size_t size) \
 void classType::operator delete(void* memory) \
 { \
 	::operator delete(memory); \
+}\
+void* classType::operator new[](std::size_t size) \
+{ \
+if (!heap) \
+{ \
+heap = HeapFactory::Instance()->GetHeap(heapName);\
+} \
+return ::operator new[](size, heap); \
+} \
+void classType::operator delete[](void* memory) \
+{ \
+::operator delete[](memory); \
 }
