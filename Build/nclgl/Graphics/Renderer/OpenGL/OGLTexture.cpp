@@ -56,13 +56,14 @@ void OGLTexture::Bind(int textureUnit)
 }
 
 
-void OGLTexture::LoadTexture(const std::string& filepath)
+bool OGLTexture::LoadTexture(const std::string& filepath)
 {
 	textureID = SOIL_load_OGL_texture(filepath.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 	if (!textureID) {
 		std::cout << filepath << " " << SOIL_last_result() << std::endl;
 	}
 	loadSuccess = bool(textureID);
+	return true;
 }
 
 void OGLTexture::SetTextureFiltering(bool nearest)
