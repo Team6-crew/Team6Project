@@ -21,13 +21,18 @@ public:
 	void setSelection(int sel);
 	bool visible = false;
 	int getSelection();
-	bool Submenu() { return Submenu_active; };
 	void replaceMenuItem(int position, std::string item);
-
+	Menu * onMenuSelect() { return subMenu[selection]; }
+	void addToMenu(Menu * mn, int pos) { subMenu[pos] = mn; }
+	void set_id(int i) { id = i; }
+	int get_id() { return id; }
 protected:
 	int selection;
 	std::vector<std::string> Items;
-	bool Submenu_active;
+	std::vector<Menu*> subMenu;
+	int id;
+
+	
 };
 
 

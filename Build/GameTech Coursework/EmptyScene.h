@@ -35,8 +35,11 @@ public:
 	{
 		Scene::OnInitializeScene();
 
-
-		GameLogic::Instance()->addPlayers(GameLogic::Instance()->getnumOfPlayersMp());
+		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
+		if (num_p & 0b0001) GameLogic::Instance()->addPlayer(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addPlayer(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addPlayer(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addPlayer(3);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));

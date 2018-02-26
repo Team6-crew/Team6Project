@@ -3,7 +3,7 @@
 using namespace nclgl::Maths;
 using namespace std;
 
-Menu::Menu() :selection(0), Submenu_active(0)
+Menu::Menu() :selection(0), id(-1)
 {
 
 }
@@ -14,6 +14,9 @@ Menu::~Menu()
 
 void Menu::AddMenuItem(string item) {
 	Items.push_back(item);
+	Menu * temp_menu = NULL;
+	subMenu.push_back(temp_menu);
+
 }
 
 void Menu::MoveUp() {

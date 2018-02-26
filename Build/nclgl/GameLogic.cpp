@@ -13,28 +13,25 @@ GameLogic::GameLogic() {
 	setnumOfPlayersMp(0);
 }
 
-void GameLogic::addPlayers(int num_players) {
-	for (int i = 0; i < num_players; i++) {
-		Player * player = new Player("Player_"+i,
-			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
-			1.0f,
-			true,
-			1.0f,
-			true,
-			colours[i]);
-		player->SetPhysics(player->Physics());
-		switch (i) {
-		case 0:
-			player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
-			break;
-		case 1:
-			player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0);
-			break;
-		}
-		player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
-		players.push_back(player);
+void GameLogic::addPlayer(int num_player) {
+	Player * player = new Player("Player_"+ num_player,
+		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+		1.0f,
+		true,
+		1.0f,
+		true,
+		colours[num_player]);
+	player->SetPhysics(player->Physics());
+	switch (num_player) {
+	case 0:
+		player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+		break;
+	case 1:
+		player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0);
+		break;
 	}
-	
+	player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
+	players.push_back(player);
 }
 
 
