@@ -11,6 +11,9 @@ GameLogic::GameLogic() {
 
 	setnumAI(0);
 	setnumOfPlayersMp(0);
+
+	
+
 }
 
 void GameLogic::addPlayer(int num_player) {
@@ -22,14 +25,7 @@ void GameLogic::addPlayer(int num_player) {
 		true,
 		colours[num_player]);
 	player->SetPhysics(player->Physics());
-	switch (num_player) {
-	case 0:
-		player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
-		break;
-	case 1:
-		player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0);
-		break;
-	}
+	player->setControls(controls[num_player][0], controls[num_player][1], controls[num_player][2], controls[num_player][3], controls[num_player][4], controls[num_player][5]);
 	player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
 	players.push_back(player);
 }
@@ -62,4 +58,19 @@ void GameLogic::calculatePaintPercentage() {
 			}
 		}
 	}
+}
+
+void GameLogic::setControls(int x, int y, KeyboardKeys key) {
+	controls[x][y] = key;
+}
+
+void GameLogic::updateControls() {
+	if (numOfPlayersMp & 0b0001) 
+		players[0]->setControls(controls[0][0], controls[0][1], controls[0][2], controls[0][3], controls[0][4], controls[0][5]);
+	if (numOfPlayersMp & 0b0010) 
+		players[1]->setControls(controls[1][0], controls[1][1], controls[1][2], controls[1][3], controls[1][4], controls[1][5]);
+	if (numOfPlayersMp & 0b0100)
+		players[2]->setControls(controls[2][0], controls[2][1], controls[2][2], controls[2][3], controls[2][4], controls[2][5]);
+	if (numOfPlayersMp & 0b1000) 
+		players[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
 }

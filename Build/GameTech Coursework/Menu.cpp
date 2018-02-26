@@ -5,7 +5,7 @@ using namespace std;
 
 Menu::Menu() :selection(0), id(-1)
 {
-
+	
 }
 
 Menu::~Menu()

@@ -99,12 +99,13 @@ Player::~Player()
 
 }
 
-void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump) {
+void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
 	move_up = up;
 	move_down = down;
 	move_left = left;
 	move_right = right;
 	move_jump = jump;
+	move_shoot = shoot;
 }
 
 void Player::move(float dt) {
