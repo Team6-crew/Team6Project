@@ -1,4 +1,5 @@
 #pragma once
+#include "../RenderBase.h"
 class PS4Renderer : public RenderBase
 {
 public:

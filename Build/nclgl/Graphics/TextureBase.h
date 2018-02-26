@@ -29,7 +29,7 @@ protected:
 	uint width;
 	uint height;
 
-	virtual void LoadTexture(const std::string& filepath) = 0;
+	virtual bool LoadTexture(const std::string& filepath) = 0;
 	
 	bool loadSuccess;
 };
