@@ -6,6 +6,7 @@
 
 class OGLTexture : public TextureBase
 {
+	DECLARE_HEAP;
 public:
 	// Load a texture from a file
 	OGLTexture(const std::string& filePath);

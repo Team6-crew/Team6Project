@@ -8,6 +8,8 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
+
+#include <ncltech\Memory Management\HeapFactory.h>
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -85,6 +87,8 @@ void PrintStatusEntries()
 		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
 	}
 	NCLDebug::AddStatusEntry(status_colour, "");
+
+
 }
 
 
@@ -119,63 +123,18 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
+
+	
 }
 
-#include <ncltech\Memory Management\MemoryManager.h>
-class TestClass
-{
-	DECLARE_HEAP;
-public:
-	
-	TestClass() {}
-	int x; 
-	float y;
-};
 
-DEFINE_HEAP(TestClass, "Box");
-
-class TestClass2
-{
-	DECLARE_HEAP;
-public:
-	TestClass2(int a, int b) { x = a; y = b; }
-	int x;
-	int y;
-	int z;
-};
-DEFINE_HEAP(TestClass2, "Box");
-
-class TestClass3
-{
-	DECLARE_HEAP;
-public:
-	TestClass3() { }
-	int x;
-	int y;
-	int z;
-	int w;
-};
-DEFINE_HEAP(TestClass3, "Sausage");
-#include <ncltech\Memory Management\HeapFactory.h>
 // Program Entry Point
 int main()
 {
 	//Initialize our Window, Physics, Scenes etc
-	//Initialize();
+	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 	
-	//Heap test("test");
-	TestClass* tc = new TestClass();
-	//TestClass* tc = new (&test) TestClass();
-	TestClass2* tc2 = new  TestClass2(4,70);
-	TestClass3* tc3 = new TestClass3();
-	TestClass3* tc4 = new TestClass3();
-	TestClass3* tc5 = new TestClass3();
-	TestClass* tc6 = new TestClass();
-	delete tc5;
-	HeapFactory::Instance()->PrintDebugInfo();
-	system("pause");
-	return 0;
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
@@ -244,7 +203,7 @@ int main()
 		//Finish Timing
 		timer_total.EndTimingSection();		
 	}
-
+	HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
 	return 0;

@@ -6,6 +6,7 @@
 
 using namespace Texture;
 
+DEFINE_HEAP(OGLTexture, "Graphics");
 OGLTexture::OGLTexture(const std::string& filepath)
 {
 	LoadTexture(filepath);
