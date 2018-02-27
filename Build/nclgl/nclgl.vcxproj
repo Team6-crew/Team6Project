@@ -39,6 +39,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
     <ClCompile Include="HeightMap.cpp" />
+    <ClCompile Include="InputBase.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
+    <ClCompile Include="OGLInput.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
@@ -58,6 +60,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
+    <ClCompile Include="PS4Input.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -84,6 +87,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
     <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="InputBase.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Light.h" />
@@ -97,6 +101,7 @@
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
+    <ClInclude Include="OGLInput.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
@@ -106,6 +111,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
+    <ClInclude Include="PS4Input.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
