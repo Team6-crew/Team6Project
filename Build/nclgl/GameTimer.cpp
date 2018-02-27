@@ -1,5 +1,5 @@
 #include "GameTimer.h"
-
+#ifdef WIN_OGL
 GameTimer::GameTimer(void)	{
 	QueryPerformanceFrequency((LARGE_INTEGER *)&frequency);
 	QueryPerformanceCounter((LARGE_INTEGER *)&start);
@@ -22,3 +22,4 @@ float	 GameTimer::GetTimedMS() {
 	lastTime	= a;
 	return b;
 }
+#endif //winogl
