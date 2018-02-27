@@ -11,7 +11,7 @@
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
 #include <nclgl/GameLogic.h>
-
+#include "MainMenu.h"
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -22,6 +22,15 @@ public:
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
+		// Pause Menu
+		pauseMenu = new Menu();
+		pauseMenu->visible = false;
+		pauseMenu->AddMenuItem("Resume");
+		pauseMenu->AddMenuItem("Sound");
+		pauseMenu->AddMenuItem("Controls");
+		pauseMenu->AddMenuItem("Back to Main Menu");
+		pauseMenu->AddMenuItem("Exit Game");
+		pauseMenu->setSelection(-1);
 	}
 
 	virtual ~EmptyScene()
@@ -91,6 +100,65 @@ public:
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		}
+		// Pause Menu
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
+		{
+
+			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+			if (pauseMenu->visible == false) {
+				pauseMenu->setSelection(0);
+				pauseMenu->visible = true;
+			}
+			else {
+				pauseMenu->setSelection(-1);
+				pauseMenu->visible = false;
+			}
+		}
+
+		//Navigate choices
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
+		{
+			if (pauseMenu->visible == true) { pauseMenu->MoveUp(); }
+			else { pauseMenu->MoveUp(); }
+		}
+
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN))
+		{
+			if (pauseMenu->visible == true) { pauseMenu->MoveDown(); }
+			else { pauseMenu->MoveDown(); }
+		}
+		if (pauseMenu->visible == true) {
+			pauseMenu->ShowMenu();
+		}
+
+
+		//Change Menus
+		if (pauseMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+			pauseMenu->visible = false;
+		}
+		else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			pauseMenu->visible = false;
+			SceneManager::Instance()->JumpToScene("Main Menu");
+			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+		}
+		else if (pauseMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+		{
+			exit(0);
+		}
+
+		//camera->SetPosition(cam->GetWorldTransform().GetPositionVector());
 
 	}
+private:
+	RenderNode * cam;
+
+	GameObject *body;
+	GameObject *ball;
+
+	Menu * pauseMenu;
+
+	float Score = 0.0f;
 };

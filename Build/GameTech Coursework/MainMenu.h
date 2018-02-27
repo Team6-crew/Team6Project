@@ -239,19 +239,19 @@ public:
 					}
 				}
 				case (500): {
-					std::cout << "1920 x 1080 set.";
+					(Window::GetWindow()).ResizeWindow(1920, 1080);
 					break;
 				}
 				case (501): {
-					std::cout << "1600 x 900 set.";
+					(Window::GetWindow()).ResizeWindow(1600, 900);
 					break;
 				}
 				case (502): {
-					std::cout << "1366 x 768 set.";
+					(Window::GetWindow()).ResizeWindow(1366, 768);
 					break;
 				}
 				case (503): {
-					std::cout << "1280 x 720 set.";
+					(Window::GetWindow()).ResizeWindow(1280, 720);
 					break;
 				}
 				case (700): {
