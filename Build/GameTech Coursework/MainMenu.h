@@ -168,7 +168,7 @@ public:
 				if (Window::GetKeyboard()->KeyTriggered((KeyboardKeys)it->first)) {
 					playerControlsMenu->replaceMenuItem(activeMenu->getSelection(), con[activeMenu->getSelection()]
 						+ "	" + it->second);
-					replaceControl(it->first, player_c * 4 + activeMenu->getSelection());
+					replaceControl(it->first, player_c * 6 + activeMenu->getSelection());
 					waitsInput = false;
 				}
 			}
@@ -207,7 +207,7 @@ public:
 			}
 			switch (id) {
 				case (100): {
-					GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
 					break;
@@ -227,7 +227,7 @@ public:
 						}
 					}
 					if (numOfPlayers != 0) {
-
+						getControls();
 						GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 						GraphicsPipeline::Instance()->ChangeScene();
 						SceneManager::Instance()->JumpToScene("Team Project");
