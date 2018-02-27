@@ -83,6 +83,9 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
+    <ClCompile Include="InputBase.cpp" />
+    <ClCompile Include="PS4Input.cpp" />
+    <ClCompile Include="OGLInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -183,5 +186,8 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
     <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
+    <ClInclude Include="InputBase.h" />
+    <ClInclude Include="PS4Input.h" />
+    <ClInclude Include="OGLInput.h" />
   </ItemGroup>
 </Project>
