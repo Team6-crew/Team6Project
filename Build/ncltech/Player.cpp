@@ -190,7 +190,7 @@ void Player::handleInput(float dt) {
 
 void Player::equipStunWeapon(Vector4 colour) {
 	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Rotation(10.0f, Vector3(1, 0, 0))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 }
@@ -204,8 +204,8 @@ bool Player::stun(float dt) {
 		physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
 		if (stunDuration > 2.0f)
 		{	// Shake
-			camera->SetYaw(camera->GetYaw() + 360.0f * 0.001f * ((rand() % 200 - 100.0f) / 100.0f));
-			camera->SetPitch(camera->GetPitch() + 360.0f * 0.001f * ((rand() % 200 - 100.0f) / 100.0f));
+			camera->SetYaw(camera->GetYaw() + 360.0f * 0.0005f * ((rand() % 200 - 100.0f) / 100.0f));
+			camera->SetPitch(camera->GetPitch() + 360.0f * 0.0005f * ((rand() % 200 - 100.0f) / 100.0f));
 			return true;
 		}
 		else {
@@ -250,9 +250,9 @@ void Player::shoot() {
 	if (equippedStunWeapon) {
 		Vector3 up = Vector3(0, 1, 0);
 		Vector3 right = Vector3::Cross(forward, up);
-		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 5, 0) - right*1.5f;
+		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right*1.5f - forward*2.0f;
 		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true,Vector4(1,0,0,1));
-		projectile->Physics()->SetLinearVelocity(-forward*30.0f);
+		projectile->Physics()->SetLinearVelocity(-forward*40.0f);
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
