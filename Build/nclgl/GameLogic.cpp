@@ -32,6 +32,7 @@ void GameLogic::addPlayers(int num_players) {
 		player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
 		players.push_back(player);
 		paint_perc.push_back(0.0f);
+		cout << "Player " << i << " created \n";
 	}
 	
 }
@@ -68,16 +69,16 @@ void GameLogic::calculatePaintPercentage() {
 			}
 		}
 	}
-	for (int i = 0; i < aiPlayers.size(); i++) {
-		nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
-		nclgl::Maths::Vector3 position = aiPlayers[i]->getBall()->Physics()->GetPosition();
+	for (int l = 0; l < aiPlayers.size(); l++) {
+		nclgl::Maths::Vector3 position = aiPlayers[l]->getBall()->Physics()->GetPosition();
+		
 		rad = (rand() % 100)*0.0001f;
 
-		aiPlayers[i]->setRadius(rad);
+		aiPlayers[l]->setRadius(rad);
 		posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 		posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-		aiPlayers[i]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+		aiPlayers[l]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
 		for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
 			for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
@@ -85,9 +86,13 @@ void GameLogic::calculatePaintPercentage() {
 				float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 				if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
 					if (world_paint[i][j] == 0) {
-						paint_perc += 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
+						paint_perc[l] += increment;
 					}
-					world_paint[i][j] = 1;
+					else if (world_paint[i][j] != l + 1) {
+						paint_perc[l] += increment;
+						paint_perc[world_paint[i][j] - 1] -= increment;
+					}
+					world_paint[i][j] = l+1;
 				}
 			}
 		}

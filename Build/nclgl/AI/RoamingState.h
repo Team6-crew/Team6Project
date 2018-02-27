@@ -4,6 +4,8 @@
 #include "iostream"
 #include "fstream"
 #include "State.h"
+#include "BallAI.h"
+#include "StateMachine.h"
 
 #include <iostream>
 #include <nclgl\Vector3.h>
@@ -11,6 +13,7 @@
 
 class GameObject;
 class StateMachine;
+
 
 class RoamingState : public State
 {
@@ -22,21 +25,17 @@ class RoamingState : public State
 	}
 public:
 	float maxVel = 20.0f;
-	virtual void enter(StateMachine* sOwner, GameObject* owner);
-	virtual void update(StateMachine* sOwner, GameObject* owner);
-	virtual void exit(StateMachine* sOwner, GameObject* owner)
+	virtual void enter(StateMachine* sOwner);
+	virtual void update(StateMachine* sOwner);
+	virtual void exit(StateMachine* sOwner)
 	{
-		std::cout << "Exiting Roaming State \n";
+				std::cout << "Exiting Roaming State \n";
 	};
-	void addNodesToList(nclgl::Maths::Vector3 Node) { nodesList.push_back(Node); }
-	std::vector<nclgl::Maths::Vector3> getNodes() { return nodesList; }
-	nclgl::Maths::Vector3 seek(GameObject* owner, nclgl::Maths::Vector3 TargetPos);
-	nclgl::Maths::Vector3 followPath(StateMachine* sOwner, GameObject* owner);
+	nclgl::Maths::Vector3 seek(StateMachine* sOwner, nclgl::Maths::Vector3 TargetPos);
+	nclgl::Maths::Vector3 followPath(StateMachine* sOwner);
 
 private:
+	//std::vector<nclgl::Maths::Vector3> nodesList;
 	State * chasingState;
-	int CurrentNode = 0;
-	nclgl::Maths::Vector3 goal;
-	std::vector<nclgl::Maths::Vector3> nodesList;
 };
 

@@ -17,8 +17,9 @@ public:
 		const nclgl::Maths::Vector4& color);
 	~BallAI();
 	static void addBallAIPlayers(int numBallAI);
-	std::vector<nclgl::Maths::Vector3> getNodes() { return Nodes; }
-	void setNodes(nclgl::Maths::Vector3 Node) { Nodes.push_back(Node); }
+	std::vector<nclgl::Maths::Vector3> getNodeList() { return nodesList; }
+	nclgl::Maths::Vector3 getNode(int a) { return nodesList[a]; }
+	void addNodesToList(nclgl::Maths::Vector3 Node) { nodesList.push_back(Node); }
 	GameObject* getBall() { return this; }
 	void move();
 	float getSpeed() { return speed; }
@@ -28,15 +29,22 @@ public:
 	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) { relative_position = rel_pos; }
 	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; }
 	bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
-	StateMachine* AIStateMachine;
+	void setStateMachine(StateMachine* a) { AIStateMachine = a; }
+	StateMachine* getStateMachine() { return AIStateMachine; }
+	int getCurrentNode() { return currentNode; }
+	void increaseCurrentNode() { currentNode = (currentNode + 1) % nodesList.size();; }
+	void resetCurrentNode() { currentNode = 0; }
+
 
 private:
 	nclgl::Maths::Vector3 goal;
-	int CurrentNode = 0;
-	std::vector<nclgl::Maths::Vector3> Nodes;
+	int currentNode = 0;
+	std::vector<nclgl::Maths::Vector3> nodesList;
 	float speed;
 	float rad;
 	nclgl::Maths::Vector3 relative_position;
+	std::vector<StateMachine*> stateMachines;
+	StateMachine * AIStateMachine;
 	
 };
 

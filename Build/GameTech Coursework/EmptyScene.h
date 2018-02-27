@@ -37,19 +37,17 @@ public:
 	{
 		Scene::OnInitializeScene();
 	
-		
-		GameLogic::Instance()->addPlayers(4);
+		int players = 3;
+		GameLogic::Instance()->addPlayers(players);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
-			cout << "Player " << i << " created \n";
 		}
-		int aiplayers = 4 - players;
-		BallAI::addBallAIPlayers(aiplayers);
+		int aiPlayers = 4 - players;
+		BallAI::addBallAIPlayers(aiPlayers);
 		for (int i = 0; i < GameLogic::Instance()->getNumAIPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(i));
-			cout << "AIPlayer " << i << " created \n";
 		}
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
@@ -83,9 +81,6 @@ public:
 
 	virtual void OnUpdateScene(float dt) override
 	{
-		
-
-		//AIBall->move();
 		Scene::OnUpdateScene(dt);
 		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");

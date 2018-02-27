@@ -9,18 +9,18 @@ class CollectAndUsePickupState;
 
 using namespace nclgl::Maths;
 
-void CollectandUsePickupState::enter(StateMachine * sOwner, GameObject * owner)
+void CollectandUsePickupState::enter(StateMachine * sOwner)
 {
 	cout << "Entered Pickup State \n";
 }
 
-void CollectandUsePickupState::update(StateMachine * sOwner, GameObject * owner)
+void CollectandUsePickupState::update(StateMachine * sOwner)
 {
-	nclgl::Maths::Vector3 ballPos = owner->Physics()->GetPosition();
+	nclgl::Maths::Vector3 ballPos = sOwner->getOwner()->Physics()->GetPosition();
 	Vector3 pickupPos = SpeedPickup::getPickup(1)->getLocation();
 	nclgl::Maths::Vector3 steering = ((pickupPos - ballPos).Normalise()) * maxVel;
 
-	steering = steering / owner->Physics()->GetInverseMass();
+	steering = steering / sOwner->getOwner()->Physics()->GetInverseMass();
 
 	float distanceToPickup = (pickupPos - ballPos).Length();
 
@@ -31,10 +31,10 @@ void CollectandUsePickupState::update(StateMachine * sOwner, GameObject * owner)
 	}
 
 	
-	owner->Physics()->SetForce(nclgl::Maths::Vector3(steering));
+	sOwner->getOwner()->Physics()->SetForce(nclgl::Maths::Vector3(steering));
 }
 
-void CollectandUsePickupState::exit(StateMachine * sOwner, GameObject * owner)
+void CollectandUsePickupState::exit(StateMachine * sOwner)
 {
 	cout << "Leaving Collect and use Pickup State \n";
 }

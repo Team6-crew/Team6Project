@@ -10,12 +10,13 @@
 using namespace nclgl::Maths;
 
 
-void ChasingState::update(StateMachine * sOwner, GameObject * owner)
+void ChasingState::update(StateMachine * sOwner)
 {
+	BallAI * owner = dynamic_cast<BallAI*>(sOwner->getOwner());
 	int numOfPlayers = GameLogic::Instance()->getNumPlayers();
 	float closestPlayerDistance = 10000000000.0f;// std::numeric_limits<float>::max();
 	int closestPlayer = 0; /// so we can get the correct player
-	nclgl::Maths::Vector3 AIBallPos = GameLogic::Instance()->getAIPlayer(0)->getBall()->Physics()->GetPosition();
+	nclgl::Maths::Vector3 AIBallPos = owner->getBall()->Physics()->GetPosition();
 
 	for (int i = 0; i < numOfPlayers; i++)
 	{
@@ -39,16 +40,16 @@ void ChasingState::update(StateMachine * sOwner, GameObject * owner)
 
 	 if (distanceToPlayer <= 10)
 	{
-		 nclgl::Maths::Vector3 AIVelocity = owner->Physics()->GetLinearVelocity();
-		 nclgl::Maths::Vector3 AIBallPos = owner->Physics()->GetPosition();
+		 nclgl::Maths::Vector3 AIVelocity = sOwner->getOwner()->Physics()->GetLinearVelocity();
+		 nclgl::Maths::Vector3 AIBallPos = sOwner->getOwner()->Physics()->GetPosition();
 
 		 nclgl::Maths::Vector3 goal = GameLogic::Instance()->getPlayer(closestPlayer)->Physics()->GetPosition();
 		 nclgl::Maths::Vector3 desVelo = ((goal - AIBallPos).Normalise()) * maxVel;
 
 		 nclgl::Maths::Vector3 Steering = desVelo - AIVelocity;
-		 Steering = Steering / owner->Physics()->GetInverseMass();
+		 Steering = Steering / sOwner->getOwner()->Physics()->GetInverseMass();
 
-		owner->Physics()->SetForce(nclgl::Maths::Vector3(desVelo));
+		 sOwner->getOwner()->Physics()->SetForce(nclgl::Maths::Vector3(desVelo));
 	}
 	 if (distanceToPlayer > 11)
 	{
@@ -56,9 +57,9 @@ void ChasingState::update(StateMachine * sOwner, GameObject * owner)
 	}
 }
 
-void ChasingState::exit(StateMachine * sOwner, GameObject * owner)
+void ChasingState::exit(StateMachine * sOwner)
 {
 	cout << "leaving ChasingState \n";
 }
 
-void ChasingState::enter(StateMachine * sOwner, GameObject * owner) { std::cout << "Entered ChasingState \n"; }
+void ChasingState::enter(StateMachine * sOwner) { std::cout << "Entered ChasingState \n"; }

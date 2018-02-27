@@ -195,7 +195,7 @@ void GraphicsPipeline::RenderScene()
 
 		GameLogic::Instance()->calculatePaintPercentage();
 
-		SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+		//SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
 
 		TrailBuffer->Activate();
 		renderer->SetViewPort(2048, 2048);
@@ -283,7 +283,9 @@ void GraphicsPipeline::RenderScene()
 
 		shaderForwardLighting->Activate();
 		shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
-		shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+
+		shaderForwardLighting->SetUniform("uDiffuseTex0", 0);
+		shaderForwardLighting->SetUniform("uDiffuseTex1", 1);
 		shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);

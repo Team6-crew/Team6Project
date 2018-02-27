@@ -4,7 +4,7 @@
 #include <ncltech\SceneManager.h>
 #include <ncltech\Scene.h>
 #include <vector>
-class AIBall;
+
 class GameLogic : public TSingleton<GameLogic> {
 
 public:
@@ -21,7 +21,8 @@ public:
 	int getNumAIPlayers() { return aiPlayers.size(); }
 	Player* getPlayer(int num_player)  {return players[num_player]; }
 	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
-	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); };
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
+	};
 
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];

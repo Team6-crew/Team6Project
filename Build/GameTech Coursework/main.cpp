@@ -122,7 +122,7 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 	{
-		pos = GameLogic::Instance()->getPlayer(1)->Physics()->GetPosition();
+		pos = GameLogic::Instance()->getPlayer(0)->Physics()->GetPosition();
 		std::ofstream myfile;
 		myfile.open("pos.txt", std::ios_base::app);
 		cout << pos << "\n";
@@ -139,6 +139,7 @@ void HandleKeyboardInputs()
 // Program Entry Point
 int main()
 {
+	srand(time(NULL));
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);

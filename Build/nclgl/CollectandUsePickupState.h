@@ -19,9 +19,9 @@ public:
 	}
 
 public:
-	virtual void enter(StateMachine* sOwner, GameObject* owner);
-	virtual void update(StateMachine* sOwner, GameObject* owner);
-	virtual void exit(StateMachine* sOwner, GameObject* owner);
+	virtual void enter(StateMachine* sOwner);
+	virtual void update(StateMachine* sOwner);
+	virtual void exit(StateMachine* sOwner);
 private:
 	float maxVel = 20;
 };

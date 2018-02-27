@@ -102,7 +102,7 @@ void BallAI::addBallAIPlayers(int numBallAI)
 
 	for (int i = 0; i < numBallAI; i++)
 	{
-		BallAI * AIBall = new BallAI("AIPlayer " + i,
+		BallAI * AIBall = new BallAI("AIPlayer"+(i),
 			nclgl::Maths::Vector3(5.0f*(i + 2), 1.f, 5.0f*(i + 1)),
 			1.0f,
 			true,
@@ -111,19 +111,71 @@ void BallAI::addBallAIPlayers(int numBallAI)
 			colours[i + GameLogic::Instance()->getNumPlayers()]);
 		AIBall->SetPhysics(AIBall->Physics());
 
-
 		GameLogic::Instance()->addAIPlayer(AIBall);
 		AIBall->AIStateMachine = new StateMachine(AIBall);
-
 		AIBall->AIStateMachine->setCurrentState(AIBall->AIStateMachine, RoamingState::GetInstance());
+		AIBall->setStateMachine(AIBall->AIStateMachine);
+
+		cout << "AI Player " << i << " created \n";
+
+		{
+			int numOfPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers();
+			int AIChosenPath = rand() % numOfPlayers;
+			std::string path = to_string(AIChosenPath);
+
+			std::ifstream myReadFile;
+			myReadFile.open((path)+"pos.txt");
+			//cout <<sOwner->getOwner->getName()<<" using " <<path << "pos.txt\n";
+			string line;
+
+			float xQ;
+			float yQ;
+			float zQ;
+			nclgl::Maths::Vector3 pos;
+			int nodeNum = 0;
+			if (myReadFile.is_open())
+			{
+				while (!myReadFile.eof())
+				{
+					string vector3;
+					getline(myReadFile, line);
+					remove(line.begin(), line.end(), ' '); //remove any spaces
+					getline(myReadFile, vector3, '(');
+					string x;
+					getline(myReadFile, x, ',');
+					string y;
+					getline(myReadFile, y, ',');
+					string z;
+					getline(myReadFile, z, ')');
+
+					if (myReadFile.eof())
+						break;
+
+					std::string::size_type sz;
+
+					xQ = std::stof(x, &sz);
+					yQ = std::stof(y, &sz);
+					zQ = std::stof(z, &sz);
+
+
+
+					pos = (nclgl::Maths::Vector3(xQ, yQ, zQ));
+					AIBall->addNodesToList(pos);
+					++nodeNum;
+					std::cout << "Node " << nodeNum << " added \n";
+				}
+				myReadFile.close();
+			}
+		}
+
 	}
 }
 
 
 void BallAI::move()
-{
-	AIStateMachine->getCurrentState()->update(AIStateMachine,AIStateMachine->getOwner());
-
+{	
+		BallAI::getStateMachine()->getCurrentState()->update(BallAI::getStateMachine());
+	
 }
 
 bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
