@@ -33,6 +33,7 @@
     <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Launchpad.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -102,6 +104,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
@@ -116,6 +119,9 @@
     <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Launchpad.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />

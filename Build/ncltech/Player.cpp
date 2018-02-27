@@ -7,6 +7,7 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <nclgl\Launchpad.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
@@ -173,6 +174,30 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
 		return false;
 	}
+	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
+	{
+		Launchpad* launchpad = (Launchpad*)otherNode->GetParent();
+		launchpad->Launch(this);
+		canjump = false;
+		return false;
+	}
+	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
+	{
+		GameObject *portal = FindGameObject("portal_b");
+		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
+	{
+
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
+	{
+
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
+	{
+
+	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;

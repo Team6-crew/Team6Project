@@ -54,7 +54,7 @@ private:
 	nclgl::Maths::Vector3 relative_position;
 	float speed;
 
-	bool canjump = 1;
+	bool canjump = true;
 
 	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
 	
