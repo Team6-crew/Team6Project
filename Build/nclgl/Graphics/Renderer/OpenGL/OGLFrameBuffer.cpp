@@ -1,3 +1,5 @@
+#ifdef WIN_OGL
+
 #include "OGLFrameBuffer.h"
 
 #include "OGLTexture.h"
@@ -77,3 +79,5 @@ void OGLFrameBuffer::Activate()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferID);
 }
+
+#endif

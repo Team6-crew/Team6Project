@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #pragma once
 
 #include "../RenderBase.h"
@@ -56,3 +57,4 @@ private:
 	int minor = 2;
 };
 
+#endif

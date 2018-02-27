@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLTextureArray.h"
 
 using namespace Texture;
@@ -64,3 +65,4 @@ void OGLTextureArray::LoadTexture(const std::string& filepath)
 {
 
 }
+#endif

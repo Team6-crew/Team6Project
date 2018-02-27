@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLRenderer.h"
 
 #include <cassert>
@@ -209,3 +210,4 @@ void	OGLRenderer::SetDefaultSettings()
 	glDepthFunc(GL_LEQUAL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+#endif

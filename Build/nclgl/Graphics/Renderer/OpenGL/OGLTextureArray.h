@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #pragma once
 
 #include <nclgl\Graphics\TextureBase.h>
@@ -26,3 +27,4 @@ protected:
 	GLuint textureID;
 };
 
+#endif

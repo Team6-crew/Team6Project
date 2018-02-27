@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #pragma once
 
 #include <nclgl\Graphics\FrameBufferBase.h>
@@ -25,3 +26,4 @@ public:
 
 };
 
+#endif

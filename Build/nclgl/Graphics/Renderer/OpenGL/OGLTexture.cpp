@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLTexture.h"
 
 #include <SOIL.h>
@@ -107,3 +108,5 @@ GLuint OGLTexture::GetID()
 {
 	return textureID;
 }
+
+#endif
