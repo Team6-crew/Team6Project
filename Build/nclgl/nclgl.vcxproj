@@ -41,7 +41,6 @@
     <ClCompile Include="OGLRenderer.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Portal.cpp" />
-    <ClCompile Include="Portal_B.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RenderNode.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -71,7 +70,6 @@
     <ClInclude Include="OGLRenderer.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
-    <ClInclude Include="Portal_B.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RenderNode.h" />
