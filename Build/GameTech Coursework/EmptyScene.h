@@ -9,6 +9,8 @@
 
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
+#include <ncltech\WeaponPickup.h>
+#include <ncltech\StunWeaponPickup.h>
 #include <ncltech\Paintbomb.h>
 
 #include <ncltech\WorldPartition.h>
