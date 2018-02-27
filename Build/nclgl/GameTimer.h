@@ -34,7 +34,7 @@ protected:
 	float lastTime;					//Last time GetTimedMS was called
 };
 
-#elif PSTATION4
+#else
 
 #include <texture_tool\raw\timer.h>
 
@@ -57,8 +57,8 @@ public:
 	}
 
 protected:
-	float	start = 0;			//Start of timer
-	float	frequency = 0;		//Ticks Per Second
+	float	start;			//Start of timer
+	float	frequency ;		//Ticks Per Second
 
 	float lastTime = 0;					//Last time GetTimedMS was called
 	sce::TextureTool::Raw::Timer  t;
