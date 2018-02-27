@@ -25,6 +25,7 @@ private:
 	std::vector<float> paint_perc;
 	float posX, posZ;
 	float rad;
+	float add_rad;
 	std::vector <Player*> players;
 	nclgl::Maths::Vector4 colours[4];
 	float increment;
