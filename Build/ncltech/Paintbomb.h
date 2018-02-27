@@ -1,6 +1,7 @@
 #pragma once
 #include "Pickup.h"
 
+#include <string>
 
 class Paintbomb : public Pickup
 {
