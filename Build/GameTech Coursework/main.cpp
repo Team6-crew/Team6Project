@@ -25,6 +25,7 @@ void Quit(bool error = false, const std::string &reason = "") {
 	SceneManager::Release();
 	PhysicsEngine::Release();
 	GraphicsPipeline::Release();
+	TimerFactory::Release();
 
 	//Show console reason before exit
 	if (error) {

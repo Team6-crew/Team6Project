@@ -17,7 +17,7 @@ Description:Creates and handles the Window, including the initialisation of the 
 
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "GameTimer.h"
+#include "GameTimerBase.h"
 
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
@@ -62,7 +62,7 @@ public:
 
 	void SetCursorStyle(CursorStyle style);
 
-	GameTimer*   GetTimer() { return timer; }
+	GameTimerBase*   GetTimer() { return timer; }
 
 
 protected:
@@ -76,7 +76,7 @@ protected:
 	static Keyboard*	keyboard;
 	static Mouse*		mouse;
 
-	GameTimer*	timer;
+	GameTimerBase*	timer;
 
 	OGLRenderer*		renderer;
 

@@ -18,7 +18,8 @@ time of the various components of the game engine.
 */
 
 #pragma once
-#include "GameTimer.h"
+#include "TimerFactory.h"
+#include "GameTimerBase.h"
 #include "NCLDebug.h"
 
 class PerfTimer
@@ -28,7 +29,8 @@ public:
 		: m_UpdateInterval(1.0f)
 		, m_RealTimeElapsed(0.0f)
 	{
-		m_Timer.GetTimedMS();
+		m_Timer = TimerFactory::Instance()->MakeGameTimer();
+		m_Timer->GetTimedMS();
 		memset(&m_CurrentData, 0, sizeof(PerfTimer_Data));
 		memset(&m_PreviousData, 0, sizeof(PerfTimer_Data));
 	}
@@ -53,13 +55,13 @@ public:
 	//Called /before/ the section of code to measure
 	void BeginTimingSection()
 	{
-		m_Timer.GetTimedMS(); //In the underlying GameTimer class this resets the time since last called variable.
+		m_Timer->GetTimedMS(); //In the underlying GameTimer class this resets the time since last called variable.
 	}
 
 
 	void EndTimingSection()
 	{
-		float elapsed = m_Timer.GetTimedMS();
+		float elapsed = m_Timer->GetTimedMS();
 
 		//Set the min/max execution times
 		if (m_CurrentData._num == 0)
@@ -105,7 +107,7 @@ protected:
 	float m_UpdateInterval;
 	float m_RealTimeElapsed;
 
-	GameTimer m_Timer;
+	GameTimerBase* m_Timer;
 
 	struct PerfTimer_Data
 	{

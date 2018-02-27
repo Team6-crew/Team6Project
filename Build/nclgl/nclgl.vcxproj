@@ -31,10 +31,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GameTimerBase.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
@@ -51,6 +51,7 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
+    <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="OGLInput.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
@@ -73,16 +74,17 @@
     <ClCompile Include="Graphics\ShaderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
     <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
+    <ClCompile Include="TimerFactory.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="GameTimerBase.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
     <ClInclude Include="Graphics\FrameBufferBase.h" />
     <ClInclude Include="Frustum.h" />
-    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
     <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
@@ -101,6 +103,7 @@
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
+    <ClInclude Include="OGLGameTimer.h" />
     <ClInclude Include="OGLInput.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
@@ -111,6 +114,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
+    <ClInclude Include="PS4GameTimer.h" />
     <ClInclude Include="PS4Input.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
@@ -124,6 +128,7 @@
     <ClInclude Include="Graphics\ShaderBase.h" />
     <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
     <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
+    <ClInclude Include="TimerFactory.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />

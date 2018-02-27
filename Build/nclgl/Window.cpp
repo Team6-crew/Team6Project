@@ -1,7 +1,7 @@
 #include "Window.h"
 #include "Mouse.h"
 #include "Keyboard.h"
-
+#include "TimerFactory.h"
 Window* Window::window;
 
 Keyboard*Window::keyboard = NULL;
@@ -124,7 +124,7 @@ Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen) {
 		mouse = new Mouse(windowHandle);
 	}
 	//if(!timer) {
-	timer = new GameTimer();
+	timer = TimerFactory::Instance()->MakeGameTimer();
 	//}
 	elapsedMS = timer->GetMS();
 
