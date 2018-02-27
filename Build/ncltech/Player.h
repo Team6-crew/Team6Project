@@ -59,9 +59,7 @@ public:
 	Camera* getCamera() { return camera; }
 
 	void handleInput(float dt);
-	float getRadius() { return rad; }
 	float getadd_rad() { return add_rad; }
-	void setRadius(float radius) { rad = radius; }
 	void setadd_rad(float add) { add_rad = add; }
 
 	bool stun(float dt);

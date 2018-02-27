@@ -75,6 +75,16 @@ public:
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
+		StunWeaponPickup* weapon = new StunWeaponPickup("pickup",
+			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		weapon->SetPhysics(weapon->Physics());
+		this->AddGameObject(weapon);
+
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
 			0.5f,
@@ -199,7 +209,7 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
 		{			
 			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
-			PhysicsEngine::Instance()->DeleteNextFrame(kill_ob);
+			PhysicsEngine::Instance()->DeleteAfter(kill_ob,0.0f);
 		}	
 		return true;
 	};
