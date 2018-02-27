@@ -66,18 +66,16 @@ GameObject* PlayerSoftBody::getControl() {
 	return control;
 }
 
-void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump) {
+void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
 	move_up = up;
 	move_down = down;
 	move_left = left;
 	move_right = right;
 	move_jump = jump;
+	move_shoot = shoot;
 }
 
 void PlayerSoftBody::move() {
-
-
-
 	nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
 		(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
 		(ball->softball[0]->Physics()->GetPosition().z + ball->softball[181]->Physics()->GetPosition().z) / 2);

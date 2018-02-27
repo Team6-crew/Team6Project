@@ -1,5 +1,7 @@
 #include "GameLogic.h"
 #include "../ncltech/Player.h"
+#include <ncltech\PlayerSoftBody.h>
+
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	
@@ -39,7 +41,7 @@ void GameLogic::addPlayers(int num_players) {
 
 void GameLogic::addSoftPlayers(int num_splayers) {
 	for (int i = 0; i < num_splayers; i++) {
-		PlayerSoftBody* softplayer = new PlayerSoftBody("Player_" + i,
+		PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + i,
 			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
 			1.0f,
 			1.0f,
@@ -48,10 +50,10 @@ void GameLogic::addSoftPlayers(int num_splayers) {
 		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
 		switch (i) {
 		case 0:
-			softplayer->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+			softplayer->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE, KEYBOARD_N);
 			break;
 		case 1:
-			softplayer->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0);
+			softplayer->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9);
 			break;
 		}
 		softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());

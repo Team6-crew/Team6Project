@@ -18,7 +18,7 @@ public:
 	GameObject* getControl();
 
 	void move();
-	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys space);
+	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys space, KeyboardKeys shoot);
 
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
@@ -33,14 +33,14 @@ private:
 	GameObject* body;
 	RenderNodeBase* camera_transform;
 	Camera* camera;
-	GameObject* control;
-	GameObject* oppcontrol;
+	GameObject* control; // Top most sphere used to control soft body
+	GameObject* oppcontrol; // Bottom most sphere
 
 	float speed;
 
 	bool canjump = 1;
 
-	KeyboardKeys move_up, move_down, move_left, move_right, move_jump;
+	KeyboardKeys move_up, move_down, move_left, move_right, move_jump, move_shoot;
 
 
 };
