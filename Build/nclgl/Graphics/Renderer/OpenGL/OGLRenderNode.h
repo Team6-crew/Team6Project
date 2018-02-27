@@ -24,10 +24,12 @@ _-_-_-_-_-_-_-""  ""
 
 #include "../RenderNodeBase.h"
 
+#include <ncltech\Memory Management\MemoryManager.h>
 class MeshBase;
 
 class OGLRenderNode : public RenderNodeBase	
 {
+	DECLARE_HEAP;
 public:
 	OGLRenderNode(MeshBase* m = NULL, nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1, 1, 1, 1));
 	virtual ~OGLRenderNode(void);	  

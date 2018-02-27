@@ -104,8 +104,9 @@ public:
 	{
 		if (game_object)
 		{
-			if (game_object->scene) game_object->scene->RemoveGameObject(game_object);				
-
+			if (game_object->scene) {
+				//game_object->scene->RemoveGameObject(game_object);
+			}
 			m_vpObjects.push_back(game_object);
 			game_object->scene = this;
 			game_object->OnAttachedToScene();
@@ -186,9 +187,12 @@ protected:
 		m_UpdateCallbacks.clear();
 
 		for (auto obj : m_vpObjects)
-			delete obj;
-		
+			if (obj->physicsNode != NULL) {
+				SAFE_DELETE(obj);
+			}
 		m_vpObjects.clear();
+
+	
 	}
 
 

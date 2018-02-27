@@ -8,9 +8,12 @@ class Window;
 
 #include "../../../Matrix4.h"
 
+#include <ncltech\Memory Management\MemoryManager.h>
+
 
 class OGLRenderer : public RenderBase
 {
+	DECLARE_HEAP;
 public:
 	OGLRenderer(Window& window);
 	~OGLRenderer();

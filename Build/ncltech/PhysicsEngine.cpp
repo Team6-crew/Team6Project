@@ -127,6 +127,7 @@ void PhysicsEngine::UpdatePhysics()
 	//This is because we cannot delete the pickup object in player collision callback, 
 	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
 	for (int i = 0; i < objectsToDelete.size(); i++) {
+		SceneManager::Instance()->GetCurrentScene()->RemoveGameObject(objectsToDelete[i]);
 		delete objectsToDelete[i];
 	}
 	objectsToDelete.clear();

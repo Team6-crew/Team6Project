@@ -9,12 +9,14 @@
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\TextureBase.h>
-#include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 #include "Player.h"
 #include "SceneManager.h"
 #include <nclgl\GameLogic.h>
+#include <nclgl\ResourceManager.h>
 
 using namespace nclgl::Maths;
 
@@ -24,14 +26,11 @@ GraphicsPipeline::GraphicsPipeline()
 	, screenTexWidth(0)
 	, screenTexHeight(0)
 	, screenFBO(NULL)
-	, screenTexColor(NULL)
-	, screenTexDepth(NULL)
 	, shaderPresentToWindow(NULL)
 	, shaderShadow(NULL)
 	, shaderForwardLighting(NULL)
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
-	, shadowTex(NULL)
 	, TrailBuffer(NULL)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
@@ -56,12 +55,15 @@ GraphicsPipeline::GraphicsPipeline()
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 
-	gr_tex = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, 2048,2048);
-
+	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
+	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
+	
 	TextureBase* depth = NULL;
-	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(gr_tex, depth);
+	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
+	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
 
-	minimap->SetTexture(gr_tex);
+	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
+
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
 }
@@ -116,6 +118,9 @@ void GraphicsPipeline::LoadShaders()
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/testfrag.glsl");
 	
+	shaderCircle = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/circlefrag.glsl");
 
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
@@ -141,16 +146,16 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
 		//Color Texture
-		screenTexColor = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexColor",Texture::COLOUR, screenTexWidth, screenTexHeight);
 		//Depth Texture
-		screenTexDepth = TextureFactory::Instance()->MakeTexture(Texture::DEPTH, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexDepth",Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
-		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
+		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("screenTexColor"), ResourceManager::Instance()->getTexture("screenTexDepth"));
 	}
-
+	
 	//Construct our Shadow Maps and Shadow UBO
-	shadowTex = TextureFactory::Instance()->MakeTexture(Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
-	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex, false);
+	ResourceManager::Instance()->MakeTexture("shadowTex",Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("shadowTex"), false);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
@@ -272,26 +277,35 @@ void GraphicsPipeline::RenderMenu() {
 
 void GraphicsPipeline::RenderScene()
 {
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
+
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
+	}
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"),0);
+
+	}
+	RenderNodeBase * ground = NULL;
+	for (RenderNodeBase* node : allNodes) {
+		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+			ground = (*node->GetChildIteratorStart());
+		}
+	}
+	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
 	for (int i = 0; i < cameras.size(); i++) {
-		//int i = k - 1;
 		camera = cameras[i];
 		projViewMatrix = projViewMatrices[i];
 
 		//Build World Transforms
 		// - Most scene objects will probably end up being static, so we really should only be updating
 		//   modelMatrices for objects (and their children) who have actually moved since last frame
-		RenderNodeBase * ground = NULL;
-		for (RenderNodeBase* node : allNodes) {
-			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
-			if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
-				ground = (*node->GetChildIteratorStart());
-			}
-		}
+		
 
 
 		GameLogic::Instance()->calculatePaintPercentage();
 
-		SceneManager::Instance()->GetCurrentScene()->Score = GameLogic::Instance()->getPaintPerc();
+		SceneManager::Instance()->GetCurrentScene()->Score = (*GameLogic::Instance()->getPaintPerc())[0];
 
 		TrailBuffer->Activate();
 		renderer->SetViewPort(2048, 2048);
@@ -306,9 +320,7 @@ void GraphicsPipeline::RenderScene()
 			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
 			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
 			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
-			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
-				trailColor = Vector3(0.0f, 1.0f, 0.0f);
-			}
+			
 			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
 			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
@@ -317,7 +329,26 @@ void GraphicsPipeline::RenderScene()
 		}
 
 		trailQuad->Draw();
-		ground->GetMesh()->SetTexture(gr_tex);
+
+	
+
+		CircleBuffer->Activate();
+		renderer->SetViewPort(2048, 2048);
+		shaderCircle->Activate();
+		shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+		float sum_score = 0.0f;
+		float angle = 0.0f;
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+			sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
+		}
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers()-1; i++) {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			angle += 2*PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
+			shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		}
+
+		trailQuad->Draw();
+
 
 		//Build Transparent/Opaque Renderlists
 		BuildAndSortRenderLists();
@@ -356,7 +387,11 @@ void GraphicsPipeline::RenderScene()
 
 		shaderForwardLighting->Activate();
 		shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
-		shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+
+		shaderForwardLighting->SetUniform("uDiffuseTex0", 0);
+		shaderForwardLighting->SetUniform("uDiffuseTex1", 1);
+
+
 		shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
@@ -365,7 +400,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uShadowTex", 2);
 		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
-		shadowTex->Bind(2);
+		ResourceManager::Instance()->getTexture("shadowTex")->Bind(2);
 
 		RenderAllObjects(false,
 
@@ -380,7 +415,7 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
+		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -410,7 +445,9 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-			fullscreenQuad->SetTexture(screenTexColor);
+
+			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("screenTexColor"),0);
+
 
 			if (j == 0) {
 

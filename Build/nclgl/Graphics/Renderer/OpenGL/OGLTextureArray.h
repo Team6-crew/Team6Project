@@ -8,6 +8,7 @@
 
 class OGLTextureArray : public TextureBase
 {
+	DECLARE_HEAP;
 public:
 	OGLTextureArray(Texture::Type type, int width, int height);
 	~OGLTextureArray();

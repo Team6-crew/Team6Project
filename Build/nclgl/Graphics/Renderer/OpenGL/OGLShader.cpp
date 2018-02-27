@@ -14,6 +14,7 @@ using namespace nclgl::Maths;
 #include <iostream>
 #include <cassert>
 
+DEFINE_HEAP(OGLShader, "Graphics");
 
 OGLShader::OGLShader(std::string vFile, std::string fFile, std::string gFile) {
 	NCLDebug::Log("Loading Shader:");
@@ -188,7 +189,6 @@ GLint OGLShader::GetUniformLocation(string name)
 	if (location < 0)
 	{
 		cout << "Uniform " << name << " does not exist" << endl;
-		assert(false);
 	}
 	return location;
 }

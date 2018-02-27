@@ -68,8 +68,6 @@ protected:
 	FrameBufferBase*	renderFBO;
 	uint				screenTexWidth, screenTexHeight;
 	FrameBufferBase*	screenFBO;
-	TextureBase*		screenTexColor;
-	TextureBase*		screenTexDepth;
 
 	//Shaders
 	ShaderBase* shaderPresentToWindow;
@@ -77,7 +75,7 @@ protected:
 	ShaderBase* shaderForwardLighting;
 
 	ShaderBase* shaderTrail;
-
+	ShaderBase* shaderCircle;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -90,7 +88,6 @@ protected:
 	//Shadowmaps
 	float								sceneBoundingRadius; ///Approx based on scene contents
 	FrameBufferBase*					shadowFBO;
-	TextureBase*						shadowTex;
 	nclgl::Maths::Matrix4				shadowProj[SHADOWMAP_NUM];
 	nclgl::Maths::Matrix4				shadowViewMtx;
 	nclgl::Maths::Matrix4				shadowProjView[SHADOWMAP_NUM];
@@ -115,8 +112,8 @@ protected:
 
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 
-	TextureBase* gr_tex;
 	FrameBufferBase* TrailBuffer;
+	FrameBufferBase* CircleBuffer;
 	TextureBase* temp_tex;
 	float paint_perc;
 

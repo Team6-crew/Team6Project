@@ -6,6 +6,7 @@
 
 using namespace Texture;
 
+DEFINE_HEAP(OGLTexture, "Graphics");
 OGLTexture::OGLTexture(const std::string& filepath)
 {
 	LoadTexture(filepath);
@@ -27,7 +28,7 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 
 	if (type == COLOUR)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	}
 	else if (type == DEPTH)
 	{

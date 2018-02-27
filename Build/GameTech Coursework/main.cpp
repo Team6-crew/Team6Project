@@ -5,9 +5,12 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
+#include <nclgl\ResourceManager.h>
 #include "MainMenu.h"
 
-
+#include <ncltech\Memory Management\HeapFactory.h>
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -27,6 +30,7 @@ void Quit(bool error = false, const std::string &reason = "") {
 	SceneManager::Release();
 	PhysicsEngine::Release();
 	GraphicsPipeline::Release();
+	ResourceManager::Release();
 
 	//Show console reason before exit
 	if (error) {
@@ -51,9 +55,9 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
-
-
 	
+	// Move this once main menu is hooked up
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
 // Print Debug Info
@@ -88,6 +92,28 @@ void Initialize()
 //	
 //}
 
+	//Print Current Scene Name
+	NCLDebug::AddStatusEntry(status_colour_header, "[%d/%d]: %s",
+		SceneManager::Instance()->GetCurrentSceneIndex() + 1,
+		SceneManager::Instance()->SceneCount(),
+		SceneManager::Instance()->GetCurrentScene()->GetSceneName().c_str()
+		);
+	NCLDebug::AddStatusEntry(status_colour, "     \x01 T/Y to cycle or R to reload scene");
+
+	//Print Performance Timers
+	NCLDebug::AddStatusEntry(status_colour, "     FPS: %5.2f  (Press G for %s info)", 1000.f / timer_total.GetAvg(), show_perf_metrics ? "less" : "more");
+	if (show_perf_metrics)
+	{
+		timer_total.PrintOutputToStatusEntry(status_colour, "          Total Time     :");
+		timer_update.PrintOutputToStatusEntry(status_colour, "          Scene Update   :");
+		timer_physics.PrintOutputToStatusEntry(status_colour, "          Physics Update :");
+		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
+	}
+	NCLDebug::AddStatusEntry(status_colour, "");
+
+
+}
+
 
 // Process Input
 //  - Handles all program wide keyboard inputs for
@@ -120,8 +146,10 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
 
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
 
-
+	
 }
 
 
@@ -131,7 +159,7 @@ int main()
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
-
+	
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
@@ -168,6 +196,24 @@ int main()
 		//Render Scene
 		timer_render.BeginTimingSection();
 		GraphicsPipeline::Instance()->UpdateScene(dt);
+		//GraphicsPipeline::Instance()->RenderScene();
+
+		// Update Audio
+		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
+
+		if (Window::GetWindow().GetTimer()->GetMS() > 7000)
+		{
+			// Can remove this static bool once main menu is hooked up
+			static bool hasSound = false;
+			if (!hasSound)
+			{
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
+			// Remove once hooked up main menu
+			hasSound = true;
+		}
+
+		// Remove this once main menu is hooked up
 
 		if (SceneManager::Instance()->GetCurrentSceneIndex() == 0)
 		{
@@ -189,13 +235,14 @@ int main()
 		}
 		timer_render.EndTimingSection();
 
-		
+
 
 		//Finish Timing
 		timer_total.EndTimingSection();		
 	}
-
+	HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
+	system("pause");
 	return 0;
 }

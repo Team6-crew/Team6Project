@@ -55,6 +55,8 @@ public:
 	//Sets pitch, in degrees
 	void	SetPitch(float p) { pitch = p; }
 
+	nclgl::Maths::Vector3 GetFacingDirection(); 
+	
 protected:
 	float				  yaw;
 	float				  pitch;
