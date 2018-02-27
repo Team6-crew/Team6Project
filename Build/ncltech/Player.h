@@ -37,8 +37,9 @@ public:
 	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) {relative_position = rel_pos;	}
 
 	float getRadius() { return rad; }
-
+	float getadd_rad() { return add_rad; }
 	void setRadius(float radius) { rad = radius; }
+	void setadd_rad(float add) { add_rad = add; }
 
 	void setCamera(Camera* c) { camera = c; }
 
@@ -58,5 +59,6 @@ private:
 	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
 	
 	float rad;
+	float add_rad;
 };
 

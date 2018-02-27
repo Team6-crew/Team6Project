@@ -7,6 +7,7 @@
 
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
+#include <ncltech\Paintbomb.h>
 
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
@@ -69,6 +70,16 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
+
+		Paintbomb* paintbomb = new Paintbomb("paintbomb",
+			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
+		paintbomb->SetPhysics(paintbomb->Physics());
+		this->AddGameObject(paintbomb);
 
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
