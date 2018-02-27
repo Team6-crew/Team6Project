@@ -3,6 +3,7 @@
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
+#include <ncltech\PlayerSoftBody.h>
 #include <ncltech\OcTree.h>
 #include <nclgl\Launchpad.h>
 #include <nclgl\Portal.h>
@@ -41,13 +42,20 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		GameLogic::Instance()->addPlayers(3);
+		GameLogic::Instance()->addPlayers(1);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
+		GameLogic::Instance()->addSoftPlayers(1);
+		//Add player to scene
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
+			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+			//this->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+		}
 
 
 		//Who doesn't love finding some common ground?
@@ -65,6 +73,8 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 		
+
+
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
@@ -190,6 +200,11 @@ public:
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
+				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
+		}
+
 		Scene::OnUpdateScene(dt);
 		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
@@ -197,9 +212,11 @@ public:
 		if(pickup)
 		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
 			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
-		
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
+			GameLogic::Instance()->getSoftPlayer(i)->move();
 		}
 
 	}

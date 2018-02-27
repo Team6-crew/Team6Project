@@ -126,6 +126,15 @@
     <ClInclude Include="PaintProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerSoftBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Softbody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring_Constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -185,19 +194,22 @@
     <ClCompile Include="WorldPartition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Paintbomp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Memory Management\MemoryManager.cpp">
+    <ClCompile Include="Memory Management\HeapMemory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Memory Management\HeapFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Memory Management\HeapMemory.cpp">
+    <ClCompile Include="Memory Management\MemoryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponPickup.cpp">
+    <ClCompile Include="PaintProjectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PaintWeaponPickup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Paintbomp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
@@ -209,10 +221,10 @@
     <ClCompile Include="StunWeaponPickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PaintWeaponPickup.cpp">
+    <ClCompile Include="WeaponPickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PaintProjectile.cpp">
+    <ClCompile Include="PlayerSoftBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

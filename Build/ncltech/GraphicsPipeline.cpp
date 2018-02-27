@@ -181,6 +181,14 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
+
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
+	}
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"),0);
+
+	}
 	RenderNodeBase * ground = NULL;
 	for (RenderNodeBase* node : allNodes) {
 		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
@@ -374,7 +382,7 @@ void GraphicsPipeline::RenderScene()
 void GraphicsPipeline::AdjustViewport(int i, int j) {
 	float width = renderer->GetWidth();
 	float height = renderer->GetHeight();
-	int num_p = GameLogic::Instance()->getNumPlayers();
+	int num_p = GameLogic::Instance()->getTotalPlayers();
 	if (j == 0) {
 		if (num_p == 1) {
 			renderer->SetViewPort(width, height);
