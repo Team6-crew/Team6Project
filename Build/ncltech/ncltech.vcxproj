@@ -145,6 +145,8 @@
     <ClCompile Include="Memory Management\MemoryManager.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="OcTree.cpp" />
+    <ClCompile Include="PaintProjectile.cpp" />
+    <ClCompile Include="PaintWeaponPickup.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Pickup.cpp" />
@@ -175,6 +177,8 @@
     <ClInclude Include="Memory Management\HeapMemory.h" />
     <ClInclude Include="Memory Management\HeapFactory.h" />
     <ClInclude Include="Memory Management\MemoryManager.h" />
+    <ClInclude Include="PaintProjectile.h" />
+    <ClInclude Include="PaintWeaponPickup.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="SpeedPickup.h" />

@@ -117,6 +117,12 @@
     <ClInclude Include="Memory Management\HeapMemory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PaintWeaponPickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PaintProjectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -195,6 +201,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StunWeaponPickup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PaintWeaponPickup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PaintProjectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

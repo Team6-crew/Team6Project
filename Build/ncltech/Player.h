@@ -30,6 +30,7 @@ public:
 	float getRadius() { return rad; }
 
 	void equipStunWeapon(nclgl::Maths::Vector4 colour);
+	void equipPaintWeapon(nclgl::Maths::Vector4 colour);
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
 
@@ -69,6 +70,7 @@ private:
 
 	RenderNodeBase* camera_transform;
 	RenderNodeBase* equippedStunWeapon;
+	RenderNodeBase* equippedPaintWeapon;
 	Camera* camera;
 	nclgl::Maths::Vector3 relative_position;
 	float speed;

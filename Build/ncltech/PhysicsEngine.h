@@ -95,7 +95,9 @@ public:
 	//Debug draw all physics objects, manifolds and constraints
 	void DebugRender();
 
-	void DeleteAfter(GameObject* obj, float time) { objectsToDelete.insert(std::pair<GameObject*, float>(obj, time)); }
+	void DeleteAfter(GameObject* obj, float time) { 
+			objectsToDelete[obj] = time;
+	}
 
 
 

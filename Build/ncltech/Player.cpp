@@ -30,6 +30,7 @@ Player::Player(const std::string& name,
 	stunEffect = true;
 	sensitivity = 0.0f;
 	equippedStunWeapon = NULL;
+	equippedPaintWeapon = NULL;
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
@@ -189,10 +190,25 @@ void Player::handleInput(float dt) {
 }
 
 void Player::equipStunWeapon(Vector4 colour) {
+	if (equippedPaintWeapon) {
+		delete equippedPaintWeapon;
+		equippedPaintWeapon = NULL;
+	}
 	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
 	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
+}
+
+void Player::equipPaintWeapon(Vector4 colour) {
+	if (equippedStunWeapon) {
+		delete equippedStunWeapon;
+		equippedStunWeapon = NULL;
+	}
+	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
+	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+
+	(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
 }
 
 bool Player::stun(float dt) {
@@ -251,7 +267,7 @@ void Player::shoot() {
 		Vector3 up = Vector3(0, 1, 0);
 		Vector3 right = Vector3::Cross(forward, up);
 		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right*1.5f - forward*2.0f;
-		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true,Vector4(1,0,0,1));
+		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true, (*renderNode->GetChildIteratorStart())->GetColour());
 		projectile->Physics()->SetLinearVelocity(-forward*40.0f);
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
