@@ -117,6 +117,7 @@ protected:
 
 	//Minimap
 	MeshBase* minimap;
+	MeshBase* piemap;
 	nclgl::Maths::Matrix4 tempProj;
 	nclgl::Maths::Matrix4 tempView;
 };
