@@ -20,6 +20,7 @@ _-_-_-_-_-_-_-""  ""
 #include "Vector3.h"
 #include "Vector4.h"
 
+#include <ncltech\Memory Management\MemoryManager.h>
 namespace nclgl
 {
 	namespace Maths
@@ -31,6 +32,7 @@ namespace nclgl
 
 
 class nclgl::Maths::Matrix4 {
+	DECLARE_HEAP;
 public:
 	Matrix4(void);
 	Matrix4(float elements[16]);

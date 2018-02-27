@@ -15,6 +15,9 @@
 using namespace Renderer;
 using namespace nclgl::Maths;
 
+
+DEFINE_HEAP(OGLRenderer, "Graphics");
+
 OGLRenderer::OGLRenderer(Window& window)
 {
 	initSuccess = false;

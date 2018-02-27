@@ -8,6 +8,8 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
+
+#include <ncltech\Memory Management\HeapFactory.h>
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -85,6 +87,8 @@ void PrintStatusEntries()
 		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
 	}
 	NCLDebug::AddStatusEntry(status_colour, "");
+
+
 }
 
 
@@ -119,6 +123,8 @@ void HandleKeyboardInputs()
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
+
+	
 }
 
 
@@ -129,8 +135,6 @@ int main()
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 	
-
-
 	Window::GetWindow().GetTimer()->GetTimedMS();
 
 	//Create main game-loop
@@ -199,8 +203,9 @@ int main()
 		//Finish Timing
 		timer_total.EndTimingSection();		
 	}
-
+	HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
+	system("pause");
 	return 0;
 }

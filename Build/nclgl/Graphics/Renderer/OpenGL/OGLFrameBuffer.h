@@ -8,8 +8,11 @@
 
 class TextureBase;
 
+#include <ncltech\Memory Management\MemoryManager.h>
+
 class OGLFrameBuffer : public FrameBufferBase
 {
+	DECLARE_HEAP;
 public:
 	OGLFrameBuffer(TextureBase* colourTex, TextureBase* depthTex);
 	OGLFrameBuffer(std::vector<TextureBase*> colourTex, TextureBase* depthTex);
