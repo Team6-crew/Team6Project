@@ -21,6 +21,8 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
+	canpaint = true;
+	time = 0;
 
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
@@ -169,6 +171,11 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
 		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		return false;
+	}
+	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
+		Washingzone* wash = (Washingzone*)otherNode->GetParent();
+		wash->effect(this);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))

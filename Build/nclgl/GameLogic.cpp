@@ -38,13 +38,21 @@ void GameLogic::addPlayers(int num_players) {
 }
 
 
-void GameLogic::calculatePaintPercentage() {
+void GameLogic::calculatePaintPercentage()
+{
 	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
 	
-	for (int k = 0; k < players.size(); k++) {
+	for (int k = 0; k < players.size(); k++) 
+	{
 		nclgl::Maths::Vector3 position = players[k]->Physics()->GetPosition();
+		
 		if (position.y > 1.0f)
 		{
+			continue;
+		}
+		else if(players[k]->getcanpaint() == false)
+		{
+			players[k]->settime((players[k]->gettime()) + 1.0f);
 			continue;
 		}
 		else
@@ -81,6 +89,13 @@ void GameLogic::calculatePaintPercentage() {
 				}
 			}
 			players[k]->setadd_rad(0.0f);
+		}
+	}
+	for (int k = 0; k < players.size(); k++)
+	{
+		if (players[k]->gettime() > 100.0f)
+		{
+			players[k]->setcanpaint(true);
 		}
 	}
 }

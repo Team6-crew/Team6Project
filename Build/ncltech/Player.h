@@ -2,7 +2,7 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\GameObject.h>
 #include <ncltech\Pickup.h>
-
+#include <ncltech\Washingzone.h>
 class Pickup;
 class Player : public GameObject
 {
@@ -35,8 +35,13 @@ public:
 
 	float getRadius() { return rad; }
 	float getadd_rad() { return add_rad; }
+	bool getcanpaint() { return canpaint; }
+	float gettime() { return time; }
+
 	void setRadius(float radius) { rad = radius; }
 	void setadd_rad(float add) { add_rad = add; }
+	bool setcanpaint(bool canp) { canpaint = canp; return canpaint; }
+	void settime(float t) { time = t; }
 
 	void setCamera(Camera* c) { camera = c; }
 
@@ -52,7 +57,8 @@ private:
 	float speed;
 
 	bool canjump = 1;
-
+	bool canpaint;
+	float time;
 	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
 	
 	float rad;

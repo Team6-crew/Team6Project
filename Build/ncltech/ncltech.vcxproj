@@ -151,6 +151,7 @@
     <ClCompile Include="ScreenPicker.cpp" />
     <ClCompile Include="SpeedPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="Washingzone.cpp" />
     <ClCompile Include="WorldPartition.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScreenPicker.h" />
     <ClInclude Include="SphereCollisionShape.h" />
+    <ClInclude Include="Washingzone.h" />
     <ClInclude Include="WorldPartition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
