@@ -190,7 +190,7 @@ void Player::handleInput(float dt) {
 
 void Player::equipStunWeapon(Vector4 colour) {
 	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Rotation(10.0f, Vector3(1, 0, 0))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 }
