@@ -1,6 +1,7 @@
-#include "SpeedPickup.h"
+#include "Paintbomb.h"
 #include "CommonUtils.h"
 #include "SphereCollisionShape.h"
+#include "CuboidCollisionShape.h"
 #include "CommonMeshes.h"
 #include "ScreenPicker.h"
 #include <nclgl\OBJMesh.h>
@@ -9,7 +10,7 @@
 
 using namespace nclgl::Maths;
 
-SpeedPickup::SpeedPickup(const std::string& name,
+Paintbomb::Paintbomb(const std::string& name,
 	const Vector3& pos,
 	float radius,
 	bool physics_enabled,
@@ -55,16 +56,16 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	physicsNode = pnode;
 
 	setDynamic(false);
-	
+
 
 	RegisterPhysicsToRenderTransformCallback();
 }
 
 
-SpeedPickup::~SpeedPickup()
+Paintbomb::~Paintbomb()
 {
 }
 
-void SpeedPickup::effect(Player* player) {
-	player->setSpeed(50.0f);
+void Paintbomb::effect(Player* player) {
+	player->setadd_rad(0.05f);
 }

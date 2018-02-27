@@ -5,6 +5,8 @@
 using std::vector;
 using namespace nclgl::Maths;
 
+DEFINE_HEAP(OGLRenderNode, "Graphics");
+
 OGLRenderNode::OGLRenderNode(MeshBase* mesh, Vector4 colour) :
 	RenderNodeBase()
 {

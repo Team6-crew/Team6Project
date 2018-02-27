@@ -138,19 +138,28 @@
     <ClCompile Include="CuboidCollisionShape.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
+    <ClCompile Include="Memory Management\HeapMemory.cpp" />
+    <ClCompile Include="Memory Management\HeapFactory.cpp" />
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="Manifold.cpp" />
+    <ClCompile Include="Memory Management\MemoryManager.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="OcTree.cpp" />
+    <ClCompile Include="PaintProjectile.cpp" />
+    <ClCompile Include="PaintWeaponPickup.cpp" />
+    <ClCompile Include="Paintbomp.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerSoftBody.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenPicker.cpp" />
     <ClCompile Include="SpeedPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="StunProjectile.cpp" />
+    <ClCompile Include="StunWeaponPickup.cpp" />
+    <ClCompile Include="WeaponPickup.cpp" />
     <ClCompile Include="WorldPartition.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,10 +175,19 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
+    <ClInclude Include="Paintbomb.h" />
+    <ClInclude Include="Memory Management\HeapMemory.h" />
+    <ClInclude Include="Memory Management\HeapFactory.h" />
+    <ClInclude Include="Memory Management\MemoryManager.h" />
+    <ClInclude Include="PaintProjectile.h" />
+    <ClInclude Include="PaintWeaponPickup.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerSoftBody.h" />
     <ClInclude Include="Softbody.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="StunProjectile.h" />
+    <ClInclude Include="StunWeaponPickup.h" />
     <ClInclude Include="Spring_Constraint.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="Hull.h" />
@@ -183,6 +201,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScreenPicker.h" />
     <ClInclude Include="SphereCollisionShape.h" />
+    <ClInclude Include="WeaponPickup.h" />
     <ClInclude Include="WorldPartition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -48,8 +48,10 @@ namespace nclgl
 	}
 }
 
+#include <ncltech\Memory Management\HeapMemory.h>
 
 class OGLMesh	: public MeshBase {
+	DECLARE_HEAP;
 public:
 	friend class MD5Mesh;
 	OGLMesh(void);

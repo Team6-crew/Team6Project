@@ -14,6 +14,7 @@ using namespace nclgl::Maths;
 #include <iostream>
 #include <cassert>
 
+DEFINE_HEAP(OGLShader, "Graphics");
 
 OGLShader::OGLShader(std::string vFile, std::string fFile, std::string gFile) {
 	NCLDebug::Log("Loading Shader:");
