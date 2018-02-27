@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 /******************************************************************************
 Class:RenderNode
 Implements:
@@ -55,3 +56,4 @@ protected:
 	 nclgl::Maths::Vector3		modelScale;
 };
 
+#endif

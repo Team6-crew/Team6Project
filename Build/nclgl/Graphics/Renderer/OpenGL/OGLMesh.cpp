@@ -1,3 +1,5 @@
+
+#ifdef WIN_OGL
 #include "OGLMesh.h"
 
 #include <nclgl/Vector2.h>
@@ -647,3 +649,4 @@ void OGLMesh::SetTexture(TextureBase* texture)
 	this->texture = static_cast<OGLTexture*>(texture)->GetID();
 	//TODO: Don't actually need texture here is for OBJMesh??
 }
+#endif

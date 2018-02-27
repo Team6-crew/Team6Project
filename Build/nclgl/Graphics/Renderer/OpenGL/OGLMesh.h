@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 /******************************************************************************
 Class:Mesh
 Implements:
@@ -140,3 +141,4 @@ public:
 	unsigned int*	indices;
 };
 
+#endif

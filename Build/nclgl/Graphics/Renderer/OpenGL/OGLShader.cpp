@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLShader.h"
 #include <nclgl\NCLDebug.h>
 
@@ -193,3 +194,4 @@ GLint OGLShader::GetUniformLocation(string name)
 	return location;
 }
 
+#endif

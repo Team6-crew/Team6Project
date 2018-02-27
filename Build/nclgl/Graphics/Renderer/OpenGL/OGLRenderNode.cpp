@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLRenderNode.h"
 
 #include <nclgl\Graphics\MeshBase.h>
@@ -73,3 +74,4 @@ void			OGLRenderNode::SetColour(const Vector4 &c)
 {
 	colour = c;
 }
+#endif

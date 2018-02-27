@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 /******************************************************************************
 Class:Shader
 Implements:
@@ -67,3 +68,4 @@ protected:
 	GLint GetUniformLocation(std::string name);
 };
 
+#endif
