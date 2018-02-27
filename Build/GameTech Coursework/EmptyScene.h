@@ -85,24 +85,24 @@ public:
 
 		Launchpad* launchpad = new Launchpad(
 			"launchpad",
-			Vector3(-10.0f, -0.3f, 0.0f),
-			Vector3(1.0f,0.1f,1.0f),
+			nclgl::Maths::Vector3(-10.0f, -0.3f, -30.0f),
+			nclgl::Maths::Vector3(1.0f,0.1f,1.0f),
 			true,
 			0.0f,
 			true,
-			Vector4(0.7f, 0.5f, 0.7f, 1.0f));
+			nclgl::Maths::Vector4(0.7f, 0.5f, 0.7f, 1.0f));
 		launchpad->SetPhysics(launchpad->Physics());
 		this->AddGameObject(launchpad);
 
 		//portal a1
 		Portal* portal_a1 = new Portal(
 			"portal_a1",
-			Vector3(-10.0f, 0.5f, 10.0f),
+			nclgl::Maths::Vector3(-10.0f, 0.5f, 10.0f),
 			true,
 			100.0f,
 			true,
-			Vector4(0.7f, 0.4f, 0.8f, 1.0f));
-		portal_a1->setDynamic(true);
+			nclgl::Maths::Vector4(1.f, 0.f, 0.f, 1.0f));
+		portal_a1->setDynamic(false);
 		portal_a1->SetPhysics(portal_a1->Physics());
 		portal_a1->SetTag(Tags::TPortal_A1);
 		portal_a1->Physics()->SetOnCollisionCallback(
@@ -116,12 +116,12 @@ public:
 		//portal a2
 		Portal* portal_a2 = new Portal(
 			"portal_a2",
-			Vector3(-10.2f, 0.5f, 10.0f),
+			nclgl::Maths::Vector3(-10.2f, 0.5f, 10.0f),
 			true,
 			100.0f,
 			true,
-			Vector4(0.7f, 0.4f, 0.8f, 1.0f));
-		portal_a2->setDynamic(true);
+			nclgl::Maths::Vector4(1.f, 0.f, 0.f, 1.0f));
+		portal_a2->setDynamic(false);
 		portal_a2->SetPhysics(portal_a2->Physics());
 		portal_a2->SetTag(Tags::TPortal_A2);
 		portal_a2->Physics()->SetOnCollisionCallback(
@@ -135,12 +135,12 @@ public:
 		//portal b1
 		Portal* portal_b1 = new Portal(
 			"portal_b1",
-			Vector3(10.0f, 0.5f, -10.0f),
+			nclgl::Maths::Vector3(10.0f, 0.5f, -10.0f),
 			true,
 			100.0f,
 			true,
-			Vector4(0.7f, 0.4f, 0.8f, 1.0f));
-		portal_b1->setDynamic(true);
+			nclgl::Maths::Vector4(0.f, 1.f, 0.f, 1.0f));
+		portal_b1->setDynamic(false);
 		portal_b1->SetPhysics(portal_b1->Physics());
 		portal_b1->SetTag(Tags::TPortal_B1);
 		portal_b1->Physics()->SetOnCollisionCallback(
@@ -154,12 +154,12 @@ public:
 		//portal b2
 		Portal* portal_b2 = new Portal(
 			"portal_b2",
-			Vector3(10.2f, 0.5f, -10.0f),
+			nclgl::Maths::Vector3(10.2f, 0.5f, -10.0f),
 			true,
 			100.0f,
 			true,
-			Vector4(0.7f, 0.4f, 0.8f, 1.0f));
-		portal_b2->setDynamic(true);
+			nclgl::Maths::Vector4(0.f, 1.f, 0.f, 1.0f));
+		portal_b2->setDynamic(false);
 		portal_b2->SetPhysics(portal_b2->Physics());
 		portal_b2->SetTag(Tags::TPortal_B2);
 		portal_b2->Physics()->SetOnCollisionCallback(
@@ -207,9 +207,9 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
 			GameObject *portal = FindGameObject("portal_b1");
-			portal->physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(Vector3(0, 0, 0));
-			player1->physicsNode->SetPosition(portal->physicsNode->GetPosition()+Vector3(-2,0,0));
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition()+ nclgl::Maths::Vector3(-2,0,0));
 		}
 		return true;
 	};
@@ -219,9 +219,9 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
 			GameObject *portal = FindGameObject("portal_b2");
-			portal->physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(Vector3(0, 0, 0));
-			player1->physicsNode->SetPosition(portal->physicsNode->GetPosition() + Vector3(2, 0, 0));
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
 		return true;
 	};
@@ -231,9 +231,9 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
 			GameObject *portal = FindGameObject("portal_a1");
-			portal->physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(Vector3(0, 0, 0));
-			player1->physicsNode->SetPosition(portal->physicsNode->GetPosition() + Vector3(2, 0, 0));
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
 		return true;
 	};
@@ -243,9 +243,9 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
 			GameObject *portal = FindGameObject("portal_a2");
-			portal->physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(Vector3(0, 0, 0));
-			player1->physicsNode->SetPosition(portal->physicsNode->GetPosition() + Vector3(-2, 0, 0));
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 		}
 		return true;
 	};

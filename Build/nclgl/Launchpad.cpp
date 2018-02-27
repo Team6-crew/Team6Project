@@ -1,21 +1,22 @@
 #include"Launchpad.h"
 #include <ncltech\CommonMeshes.h>
+#include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
 Launchpad::Launchpad(const std::string& name,
-	const Vector3& pos,
-	const Vector3& scale,
+	const nclgl::Maths::Vector3& pos,
+	const nclgl::Maths::Vector3& scale,
 	bool physics_enabled,
 	float inverse_mass,
 	bool collidable,
-	const Vector4& color)
+	const nclgl::Maths::Vector4& color)
 {
-	RenderNode* rnode = new RenderNode();
+	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNode* dummy = new RenderNode(CommonMeshes::Cube(), color);
-	dummy->SetTransform(Matrix4::Scale(scale));
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
+	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(scale));
 	rnode->AddChild(dummy);
 
-	rnode->SetTransform(Matrix4::Translation(pos));
+	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));
 	rnode->SetBoundingRadius(0.5f);
 
 	PhysicsNode* pnode = NULL;
@@ -57,5 +58,5 @@ Launchpad::~Launchpad()
 
 void Launchpad::Launch(Player* player)
 {
-	player->physicsNode->SetLinearVelocity(Vector3(0, 30.f, 0));
+	player->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 30.f, 0));
 }

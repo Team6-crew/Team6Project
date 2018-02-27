@@ -1,6 +1,9 @@
 #pragma once
 #include <ncltech\GameObject.h>
 #include <ncltech\Player.h>
+#include <string>
+#include <vector>
+#include <nclgl\Vector4.h>
 
 class Player;
 class Launchpad : public GameObject
@@ -8,12 +11,12 @@ class Launchpad : public GameObject
 public:
 	Launchpad(
 		const std::string& name, 
-		const Vector3& pos, 
-		const Vector3& scale,
+		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& scale,
 		bool physics_enabled,
 		float inverse_mass,
 		bool collidable,
-		const Vector4& color);
+		const nclgl::Maths::Vector4& color);
 
 	~Launchpad();
 
