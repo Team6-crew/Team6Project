@@ -146,6 +146,7 @@
     <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerSoftBody.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenPicker.cpp" />
     <ClCompile Include="SpeedPickup.cpp" />
@@ -166,7 +167,10 @@
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="Pickup.h" />
+    <ClInclude Include="PlayerSoftBody.h" />
+    <ClInclude Include="Softbody.h" />
     <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="Spring_Constraint.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="Manifold.h" />

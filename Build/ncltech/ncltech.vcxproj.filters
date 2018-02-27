@@ -96,6 +96,15 @@
     <ClInclude Include="WorldPartition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerSoftBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Softbody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring_Constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -153,6 +162,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldPartition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSoftBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

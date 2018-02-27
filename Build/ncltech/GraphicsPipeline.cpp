@@ -181,7 +181,7 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getTotalPlayers()>1) {
 
 		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
 	}
@@ -209,7 +209,7 @@ void GraphicsPipeline::RenderScene()
 
 		GameLogic::Instance()->calculatePaintPercentage();
 
-		SceneManager::Instance()->GetCurrentScene()->Score = (*GameLogic::Instance()->getPaintPerc())[0];
+		//SceneManager::Instance()->GetCurrentScene()->Score = (*GameLogic::Instance()->getPaintPerc())[0];
 
 		TrailBuffer->Activate();
 		renderer->SetViewPort(2048, 2048);
@@ -387,7 +387,7 @@ void GraphicsPipeline::RenderScene()
 void GraphicsPipeline::AdjustViewport(int i, int j) {
 	float width = renderer->GetWidth();
 	float height = renderer->GetHeight();
-	int num_p = GameLogic::Instance()->getNumPlayers();
+	int num_p = GameLogic::Instance()->getTotalPlayers();
 	if (j == 0) {
 		if (num_p == 1) {
 			renderer->SetViewPort(width, height);

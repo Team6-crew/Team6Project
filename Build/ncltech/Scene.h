@@ -36,6 +36,7 @@ Description:
 #include <algorithm>
 #include <unordered_map>
 #include "Player.h"
+#include "Softbody.h"
 //Callback function called whenever the scene is updated
 // - Should be used to register Update(dt) functions for AI/Game Logic
 //Params:
@@ -114,6 +115,12 @@ public:
 			if (game_object->renderNode) GraphicsPipeline::Instance()->AddRenderNode(game_object->renderNode);
 			if (game_object->physicsNode) PhysicsEngine::Instance()->AddPhysicsObject(game_object->physicsNode);
 		}
+	}
+
+	void AddSoftBody(Softbody* soft_body)
+	{
+		for (int i = 0; i < 182; ++i)
+			AddGameObject(soft_body->softball[i]);
 	}
 
 	// Remove GameObject from the scene list
