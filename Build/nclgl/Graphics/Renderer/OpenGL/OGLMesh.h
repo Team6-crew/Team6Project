@@ -1,4 +1,4 @@
-#ifdef WIN_OGL
+
 /******************************************************************************
 Class:Mesh
 Implements:
@@ -16,7 +16,8 @@ _-_-_-_-_-_-_-|   /\_/\   NYANYANYAN
 _-_-_-_-_-_-_-""  ""   
 
 *//////////////////////////////////////////////////////////////////////////////
-
+#define WIN_OGL
+#ifdef WIN_OGL
 #pragma once
 
 #include <nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h>

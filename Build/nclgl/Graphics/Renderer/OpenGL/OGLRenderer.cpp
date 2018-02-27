@@ -210,4 +210,14 @@ void	OGLRenderer::SetDefaultSettings()
 	glDepthFunc(GL_LEQUAL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
+void OGLRenderer::PrepareToRender()
+{
+}
+
+void OGLRenderer::PostRender()
+{
+}
+
+
 #endif

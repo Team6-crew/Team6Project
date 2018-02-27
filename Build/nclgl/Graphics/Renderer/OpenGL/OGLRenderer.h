@@ -35,6 +35,9 @@ public:
 
 	void	SetScreenCulling(Renderer::Culling type) override;
 	void	SetDefaultSettings() override;
+
+	void	PrepareToRender() override;
+	void	PostRender() override;
 protected:
 	// Windows specific handles
 	HDC		deviceContext;	

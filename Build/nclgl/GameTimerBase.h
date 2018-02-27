@@ -2,7 +2,7 @@
 class GameTimerBase
 {
 public:
-	GameTimerBase(void);
+	GameTimerBase(void) {};
 	~GameTimerBase(void) {}
 
 	//How many milliseconds have passed since the GameTimer was created

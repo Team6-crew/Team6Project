@@ -107,7 +107,7 @@ protected:
 	float m_UpdateInterval;
 	float m_RealTimeElapsed;
 
-	GameTimerBase* m_Timer;
+	GameTimerBase* m_Timer = nullptr;
 
 	struct PerfTimer_Data
 	{

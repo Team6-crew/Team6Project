@@ -63,6 +63,6 @@ int OGLTextureArray::TempGetID()
 
 bool OGLTextureArray::LoadTexture(const std::string& filepath)
 {
-
+	return true;
 }
 #endif

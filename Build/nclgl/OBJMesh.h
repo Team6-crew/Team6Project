@@ -73,7 +73,8 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #define OBJ_FIX_TEXTURES
 
-
+#define WIN_OGL
+#ifdef WIN_OGL
 #pragma once
 
 #include <fstream>
@@ -155,3 +156,4 @@ protected:
 	std::map <std::string, MTLInfo> materials;
 };
 
+#endif
