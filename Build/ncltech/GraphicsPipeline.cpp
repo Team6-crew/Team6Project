@@ -12,7 +12,8 @@
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include <nclgl\Graphics\FrameBufferBase.h>
 #include <nclgl\Graphics\Renderer\FrameBufferFactory.h>
-
+#include <nclgl\Graphics\Renderer\RenderBase.h>
+#include <nclgl\Graphics\MeshBase.h>
 using namespace nclgl::Maths;
 
 GraphicsPipeline::GraphicsPipeline()

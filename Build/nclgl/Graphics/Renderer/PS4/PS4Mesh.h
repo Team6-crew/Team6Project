@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #pragma once
 
 #include "PS4MemoryAware.h"
@@ -92,3 +94,5 @@ protected:
 	// Primitive type e.g. lines, trianglestrip
 	sce::Gnm::PrimitiveType primitiveType;
 };
+
+#endif

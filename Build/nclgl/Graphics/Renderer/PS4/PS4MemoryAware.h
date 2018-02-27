@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #pragma once
 
 #include <gnm.h>
@@ -22,3 +23,4 @@ protected:
 	static sce::Gnm::OwnerHandle			ownerHandle;
 };
 
+#endif

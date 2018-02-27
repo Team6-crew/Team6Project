@@ -61,7 +61,7 @@ int OGLTextureArray::TempGetID()
 	return textureID;
 }
 
-void OGLTextureArray::LoadTexture(const std::string& filepath)
+bool OGLTextureArray::LoadTexture(const std::string& filepath)
 {
 
 }

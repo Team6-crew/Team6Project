@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #pragma once
 
 #include "nclPS4Interface.h"
@@ -54,3 +55,5 @@ protected:
 	// Temp - should be a MeshBase* inherited from RenderNoseBase
 	PS4Mesh*	mesh;
 };
+
+#endif

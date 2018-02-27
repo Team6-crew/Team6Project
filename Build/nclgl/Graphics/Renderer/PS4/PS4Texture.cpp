@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #include "PS4Texture.h"
 
 #include <fstream>
@@ -101,3 +102,4 @@ void PS4Texture::SetTextureWrapping(bool repeating)
 
 }
 
+#endif

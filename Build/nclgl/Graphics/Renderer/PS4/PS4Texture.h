@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #pragma once
 
 
@@ -39,3 +41,5 @@ protected:
 	//bool repeating;
 	//bool 
 };
+
+#endif

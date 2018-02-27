@@ -1,3 +1,6 @@
+#ifdef PSTATION4
+
+
 #include "PS4Mesh.h"
 
 #include <graphics\api_gnm\toolkit\geommath\geommath.h>
@@ -145,3 +148,5 @@ void PS4Mesh::DefineQuadTexCoords()
 	texCoords[2] = Vector2(1.0f, 1.0f);
 	texCoords[3] = Vector2(1.0f, 0.0f);
 }
+
+#endif

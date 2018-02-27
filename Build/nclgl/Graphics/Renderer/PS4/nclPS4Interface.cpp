@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #include "nclPS4Interface.h"
 
 // Converts an nclgl matrix to a PS4 matrix. 
@@ -77,3 +79,5 @@ nclgl::Maths::Vector3 PS4ToNcl(const sce::Vectormath::Scalar::Aos::Vector3& vec)
 
 	return nclVec;
 }
+
+#endif

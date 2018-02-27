@@ -1,3 +1,7 @@
+#ifdef PSTATION4
+
+
+
 #include "PS4Input.h"
 #include <sys\_defines\_sce_ok.h>
 #include <iostream>
@@ -77,3 +81,4 @@ void PS4Input::Poll() {
 		}
 	}
 }
+#endif // PSTATION4

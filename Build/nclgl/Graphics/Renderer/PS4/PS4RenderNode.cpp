@@ -1,3 +1,6 @@
+#ifdef PSTATION4
+
+
 #include "PS4RenderNode.h"
 
 
@@ -65,3 +68,5 @@ void							PS4RenderNode::SetColour(const nclgl::Maths::Vector4 &c)
 {
 	colour = nclToPS4(c);
 }
+
+#endif

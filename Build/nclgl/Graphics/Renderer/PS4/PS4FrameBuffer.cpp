@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #include "PS4FrameBuffer.h"
 #include "../../TextureBase.h"
 #include "PS4Texture.h"
@@ -96,3 +98,4 @@ void PS4FrameBuffer::ClearBuffer()
 
 
 }
+#endif

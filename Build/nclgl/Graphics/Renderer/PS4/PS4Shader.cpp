@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #include "PS4Shader.h"
 
 #include <gnmx/shader_parser.h> // ShaderInfo 
@@ -273,3 +275,4 @@ void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4&
 //}
 
 
+#endif

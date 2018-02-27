@@ -1,10 +1,5 @@
 #pragma once
-class InputBase
-{
-public:
-	InputBase();
-	~InputBase();
-};
+
 
 #pragma once
 

@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #include "PS4Renderer.h"
 
 using namespace Renderer;
@@ -454,3 +456,5 @@ void	PS4Renderer::SetRenderFrameBuffer(PS4FrameBuffer*buffer, bool clearColour, 
 	currentPS4FrameBuffer->SetGraphicsContext(currentGFXContext);
 	currentPS4FrameBuffer->Activate();
 }
+
+#endif

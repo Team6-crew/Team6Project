@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #pragma once
 
 #include "pad.h"
@@ -18,3 +19,4 @@ protected:
 	ScePadControllerInformation padInfo;
 };
 
+#endif

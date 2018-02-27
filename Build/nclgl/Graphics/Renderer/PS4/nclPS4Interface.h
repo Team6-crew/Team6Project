@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #pragma once
 
 #include <gnmx.h>
@@ -21,3 +22,5 @@ sce::Vectormath::Scalar::Aos::Vector3 nclToPS4(const nclgl::Maths::Vector3& vec)
 
 // Converts  a PS4 Vector3 to an nclgl Vector3
 nclgl::Maths::Vector3 PS4ToNcl(const sce::Vectormath::Scalar::Aos::Vector3& mat);
+
+#endif

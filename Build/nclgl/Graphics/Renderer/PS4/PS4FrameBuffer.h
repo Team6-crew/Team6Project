@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #pragma once
 
 #include <vector>
@@ -54,3 +55,4 @@ protected:
 	sce::Gnmx::GnmxGfxContext*	   currentGFXContext = nullptr;
 };
 
+#endif

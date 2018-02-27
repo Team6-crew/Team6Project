@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #pragma once
 
 #include <utility> // pair
@@ -81,3 +83,4 @@ protected:
 	//static std::map<std::string, sce::Gnm::ShaderStage> uniformMap;
 };
 
+#endif
