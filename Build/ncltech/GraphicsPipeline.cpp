@@ -224,11 +224,11 @@ void GraphicsPipeline::RenderMenu() {
 	shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 	shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
 	shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
-	shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-	shaderForwardLighting->SetUniform("uShadowTex", 2);
-	shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
+	//shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+	//shaderForwardLighting->SetUniform("uShadowTex", 2);
+	//shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
-	shadowTex->Bind(2);
+	//ResourceManager::Instance()->getTexture("shadowTex")->Bind(2);
 
 	RenderAllObjects(false,
 		[&](RenderNodeBase* node)
@@ -242,7 +242,7 @@ void GraphicsPipeline::RenderMenu() {
 	// - This needs to be somewhere before we lose our depth buffer
 	//   BUT at the moment that means our screen picking is super sampled and rendered at 
 	//   a much higher resolution. Which is silly.
-	ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
+	ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 	screenFBO->Activate();
 	renderer->SetViewPort(screenTexWidth, screenTexHeight);

@@ -98,7 +98,7 @@ public:
 		Launchpad* launchpad = new Launchpad(
 			"launchpad",
 			nclgl::Maths::Vector3(-10.0f, -0.3f, -30.0f),
-			nclgl::Maths::Vector3(1.0f,0.1f,1.0f),
+			nclgl::Maths::Vector3(1.0f, 0.1f, 1.0f),
 			true,
 			0.0f,
 			true,
@@ -215,68 +215,6 @@ public:
 				pauseMenu->visible = false;
 			}
 		}
-
-	}
-
-	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
-		{			
-			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
-			PhysicsEngine::Instance()->DeleteNextFrame(kill_ob);
-		}	
-		return true;
-	};
-
-	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
-		{
-			GameObject *portal = FindGameObject("portal_b1");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition()+ nclgl::Maths::Vector3(-2,0,0));
-		}
-		return true;
-	};
-
-	bool collisionCallback_a2(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
-		{
-			GameObject *portal = FindGameObject("portal_b2");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
-		}
-		return true;
-	};
-
-	bool collisionCallback_b1(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
-		{
-			GameObject *portal = FindGameObject("portal_a1");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
-		}
-		return true;
-	};
-
-	bool collisionCallback_b2(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
-		{
-			GameObject *portal = FindGameObject("portal_a2");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
-		}
-		return true;
-	};
-
-	
 		//Navigate choices
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
 		{
@@ -312,8 +250,67 @@ public:
 		}
 
 		//camera->SetPosition(cam->GetWorldTransform().GetPositionVector());
-
 	}
+
+
+	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	{
+		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
+		{
+			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
+			PhysicsEngine::Instance()->DeleteNextFrame(kill_ob);
+		}
+		return true;
+	}
+
+	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	{
+		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
+		{
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+		}
+		return true;
+	}
+
+	bool collisionCallback_a2(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	{
+		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
+		{
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+		}
+		return true;
+	}
+
+	bool collisionCallback_b1(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	{
+		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
+		{
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+		}
+		return true;
+	}
+
+	bool collisionCallback_b2(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	{
+		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
+		{
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+		}
+		return true;
+	}
+
 private:
 	RenderNode * cam;
 
