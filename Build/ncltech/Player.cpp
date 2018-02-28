@@ -192,6 +192,7 @@ void Player::handleInput(float dt) {
 
 	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
 	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		shoot();
 	}
 }

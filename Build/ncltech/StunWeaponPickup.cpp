@@ -6,6 +6,8 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -65,4 +67,5 @@ StunWeaponPickup::~StunWeaponPickup()
 
 void StunWeaponPickup::effect(Player* player) {
 	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
 }

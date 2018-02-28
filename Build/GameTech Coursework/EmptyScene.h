@@ -201,7 +201,7 @@ public:
 
 		Washingzone* washingzone = new Washingzone("washingzone",
 			nclgl::Maths::Vector3(10.0f, -0.389f, 15.0f),
-			nclgl::Maths::Vector3(5.0f, 0.01f, 0.5f),
+			nclgl::Maths::Vector3(5.0f, 0.01f, 3.0f),
 			true,
 			0.0f,
 			true,
@@ -238,15 +238,15 @@ public:
 
 	}
 
-	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	/*bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
-		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
+		if (otherNode->GetParent()->HasTag(Tags::TProjectile))
 		{			
 			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
 			PhysicsEngine::Instance()->DeleteAfter(kill_ob,0.0f);
 		}	
 		return true;
-	};
+	};*/
 
 	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
