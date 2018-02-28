@@ -73,6 +73,11 @@ void GameLogic::calculatePaintPercentage() {
 		{
 			continue;
 		}
+		else if (players[k]->getcanpaint() == false)
+		{
+			players[k]->settime((players[k]->gettime()) + 1.0f);
+			continue;
+		}
 		else
 		{
 			add_rad = players[k]->getadd_rad();
