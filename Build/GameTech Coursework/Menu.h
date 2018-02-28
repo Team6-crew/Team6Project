@@ -26,6 +26,7 @@ public:
 	void addToMenu(Menu * mn, int pos) { subMenu[pos] = mn; }
 	void set_id(int i) { id = i; }
 	int get_id() { return id; }
+	int lastElement();
 protected:
 	int selection;
 	std::vector<std::string> Items;

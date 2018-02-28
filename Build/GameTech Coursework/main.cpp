@@ -201,6 +201,7 @@ int main()
 		// Update Audio
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
 
+		
 		if (Window::GetWindow().GetTimer()->GetMS() > 7000)
 		{
 			// Can remove this static bool once main menu is hooked up

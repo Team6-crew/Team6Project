@@ -32,6 +32,9 @@ void Menu::MoveDown() {
 		selection = 0;
 	}
 }
+int Menu::lastElement() {
+	return Items.size() - 1;
+}
 
 void Menu::ShowMenu()
 {

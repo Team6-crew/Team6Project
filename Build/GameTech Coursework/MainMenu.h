@@ -24,6 +24,8 @@ public:
 	int numOfPlayers;
 	int numOfAi;
 	
+	int volumelevel = 5;
+
 	int humanOrAi[4] = { 0 };
 	int playerSelection = 0;
 
@@ -94,7 +96,7 @@ public:
 		// Sound Menu
 		soundMenu = new Menu();
 		soundMenu->visible = false;
-		soundMenu->AddMenuItem("Volume");
+		soundMenu->AddMenuItem("Volume 5");
 		soundMenu->AddMenuItem("Back");
 		optionsMenu->addToMenu(soundMenu, 1);
 		soundMenu->addToMenu(optionsMenu, 1);
@@ -192,6 +194,15 @@ public:
 			else if (humanOrAi[activeMenu->getSelection()] == 1) { activeMenu->replaceMenuItem(activeMenu->getSelection(), "< Human Player " + std::to_string(activeMenu->getSelection() + 1) + " > "); }
 			else if (humanOrAi[activeMenu->getSelection()] == 2) { activeMenu->replaceMenuItem(activeMenu->getSelection(), "< CPU Player " + std::to_string(activeMenu->getSelection() + 1) + " "); }
 		}
+		else if (activeMenu->get_id() == 6 && activeMenu->getSelection() == 0) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
+				volumelevel -= 1;
+			}
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
+				volumelevel += 1;
+			}
+			activeMenu->replaceMenuItem(activeMenu->getSelection(), "Volume " + std::to_string(volumelevel));
+		}
 		// MainMenu : 1
 		// MutiplayerMenu : 2
 		// SplitScreen : 3
@@ -207,6 +218,7 @@ public:
 			}
 			switch (id) {
 				case (100): {
+					getControls();
 					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
@@ -286,6 +298,19 @@ public:
 				
 			}
 
+		}
+		else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_BACK) && activeMenu->get_id() != 1 && !waitsInput) {
+			activeMenu->setSelection(activeMenu->lastElement());
+			activeMenu = activeMenu->onMenuSelect();
+			activeMenu->setSelection(0);
+		}
+		else if (activeMenu->get_id() == 8 && waitsInput) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_BACK)) {
+				waitsInput = !waitsInput;
+				activeMenu->setSelection(activeMenu->lastElement());
+				activeMenu = activeMenu->onMenuSelect();
+				activeMenu->setSelection(0);
+			}
 		}
 
 
@@ -381,7 +406,7 @@ private:
 		else std::cout << "Unable to open file";
 	}
 	void mapKeys() {
-		KEYS[8] = "BACKSPACE";
+		//KEYS[8] = "BACKSPACE";
 		KEYS[9] = "TAB";
 		KEYS[19] = "PAUSE";
 		KEYS[20] = "CAPS LOCK";
