@@ -7,6 +7,8 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -68,4 +70,5 @@ SpeedPickup::~SpeedPickup()
 
 void SpeedPickup::effect(Player* player) {
 	player->setSpeed(50.0f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }

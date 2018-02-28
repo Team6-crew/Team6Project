@@ -1,5 +1,8 @@
 #include "GameLogic.h"
 #include "../ncltech/Player.h"
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
+
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	
@@ -47,6 +50,11 @@ void GameLogic::calculatePaintPercentage() {
 		{
 			continue;
 		}
+		/*else if (position.y < -3.0f)
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
+			continue;
+		}*/
 		else
 		{
 			add_rad = players[k]->getadd_rad();

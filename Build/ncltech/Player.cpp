@@ -10,6 +10,8 @@
 #include <nclgl\Launchpad.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -155,6 +157,7 @@ void Player::move(float dt) {
 	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
 	{  
 		if (canjump == true) {
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
 			canjump = false;
 		}
@@ -171,33 +174,18 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
+		//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
 		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
 	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"duang.wav", false);
 		Launchpad* launchpad = (Launchpad*)otherNode->GetParent();
 		launchpad->Launch(this);
 		canjump = false;
 		return false;
 	}
-	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
-	{
-		GameObject *portal = FindGameObject("portal_b");
-		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
-	{
-
-	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;

@@ -14,6 +14,8 @@
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
 #include <nclgl/GameLogic.h>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 
 //Fully striped back scene to use as a template for new scenes.
@@ -39,7 +41,7 @@ public:
 		Scene::OnInitializeScene();
 	
 		
-		GameLogic::Instance()->addPlayers(2);
+		GameLogic::Instance()->addPlayers(1);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
@@ -206,6 +208,7 @@ public:
 	{
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
 			GameObject *portal = FindGameObject("portal_b1");
 			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
@@ -218,6 +221,7 @@ public:
 	{
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
 			GameObject *portal = FindGameObject("portal_b2");
 			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
@@ -230,6 +234,7 @@ public:
 	{
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
 			GameObject *portal = FindGameObject("portal_a1");
 			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
@@ -242,6 +247,7 @@ public:
 	{
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
 			GameObject *portal = FindGameObject("portal_a2");
 			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));

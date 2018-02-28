@@ -7,6 +7,8 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -68,4 +70,5 @@ Paintbomb::~Paintbomb()
 
 void Paintbomb::effect(Player* player) {
 	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
 }
