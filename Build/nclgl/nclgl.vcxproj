@@ -31,7 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="GameTimerBase.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
@@ -45,6 +44,7 @@
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
     <ClCompile Include="Graphics\MeshBase.cpp" />
+    <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NCLDebug.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
@@ -97,6 +97,7 @@
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />
     <ClInclude Include="Graphics\MeshBase.h" />
+    <ClInclude Include="MeshFactory.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="NCLDebug.h" />
     <ClInclude Include="OBJMesh.h" />

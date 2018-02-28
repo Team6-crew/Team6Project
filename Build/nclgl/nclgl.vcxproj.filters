@@ -83,9 +83,9 @@
     <ClCompile Include="InputBase.cpp" />
     <ClCompile Include="PS4Input.cpp" />
     <ClCompile Include="OGLInput.cpp" />
-    <ClCompile Include="GameTimerBase.cpp" />
     <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="TimerFactory.cpp" />
+    <ClCompile Include="MeshFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -190,5 +190,6 @@
     <ClInclude Include="OGLGameTimer.h" />
     <ClInclude Include="PS4GameTimer.h" />
     <ClInclude Include="TimerFactory.h" />
+    <ClInclude Include="MeshFactory.h" />
   </ItemGroup>
 </Project>
