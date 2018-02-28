@@ -6,6 +6,7 @@
 #include "../../MeshBase.h"
 #include "PS4Texture.h"
 
+#include <nclgl\Graphics\Renderer\PS4\nclPS4Interface.h>
 class TextureBase;
 
 namespace sce
@@ -102,6 +103,49 @@ protected:
 	PS4Texture* bumpTexture;
 
 
-	void	GenerateNormals();
+	void PS4Mesh::GenerateNormals() {
+		if (!normals) {
+			normals = new sce::Vectormath::Scalar::Aos::Vector3[numVertices];
+		}
+		for (int i = 0; i < numVertices; ++i) {
+			normals[i] = sce::Vectormath::Scalar::Aos::Vector3();
+		}
+		if (indices) {
+			uint i = 0;
+			int test = 0;
+			for (i = 0; i < numIndices; i += 3) {
+				int a = indices[i];
+				int b = indices[i + 1];
+				int c = indices[i + 2];
+
+				sce::Vectormath::Scalar::Aos::Vector3 normal = CrossPS4((vertices[b] - vertices[a]), (vertices[c] - vertices[a]));
+
+				normals[a] += normal;
+				normals[b] += normal;
+				normals[c] += normal;
+
+				test += 3;
+			}
+			bool asdf = true;
+		}
+		else {
+			for (int i = 0; i < numVertices; i += 3) {
+				sce::Vectormath::Scalar::Aos::Vector3 &a = vertices[i];
+				sce::Vectormath::Scalar::Aos::Vector3 &b = vertices[i + 1];
+				sce::Vectormath::Scalar::Aos::Vector3 &c = vertices[i + 2];
+
+				sce::Vectormath::Scalar::Aos::Vector3 normal = CrossPS4(b - a, c - a);
+
+				normals[i] = normal;
+				normals[i + 1] = normal;
+				normals[i + 2] = normal;
+			}
+			for (int i = 0; i < numVertices; ++i) {
+				NormalisePS4(normals[i]);
+			}
+		}
+	}
+};
+
 
 #endif

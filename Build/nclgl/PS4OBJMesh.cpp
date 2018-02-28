@@ -235,10 +235,10 @@ bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 				m->GenerateNormals();
 			}
 			else {
-				m->normals = new Vector3[m->numVertices];
+				m->normals = new sce::Vectormath::Scalar::Aos::Vector3[m->numVertices];
 
 				for (unsigned int j = 0; j < sm->normIndices.size(); ++j) {
-					m->normals[j] = inputNormals[sm->normIndices[j] - 1];
+					m->normals[j] = nclToPS4(inputNormals[sm->normIndices[j] - 1]);
 				}
 			}
 #endif
