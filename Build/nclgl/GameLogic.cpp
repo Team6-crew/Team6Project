@@ -40,8 +40,7 @@ void GameLogic::addPlayers(int num_players) {
 }
 
 
-void GameLogic::calculatePaintPercentage()
-{
+
 void GameLogic::addSoftPlayers(int num_splayers) {
 	for (int i = 0; i < num_splayers; i++) {
 		PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + i,
@@ -50,7 +49,7 @@ void GameLogic::addSoftPlayers(int num_splayers) {
 			1.0f,
 			colours[i]);
 		for (int j = 0; j < 182; ++j)
-		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+			softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
 		switch (i) {
 		case 0:
 			softplayer->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE, KEYBOARD_N);

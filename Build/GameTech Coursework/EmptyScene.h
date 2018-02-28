@@ -195,15 +195,7 @@ public:
 		this->AddGameObject(portal_b2);
 
 
-		Paintbomb* paintbomb = new Paintbomb("paintbomb",
-			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
-			0.5f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
-		paintbomb->SetPhysics(paintbomb->Physics());
-		this->AddGameObject(paintbomb);
+
 
 		Washingzone* washingzone = new Washingzone("washingzone",
 			nclgl::Maths::Vector3(-10.0f, -0.389f, 5.0f),
@@ -212,6 +204,7 @@ public:
 			0.0f,
 			true,
 			nclgl::Maths::Vector4(0.6f, 0.5f, 1.0f, 1.0f));
+		washingzone->SetTag(Tags::TWash);
 		washingzone->SetPhysics(washingzone->Physics());
 		this->AddGameObject(washingzone);
 
