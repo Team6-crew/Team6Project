@@ -184,6 +184,7 @@ void PS4Shader::Activate()
 }
 
 
+
 pair<ShaderStage, int> PS4Shader::GetConstantBuffer(const std::string &name)
 {
 	sce::Shader::Binary::Buffer* constantBuffer = vertexBinary.getBufferResourceByName(name.c_str());
@@ -210,16 +211,6 @@ pair<ShaderStage, int> PS4Shader::GetConstantBuffer(const std::string &name)
 
 
 
-//void PS4Shader::SetUniform(const std::string& name, int i)
-//{
-//
-//}
-//
-//void PS4Shader::SetUniform(const std::string& name, float f)
-//{
-//
-//}
-//
 void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4& mat)
 {
 	if (currentGFXContext)
@@ -243,36 +234,156 @@ void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4&
 	}
 
 }
-//
-//void PS4Shader::SetUniform(const std::string& name, const Vector2& vec)
-//{
-//
-//}
-//
-//void PS4Shader::SetUniform(const std::string& name, const Vector3& vec)
-//{
-//
-//}
-//
-//void PS4Shader::SetUniform(const std::string& name, const Vector4& vec)
-//{
-//
-//}
-//
-//void PS4Shader::SetUniform(const std::string& name, int numMats, Matrix4* mats)
-//{
-//
-//}
-//
-//void PS4Shader::SetUniform(const std::string& name, int numVecs, Vector3* vecs)
-//{
-//
-//}
-//
-//void PS4Shader::SetUniform(const std::string& name, int numFloats, float* floats)
-//{
-//
-//}
 
+void PS4Shader::SetUniform(const std::string & name, int i)
+{
+	if (currentGFXContext)
+	{
+		int* inti = (int*)currentGFXContext->allocateFromCommandBuffer(sizeof(int), sce::Gnm::kEmbeddedDataAlignment4);
+		*inti = i;
+
+		// Create (read-only) uniform buffer
+		sce::Gnm::Buffer constantBuffer;
+		constantBuffer.initAsConstantBuffer(inti, sizeof(int));
+		constantBuffer.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+
+		// Send uniform data to correct shader location
+		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
+		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+
+}
+
+void PS4Shader::SetUniform(const std::string & name, float f)
+{
+	if (currentGFXContext)
+	{
+		float* floatf = (float*)currentGFXContext->allocateFromCommandBuffer(sizeof(float), sce::Gnm::kEmbeddedDataAlignment4);
+		*floatf = f;
+
+		// Create (read-only) uniform buffer
+		sce::Gnm::Buffer constantBuffer;
+		constantBuffer.initAsConstantBuffer(floatf, sizeof(float));
+		constantBuffer.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+
+		// Send uniform data to correct shader location
+		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
+		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
+
+
+void PS4Shader::SetUniform(const std::string & name, const nclgl::Maths::Vector2& vec)
+{
+	if (currentGFXContext)
+	{
+		// Allocate memory for buffer matrix
+		Vector2* vec2 = (Vector2*)currentGFXContext->allocateFromCommandBuffer(sizeof(Vector2), sce::Gnm::kEmbeddedDataAlignment4);
+		*vec2 = nclToPS4(vec);
+
+		// Create (read-only) uniform buffer
+		sce::Gnm::Buffer constantBuffer;
+		constantBuffer.initAsConstantBuffer(vec2, sizeof(Vector2));
+		constantBuffer.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+
+		// Send uniform data to correct shader location
+		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
+		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
+
+void PS4Shader::SetUniform(const std::string & name, const nclgl::Maths::Vector3 & vec)
+{
+	if (currentGFXContext)
+	{
+		// Allocate memory for buffer matrix
+		Vector3* vec3 = (Vector3*)currentGFXContext->allocateFromCommandBuffer(sizeof(Vector3), sce::Gnm::kEmbeddedDataAlignment4);
+		*vec3 = nclToPS4(vec);
+
+		// Create (read-only) uniform buffer
+		sce::Gnm::Buffer constantBuffer;
+		constantBuffer.initAsConstantBuffer(vec3, sizeof(Vector3));
+		constantBuffer.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+
+		// Send uniform data to correct shader location
+		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
+		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
+
+void PS4Shader::SetUniform(const std::string & name, const nclgl::Maths::Vector4 & vec)
+{
+	if (currentGFXContext)
+	{
+		// Allocate memory for buffer matrix
+		Vector4* vec4 = (Vector4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Vector4), sce::Gnm::kEmbeddedDataAlignment4);
+		*vec4 = nclToPS4(vec);
+
+		// Create (read-only) uniform buffer
+		sce::Gnm::Buffer constantBuffer;
+		constantBuffer.initAsConstantBuffer(vec4, sizeof(Vector4));
+		constantBuffer.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+
+		// Send uniform data to correct shader location
+		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
+		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
+
+void PS4Shader::SetUniform(const std::string & name, int numMats, nclgl::Maths::Matrix4 * mats)
+{
+	if (currentGFXContext)
+	{
+		std::cout << "Not yet implemented" << std::endl;
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
+
+void PS4Shader::SetUniform(const std::string & name, int numVecs, nclgl::Maths::Vector3 * vecs)
+{
+	if (currentGFXContext)
+	{
+		std::cout << "Not yet implemented" << std::endl;
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
+
+void PS4Shader::SetUniform(const std::string & name, int numFloats, float * floats)
+{
+	if (currentGFXContext)
+	{
+		std::cout << "Not yet implemented" << std::endl;
+	}
+	else
+	{
+		std::cout << "Tried to set uniform without a valid context" << std::endl;
+	}
+}
 
 #endif
