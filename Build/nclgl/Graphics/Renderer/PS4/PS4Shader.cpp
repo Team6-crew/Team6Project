@@ -6,7 +6,6 @@
 #include <graphics\api_gnm\toolkit\shader_loader.h>  // calculateMemoryRequiredForVsFetchShader()
 
 #include <iostream>
-#include <ios>
 #include <fstream>
 
 #include "nclPS4Interface.h"

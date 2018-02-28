@@ -93,6 +93,8 @@ protected:
 	sce::Gnm::IndexSize		indexType;
 	// Primitive type e.g. lines, trianglestrip
 	sce::Gnm::PrimitiveType primitiveType;
+
+
 };
 
 #endif

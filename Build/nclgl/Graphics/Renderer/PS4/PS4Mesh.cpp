@@ -141,6 +141,11 @@ void PS4Mesh::Draw()
 	}
 }
 
+void PS4Mesh::SetTexture(TextureBase * texture)
+{
+	this->texture = static_cast<OGLTexture*>(texture)->GetID();
+}
+
 void PS4Mesh::DefineQuadTexCoords()
 {
 	texCoords[0] = Vector2(0.0f, 1.0f);
