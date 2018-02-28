@@ -162,6 +162,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 
 void GraphicsPipeline::UpdateScene(float dt)
 {
+
 	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 		camera->HandleMouse(dt);
 
