@@ -135,6 +135,12 @@
     <ClInclude Include="Spring_Constraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Paintbomb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Washingzone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -225,6 +231,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerSoftBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Paintbomp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Washingzone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

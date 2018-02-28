@@ -26,6 +26,8 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
+	canpaint = true;
+	time = 0;
 	time = 0.0f;
 	stunDuration = 0.0f;
 
@@ -264,23 +266,11 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		canjump = false;
 		return false;
 	}
-	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
-	{
-		GameObject *portal = FindGameObject("portal_b");
-		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
+	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
+		Washingzone* wash = (Washingzone*)otherNode->GetParent();
+		wash->effect(this);
+		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
-	{
-
-	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;

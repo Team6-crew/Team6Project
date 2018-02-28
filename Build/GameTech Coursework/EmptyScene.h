@@ -13,6 +13,8 @@
 #include <ncltech\WeaponPickup.h>
 #include <ncltech\StunWeaponPickup.h>
 #include <ncltech\Paintbomb.h>
+#include <ncltech\Paintbomb.h>
+#include <ncltech\Washingzone.h>
 
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
@@ -192,6 +194,26 @@ public:
 		);
 		this->AddGameObject(portal_b2);
 
+
+		Paintbomb* paintbomb = new Paintbomb("paintbomb",
+			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
+		paintbomb->SetPhysics(paintbomb->Physics());
+		this->AddGameObject(paintbomb);
+
+		Washingzone* washingzone = new Washingzone("washingzone",
+			nclgl::Maths::Vector3(-10.0f, -0.389f, 5.0f),
+			nclgl::Maths::Vector3(3.0f, 0.01f, 3.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.6f, 0.5f, 1.0f, 1.0f));
+		washingzone->SetPhysics(washingzone->Physics());
+		this->AddGameObject(washingzone);
 
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);

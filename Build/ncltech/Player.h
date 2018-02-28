@@ -5,6 +5,7 @@
 
 #include <ncltech\Memory Management\MemoryManager.h>
 
+#include <ncltech\Washingzone.h>
 class Pickup;
 class Player : public GameObject
 {
@@ -56,11 +57,19 @@ public:
 
 	void resetCamera(float dt);
 
+	float getRadius() { return rad; }
+	float getadd_rad() { return add_rad; }
+	bool getcanpaint() { return canpaint; }
+	float gettime() { return time; }
 	Camera* getCamera() { return camera; }
 
 	void handleInput(float dt);
 	float getadd_rad() { return add_rad; }
 	void setadd_rad(float add) { add_rad = add; }
+	void setRadius(float radius) { rad = radius; }
+	void setadd_rad(float add) { add_rad = add; }
+	bool setcanpaint(bool canp) { canpaint = canp; return canpaint; }
+	void settime(float t) { time = t; }
 
 	bool stun(float dt);
 
@@ -83,8 +92,13 @@ private:
 	float time;
 
 	float sensitivity;
+	bool canjump = 1;
+	bool canpaint;
+	float time;
+	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
 	
 	float rad;
+	float add_rad;
 	float stunDuration;
 	bool stunEffect;
 	float tempYaw, tempPitch;
