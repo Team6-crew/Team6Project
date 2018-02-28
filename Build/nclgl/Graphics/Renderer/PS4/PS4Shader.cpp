@@ -6,6 +6,7 @@
 #include <graphics\api_gnm\toolkit\shader_loader.h>  // calculateMemoryRequiredForVsFetchShader()
 
 #include <iostream>
+#include <ios>
 #include <fstream>
 
 #include "nclPS4Interface.h"
@@ -132,12 +133,12 @@ bool PS4Shader::LoadShaderBinary(const string &name, char*& into, int& dataSize)
 	if (!binFile) {
 		return false;
 	}
-	binFile.seekg(0, ios::end);
+	binFile.seekg(0, std::ios::end);
 	int size = binFile.tellg();
-
+	
 	into = new char[size];
 
-	binFile.seekg(0, ios::beg);
+	binFile.seekg(0, std::ios::beg);
 	binFile.read(into, size);
 
 	dataSize = size;
