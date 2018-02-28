@@ -537,10 +537,10 @@ void NCLDebug::_BuildTextBackgrounds()
 	float rounded_offset_y = 10.f / ss.y * 2.0f;
 
 	Vector2 cs_mouse = Vector2(-10.f, -10.f);
-	if (Window::GetWindow().GetMouseScreenPos(&cs_mouse))
+	/*if (Window::GetWindow().GetMouseScreenPos(&cs_mouse))
 	{
 		cs_mouse = Vector2(cs_mouse.x / ss.x * 2.0f - 1.0f, (1.f - cs_mouse.y / ss.y) * 2.0f - 1.0f);
-	}
+	}*/
 
 	Vector3 centre;
 	Vector3 last;
@@ -737,12 +737,12 @@ void NCLDebug::_BuildTextBackgrounds()
 					invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
 					0.0002f);
 
-				g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
+				/*g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
 
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);*/
 			}
 		}
 	}

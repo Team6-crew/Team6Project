@@ -4,6 +4,7 @@
 
 #include "PS4MemoryAware.h"
 #include "../../MeshBase.h"
+#include "PS4Texture.h"
 
 class TextureBase;
 
@@ -35,6 +36,8 @@ public:
 	inline void SetGraphicsContext(sce::Gnmx::GnmxGfxContext* context) { currentGfxContext = context; }
 
 	static PS4Mesh* GenerateQuad();
+
+	void	SetBumpMap(TextureBase* text) { bumpTexture = static_cast<PS4Texture*>(text); }
 
 protected: // GPU data
 	void	BufferData();
@@ -94,6 +97,9 @@ protected:
 	// Primitive type e.g. lines, trianglestrip
 	sce::Gnm::PrimitiveType primitiveType;
 
+
+	PS4Texture* texture;
+	PS4Texture* bumpTexture;
 
 };
 

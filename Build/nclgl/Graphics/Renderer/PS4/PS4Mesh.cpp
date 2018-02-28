@@ -134,6 +134,8 @@ void PS4Mesh::Draw()
 {
 	if (currentGfxContext)
 	{
+		texture->Bind(0);
+		bumpTexture->Bind(1);
 		currentGfxContext->setVertexBuffers(sce::Gnm::ShaderStage::kShaderStageVs, 0, numAttributes, attributeBuffers);
 		currentGfxContext->setPrimitiveType(primitiveType);
 		currentGfxContext->setIndexSize(indexType);
@@ -141,9 +143,9 @@ void PS4Mesh::Draw()
 	}
 }
 
-void PS4Mesh::SetTexture(TextureBase * texture)
+void PS4Mesh::SetTexture(TextureBase * text)
 {
-	this->texture = static_cast<OGLTexture*>(texture)->GetID();
+	texture = static_cast<PS4Texture*>(text);
 }
 
 void PS4Mesh::DefineQuadTexCoords()
