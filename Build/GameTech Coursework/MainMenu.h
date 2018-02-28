@@ -19,6 +19,8 @@
 #include <fstream>
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
+
+//#include <iomanip> // for extra field in seconds output std::setfill ('x') << std::setw (10) delete later
 class MainMenu : public Scene
 {
 public:
@@ -29,6 +31,9 @@ public:
 
 	int humanOrAi[4] = { 0 };
 	int playerSelection = 0;
+
+	// game timer
+	int seconds = 60;
 
 	MainMenu(const std::string& friendly_name)
 		: Scene(friendly_name)
@@ -77,10 +82,11 @@ public:
 		optionsMenu->AddMenuItem("Resolution");
 		optionsMenu->AddMenuItem("Sound");
 		optionsMenu->AddMenuItem("Controls");
+		optionsMenu->AddMenuItem("Game Time " + std::to_string(seconds/60) + ":" + std::to_string(seconds % 60) + "0");
 		optionsMenu->AddMenuItem("Back");
 		optionsMenu->setSelection(0);
 		mainMenu->addToMenu(optionsMenu, 2);
-		optionsMenu->addToMenu(mainMenu, 3);
+		optionsMenu->addToMenu(mainMenu, 4);
 		optionsMenu->set_id(4);
 		// Resolution Menu
 		resolutionMenu = new Menu();
@@ -242,6 +248,18 @@ public:
 				numOfAi += 1;
 			}
 			activeMenu->replaceMenuItem(activeMenu->getSelection(), "AI Opponents " + std::to_string(numOfAi));
+		}
+		else if (activeMenu->get_id() == 4 && activeMenu->getSelection() == 3) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && seconds > 60) {
+				seconds -= 30;
+			}
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && seconds < 300) {
+				seconds += 30;
+			}
+			if (seconds % 60 == 0) {
+				activeMenu->replaceMenuItem(activeMenu->getSelection(), "Game Time " + std::to_string(seconds / 60) + ":" + std::to_string(seconds % 60) + "0");
+			}
+			else { activeMenu->replaceMenuItem(activeMenu->getSelection(), "Game Time " + std::to_string(seconds / 60) + ":" + std::to_string(seconds % 60)); }
 		}
 		// MainMenu : 1
 		// MutiplayerMenu : 2
