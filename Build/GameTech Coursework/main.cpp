@@ -161,7 +161,7 @@ int main()
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 	
 	Window::GetWindow().GetTimer()->GetTimedMS();
-
+	
 	//Create main game-loop
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
@@ -172,7 +172,7 @@ int main()
 		timer_physics.UpdateRealElapsedTime(dt);
 		timer_update.UpdateRealElapsedTime(dt);
 		timer_render.UpdateRealElapsedTime(dt);
-
+		std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
 		//Print Status Entries
 		//PrintStatusEntries();
 

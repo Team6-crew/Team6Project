@@ -219,7 +219,7 @@ void GraphicsPipeline::RenderMenu() {
 
 	shaderForwardLighting->Activate();
 	shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
-	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+	//shaderForwardLighting->SetUniform("uDiffuseTex", 0);
 	shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
 	shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 	shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
