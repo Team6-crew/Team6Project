@@ -3,13 +3,18 @@
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
+#include <ncltech\PlayerSoftBody.h>
 #include <ncltech\OcTree.h>
 #include <nclgl\Launchpad.h>
 #include <nclgl\Portal.h>
 
 #include <ncltech\Tags.h>
 #include <ncltech\SpeedPickup.h>
+#include <ncltech\WeaponPickup.h>
+#include <ncltech\StunWeaponPickup.h>
 #include <ncltech\Paintbomb.h>
+#include <ncltech\Paintbomb.h>
+#include <ncltech\Washingzone.h>
 
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
@@ -48,6 +53,13 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
+		GameLogic::Instance()->addSoftPlayers(1);
+		//Add player to scene
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
+			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+			//this->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+		}
 
 
 		//Who doesn't love finding some common ground?
@@ -65,6 +77,8 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 		
+
+
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
@@ -74,6 +88,16 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
+
+		StunWeaponPickup* weapon = new StunWeaponPickup("pickup",
+			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		weapon->SetPhysics(weapon->Physics());
+		this->AddGameObject(weapon);
 
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
@@ -173,6 +197,19 @@ public:
 		this->AddGameObject(portal_b2);
 
 
+
+
+		Washingzone* washingzone = new Washingzone("washingzone",
+			nclgl::Maths::Vector3(10.0f, -0.389f, 15.0f),
+			nclgl::Maths::Vector3(5.0f, 0.01f, 0.5f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.6f, 0.5f, 1.0f, 1.0f));
+		washingzone->SetTag(Tags::TWash);
+		washingzone->SetPhysics(washingzone->Physics());
+		this->AddGameObject(washingzone);
+
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 	}
@@ -180,6 +217,11 @@ public:
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
+				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
+		}
+
 		Scene::OnUpdateScene(dt);
 		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
@@ -187,9 +229,11 @@ public:
 		if(pickup)
 		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
 			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
-		
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
+			GameLogic::Instance()->getSoftPlayer(i)->move();
 		}
 
 	}
@@ -199,7 +243,7 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
 		{			
 			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
-			PhysicsEngine::Instance()->DeleteNextFrame(kill_ob);
+			PhysicsEngine::Instance()->DeleteAfter(kill_ob,0.0f);
 		}	
 		return true;
 	};

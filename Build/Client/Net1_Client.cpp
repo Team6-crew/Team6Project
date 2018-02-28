@@ -87,8 +87,8 @@ produce satisfactory results on the networked peers.
 #include <ncltech\DistanceConstraint.h>
 #include <ncltech\CommonUtils.h>
 
-const Vector3 status_color3 = Vector3(1.0f, 0.6f, 0.6f);
-const Vector4 status_color = Vector4(status_color3.x, status_color3.y, status_color3.z, 1.0f);
+const nclgl::Maths::Vector3 status_color3 = nclgl::Maths::Vector3(1.0f, 0.6f, 0.6f);
+const nclgl::Maths::Vector4 status_color = nclgl::Maths::Vector4(status_color3.x, status_color3.y, status_color3.z, 1.0f);
 
 Net1_Client::Net1_Client(const std::string& friendly_name)
 	: Scene(friendly_name)
@@ -112,13 +112,13 @@ void Net1_Client::OnInitializeScene()
 	//Generate Simple Scene with a box that can be updated upon recieving server packets
 	box = CommonUtils::BuildCuboidObject(
 		"Server",
-		Vector3(0.0f, 1.0f, 0.0f),
-		Vector3(0.5f, 0.5f, 0.5f),
+		nclgl::Maths::Vector3(0.0f, 1.0f, 0.0f),
+		nclgl::Maths::Vector3(0.5f, 0.5f, 0.5f),
 		true,									//Physics Enabled here Purely to make setting position easier via Physics()->SetPosition()
 		0.0f,
 		false,
 		false,
-		Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 	this->AddGameObject(box);
 }
 
@@ -157,7 +157,7 @@ void Net1_Client::OnUpdateScene(float dt)
 	uint8_t ip3 = (serverConnection->address.host >> 16) & 0xFF;
 	uint8_t ip4 = (serverConnection->address.host >> 24) & 0xFF;
 
-	NCLDebug::DrawTextWs(box->Physics()->GetPosition() + Vector3(0.f, 0.6f, 0.f), STATUS_TEXT_SIZE, TEXTALIGN_CENTRE, Vector4(0.f, 0.f, 0.f, 1.f),
+	NCLDebug::DrawTextWs(box->Physics()->GetPosition() + nclgl::Maths::Vector3(0.f, 0.6f, 0.f), STATUS_TEXT_SIZE, TEXTALIGN_CENTRE, nclgl::Maths::Vector4(0.f, 0.f, 0.f, 1.f),
 		"Peer: %u.%u.%u.%u:%u", ip1, ip2, ip3, ip4, serverConnection->address.port);
 
 	
@@ -178,7 +178,7 @@ void Net1_Client::ProcessNetworkEvent(const ENetEvent& evnt)
 				NCLDebug::Log(status_color3, "Network: Successfully connected to server!");
 
 				//Send a 'hello' packet
-				char* text_data = "Hellooo!";
+				const char* text_data = "Hellooo!";
 				ENetPacket* packet = enet_packet_create(text_data, strlen(text_data) + 1, 0);
 				enet_peer_send(serverConnection, 0, packet);
 			}	
@@ -189,10 +189,10 @@ void Net1_Client::ProcessNetworkEvent(const ENetEvent& evnt)
 	//Server has sent us a new packet
 	case ENET_EVENT_TYPE_RECEIVE:
 		{
-			if (evnt.packet->dataLength == sizeof(Vector3))
+			if (evnt.packet->dataLength == sizeof(nclgl::Maths::Vector3))
 			{
-				Vector3 pos;
-				memcpy(&pos, evnt.packet->data, sizeof(Vector3));
+				nclgl::Maths::Vector3 pos;
+				memcpy(&pos, evnt.packet->data, sizeof(nclgl::Maths::Vector3));
 				box->Physics()->SetPosition(pos);
 			}
 			else

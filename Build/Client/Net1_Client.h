@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <ncltech\Scene.h>
-#include <ncltech\NetworkBase.h>
-
+#include <ncltech/Scene.h>
+#include <ncltech/NetworkBase.h>
+#include <enet\enet.h>
 //Basic Network Example
 
 class Net1_Client : public Scene

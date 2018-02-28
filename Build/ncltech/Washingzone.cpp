@@ -1,19 +1,18 @@
-#include "SpeedPickup.h"
+#include "Washingzone.h"
 #include "CommonUtils.h"
 #include "SphereCollisionShape.h"
+#include "CuboidCollisionShape.h"
 #include "CommonMeshes.h"
 #include "ScreenPicker.h"
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
-#include <nclgl\Audio\AudioFactory.h>
-#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
-SpeedPickup::SpeedPickup(const std::string& name,
+Washingzone::Washingzone(const std::string& name,
 	const Vector3& pos,
-	float radius,
+	const Vector3& scale,
 	bool physics_enabled,
 	float inverse_mass,
 	bool collidable,
@@ -24,12 +23,12 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
-	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
+	dummy->SetTransform(Matrix4::Scale(Vector3(scale.x, scale.y, scale.z)));
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(Matrix4::Translation(pos));
-	rnode->SetBoundingRadius(radius);
+	rnode->SetBoundingRadius(3.0f);
 
 	PhysicsNode* pnode = NULL;
 	if (physics_enabled)
@@ -37,16 +36,16 @@ SpeedPickup::SpeedPickup(const std::string& name,
 		pnode = new PhysicsNode();
 		pnode->SetPosition(pos);
 		pnode->SetInverseMass(inverse_mass);
-		pnode->SetColRadius(radius);
+		pnode->SetColRadius(3.0f);
 
 		if (!collidable)
 		{
 			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
-			pnode->SetInverseInertia(SphereCollisionShape(radius).BuildInverseInertia(inverse_mass));
+			pnode->SetInverseInertia(CuboidCollisionShape(scale).BuildInverseInertia(inverse_mass));
 		}
 		else
 		{
-			CollisionShape* pColshape = new SphereCollisionShape(radius);
+			CollisionShape* pColshape = new CuboidCollisionShape(scale);
 			pnode->SetCollisionShape(pColshape);
 			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
 		}
@@ -56,18 +55,21 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	renderNode = rnode;
 	physicsNode = pnode;
 
-	setDynamic(false);
-	
+	setDynamic(true);
+	SetTag(Tags::TWash);
 
 	RegisterPhysicsToRenderTransformCallback();
 }
 
 
-SpeedPickup::~SpeedPickup()
+Washingzone::~Washingzone()
 {
 }
 
-void SpeedPickup::effect(Player* player) {
-	player->setSpeed(50.0f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+void Washingzone::effect(Player* player) 
+{
+	player->setDebuffTime(70);
+	player->setcanpaint(false);
+	player->settime(0.0f);
 }
+

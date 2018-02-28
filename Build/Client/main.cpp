@@ -10,7 +10,7 @@
 
 #include "Net1_Client.h"
 
-void Quit(bool error = false, const string &reason = "");
+void Quit(bool error = false, const std::string &reason = "");
 
 void Initialize()
 {
@@ -37,7 +37,7 @@ void Initialize()
 }
 
 
-void Quit(bool error, const string &reason) {
+void Quit(bool error, const std::string &reason) {
 	//Release Singletons
 	SceneManager::Release();
 	GraphicsPipeline::Release();
@@ -75,7 +75,7 @@ void Quit(bool error, const string &reason) {
 
 void PrintStatusEntries()
 {
-	const Vector4 status_color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	const nclgl::Maths::Vector4 status_color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//Print Current Scene Name
 	NCLDebug::AddStatusEntry(status_color, "[%d/%d]: %s ([T]/[Y] to cycle or [R] to reload)",

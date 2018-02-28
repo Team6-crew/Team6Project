@@ -1,5 +1,7 @@
 #include "GameLogic.h"
 #include "../ncltech/Player.h"
+#include <ncltech\PlayerSoftBody.h>
+
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 
@@ -18,7 +20,7 @@ GameLogic::GameLogic() {
 void GameLogic::addPlayers(int num_players) {
 	for (int i = 0; i < num_players; i++) {
 		Player * player = new Player("Player_"+i,
-			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
+			nclgl::Maths::Vector3(3.0f*i + 6, 1.f, 3.0f*i + 6),
 			1.0f,
 			true,
 			1.0f,
@@ -27,10 +29,10 @@ void GameLogic::addPlayers(int num_players) {
 		player->SetPhysics(player->Physics());
 		switch (i) {
 		case 0:
-			player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+			player->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE, KEYBOARD_N);
 			break;
 		case 1:
-			player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0);
+			player->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9);
 			break;
 		}
 		player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
@@ -41,13 +43,46 @@ void GameLogic::addPlayers(int num_players) {
 }
 
 
+
+void GameLogic::addSoftPlayers(int num_splayers) {
+	for (int i = 0; i < num_splayers; i++) {
+		PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + i,
+			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
+			1.0f,
+			1.0f,
+			colours[i]);
+		for (int j = 0; j < 182; ++j)
+			softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+		switch (i) {
+		case 0:
+			softplayer->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE, KEYBOARD_N);
+			break;
+		case 1:
+			softplayer->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9);
+			break;
+		}
+		softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
+		softplayers.push_back(softplayer);
+		paint_perc.push_back(0.0f);
+	}
+}
 void GameLogic::calculatePaintPercentage() {
 	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
 	
-	for (int k = 0; k < players.size(); k++) {
+	for (int k = 0; k < players.size(); k++) 
+	{
 		nclgl::Maths::Vector3 position = players[k]->Physics()->GetPosition();
 		if (position.y > 1.0f)
 		{
+			continue;
+		}
+		else if (players[k]->getcanpaint() == false)
+		{
+			players[k]->settime((players[k]->gettime()) + 1.0f);
+			if (players[k]->gettime() > players[k]->getDebuffTime())
+			{
+				players[k]->setcanpaint(true);
+			}
 			continue;
 		}
 		/*else if (position.y < -3.0f)

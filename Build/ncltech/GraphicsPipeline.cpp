@@ -40,7 +40,7 @@ GraphicsPipeline::GraphicsPipeline()
 	
 	trailQuad = OGLMesh::GenerateQuad();
 	minimap = OGLMesh::GenerateQuad();
-	
+	piemap = OGLMesh::GenerateQuad();
 	tempProj = renderer->GetProjMatrix();
 	tempView = renderer->GetViewMatrix();
 	fullscreenQuad = OGLMesh::GenerateQuad();
@@ -63,7 +63,7 @@ GraphicsPipeline::GraphicsPipeline()
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
 
 	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
-
+	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 }
 
@@ -162,6 +162,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 
 void GraphicsPipeline::UpdateScene(float dt)
 {
+
 	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 		camera->HandleMouse(dt);
 
@@ -196,65 +197,55 @@ void GraphicsPipeline::RenderScene()
 			ground = (*node->GetChildIteratorStart());
 		}
 	}
+
+	GameLogic::Instance()->calculatePaintPercentage();
+
+	TrailBuffer->Activate();
+	renderer->SetViewPort(2048, 2048);
+
+	shaderTrail->Activate();
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+
+	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+		std::string arr = "players[" + std::to_string(i) + "].";
+		float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+
+		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+		shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+
+	}
+
+	trailQuad->Draw();
+
+
+
+	CircleBuffer->Activate();
+	renderer->SetViewPort(2048, 2048);
+	shaderCircle->Activate();
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+	float sum_score = 0.0f;
+	float angle = 0.0f;
+	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
+	}
+	for (int i = 0; i < GameLogic::Instance()->getNumPlayers() - 1; i++) {
+		std::string arr = "players[" + std::to_string(i) + "].";
+		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
+		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+	}
+
+	trailQuad->Draw();
+
 	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
 	for (int i = 0; i < cameras.size(); i++) {
 		camera = cameras[i];
 		projViewMatrix = projViewMatrices[i];
-
-		//Build World Transforms
-		// - Most scene objects will probably end up being static, so we really should only be updating
-		//   modelMatrices for objects (and their children) who have actually moved since last frame
-		
-
-
-		GameLogic::Instance()->calculatePaintPercentage();
-
-		SceneManager::Instance()->GetCurrentScene()->Score = (*GameLogic::Instance()->getPaintPerc())[0];
-
-		TrailBuffer->Activate();
-		renderer->SetViewPort(2048, 2048);
-
-		shaderTrail->Activate();
-		shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
-
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
-			std::string arr = "players[" + std::to_string(i) + "].";
-			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
-			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
-			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
-			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
-			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
-			
-			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
-			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
-
-		}
-
-		trailQuad->Draw();
-
-	
-
-		CircleBuffer->Activate();
-		renderer->SetViewPort(2048, 2048);
-		shaderCircle->Activate();
-		shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
-		float sum_score = 0.0f;
-		float angle = 0.0f;
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
-			sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
-		}
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers()-1; i++) {
-			std::string arr = "players[" + std::to_string(i) + "].";
-			angle += 2*PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
-			shaderCircle->SetUniform((arr + "angle").c_str(), angle);
-		}
-
-		trailQuad->Draw();
-
-
-		//Build Transparent/Opaque Renderlists
 		BuildAndSortRenderLists();
 		//Build World Transforms
 		// - Most scene objects will probably end up being static, so we really should only be updating
@@ -266,7 +257,7 @@ void GraphicsPipeline::RenderScene()
 		BuildAndSortRenderLists();
 
 		//NCLDebug - Build render lists
-		NCLDebug::_BuildRenderLists();
+		
 
 		//Build shadowmaps
 		BuildShadowTransforms();
@@ -325,19 +316,15 @@ void GraphicsPipeline::RenderScene()
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
-		//NCLDEBUG - World Debug Data (anti-aliased)		
-		NCLDebug::_RenderDebugDepthTested();
-		NCLDebug::_RenderDebugNonDepthTested();
-
-
-
+		
 		//Downsample and present to screen
 
 
 
-		for (int j = 0; j < 2; j++) {
+		for (int j = 0; j < 3; j++) {
+
 			renderer->BindScreenFramebuffer();
-			
+
 			renderer->SetScissor(TRUE);
 			AdjustViewport(i, j);
 			renderer->Clear(Renderer::COLOUR_DEPTH);
@@ -351,14 +338,14 @@ void GraphicsPipeline::RenderScene()
 			shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 			shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 
-			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("screenTexColor"),0);
+			fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("screenTexColor"), 0);
 
 
 			if (j == 0) {
 
 				fullscreenQuad->Draw();
 			}
-			else {
+			else if (j == 1) {
 				tempProj = renderer->GetProjMatrix();
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
@@ -367,27 +354,36 @@ void GraphicsPipeline::RenderScene()
 				minimap->Draw();
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
+			}		
+			else{
+				tempProj = renderer->GetProjMatrix();
+				tempView = renderer->GetViewMatrix();
+				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
+				renderer->GetViewMatrix().ToIdentity();
+
+				piemap->Draw();
+				renderer->SetProjMatrix(tempProj);
+				renderer->SetViewMatrix(tempView);
 			}
-
-
-			//NCLDEBUG - Text Elements (aliased)
-			NCLDebug::_RenderDebugClipSpace();
-			NCLDebug::_ClearDebugLists();
 		}
-		screenFBO->Activate();
-
-		renderer->Clear(Renderer::COLOUR_DEPTH);
-		renderer->BindScreenFramebuffer();
-
-
 	}
-		renderer->SwapBuffers();
+
+	NCLDebug::_BuildRenderLists();
+	renderer->SetViewPort(screenTexWidth / 4, screenTexHeight / 4);
+	//NCLDEBUG - Text Elements (aliased)
+	NCLDebug::_RenderDebugClipSpace();
+	NCLDebug::_ClearDebugLists();
+	screenFBO->Activate();
+
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	renderer->BindScreenFramebuffer();
+	renderer->SwapBuffers();
 }
 
 void GraphicsPipeline::AdjustViewport(int i, int j) {
 	float width = renderer->GetWidth();
 	float height = renderer->GetHeight();
-	int num_p = GameLogic::Instance()->getNumPlayers();
+	int num_p = GameLogic::Instance()->getTotalPlayers();
 	if (j == 0) {
 		if (num_p == 1) {
 			renderer->SetViewPort(width, height);
@@ -405,8 +401,8 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 		}
 		else if (num_p == 3) {
 			if (i == 0) {
-				renderer->SetViewPort(0, height / 2, width / 2, height / 2);
-				renderer->Scissor(0, height / 2, width / 2, height / 2);
+				renderer->SetViewPort(width/4, height / 2, width / 2, height / 2);
+				renderer->Scissor(width / 4, height / 2, width / 2, height / 2);
 			}
 			else if (i == 1) {
 				renderer->SetViewPort(0, 0, width / 2, height / 2);
@@ -436,23 +432,44 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 			}
 		}
 	}
-	else {
+	else if (j == 1) {
 		if (num_p == 1) {
-			renderer->Scissor(4 * width / 5, 0, width / 5, width / 5);
-			renderer->SetViewPort(4 * width / 5, 0, width / 5, width / 5);
+			renderer->Scissor(4 * width / 5, height - width / 5, width / 5, width / 5);
+			renderer->SetViewPort(4 * width / 5, height - width / 5, width / 5, width / 5);
 		}
-		else if (num_p == 2) {
+		else if (num_p == 2 ) {
 			renderer->Scissor(4 * width / 5, height/2 - width/10, width / 5, width / 5);
 			renderer->SetViewPort(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
 		}
 		else if (num_p == 3) {
-			renderer->SetViewPort(width / 2, height / 2, width / 2, height / 2);
-			renderer->Scissor(width / 2, height / 2, width / 2, height / 2);
+			float size = width / 4.0f;
+			renderer->SetViewPort(0, height / 2 + size/8, size, size);
+			renderer->Scissor(0, height / 2 + size / 8, size, size);
 		}
 		else if (num_p == 4) {
-			renderer->Scissor(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
-			renderer->SetViewPort(3 * width / 7, height / 2 - width / 14, width / 7, width / 7);
+			renderer->Scissor(9*width/10, height / 2 - width / 20, width / 10, width / 10);
+			renderer->SetViewPort(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
 		}
+	}
+	else {
+		if (num_p == 1) {
+			renderer->Scissor(0, height - width/5, width / 5, width / 5);
+			renderer->SetViewPort(0, height - width / 5, width / 5, width / 5);
+		}
+		else if (num_p == 2) {
+			renderer->Scissor(0, height / 2 - width / 10, width / 5, width / 5);
+			renderer->SetViewPort(0, height / 2 - width / 10, width / 5, width / 5);
+		}
+		else if (num_p == 3) {
+			float size = width / 4.0f;
+			renderer->SetViewPort(3*width / 4, height / 2 + size/8, size, size);
+			renderer->Scissor(3 * width / 4, height / 2 + size / 8, size, size);
+		}
+		else if (num_p == 4) {
+			renderer->Scissor(0, height / 2 - width / 20, width / 10, width / 10);
+			renderer->SetViewPort(0, height / 2 - width / 20, width / 10, width / 10);
+		}
+
 	}
 }
 

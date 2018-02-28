@@ -6,6 +6,7 @@
 
 #include <nclgl\Vector3.h>
 
+
 namespace irrklang
 {
 	class ISoundEngine;
