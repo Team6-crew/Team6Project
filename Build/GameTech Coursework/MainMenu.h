@@ -97,7 +97,7 @@ public:
 		// Sound Menu
 		soundMenu = new Menu();
 		soundMenu->visible = false;
-		soundMenu->AddMenuItem("Volume 5");
+		soundMenu->AddMenuItem("Volume" + std::to_string(volumelevel));
 		soundMenu->AddMenuItem("Back");
 		optionsMenu->addToMenu(soundMenu, 1);
 		soundMenu->addToMenu(optionsMenu, 1);
@@ -132,6 +132,32 @@ public:
 		playerControlsMenu->addToMenu(controlsMenu, 6);
 		playerControlsMenu->set_id(8);
 
+		// Add AI to single player menu
+		singlePlayerAIMenu = new Menu();
+		singlePlayerAIMenu->visible = false;
+		singlePlayerAIMenu->AddMenuItem("AI Opponents " + std::to_string(numOfAi));
+		singlePlayerAIMenu->AddMenuItem("Start Game");
+		singlePlayerAIMenu->AddMenuItem("Back");
+		mainMenu->addToMenu(singlePlayerAIMenu, 0);
+		singlePlayerAIMenu->addToMenu(mainMenu, 2);
+		singlePlayerAIMenu->set_id(9);
+
+		// Join Server Menu
+		JoinServerMenu = new Menu();
+		JoinServerMenu->visible = false;
+		JoinServerMenu->AddMenuItem("Dummy Server");
+		JoinServerMenu->AddMenuItem("Back");
+		multiPlayerMenu->addToMenu(JoinServerMenu, 2);
+		JoinServerMenu->addToMenu(multiPlayerMenu, 1);
+		JoinServerMenu->set_id(10);
+		// Server List Menu
+		ServerListMenu = new Menu();
+		ServerListMenu->visible = false;
+		ServerListMenu->AddMenuItem("Dummy IP");
+		ServerListMenu->AddMenuItem("Back");
+		JoinServerMenu->addToMenu(ServerListMenu, 0);
+		ServerListMenu->addToMenu(JoinServerMenu, 1);
+		ServerListMenu->set_id(11);
 	}
 
 	virtual ~MainMenu()
@@ -208,6 +234,15 @@ public:
 			}
 			activeMenu->replaceMenuItem(activeMenu->getSelection(), "Volume " + std::to_string(volumelevel));
 		}
+		else if (activeMenu->get_id() == 9 && activeMenu->getSelection() == 0) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && numOfAi > 0) {
+				numOfAi -= 1;
+			}
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && numOfAi < 3) {
+				numOfAi += 1;
+			}
+			activeMenu->replaceMenuItem(activeMenu->getSelection(), "AI Opponents " + std::to_string(numOfAi));
+		}
 		// MainMenu : 1
 		// MutiplayerMenu : 2
 		// SplitScreen : 3
@@ -222,8 +257,9 @@ public:
 				activeMenu->setSelection(0);
 			}
 			switch (id) {
-				case (100): {
+				case (901): {
 					getControls();
+					// add num of AI as well
 					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
@@ -329,6 +365,7 @@ private:
 	RenderNodeBase * cam;
 	RenderNodeBase * backTexture;
 	int player_c;
+	bool waitsInput;
 	// Menus definitions
 	Menu * mainMenu;
 	Menu * optionsMenu;
@@ -338,10 +375,13 @@ private:
 	Menu * controlsMenu;
 	Menu * splitScreenMenu;
 	Menu * addPlayerMenu;
-	bool waitsInput;
 	Menu * activeMenu;
 	Menu * activeSubmenu;
 	Menu * playerControlsMenu;
+	Menu * singlePlayerAIMenu;
+	Menu * JoinServerMenu;
+	Menu * ServerListMenu;
+
 	std::map <int, std::string> KEYS;
 
 	void replaceControl(int con, int line_num) {
