@@ -76,6 +76,10 @@ void GameLogic::calculatePaintPercentage() {
 		else if (players[k]->getcanpaint() == false)
 		{
 			players[k]->settime((players[k]->gettime()) + 1.0f);
+			if (players[k]->gettime() > players[k]->getDebuffTime())
+			{
+				players[k]->setcanpaint(true);
+			}
 			continue;
 		}
 		else

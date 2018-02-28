@@ -68,6 +68,8 @@ public:
 
 	bool stun(float dt);
 
+	int getDebuffTime() { return debuffTime; }
+	void setDebuffTime(int t) { debuffTime = t; }
 private:
 
 	GameObject* body;
@@ -94,5 +96,6 @@ private:
 	bool stunEffect;
 	float tempYaw, tempPitch;
 	float add_rad;
+	int debuffTime;
 };
 
