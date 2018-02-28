@@ -146,8 +146,8 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		OcTree::toggle();
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Q))
-		AudioFactory::Instance()->GetAudioEngine()->PlaySound3D(SOUNDSDIR"SmallScream.ogg", Vector3(1.0f, 0.0f, 0.0f));
+
+	
 
 	
 }
@@ -201,18 +201,6 @@ int main()
 		// Update Audio
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
 
-		
-		if (Window::GetWindow().GetTimer()->GetMS() > 7000)
-		{
-			// Can remove this static bool once main menu is hooked up
-			static bool hasSound = false;
-			if (!hasSound)
-			{
-				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
-			}
-			// Remove once hooked up main menu
-			hasSound = true;
-		}
 
 		// Remove this once main menu is hooked up
 

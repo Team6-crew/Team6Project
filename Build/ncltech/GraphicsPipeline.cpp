@@ -242,7 +242,7 @@ void GraphicsPipeline::RenderMenu() {
 	// - This needs to be somewhere before we lose our depth buffer
 	//   BUT at the moment that means our screen picking is super sampled and rendered at 
 	//   a much higher resolution. Which is silly.
-	ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
+	//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 	screenFBO->Activate();
 	renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -415,7 +415,7 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
+		//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);

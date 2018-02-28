@@ -17,7 +17,8 @@
 #include <nclgl\Graphics\MeshBase.h>
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <fstream>
-
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 class MainMenu : public Scene
 {
 public:
@@ -197,9 +198,13 @@ public:
 		else if (activeMenu->get_id() == 6 && activeMenu->getSelection() == 0) {
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
 				volumelevel -= 1;
+				AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
+				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg",false);
 			}
 			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
 				volumelevel += 1;
+				AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
+				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
 			}
 			activeMenu->replaceMenuItem(activeMenu->getSelection(), "Volume " + std::to_string(volumelevel));
 		}
@@ -222,6 +227,7 @@ public:
 					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
+					AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 					break;
 				}
 				case (103): {
