@@ -41,6 +41,10 @@ void Quit(bool error = false, const std::string &reason = "") {
 //    for the SceneManager to display
 void Initialize()
 {
+	timer_total.init();
+	timer_physics.init();
+	timer_update.init();
+	timer_render.init();
 	//Initialize Renderer
 	GraphicsPipeline::Instance();
 
@@ -49,7 +53,6 @@ void Initialize()
 
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
-	
 }
 
 // Print Debug Info

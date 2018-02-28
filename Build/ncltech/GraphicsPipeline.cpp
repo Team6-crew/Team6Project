@@ -94,8 +94,8 @@ void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 void GraphicsPipeline::LoadShaders()
 {
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"SceneRenderer/TechVertexBasic.glsl",
-		SHADERDIR"SceneRenderer/TechFragSuperSample.glsl");
+		SHADERDIR"SceneRenderer/TechVertexBasic",
+		SHADERDIR"SceneRenderer/TechFragSuperSample");
 
 	//shaderShadow = ShaderFactory::Instance()->MakeShader(
 	//	SHADERDIR"SceneRenderer/TechVertexShadow.glsl",
@@ -103,8 +103,8 @@ void GraphicsPipeline::LoadShaders()
 	//	SHADERDIR"SceneRenderer/TechGeomShadow.glsl");
 
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
-		SHADERDIR"SceneRenderer/TechFragForwardRender.glsl");
+		SHADERDIR"SceneRenderer/TechVertexFull",
+		SHADERDIR"SceneRenderer/TechFragForwardRender");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)

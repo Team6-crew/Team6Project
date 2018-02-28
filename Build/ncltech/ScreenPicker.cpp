@@ -108,9 +108,9 @@ void ScreenPicker::UpdateAssets(int screen_width, int screen_height)
 	if (!m_pShaderPicker)
 	{
 #ifdef USE_NSIGHT_HACK
-		m_pShaderPicker = ShaderFactory::Instance()->MakeShader(SHADERDIR"SceneRenderer/TechVertexPicker.glsl", SHADERDIR"SceneRenderer/TechFragScreenPicker_nsightfix.glsl");
+		m_pShaderPicker = ShaderFactory::Instance()->MakeShader(SHADERDIR"SceneRenderer/TechVertexPicker", SHADERDIR"SceneRenderer/TechFragScreenPicker_nsightfix");
 #else
-		m_pShaderPicker = new Shader(SHADERDIR"SceneRenderer/TechVertexPicker.glsl", SHADERDIR"SceneRenderer/TechFragScreenPicker.glsl");
+		m_pShaderPicker = new Shader(SHADERDIR"SceneRenderer/TechVertexPicker", SHADERDIR"SceneRenderer/TechFragScreenPicker");
 #endif
 		//glBindFragDataLocation(m_pShaderPicker->GetProgram(), 0, "OutFrag"); TODO: Need to hack this in? What on earth does it do
 

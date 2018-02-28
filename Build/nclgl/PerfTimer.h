@@ -29,15 +29,17 @@ public:
 		: m_UpdateInterval(1.0f)
 		, m_RealTimeElapsed(0.0f)
 	{
+		
+	}
+
+	virtual ~PerfTimer() {}
+
+	void init() {
 		m_Timer = TimerFactory::Instance()->MakeGameTimer();
 		m_Timer->GetTimedMS();
 		memset(&m_CurrentData, 0, sizeof(PerfTimer_Data));
 		memset(&m_PreviousData, 0, sizeof(PerfTimer_Data));
 	}
-
-	virtual ~PerfTimer() {}
-
-
 	//Returns the maximum execution time recorded in the last second
 	inline float GetHigh() const { return m_PreviousData._max; }
 

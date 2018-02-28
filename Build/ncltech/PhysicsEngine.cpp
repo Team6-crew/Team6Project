@@ -36,6 +36,10 @@ PhysicsEngine::PhysicsEngine()
 	octree = new OcTree(new AABB(Vector3(0, worldSize, 0), worldSize));
 	worldPartition = new WorldPartition(new AABB(Vector3(0, worldSize, 0), worldSize), 4);
 	SetDefaults();
+	perfUpdate.init();
+	perfBroadphase.init();
+	perfNarrowphase.init();
+	perfSolver.init();
 }
 
 PhysicsEngine::~PhysicsEngine()
