@@ -114,7 +114,7 @@ void PS4Mesh::DefineQuadVertices()
 	vertices[3] = Vector3(1.0f, 1.0f, 0.0f);
 }
 
-void PS4Mesh::SetupQuadVectors()
+void PS4Mesh::SetupQugadVectors()
 {
 	for (int i = 0; i < numVertices; ++i) {
 		normals[i] = Vector3(0, 0, 1);
@@ -123,6 +123,56 @@ void PS4Mesh::SetupQuadVectors()
 	}
 
 }
+
+void PS4Mesh::GenerateNormals()
+{		
+	if (!normals) {
+			normals = new Vector3[numVertices];
+		}
+		for (GLuint i = 0; i < numVertices; ++i) {
+			normals[i] = Vector3();
+		}
+
+		if (indices) {
+			GLuint i = 0;
+
+			int test = 0;
+			for (i = 0; i < numIndices; i += 3) {
+				int a = indices[i];
+				int b = indices[i + 1];
+				int c = indices[i + 2];
+
+				Vector3 normal = Vector3::Cross((vertices[b] - vertices[a]), (vertices[c] - vertices[a]));
+
+				normals[a] += normal;
+				normals[b] += normal;
+				normals[c] += normal;
+
+				test += 3;
+			}
+			bool asdf = true;
+		}
+		else {
+			//It's just a list of triangles, so generate face normals
+			for (GLuint i = 0; i < numVertices; i += 3) {
+				Vector3 &a = vertices[i];
+				Vector3 &b = vertices[i + 1];
+				Vector3 &c = vertices[i + 2];
+
+				Vector3 normal = Vector3::Cross(b - a, c - a);
+
+				normals[i] = normal;
+				normals[i + 1] = normal;
+				normals[i + 2] = normal;
+			}
+		}
+
+		for (GLuint i = 0; i < numVertices; ++i) {
+			normals[i].Normalise();
+		}
+	
+};
+
 
 void PS4Mesh::InitAttributeBuffer(sce::Gnm::Buffer &buffer, sce::Gnm::DataFormat format, void*offset)
 {

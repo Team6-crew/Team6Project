@@ -47,12 +47,12 @@
     <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NCLDebug.cpp" />
-    <ClCompile Include="OBJMesh.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
     <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="OGLInput.cpp" />
+    <ClCompile Include="OGLOBJMesh.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
@@ -62,6 +62,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
     <ClCompile Include="PS4Input.cpp" />
+    <ClCompile Include="PS4OBJMesh.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -100,12 +101,13 @@
     <ClInclude Include="MeshFactory.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="NCLDebug.h" />
-    <ClInclude Include="OBJMesh.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
+    <ClInclude Include="OBJMeshBase.h" />
     <ClInclude Include="OGLGameTimer.h" />
     <ClInclude Include="OGLInput.h" />
+    <ClInclude Include="OGLOBJMesh.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
@@ -117,6 +119,7 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
     <ClInclude Include="PS4GameTimer.h" />
     <ClInclude Include="PS4Input.h" />
+    <ClInclude Include="PS4OBJMesh.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />

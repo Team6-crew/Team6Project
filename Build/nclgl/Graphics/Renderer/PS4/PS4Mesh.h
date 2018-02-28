@@ -101,6 +101,7 @@ protected:
 	PS4Texture* texture;
 	PS4Texture* bumpTexture;
 
-};
+
+	void	GenerateNormals();
 
 #endif
