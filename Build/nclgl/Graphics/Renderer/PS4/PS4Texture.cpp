@@ -86,7 +86,7 @@ void PS4Texture::Bind(int textureUnit)
 {
 	if (currentGFXContext)
 	{
-		currentGFXContext->setTextures(sce::Gnm::kShaderStagePs, 0, 1, &apiTexture);
+		currentGFXContext->setTextures(sce::Gnm::kShaderStagePs, textureUnit, 1, &apiTexture);
 	}
 
 }

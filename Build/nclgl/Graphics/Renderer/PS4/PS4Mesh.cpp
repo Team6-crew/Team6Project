@@ -114,7 +114,7 @@ void PS4Mesh::DefineQuadVertices()
 	vertices[3] = Vector3(1.0f, 1.0f, 0.0f);
 }
 
-void PS4Mesh::SetupQuadVectors()
+void PS4Mesh::SetupQugadVectors()
 {
 	for (int i = 0; i < numVertices; ++i) {
 		normals[i] = Vector3(0, 0, 1);
@@ -123,7 +123,6 @@ void PS4Mesh::SetupQuadVectors()
 	}
 
 }
-
 void PS4Mesh::InitAttributeBuffer(sce::Gnm::Buffer &buffer, sce::Gnm::DataFormat format, void*offset)
 {
 	buffer.initAsVertexBuffer(offset, format, sizeof(MeshVertex), numVertices);
@@ -134,11 +133,18 @@ void PS4Mesh::Draw()
 {
 	if (currentGfxContext)
 	{
+		texture->Bind(0);
+		bumpTexture->Bind(1);
 		currentGfxContext->setVertexBuffers(sce::Gnm::ShaderStage::kShaderStageVs, 0, numAttributes, attributeBuffers);
 		currentGfxContext->setPrimitiveType(primitiveType);
 		currentGfxContext->setIndexSize(indexType);
 		currentGfxContext->drawIndex(numIndices, indexBuffer);
 	}
+}
+
+void PS4Mesh::SetTexture(TextureBase * text)
+{
+	texture = static_cast<PS4Texture*>(text);
 }
 
 void PS4Mesh::DefineQuadTexCoords()

@@ -7,6 +7,7 @@
 #include <nclgl\Graphics\Renderer\ShaderFactory.h>
 #include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
+#include <nclgl\MeshFactory.h>
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
@@ -36,7 +37,7 @@ GraphicsPipeline::GraphicsPipeline()
 	LoadShaders();
 	NCLDebug::_LoadShaders();
 
-	fullscreenQuad = OGLMesh::GenerateQuad();
+	fullscreenQuad = MeshFactory::Instance()->GenerateQuad();
 
 	renderer->SetDefaultSettings();
 

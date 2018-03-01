@@ -34,11 +34,11 @@ public:
 	void SetUniform(const std::string& name, int i) override;
 	void SetUniform(const std::string& name, float f) override;
 	void SetUniform(const std::string& name, const nclgl::Maths::Matrix4& mat) override;
-	void SetUniform(const std::string& name, const Vector2& vec) override;
-	void SetUniform(const std::string& name, const Vector3& vec) override;
-	void SetUniform(const std::string& name, const Vector4& vec) override;
-	void SetUniform(const std::string& name, int numMats, Matrix4* mats) override;
-	void SetUniform(const std::string& name, int numVecs, Vector3* vecs) override;
+	void SetUniform(const std::string& name, const  nclgl::Maths::Vector2& vec) override;
+	void SetUniform(const std::string& name, const  nclgl::Maths::Vector3& vec) override;
+	void SetUniform(const std::string& name, const  nclgl::Maths::Vector4& vec) override;
+	void SetUniform(const std::string& name, int numMats, nclgl::Maths::Matrix4* mats) override;
+	void SetUniform(const std::string& name, int numVecs, nclgl::Maths::Vector3* vecs) override;
 	void SetUniform(const std::string& name, int numFloats, float* floats) override;
 
 protected: // Constructor helper functions

@@ -33,9 +33,6 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OBJMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,6 +75,9 @@
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
     <ClCompile Include="GameTimerBase.cpp" />
+    <ClCompile Include="InputBase.cpp" />
+    <ClCompile Include="PS4Input.cpp" />
+    <ClCompile Include="OGLInput.cpp" />
     <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="TimerFactory.cpp" />
     <ClCompile Include="Input\InputBase.cpp" />
@@ -90,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="WindowBase.cpp" />
     <ClCompile Include="PS4Window.cpp" />
+    <ClCompile Include="MeshFactory.cpp" />
+    <ClCompile Include="OGLOBJMesh.cpp" />
+    <ClCompile Include="PS4OBJMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -120,9 +123,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OBJMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">

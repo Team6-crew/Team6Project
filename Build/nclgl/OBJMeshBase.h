@@ -2,11 +2,11 @@
 Class:OBJMesh
 Implements:Mesh, MD5MeshInstance
 Author:Rich Davison	<richard.davison4@newcastle.ac.uk>
-Description: Implementation of the Wavefront OBJ mesh format. 
+Description: Implementation of the Wavefront OBJ mesh format.
 
 This was going to be a full tutorial, and then I implemented it and was
-reminded of how horrific OBJ files can be, so just dumped the code in the 
-framework, instead. 
+reminded of how horrific OBJ files can be, so just dumped the code in the
+framework, instead.
 
 You'll very quickly find OBJ meshes that can't be loaded by this loader.
 
@@ -17,11 +17,11 @@ should be trivial to add in, n-sided polygons should be OK if they are convex
 Some OBJ meshes use negative indices, which won't work.
 
 In both cases, loading the OBJ into Blender or maybe Milkshape, and exporting
-them out as OBJs again might create a file more likely to load. 
+them out as OBJs again might create a file more likely to load.
 
 OBJ files are ok for simple geometry (the tutorial series uses them for 2
 slightly different cubes, and an icosphere), but generally don't work very
-well for 'big' geometry. 
+well for 'big' geometry.
 
 The simple loader doesn't do anything fancy with indices - have fun trying
 to get that working!
@@ -29,28 +29,28 @@ to get that working!
 The 'Stanford Bunny' OBJ does load up with this though, if you really want
 to see a rabbit.
 
-		   ***
-		  ** **
-		 **   **
-		 **   **         ****
-		 **   **       **   ****
-		 **  **       *   **   **
-		  **  *      *  **  ***  **
-		   **  *    *  **     **  *
-			** **  ** **        **
-			**   **  **
-		   *           *
-		  *             *
-		 *    0     0    *
-		 *   /   @   \   *
-		 *   \__/ \__/   *
-		   *     W     *
-			 **     **
-			   *****
--_-_-_-_-_-_-_,------,   
+***
+** **
+**   **
+**   **         ****
+**   **       **   ****
+**  **       *   **   **
+**  *      *  **  ***  **
+**  *    *  **     **  *
+** **  ** **        **
+**   **  **
+*           *
+*             *
+*    0     0    *
+*   /   @   \   *
+*   \__/ \__/   *
+*     W     *
+**     **
+*****
+-_-_-_-_-_-_-_,------,
 _-_-_-_-_-_-_-|   /\_/\   NYANYANYAN
 -_-_-_-_-_-_-~|__( ^ .^) /
-_-_-_-_-_-_-_-""  ""   
+_-_-_-_-_-_-_-""  ""
 
 *//////////////////////////////////////////////////////////////////////////////
 
@@ -73,8 +73,6 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #define OBJ_FIX_TEXTURES
 
-#define WIN_OGL
-#ifdef WIN_OGL
 #pragma once
 
 #include <fstream>
@@ -84,7 +82,7 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #include "Vector3.h"
 #include "Vector2.h"
-#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
+
 #include "ChildMeshInterface.h"
 
 #define OBJOBJECT		"object"	//the current line of the obj file defines the start of a new material
@@ -111,7 +109,7 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 
 /*
-OBJSubMesh structs are used to temporarily keep the data loaded 
+OBJSubMesh structs are used to temporarily keep the data loaded
 in from the OBJ files, before being parsed into a series of
 Meshes
 */
@@ -129,31 +127,30 @@ struct MTLInfo {
 	std::string bump;
 	std::string diffuse;
 
-	GLuint bumpNum;
-	GLuint diffuseNum;
+	int bumpNum;
+	int diffuseNum;
 
 	MTLInfo() {
-		bumpNum		= 0;
-		diffuseNum	= 0;
+		bumpNum = 0;
+		diffuseNum = 0;
 	}
 	//this is all we care about...
 };
 
-class OBJMesh : public OGLMesh, public ChildMeshInterface	{
+class OBJMeshBase : public ChildMeshInterface {
 public:
-	OBJMesh(void){};
-	OBJMesh(std::string filename){LoadOBJMesh(filename);};
-	~OBJMesh(void){};
-	bool	LoadOBJMesh(std::string filename);
+	OBJMeshBase(void) {};
+	OBJMeshBase(std::string filename) { LoadOBJMesh(filename); };
+	~OBJMeshBase(void) {};
+	virtual bool	LoadOBJMesh(std::string filename) = 0;
 
-	virtual void Draw();
+	virtual void Draw() = 0;
 
 protected:
-	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType);
+	virtual	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType) = 0;
 
-	void	FixTextures(MTLInfo &info);
+	virtual void	FixTextures(MTLInfo &info) = 0;
 
 	std::map <std::string, MTLInfo> materials;
 };
 
-#endif

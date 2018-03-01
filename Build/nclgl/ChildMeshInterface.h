@@ -27,7 +27,7 @@ _-_-_-_-_-_-_-""  ""
 class ChildMeshInterface	{
 public:
 	//Adds a child mesh to this mesh (only used by OBJ and MD5Mesh)
-	void ChildMeshInterface::AddChild(OGLMesh*m)	{
+	void ChildMeshInterface::AddChild(MeshBase*m)	{
 		children.push_back(m);
 	}
 
@@ -39,6 +39,6 @@ public:
 
 protected:
 	//Some Meshes have children...
-	std::vector<OGLMesh*>children;
+	std::vector<MeshBase*>children;
 	ChildMeshInterface(void){};
 };
