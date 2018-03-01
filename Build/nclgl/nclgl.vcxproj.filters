@@ -74,14 +74,9 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
-    <ClCompile Include="GameTimerBase.cpp" />
-    <ClCompile Include="InputBase.cpp" />
-    <ClCompile Include="PS4Input.cpp" />
-    <ClCompile Include="OGLInput.cpp" />
     <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="TimerFactory.cpp" />
     <ClCompile Include="Input\InputBase.cpp" />
-    <ClCompile Include="Input\PS4Input.cpp" />
     <ClCompile Include="Input\ControllerFactory.cpp" />
     <ClCompile Include="Input\OGLInput.cpp" />
     <ClCompile Include="WindowFactory.cpp" />
@@ -93,6 +88,7 @@
     <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="OGLOBJMesh.cpp" />
     <ClCompile Include="PS4OBJMesh.cpp" />
+    <ClCompile Include="Input\PS4Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -198,5 +194,9 @@
     </ClInclude>
     <ClInclude Include="WindowBase.h" />
     <ClInclude Include="PS4Window.h" />
+    <ClInclude Include="MeshFactory.h" />
+    <ClInclude Include="OBJMeshBase.h" />
+    <ClInclude Include="OGLOBJMesh.h" />
+    <ClInclude Include="PS4OBJMesh.h" />
   </ItemGroup>
 </Project>
