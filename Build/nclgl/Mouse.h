@@ -13,7 +13,7 @@ _-_-_-_-_-_-_-""  ""
 
 #pragma once
 
-#include "InputDevice.h"
+#include <nclgl\Input\InputDevice.h>
 #include "Vector2.h"
 
 //Presumably RAW input does actually support those fancy mice with greater
@@ -30,7 +30,7 @@ enum MouseButtons{
 
 class Mouse : public InputDevice	{
 public:
-	friend class Window;
+	friend class OGLWindow;
 
 	//Is this mouse button currently pressed down?
 	bool	ButtonDown(MouseButtons button);
@@ -59,15 +59,16 @@ public:
 	//implement a 'MenuSensitivity' for absolute movement?
 	void	SetMouseSensitivity(float amount);
 
-protected:
-	Mouse(HWND &hwnd);
-	~Mouse(void){}
-
 	//Internal function that updates the mouse variables from a 
 	//raw input 'packet'
 	virtual void	Update(RAWINPUT* raw);
 	//Updates the holdButtons array. Call once per frame!
 	virtual void	UpdateHolds();
+public:
+	Mouse(HWND &hwnd);
+	~Mouse(void){}
+
+
 	//Sends the mouse to sleep (i.e window has been alt-tabbed away etc)
 	virtual void	Sleep();
 

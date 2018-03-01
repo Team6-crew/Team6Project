@@ -19,7 +19,7 @@ _-_-_-_-_-_-_-""  ""
 
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "InputDevice.h"
+#include <nclgl\Input\InputDevice.h>
 
 //http://msdn.microsoft.com/en-us/library/ms645540(VS.85).aspx
 enum KeyboardKeys {
@@ -171,8 +171,6 @@ enum KeyboardKeys {
 
 class Keyboard : public InputDevice	{
 public:
-	friend class Window;
-
 	//Is this key currently pressed down?
 	bool KeyDown(KeyboardKeys key);
 	//Has this key been held down for multiple frames?
@@ -180,18 +178,24 @@ public:
 	//Is this the first update the key has been pressed for?
 	bool KeyTriggered(KeyboardKeys key);
 
-protected:
-	Keyboard(HWND &hwnd);
-	~Keyboard(void){}
 	//Update the holdStates array...call this each frame!
-	virtual void UpdateHolds();	
+	virtual void UpdateHolds();
 	//Update the keyStates array etc...call this each frame!
 	virtual void Update(RAWINPUT* raw);
+
+
+public:
+	Keyboard(HWND &hwnd);
+	~Keyboard(void){}
+
 	//Sends the keyboard to sleep
 	virtual void Sleep();
 
+private:
 	bool keyStates[KEYBOARD_MAX];		//Is the key down?
 	bool holdStates[KEYBOARD_MAX];		//Has the key been down for multiple updates?
+
+
 };
 
 

@@ -21,57 +21,57 @@ void CommonUtils::SelectableObjectCallBack(GameObject* obj, Vector3* pos) {
 
 void CommonUtils::DragableObjectCallback(GameObject* obj, float dt, const Vector3& newWsPos, const Vector3& wsMovedAmount, bool stopDragging)
 {
-	if (obj->HasPhysics())
-	{
-		if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-		{
-			//Position
-			obj->Physics()->SetPosition(newWsPos);
-			obj->Physics()->SetLinearVelocity(wsMovedAmount / dt);
-			obj->Physics()->SetAngularVelocity(Vector3(0, 0, 0));
-		}
-		else if (Window::GetMouse()->ButtonDown(MOUSE_RIGHT))
-		{
-			Matrix3 viewRot = (Matrix3(GraphicsPipeline::Instance()->GetCamera()->BuildViewMatrix()));
-			Matrix3 invViewRot = Matrix3::Transpose(viewRot);
+	//if (obj->HasPhysics())
+	//{
+	//	if (OGLWindow::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//	{
+	//		//Position
+	//		obj->Physics()->SetPosition(newWsPos);
+	//		obj->Physics()->SetLinearVelocity(wsMovedAmount / dt);
+	//		obj->Physics()->SetAngularVelocity(Vector3(0, 0, 0));
+	//	}
+	//	else if (OGLWindow::GetMouse()->ButtonDown(MOUSE_RIGHT))
+	//	{
+	//		Matrix3 viewRot = (Matrix3(GraphicsPipeline::Instance()->GetCamera()->BuildViewMatrix()));
+	//		Matrix3 invViewRot = Matrix3::Transpose(viewRot);
 
-			//Rotation
-			Vector3 angVel = invViewRot * Vector3::Cross(Vector3(0, 0, 1), viewRot * wsMovedAmount * 25.f);
+	//		//Rotation
+	//		Vector3 angVel = invViewRot * Vector3::Cross(Vector3(0, 0, 1), viewRot * wsMovedAmount * 25.f);
 
-			obj->Physics()->SetAngularVelocity(angVel);
-			Quaternion quat = obj->Physics()->GetOrientation();
-			quat = quat + Quaternion(angVel * dt * 0.5f, 0.0f) * quat;
-			quat.Normalise();
-			obj->Physics()->SetOrientation(quat);
-			obj->Physics()->SetLinearVelocity(Vector3(0, 0, 0));
-		}
+	//		obj->Physics()->SetAngularVelocity(angVel);
+	//		Quaternion quat = obj->Physics()->GetOrientation();
+	//		quat = quat + Quaternion(angVel * dt * 0.5f, 0.0f) * quat;
+	//		quat.Normalise();
+	//		obj->Physics()->SetOrientation(quat);
+	//		obj->Physics()->SetLinearVelocity(Vector3(0, 0, 0));
+	//	}
 
 
-		if (stopDragging)
-		{
-			dragDataSet = false;
+	//	if (stopDragging)
+	//	{
+	//		dragDataSet = false;
 
-			obj->Physics()->SetInverseInertia(dragDataInertia);
-			obj->Physics()->SetInverseMass(dragDataMass);
-			
-		}
-		else if(!dragDataSet)
-		{
-			dragDataSet = true;
+	//		obj->Physics()->SetInverseInertia(dragDataInertia);
+	//		obj->Physics()->SetInverseMass(dragDataMass);
+	//		
+	//	}
+	//	else if(!dragDataSet)
+	//	{
+	//		dragDataSet = true;
 
-			dragDataInertia = obj->Physics()->GetInverseInertia();
-			dragDataMass = obj->Physics()->GetInverseMass();
+	//		dragDataInertia = obj->Physics()->GetInverseInertia();
+	//		dragDataMass = obj->Physics()->GetInverseMass();
 
-			obj->Physics()->SetInverseInertia(Matrix3::ZeroMatrix);
-			obj->Physics()->SetInverseMass(0.0f);
-		}
-	}
-	else
-	{
-		Matrix4 transform = obj->Render()->GetTransform();
-		transform.SetPositionVector(newWsPos);
-		obj->Render()->SetTransform(transform);
-	}
+	//		obj->Physics()->SetInverseInertia(Matrix3::ZeroMatrix);
+	//		obj->Physics()->SetInverseMass(0.0f);
+	//	}
+	//}
+	//else
+	//{
+	//	Matrix4 transform = obj->Render()->GetTransform();
+	//	transform.SetPositionVector(newWsPos);
+	//	obj->Render()->SetTransform(transform);
+	//}
 }
 
 Vector4 CommonUtils::GenColor(float scalar, float alpha)
@@ -153,13 +153,13 @@ GameObject* CommonUtils::BuildSphereObject(
 		pnode->SetParent(obj);
 	}
 
-	if (dragable)
-	{
-		ScreenPicker::Instance()->RegisterNodeForMouseCallback(
-			dummy, //Dummy is the rendernode that actually contains the drawable mesh, and the one we can to 'drag'
-			std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
-		);
-	}
+	//if (dragable)
+	//{
+	//	ScreenPicker::Instance()->RegisterNodeForMouseCallback(
+	//		dummy, //Dummy is the rendernode that actually contains the drawable mesh, and the one we can to 'drag'
+	//		std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
+	//	);
+	//}
 
 	return obj;
 }
@@ -255,13 +255,13 @@ GameObject* CommonUtils::BuildCuboidObject(
 		pnode->SetParent(obj);
 	}
 
-	if (dragable)
-	{
-		ScreenPicker::Instance()->RegisterNodeForMouseCallback(
-			dummy, //Dummy is the rendernode that actually contains the drawable mesh
-			std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
-		);
-	}
+	//if (dragable)
+	//{
+	//	ScreenPicker::Instance()->RegisterNodeForMouseCallback(
+	//		dummy, //Dummy is the rendernode that actually contains the drawable mesh
+	//		std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
+	//	);
+	//}
 	
 	return obj;
 }
@@ -291,13 +291,13 @@ GameObject* CommonUtils::BuildMazeNode(
 
 	GameObject* obj = new GameObject(name, rnode, pnode);
 
-	if (selectable)
-	{
-		ScreenPicker::Instance()->RegisterNodeForMouseCallback(
-			dummy, //Dummy is the rendernode that actually contains the drawable mesh
-			std::bind(&SelectableObjectCallBack, obj, select_pos)
-		);
-	}
+	//if (selectable)
+	//{
+	//	ScreenPicker::Instance()->RegisterNodeForMouseCallback(
+	//		dummy, //Dummy is the rendernode that actually contains the drawable mesh
+	//		std::bind(&SelectableObjectCallBack, obj, select_pos)
+	//	);
+	//}
 
 	return obj;
 }
@@ -347,13 +347,13 @@ GameObject* CommonUtils::BuildCuboidObjectNoTexture(
 
 	GameObject* obj = new GameObject(name, rnode, pnode);
 
-	if (dragable)
-	{
-		ScreenPicker::Instance()->RegisterNodeForMouseCallback(
-			dummy, //Dummy is the rendernode that actually contains the drawable mesh
-			std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
-		);
-	}
+	//if (dragable)
+	//{
+	//	ScreenPicker::Instance()->RegisterNodeForMouseCallback(
+	//		dummy, //Dummy is the rendernode that actually contains the drawable mesh
+	//		std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
+	//	);
+	//}
 
 	return obj;
 }

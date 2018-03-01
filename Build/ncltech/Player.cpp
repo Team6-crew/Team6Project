@@ -7,7 +7,8 @@
 #include <nclgl\OBJMeshBase.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
-
+#include <nclgl\Input\ControllerFactory.h>
+#include <nclgl\Input\InputBase.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 
 using namespace nclgl::Maths;
@@ -125,29 +126,29 @@ void Player::move() {
 
 	float rotation = 0.0f;
 
-	if (Window::GetKeyboard()->KeyDown(move_up))
+	if (ControllerFactory::Instance()->GetController()->IsAction(FORWARD))
 	{
 		physicsNode->SetForce(-forward * speed);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(move_down))
+	if (ControllerFactory::Instance()->GetController()->IsAction(BACKWARD))
 	{   
 		forward.y = -forward.y;
 		physicsNode->SetForce(forward * speed);
 	}
-	if (Window::GetKeyboard()->KeyDown(move_left))
+	if (ControllerFactory::Instance()->GetController()->IsAction(LEFT))
 	{
 		rotation = 0.4f;
 		camera->SetYaw(yaw + rotation);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(move_right))
+	if (ControllerFactory::Instance()->GetController()->IsAction(RIGHT))
 	{
 		rotation = -0.4f;
 		camera->SetYaw(yaw + rotation);
 	}
 
-	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
+	if (ControllerFactory::Instance()->GetController()->IsAction(ACTION_A))
 	{  
 		if (canjump == true) {
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());

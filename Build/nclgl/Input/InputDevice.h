@@ -39,17 +39,11 @@ despite it being how RAW input works....GG guys.
 
 class InputDevice	{
 protected:
-	friend class Window;
-	InputDevice(void) { isAwake = true;};
+	InputDevice(void) {};
 	~InputDevice(void){};
 
 protected:
 	virtual void Update(RAWINPUT* raw) = 0;
-
-	virtual void UpdateHolds() {}
-	virtual void Sleep(){ isAwake = false;}
-	virtual void Wake() { isAwake = true;}
-
-	bool			isAwake;		//Is the device awake...
+	bool isAwake = true;
 	RAWINPUTDEVICE	rid;			//Windows OS hook 
 };

@@ -6,6 +6,12 @@
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
 
+#include <nclgl\WindowFactory.h>
+#include <nclgl\WindowBase.h>
+
+#include <nclgl\Input\ControllerFactory.h>
+#include <nclgl\Input\InputBase.h>
+
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -93,28 +99,29 @@ void PrintStatusEntries()
 //    cycling through scenes.
 void HandleKeyboardInputs()
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
-		PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 
-	//if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_V))
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_P))
+	//	PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_V))
 	//	GraphicsPipeline::Instance()->SetVsyncEnabled(!GraphicsPipeline::Instance()->GetVsyncEnabled());
 
-	uint sceneIdx = SceneManager::Instance()->GetCurrentSceneIndex();
-	uint sceneMax = SceneManager::Instance()->SceneCount();
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Y))
-		SceneManager::Instance()->JumpToScene((sceneIdx + 1) % sceneMax);
+	//uint sceneIdx = SceneManager::Instance()->GetCurrentSceneIndex();
+	//uint sceneMax = SceneManager::Instance()->SceneCount();
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_Y))
+	//	SceneManager::Instance()->JumpToScene((sceneIdx + 1) % sceneMax);
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_T))
-		SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_T))
+	//	SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_R))
-		SceneManager::Instance()->JumpToScene(sceneIdx);
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_R))
+	//	SceneManager::Instance()->JumpToScene(sceneIdx);
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_G))
-		show_perf_metrics = !show_perf_metrics;
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_G))
+	//	show_perf_metrics = !show_perf_metrics;
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
-		OcTree::toggle();
+	//if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_O))
+	//	OcTree::toggle();
 
 
 }
@@ -123,17 +130,19 @@ void HandleKeyboardInputs()
 // Program Entry Point
 int main()
 {
-	//Initialize our Window, Physics, Scenes etc
+	//Initialize our OGLWindow, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 
-	Window::GetWindow().GetTimer()->GetTimedMS();
+	GameTimerBase* logicTimer = TimerFactory::Instance()->MakeGameTimer();
+
 
 	//Create main game-loop
-	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_X)) {
+	while (WindowFactory::Instance()->GetWindow()->UpdateWindow() && 
+		 !ControllerFactory::Instance()->GetController()->IsAction(ESCAPE)) {
 		//Start Timing
 		
-		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
+		float dt = logicTimer->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
 																		//Update Performance Timers (Show results every second)
 		timer_total.UpdateRealElapsedTime(dt);
 		timer_physics.UpdateRealElapsedTime(dt);
@@ -143,12 +152,11 @@ int main()
 		//Print Status Entries
 		PrintStatusEntries();
 
-		//Handle Keyboard Inputs
-		HandleKeyboardInputs();
-
+		//Handle Inputs
+		ControllerFactory::Instance()->GetController()->Update();
 		
 		timer_total.BeginTimingSection();
-
+	
 		//Update Scene
 		timer_update.BeginTimingSection();
 		SceneManager::Instance()->GetCurrentScene()->OnUpdateScene(dt);
@@ -165,7 +173,7 @@ int main()
 		GraphicsPipeline::Instance()->UpdateScene(dt);
 		GraphicsPipeline::Instance()->RenderScene();
 
-	
+
 
 		{
 			//Forces synchronisation if vsync is disabled

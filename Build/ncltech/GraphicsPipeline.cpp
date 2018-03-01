@@ -69,7 +69,7 @@ GraphicsPipeline::~GraphicsPipeline()
 void GraphicsPipeline::InitializeDefaults()
 {
 	allNodes.clear();
-	ScreenPicker::Instance()->ClearAllObjects();
+	//ScreenPicker::Instance()->ClearAllObjects();
 
 	backgroundColor = Vector3(0.8f, 0.8f, 0.8f);
 	ambientColor = Vector3(0.2f, 0.2f, 0.2f);
@@ -115,7 +115,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 	{
 		screenTexWidth = (uint)(width * numSuperSamples);
 		screenTexHeight = (uint)(height * numSuperSamples);
-		ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
+		//ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
 		//Color Texture
 		screenTexColor = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, screenTexWidth, screenTexHeight);
@@ -136,8 +136,8 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 
 void GraphicsPipeline::UpdateScene(float dt)
 {
-	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
-		camera->HandleMouse(dt);
+//	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
+	//	camera->HandleMouse(dt);
 
 	camera->HandleKeyboard(dt);
 	renderer->SetViewMatrix(camera->BuildViewMatrix());

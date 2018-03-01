@@ -8,15 +8,15 @@ Quickly turns a class into a singleton by extending class.
 This makes a single globally accessable instance of the given class that can be accessed
 anywhere in the program via calling <MyClass>::Instance().
 
-This type of coding style can be seen already in the Window class from graphics for games where the
-single window instance can be accessed anywhere in the program via calling Window::GetWindow().
+This type of coding style can be seen already in the OGLWindow class from graphics for games where the
+single window instance can be accessed anywhere in the program via calling WindowFactory::Instance()->GetWindow()->
 
 If your interested in learning more about the singleton pattern or good programming patterns,
 this wikibook has all you'll ever need! =]
 https://en.wikibooks.org/wiki/C%2B%2B_Programming/Code/Design_Patterns
 
 
-Note: Currently no nclgl class's have been changed to use this format (Window::GetWindow() is still around)!
+Note: Currently no nclgl class's have been changed to use this format (WindowFactory::Instance()->GetWindow() is still around)!
 	  Only ncltech class's will use this quick hack class, though I as a low level utility function I thought
 	  it best to live inside nclgl.
 
