@@ -154,9 +154,16 @@ void	OGLWindow::SetRenderer(OGLRenderer* r) {
 }
 
 bool	OGLWindow::UpdateWindow() {
+	for (auto& event : keyboardEvents)
+	{
+		delete event;
+	}
 	keyboardEvents.clear();
+	for (auto& event : mouseEvents)
+	{
+		delete event;
+	}
 	mouseEvents.clear();
-
 
 	float diff = timer->GetMS() - elapsedMS;
 
@@ -177,8 +184,6 @@ void OGLWindow::CheckMessages(MSG &msg) {
 	switch (msg.message) {	// Is There A Message Waiting?		
 	case (WM_QUIT):
 	case (WM_CLOSE): {					// Have We Received A Quit Message?
-		ShowOSPointer(true);
-		LockMouseToWindow(false);
 		forceQuit = true;
 	}break;
 	case (WM_INPUT): {
@@ -197,7 +202,7 @@ void OGLWindow::CheckMessages(MSG &msg) {
 		if (raw->header.dwType == RIM_TYPEMOUSE) {
 			mouseEvents.push_back(raw);
 		}
-		delete lpb;
+		
 	}break;
 
 	default: {								// If Not, Deal With OGLWindow Messages
