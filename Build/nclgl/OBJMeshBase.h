@@ -147,7 +147,11 @@ public:
 
 	virtual void Draw() = 0;
 
-	void SetTexture(TextureBase* t) {}
+	void SetTexture(TextureBase* t) {
+		for (auto& i = materials.begin(); i != materials.end();++i) {
+			i->second.diffuseNum = t;
+		}
+	}
 protected:
 	virtual	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType) = 0;
 

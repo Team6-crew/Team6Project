@@ -163,23 +163,6 @@ void GraphicsPipeline::RenderScene()
 	//NCLDebug - Build render lists
 	NCLDebug::_BuildRenderLists();
 
-
-	//Build shadowmaps
-		//BuildShadowTransforms();
-		//shadowFBO->Activate();
-		//renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
-		//renderer->Clear(Renderer::DEPTH);
-
-		//shaderShadow->Activate();
-		//shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-
-		//RenderAllObjects(true,
-		//	[&](RenderNodeBase* node)
-		//	{
-		//		shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
-		//	}
-		//);
-
 	//Render scene to screen fbo
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -197,7 +180,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uShadowTex", 2);
 		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
-		shadowTex->Bind(2);
+		//shadowTex->Bind(2);
 
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
@@ -211,7 +194,7 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
+		//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);

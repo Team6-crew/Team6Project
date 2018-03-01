@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-
+#include "../../OBJMeshBase.h"
 namespace nclgl
 {
 	namespace Maths
@@ -39,7 +39,13 @@ public:
 	inline MeshBase*						GetMesh() { return mesh; }
 	inline void								SetMesh(MeshBase* newMesh) { mesh = newMesh; } 
 
-	inline bool								IsRenderable() { return (this->mesh != nullptr); }
+	//obj Mesh
+	inline OBJMeshBase*						GetOBJMesh() { return objmesh; }
+	inline void								SetOBJMesh(OBJMeshBase* newMesh) { objmesh = newMesh; }
+
+
+
+	inline bool								IsRenderable() { return (mesh != nullptr || objmesh != nullptr); }
 
 	// Children
 	void	AddChild(RenderNodeBase* s);
@@ -62,6 +68,7 @@ protected:
 	RenderNodeBase*	parent = nullptr;
 
 	MeshBase*	mesh;
+	OBJMeshBase* objmesh;
 
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;

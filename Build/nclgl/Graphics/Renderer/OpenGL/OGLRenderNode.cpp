@@ -6,13 +6,15 @@
 using std::vector;
 using namespace nclgl::Maths;
 
-OGLRenderNode::OGLRenderNode(MeshBase* mesh, Vector4 colour) :
+OGLRenderNode::OGLRenderNode(MeshBase* mesh,OBJMeshBase * objm, Vector4 colour) :
 	RenderNodeBase()
 {
 	this->mesh			= mesh;
+	this->objmesh = objm;
 	this->colour		= colour;
 	modelScale			= Vector3(1,1,1);
 }
+
 
 OGLRenderNode::~OGLRenderNode(void)	{
 	for(unsigned int i = 0; i < children.size(); ++i) {
@@ -25,6 +27,10 @@ void OGLRenderNode::Draw()
 	if (mesh)
 	{
 		mesh->Draw();
+	}
+	else if (objmesh) 
+	{
+		objmesh->Draw();
 	}
 		
 }

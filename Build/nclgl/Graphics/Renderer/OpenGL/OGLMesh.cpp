@@ -104,12 +104,16 @@ GLuint activeTexture2Hack = 0;
 void OGLMesh::Draw()	{
 	//if (activeTexture1Hack != texture)
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture->GetID());
-		activeTexture1Hack = texture->GetID();
+		if (texture)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture->GetID());
+			activeTexture1Hack = texture->GetID();
+		}
+
 	}
 	//if (activeTexture2Hack != texture)
-	{
+	if(bumpTexture){
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, bumpTexture->GetID());
 		activeTexture2Hack = texture->GetID();

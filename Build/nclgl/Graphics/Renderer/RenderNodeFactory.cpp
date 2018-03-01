@@ -12,11 +12,14 @@ RenderNodeFactory::~RenderNodeFactory()
 {
 }
 
-RenderNodeBase* RenderNodeFactory::MakeRenderNode(MeshBase* mesh, nclgl::Maths::Vector4 colour)
+
+RenderNodeBase* RenderNodeFactory::MakeRenderNode(MeshBase* mesh, OBJMeshBase* objmesh, nclgl::Maths::Vector4 colour)
 {
 	#ifdef WIN_OGL
-		return new OGLRenderNode(mesh, colour);
+		return new OGLRenderNode(mesh, objmesh, colour);
 	#elif PSTATION4
-		return new PS4RenderNode(mesh, colour);
+		return new PS4RenderNode(mesh, objmesh, colour);
 	#endif
 }
+
+

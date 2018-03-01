@@ -22,7 +22,7 @@ _-_-_-_-_-_-_-""  ""
 #include "../../../Matrix4.h"
 #include "../../../Vector3.h"
 #include "../../../Vector4.h"
-
+#include "../../../OBJMeshBase.h"
 #include "../RenderNodeBase.h"
 
 class MeshBase;
@@ -30,7 +30,7 @@ class MeshBase;
 class OGLRenderNode : public RenderNodeBase	
 {
 public:
-	OGLRenderNode(MeshBase* m = NULL, nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1, 1, 1, 1));
+	OGLRenderNode(MeshBase* m = NULL, OBJMeshBase* objm = NULL, nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1, 1, 1, 1));
 	virtual ~OGLRenderNode(void);	  
 
 

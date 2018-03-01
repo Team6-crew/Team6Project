@@ -119,7 +119,7 @@ GameObject* CommonUtils::BuildSphereObject(
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(nullptr,CommonMeshes::Sphere(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 
@@ -220,7 +220,7 @@ GameObject* CommonUtils::BuildCuboidObject(
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(nullptr,CommonMeshes::Cube(), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
 	rnode->AddChild(dummy);
 
@@ -280,7 +280,7 @@ GameObject* CommonUtils::BuildMazeNode(
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(nullptr, CommonMeshes::Cube(), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
 	rnode->AddChild(dummy);
 
@@ -316,7 +316,7 @@ GameObject* CommonUtils::BuildCuboidObjectNoTexture(
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(MeshFactory::Instance()->MakeOBJMesh(MESHDIR"cube.obj"), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(nullptr,MeshFactory::Instance()->MakeOBJMesh(MESHDIR"cube.obj"), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
 	rnode->AddChild(dummy);
 
