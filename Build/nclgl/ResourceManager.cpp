@@ -22,3 +22,7 @@ TextureBase * ResourceManager::MakeTexture(std::string name, Texture::Type type,
 }
 
 
+TextureBase* ResourceManager::MakeTexture(std::string name)
+{
+	return textureManager.makeTexture(name);
+}

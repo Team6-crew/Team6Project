@@ -14,6 +14,7 @@ public:
 
 	TextureBase* getTexture(std::string name);
 	TextureBase* MakeTexture(std::string name, Texture::Type type, int a, int b);
+	TextureBase* MakeTexture(std::string name);
 
 private:
 	TextureManager textureManager;

@@ -3,6 +3,7 @@ enum Tags {
 	Default = 0,
 	TPlayer ,
 	TPickup ,
+	TPaintable,
 	TProjectile,
 	TGround,
 	TCanKiLL,

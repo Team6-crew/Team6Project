@@ -8,6 +8,7 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 #include <ncltech\StunProjectile.h>
+#include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 #include <nclgl\Launchpad.h>
 
@@ -193,6 +194,7 @@ void Player::handleInput(float dt) {
 
 void Player::equipStunWeapon(Vector4 colour) {
 	if (equippedPaintWeapon) {
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
 		delete equippedPaintWeapon;
 		equippedPaintWeapon = NULL;
 	}
@@ -204,6 +206,7 @@ void Player::equipStunWeapon(Vector4 colour) {
 
 void Player::equipPaintWeapon(Vector4 colour) {
 	if (equippedStunWeapon) {
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
 		delete equippedStunWeapon;
 		equippedStunWeapon = NULL;
 	}
@@ -295,6 +298,15 @@ void Player::shoot() {
 		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right*1.5f - forward*2.0f;
 		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true, (*renderNode->GetChildIteratorStart())->GetColour());
 		projectile->Physics()->SetLinearVelocity(-forward*40.0f);
+		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
+		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
+	}
+	else if (equippedPaintWeapon) {
+		Vector3 up = Vector3(0, 1, 0);
+		Vector3 right = Vector3::Cross(forward, up);
+		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
+		PaintProjectile* projectile = new PaintProjectile("p", pos, 0.3f, true, 0.5f, true, (*renderNode->GetChildIteratorStart())->GetColour());
+		projectile->Physics()->SetLinearVelocity(-forward * 40.0f);
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}

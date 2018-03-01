@@ -58,11 +58,19 @@ public:
 
 	float			GetCameraDistance() const { return distanceFromCamera; }
 	void			SetCameraDistance(float f) { distanceFromCamera = f; }
+
+	float			GetPaintPercentage() const { return paintPercentage; }
+	void			SetPaintPercentage(float p) { paintPercentage = p; }
+
+	bool			GetBeingPainted() const { return beingPainted; }
+	void			SetBeingPainted(bool p) { beingPainted = p; }
 protected:
 	std::vector<RenderNodeBase*> children;
 	RenderNodeBase*	parent = nullptr;
 	Tags tag;
 	MeshBase*	mesh;
+	float paintPercentage;
+	bool beingPainted;
 
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;
