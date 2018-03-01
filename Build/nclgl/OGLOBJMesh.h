@@ -91,6 +91,9 @@ public:
 
 	virtual void Draw();
 
+	virtual void SetTexture(TextureBase* t) {
+		texture = (OGLTexture*)t;
+	}
 protected:
 	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType);
 

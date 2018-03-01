@@ -91,6 +91,9 @@ public:
 
 	virtual void Draw();
 
+	virtual void SetTexture(TextureBase* t) {
+		texture = (PS4Texture*)t;
+	}
 protected:
 	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType);
 
