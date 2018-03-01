@@ -20,7 +20,7 @@ time of the various components of the game engine.
 #pragma once
 #include "TimerFactory.h"
 #include "GameTimerBase.h"
-#include "NCLDebug.h"
+//#include "NCLDebug.h"
 
 class PerfTimer
 {

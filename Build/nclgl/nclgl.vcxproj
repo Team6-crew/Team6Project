@@ -38,7 +38,6 @@
     <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
-    <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Input\InputBase.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Matrix3.cpp" />
@@ -94,7 +93,6 @@
     <ClInclude Include="Graphics\RenderConstants.h" />
     <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
-    <ClInclude Include="HeightMap.h" />
     <ClInclude Include="Input\InputBase.h" />
     <ClInclude Include="Input\InputDevice.h" />
     <ClInclude Include="Keyboard.h" />
@@ -258,7 +256,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>GLEW_STATIC;PSTATION4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;SCE_GNM_DEBUG;PSTATION4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
