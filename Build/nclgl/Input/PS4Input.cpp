@@ -41,7 +41,7 @@ void PS4Input::InitController() {
 	}
 }
 
-void PS4Input::Poll() {
+void PS4Input::Update() {
 	ScePadData data;
 
 	int ret = scePadReadState(padHandle, &data);
@@ -93,24 +93,64 @@ void PS4Input::ResetInput() {
 	}
 }
 
-AXIS	PS4Input::GetAxis(unsigned int i) {
+AXIS	PS4Input::GetAxis(Stick i) {
 	if (i > MAX_AXIS) {
 		return AXIS();
 	}
 	return axis[i];
 }
 
-float	PS4Input::GetButton(unsigned int i) {
+float	PS4Input::GetButton(Button i) {
 	if (i > MAX_BUTTONS) {
 		return 0.0f;
 	}
 	return buttons[i];
 }
 
-bool	PS4Input::GetButtonDown(unsigned int i) {
+bool	PS4Input::GetButtonDown(Button i) {
 	if (i > MAX_BUTTONS) {
 		return false;
 	}
 	return buttons[i] > 0.5f ? true : false;
 }
+
+void PS4Input::ResetInput()
+{
+	for (int i = 0; i < MAX_AXIS; ++i) {
+		axis[i].x = 0.0f;
+		axis[i].y = 0.0f;
+	}
+	for (int i = 0; i < MAX_BUTTONS; ++i) {
+		buttons[i] = 0.0f;
+	}
+}
+
+bool PS4Input::IsAction(InputToken action)
+{
+	switch (action)
+	{
+	case ESCAPE:
+		return GetButtonDown(CROSS);
+		break;
+	case FORWARD:
+		return (GetAxis(LEFT_STICK).y > 0.5);
+		break;
+	case BACKWARD:
+		return (GetAxis(LEFT_STICK).y < -0.5);
+		break;
+	case LEFT:
+		return (GetAxis(LEFT_STICK).x < -0.5);
+		break;
+	case RIGHT:
+		return (GetAxis(LEFT_STICK).x > 0.5);
+		break;
+	case ACTION_A:
+		return GetButtonDown(TRIANGLE);
+		break;
+	default:
+		return false;
+	}
+}
+
+
 #endif // PSTATION4
