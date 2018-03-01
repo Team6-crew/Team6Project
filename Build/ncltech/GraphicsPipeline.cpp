@@ -465,6 +465,7 @@ void GraphicsPipeline::RenderScene()
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
 			}
+			
 		}
 	}
 
@@ -504,8 +505,7 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 			if (i == 0) {
 				renderer->SetViewPort(width/4, height / 2, width / 2, height / 2);
 				renderer->Scissor(width / 4, height / 2, width / 2, height / 2);
-				/*renderer->SetViewPort(0, height / 2, width / 2, height / 2);
-				renderer->Scissor(0, height / 2, width / 2, height / 2);*/
+
 			}
 			else if (i == 1) {
 				renderer->SetViewPort(0, 0, width / 2, height / 2);
@@ -735,11 +735,13 @@ Camera* GraphicsPipeline::CreateNewCamera() {
 }
 
 void GraphicsPipeline::ChangeScene() {
-	renderer->SwapBuffers();
+	
 	cameras.clear();
-	screenFBO->Activate();
+
 	NCLDebug::_ClearDebugLists();
 	NCLDebug::_ReleaseShaders();
 	renderer->BindScreenFramebuffer();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 }

@@ -208,7 +208,37 @@ public:
 				}
 			}
 		}
-
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+		{
+			GameLogic::Instance()->setnumOfPlayersMp(1);
+			GraphicsPipeline::Instance()->ChangeScene();
+			SceneManager::Instance()->JumpToScene("Team Project");
+			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+		}
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
+		{
+			numOfPlayers = 0b0011;
+			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+			GraphicsPipeline::Instance()->ChangeScene();
+			SceneManager::Instance()->JumpToScene("Team Project");
+			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+		}
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
+		{
+			numOfPlayers = 0b0111;
+			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+			GraphicsPipeline::Instance()->ChangeScene();
+			SceneManager::Instance()->JumpToScene("Team Project");
+			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+		}
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
+		{
+			numOfPlayers = 0b1111;
+			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+			GraphicsPipeline::Instance()->ChangeScene();
+			SceneManager::Instance()->JumpToScene("Team Project");
+			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+		}
 		//Navigate choices
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
 		{

@@ -13,7 +13,7 @@ public:
 	~GameLogic() {}
 
 	void calculatePaintPercentage();
-	void addPlayers(int num_players);
+	void addPlayer(int num_players);
 	void addSoftPlayers(int num_players);
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }

@@ -24,7 +24,6 @@ public:
 
 	GameObject* getBody() { return body; }
 	void move(float dt);
-	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot);
 	void shoot();
 	
 	float getSpeed() { return speed; }
@@ -45,7 +44,6 @@ public:
 		tempPitch = camera->GetPitch();
 	}
 	void setSpeed(float sp) { speed = sp; }
-	float getSpeed() { return speed; }
 
 	void increaseSensitivity(float dt) {
 		sensitivity += dt * 5;
@@ -64,7 +62,6 @@ public:
 
 	void handleInput(float dt);
 	float getadd_rad() { return add_rad; }
-	void setRadius(float radius) { rad = radius; }
 	void setadd_rad(float add) { add_rad = add; }
 	bool setcanpaint(bool canp) { canpaint = canp; return canpaint; }
 	void settime(float t) { time = t; }

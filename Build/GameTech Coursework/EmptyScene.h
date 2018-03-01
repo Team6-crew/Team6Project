@@ -65,13 +65,13 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
-		GameLogic::Instance()->addSoftPlayers(1);
-		//Add player to scene
-		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
-			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
-			//this->AddGameObject(GameLogic::Instance()->getPlayer(i));
-			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
-		}
+		//GameLogic::Instance()->addSoftPlayers(1);
+		////Add player to scene
+		//for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
+		//	this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+		//	//this->AddGameObject(GameLogic::Instance()->getPlayer(i));
+		//	this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+		//}
 
 
 		//Who doesn't love finding some common ground?
