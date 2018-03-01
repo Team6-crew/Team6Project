@@ -1,7 +1,17 @@
 #include "MeshFactory.h"
 #include "Graphics\Renderer\OpenGL\OGLMesh.h"
 #include "Graphics\Renderer\PS4\PS4Mesh.h"
+#include "OGLOBJMesh.h"
+#include "PS4OBJMesh.h"
 
+OBJMeshBase * MeshFactory::MakeOBJMesh(std::string file)
+{
+#ifdef WIN_OGL
+	return new OGLOBJMesh(file);
+#elif PSTATION4
+	return new PS4OBJMesh(file);
+#endif
+}
 
 MeshBase * MeshFactory::MakeMesh()
 {

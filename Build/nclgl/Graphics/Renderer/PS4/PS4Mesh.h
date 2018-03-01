@@ -145,7 +145,47 @@ protected:
 			}
 		}
 	}
+
+	void GenerateTangents() {
+		if (!texCoords) {
+			return;
+		}
+		if (!tangents) {
+			tangents = new sce::Vectormath::Scalar::Aos::Vector3[numVertices];
+		}
+		for (int i = 0; i < numVertices; ++i) {
+			tangents[i] = sce::Vectormath::Scalar::Aos::Vector3();
+		}
+		if (indices) {
+			for (uint i = 0; i < numIndices; i += 3) {
+				int a = indices[i];
+				int b = indices[i + 1];
+				int c = indices[i + 2];
+
+				sce::Vectormath::Scalar::Aos::Vector3 tangent = GenerateTangentPS4(vertices[a], vertices[b], vertices[c], texCoords[a], texCoords[b], texCoords[c]);
+
+				tangents[a] += tangent;
+				tangents[b] += tangent;
+				tangents[c] += tangent;
+			}
+		}
+		else {
+			for (uint i = 0; i < numVertices; i += 3) {
+				sce::Vectormath::Scalar::Aos::Vector3 tangent = GenerateTangentPS4(vertices[i], vertices[i + 1], vertices[i + 2], texCoords[i], texCoords[i + 1], texCoords[i + 2]);
+
+				tangents[i] += tangent;
+				tangents[i + 1] += tangent;
+				tangents[i + 2] += tangent;
+			}
+		}
+		for (int i = 0; i < numVertices; ++i) {
+			NormalisePS4(tangents[i]);
+		}
+	}
+
 };
+
+
 
 
 #endif

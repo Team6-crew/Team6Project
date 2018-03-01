@@ -1,12 +1,13 @@
 #include "CommonMeshes.h"
 #include <nclgl\NCLDebug.h>
-#include <nclgl\OBJMesh.h>
+#include <nclgl\OBJMeshBase.h>
 #include "../ExternalLibs/SOIL/include/SOIL.h" 
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
+#include "../nclgl/MeshFactory.h"
 
-MeshBase*	  CommonMeshes::m_pCube		= NULL;
-MeshBase*	  CommonMeshes::m_pSphere	= NULL;
+OBJMeshBase*	  CommonMeshes::m_pCube		= NULL;
+OBJMeshBase*	  CommonMeshes::m_pSphere	= NULL;
 
 TextureBase*  CommonMeshes::m_pCheckerboardTex = NULL;
 
@@ -19,10 +20,10 @@ void CommonMeshes::InitializeMeshes()
 		m_pCheckerboardTex->SetTextureFiltering(true);
 		m_pCheckerboardTex->SetTextureWrapping(true);
 
-		m_pCube = new OBJMesh(MESHDIR"cube.obj");
+		m_pCube = MeshFactory::Instance()->MakeOBJMesh(MESHDIR"cube.obj");
 		m_pCube->SetTexture(m_pCheckerboardTex);
 
-		m_pSphere = new OBJMesh(MESHDIR"sphere.obj");
+		m_pSphere = MeshFactory::Instance()->MakeOBJMesh(MESHDIR"sphere.obj");
 		m_pSphere->SetTexture(m_pCheckerboardTex);
 	}
 }

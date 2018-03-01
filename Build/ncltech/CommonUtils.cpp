@@ -3,10 +3,10 @@
 #include "CuboidCollisionShape.h"
 #include "CommonMeshes.h"
 #include "ScreenPicker.h"
-#include <nclgl\OBJMesh.h>
+#include <nclgl\OBJMeshBase.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
-
+#include <nclgl/MeshFactory.h>
 using namespace nclgl::Maths;
 
 //Horrible!!!
@@ -315,8 +315,8 @@ GameObject* CommonUtils::BuildCuboidObjectNoTexture(
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
-
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(new OBJMesh(MESHDIR"cube.obj"), color);
+	
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(MeshFactory::Instance()->MakeOBJMesh(MESHDIR"cube.obj"), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
 	rnode->AddChild(dummy);
 

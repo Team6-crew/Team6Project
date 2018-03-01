@@ -89,17 +89,17 @@ bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 			currentMesh->mtlType = currentMtlType;
 		}
 		else if (currentLine == OBJVERT) {	//This line is a vertex
-			Vector3 vertex;
+			nclgl::Maths::Vector3 vertex;
 			f >> vertex.x; f >> vertex.y; f >> vertex.z;
 			inputVertices.push_back(vertex);
 		}
 		else if (currentLine == OBJNORM) {	//This line is a Normal!
-			Vector3 normal;
+			nclgl::Maths::Vector3 normal;
 			f >> normal.x; f >> normal.y; f >> normal.z;
 			inputNormals.push_back(normal);
 		}
 		else if (currentLine == OBJTEX) {	//This line is a texture coordinate!
-			Vector2 texCoord;
+			nclgl::Maths::Vector2 texCoord;
 			f >> texCoord.x; f >> texCoord.y;
 			/*
 			TODO! Some OBJ files might have 3D tex coords...
@@ -269,7 +269,7 @@ automatically be used by this overloaded function. Once 'this' has been drawn,
 all of the children of 'this' will be drawn
 */
 void PS4OBJMesh::Draw() {
-	OGLMesh::Draw();
+	PS4Mesh::Draw();
 	for (unsigned int i = 0; i < children.size(); ++i) {
 		children.at(i)->Draw();
 	}
@@ -284,11 +284,11 @@ void	PS4OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 	if (i != materials.end()) {
 		if (!i->second.diffuse.empty()) {
-			texture = i->second.diffuseNum;
+			texture =(PS4Texture*) i->second.diffuseNum;
 		}
 #ifdef OBJ_USE_TANGENTS_BUMPMAPS
 		if (!i->second.bump.empty()) {
-			bumpTexture = i->second.bumpNum;
+			bumpTexture = (PS4Texture*)i->second.bumpNum;
 		}
 #endif
 		return;
@@ -340,7 +340,7 @@ void	PS4OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 			if (!currentMTL.diffuse.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.diffuse);
 				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
-				currentMTL.diffuseNum = SOIL_load_OGL_texture(filename.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
+				currentMTL.diffuseNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
 			}
 		}
 		else if (currentLine == MTLBUMPMAP || currentLine == MTLBUMPMAPALT) {
@@ -358,7 +358,7 @@ void	PS4OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 			if (!currentMTL.bump.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.bump);
 				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
-				currentMTL.bumpNum = SOIL_load_OGL_texture(filename.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
+				currentMTL.bumpNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
 			}
 		}
 	}
@@ -389,8 +389,8 @@ void	PS4OBJMesh::FixTextures(MTLInfo &info) {
 		}
 
 		info.bump = temp;
-
-		info.bumpNum = SOIL_load_OGL_texture(string(TEXTUREDIR + info.bump).c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
+	
+		info.bumpNum = TextureFactory::Instance()->MakeTexture(string(TEXTUREDIR + info.bump).c_str());
 	}
 }
 #endif //pstation4

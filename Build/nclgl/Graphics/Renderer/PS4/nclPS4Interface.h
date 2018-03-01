@@ -31,6 +31,12 @@ sce::Vectormath::Scalar::Aos::Vector3 CrossPS4(const sce::Vectormath::Scalar::Ao
 	return sce::Vectormath::Scalar::Aos::Vector3((a.getY()*b.getZ()) - (a.getZ()*b.getY()), (a.getZ()*b.getX()) - (a.getX()*b.getZ()), (a.getX()*b.getY()) - (a.getY()*b.getX()));
 }
 
+sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::Scalar::Aos::Vector3 &a,
+	const sce::Vectormath::Scalar::Aos::Vector3 &b,
+	const sce::Vectormath::Scalar::Aos::Vector3 &c,
+	const sce::Vectormath::Scalar::Aos::Vector2 &ta,
+	const sce::Vectormath::Scalar::Aos::Vector2 &tb,
+	const sce::Vectormath::Scalar::Aos::Vector2 &tc);
 
 const sce::Vectormath::Scalar::Aos::Vector3& NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 &vec) {
 	float length = sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY() + vec.getZ() * vec.getZ());

@@ -84,6 +84,7 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 #include "Vector2.h"
 
 #include "ChildMeshInterface.h"
+#include "Graphics\Renderer\TextureFactory.h"
 
 #define OBJOBJECT		"object"	//the current line of the obj file defines the start of a new material
 #define OBJMTLLIB		"mtllib"
@@ -127,8 +128,8 @@ struct MTLInfo {
 	std::string bump;
 	std::string diffuse;
 
-	int bumpNum;
-	int diffuseNum;
+	TextureBase* bumpNum;
+	TextureBase* diffuseNum;
 
 	MTLInfo() {
 		bumpNum = 0;
@@ -146,6 +147,7 @@ public:
 
 	virtual void Draw() = 0;
 
+	void SetTexture(TextureBase* t) {}
 protected:
 	virtual	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType) = 0;
 

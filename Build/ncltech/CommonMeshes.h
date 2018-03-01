@@ -14,7 +14,7 @@ Description:
 #pragma once
 #include <nclgl\Graphics\MeshBase.h>
 #include "../ExternalLibs/GLEW/include/GL/glew.h"
-
+#include <nclgl\OBJMeshBase.h>
 class Scene;
 
 class TextureBase;
@@ -28,10 +28,10 @@ public:
 	// e.g RenderNode* cube_copy = new RenderNode(*CommonMeshes::Cube());
 
 	//Cube
-	static MeshBase* Cube()			{ return m_pCube; }
+	static OBJMeshBase* Cube()			{ return m_pCube; }
 
 	//Sphere
-	static MeshBase* Sphere()		{ return m_pSphere; }
+	static OBJMeshBase* Sphere()		{ return m_pSphere; }
 
 
 
@@ -45,8 +45,8 @@ protected:
 	static void ReleaseMeshes();
 
 protected:
-	static MeshBase* m_pCube;
-	static MeshBase* m_pSphere;
+	static OBJMeshBase* m_pCube;
+	static OBJMeshBase* m_pSphere;
 
 	static TextureBase* m_pCheckerboardTex;
 };

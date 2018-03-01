@@ -77,6 +77,23 @@ sce::Vectormath::Scalar::Aos::Vector2 nclToPS4(const nclgl::Maths::Vector2& vec)
 	return PSVec;
 }
 
+sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::Scalar::Aos::Vector3 & a, const sce::Vectormath::Scalar::Aos::Vector3 & b, const sce::Vectormath::Scalar::Aos::Vector3 & c, const sce::Vectormath::Scalar::Aos::Vector2 & ta, const sce::Vectormath::Scalar::Aos::Vector2 & tb, const sce::Vectormath::Scalar::Aos::Vector2 & tc)
+{
+	Vector2 coord1 = tb - ta;
+	Vector2 coord2 = tc - ta;
+
+	Vector3 vertex1 = b - a;
+	Vector3 vertex2 = c - a;
+
+	Vector3 axis2 = Vector3(vertex1 - vertex2);
+
+	Vector3 axis = Vector3(vertex1*coord2.getY() - vertex2 * coord1.getY());
+
+	float invDet = 1.0f / (coord1.getX() * coord2.getY() - coord2.getX() * coord1.getY());
+
+	return axis * invDet;
+}
+
 // Converts  a PS4 Vector3 to an nclgl Vector3
 nclgl::Maths::Vector3 PS4ToNcl(const sce::Vectormath::Scalar::Aos::Vector3& vec)
 {

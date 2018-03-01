@@ -96,7 +96,6 @@ protected:
 
 	void	FixTextures(MTLInfo &info);
 
-	std::map <std::string, MTLInfo> materials;
 };
 
 #endif

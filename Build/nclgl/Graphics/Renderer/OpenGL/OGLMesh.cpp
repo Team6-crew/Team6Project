@@ -74,7 +74,7 @@ OGLMesh::~OGLMesh(void)	{
 	glDeleteBuffers(MAX_BUFFER, bufferObject);		//Delete our VBOs
 
 	//glDeleteTextures(1,&texture);					//We'll be nice and delete our texture when we're done with it
-	glDeleteTextures(1,&bumpTexture);				//We'll be nice and delete our texture when we're done with it
+
 
 	//Later tutorial stuff
 	delete[]vertices;
@@ -105,14 +105,14 @@ void OGLMesh::Draw()	{
 	//if (activeTexture1Hack != texture)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		activeTexture1Hack = texture;
+		glBindTexture(GL_TEXTURE_2D, texture->GetID());
+		activeTexture1Hack = texture->GetID();
 	}
 	//if (activeTexture2Hack != texture)
 	{
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, bumpTexture);
-		activeTexture2Hack = texture;
+		glBindTexture(GL_TEXTURE_2D, bumpTexture->GetID());
+		activeTexture2Hack = texture->GetID();
 	}
 	//if (activeArrayHack != arrayObject)
 	{
@@ -646,7 +646,7 @@ void OGLMesh::SetTexture(TextureBase* texture)
 {
 	//TODO: Can we avoid this cast?
 	// Dynamic is safer but slower if static cast fails have big problems anyway
-	this->texture = static_cast<OGLTexture*>(texture)->GetID();
+	this->texture = static_cast<OGLTexture*>(texture);
 	//TODO: Don't actually need texture here is for OBJMesh??
 }
 #endif

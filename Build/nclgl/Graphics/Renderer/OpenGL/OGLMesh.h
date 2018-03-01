@@ -22,7 +22,7 @@ _-_-_-_-_-_-_-""  ""
 
 #include <nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h>
 #include <nclgl\Graphics\MeshBase.h>
-
+#include <nclgl\Graphics\Renderer\OpenGL\OGLTexture.h>
 #include <vector>
 
 
@@ -74,12 +74,12 @@ public:
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
 	void	SetTexture(TextureBase* texture)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
-	GLuint  GetTexture()			{return texture;}
+	OGLTexture*	  GetTexture()			{return texture;}
 
 	//Sets the Mesh's bump map. Takes an OpenGL texture 'name'
-	void	SetBumpMap(GLuint tex)	{bumpTexture = tex;}
+	void	SetBumpMap(OGLTexture*	 tex)	{bumpTexture = tex;}
 	//Gets the Mesh's bump map. Returns an OpenGL texture 'name'
-	GLuint  GetBumpMap()			{return bumpTexture;}
+	OGLTexture*	  GetBumpMap()			{return bumpTexture;}
 
 	//Extra stuff!!!! Aren't I nice?
 	void	DrawDebugNormals(float length = 5.0f);
@@ -113,7 +113,7 @@ public:
 	//Primitive type for this mesh (GL_TRIANGLES...etc)
 	GLuint	type;
 	//OpenGL texture name for the diffuse map
-	GLuint	texture;
+	OGLTexture*	texture;
 
 	//Stuff introduced later on in the tutorials!!
 
@@ -121,7 +121,7 @@ public:
 	GLuint			numIndices;
 
 	//OpenGL texture name for the bump map
-	GLuint			bumpTexture;
+	OGLTexture*				bumpTexture;
 
 	//You might wonder why we keep pointers to vertex data once
 	//it's sent off to graphics memory. For basic meshes, there's no
