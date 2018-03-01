@@ -1,0 +1,215 @@
+/******************************************************************************
+Class: PhysicsNode
+Implements:
+Author: 
+	Author: Pieran Marris      <p.marris@newcastle.ac.uk> and YOU!
+Description: 
+
+	A class to store all of the properties that define a physical object in the world.
+
+	This class shouldn't need to be changed for the course of the physics tutorials, though
+	will be used extensively. 
+
+	As we go through the physics tutorials, we will be adding more and more of these parameters into
+	our physics engine and processing them as required. 
+
+	The first ones (and all that is needed to give an object movement) we will use are:
+		<---------LINEAR-------------->
+		Vector3		position;						
+		Vector3		linVelocity;
+		Vector3		force;
+		float		invMass;
+
+		<----------ANGULAR-------------->
+		Quaternion  orientation;
+		Vector3		angVelocity;
+		Vector3		torque;
+		Matrix3     invInertia;
+
+
+*//////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+#include <nclgl\Quaternion.h>
+#include <nclgl\Matrix3.h>
+#include "CollisionShape.h"
+#include <functional>
+
+class PhysicsNode;
+
+//Callback function called whenever a collision is detected between two objects
+//Params:
+//	PhysicsNode* this_obj			- The current object class that contains the callback
+//	PhysicsNode* colliding_obj	- The object that is colliding with the given object
+//Return:
+//  True	- The physics engine should process the collision as normal
+//	False	- The physics engine should drop the collision pair and not do any further collision resolution/manifold generation
+//			  > This can be useful for AI to see if a player/agent is inside an area/collision volume
+typedef std::function<bool(PhysicsNode* this_obj, PhysicsNode* colliding_obj)> PhysicsCollisionCallback;
+
+
+//Callback function called whenever this physicsnode's world transform is updated
+//Params:
+//	const Matrix4& transform - New World transform of the physics node
+typedef std::function<void(const nclgl::Maths::Matrix4& transform)> PhysicsUpdateCallback;
+
+
+class GameObject;
+class PhysicsNode
+{
+public:
+	PhysicsNode()
+		: position(0.0f, 0.0f, 0.0f)
+		, linVelocity(0.0f, 0.0f, 0.0f)
+		, force(0.0f, 0.0f, 0.0f)
+		, invMass(0.0f)
+		, orientation(0.0f, 0.0f, 0.0f, 1.0f)
+		, angVelocity(0.0f, 0.0f, 0.0f)
+		, torque(0.0f, 0.0f, 0.0f)
+		, invInertia(nclgl::Maths::Matrix3::ZeroMatrix)
+		, collisionShape(NULL)
+		, friction(0.5f)
+		, elasticity(0.9f)
+		, soft(false)
+	{
+	}
+
+	virtual ~PhysicsNode()
+	{
+		SAFE_DELETE(collisionShape);
+	}
+
+
+	//<-------- Integration --------->
+	// Called automatically by PhysicsEngine on all physics nodes each frame
+	void IntegrateForVelocity(float dt);
+	//<-- Between calling these two functions the physics engine will solve velocity to get 'true' final velocity -->
+	void IntegrateForPosition(float dt);
+
+
+	//<--------- GETTERS ------------->
+	inline GameObject*			GetParent()					const { return parent; }
+
+	
+
+	inline float				GetElasticity()				const { return elasticity; }
+	inline float				GetFriction()				const { return friction; }
+
+	inline const nclgl::Maths::Vector3&		GetPosition()				const { return position; }
+	inline const nclgl::Maths::Vector3&		GetLinearVelocity()			const { return linVelocity; }
+	inline const nclgl::Maths::Vector3&		GetForce()					const { return force; }
+	inline float							GetInverseMass()			const { return invMass; }
+
+	inline const nclgl::Maths::Quaternion&	GetOrientation()			const { return orientation; }
+	inline const nclgl::Maths::Vector3&		GetAngularVelocity()		const { return angVelocity; }
+	inline const nclgl::Maths::Vector3&		GetTorque()					const { return torque; }
+	inline const nclgl::Maths::Matrix3&		GetInverseInertia()			const { return invInertia; }
+
+	inline CollisionShape*					GetCollisionShape()			const { return collisionShape; }
+
+	const nclgl::Maths::Matrix4&			GetWorldSpaceTransform()    const { return worldTransform; }
+
+
+	inline float				GetColRadius()				const { return colRadius; }
+	inline bool					isSoft()				const { return soft; }
+
+
+	//<--------- SETTERS ------------->
+	inline void					SetColRadius(float r) { colRadius = r; }
+	inline void SetParent(GameObject* obj)							{ parent = obj; }
+
+	inline void SetElasticity(float elasticityCoeff)				{ elasticity = elasticityCoeff; }
+	inline void SetFriction(float frictionCoeff)					{ friction = frictionCoeff; }
+
+	inline void SetPosition(const nclgl::Maths::Vector3& v)							{ position = v; FireOnUpdateCallback(); }
+	inline void SetLinearVelocity(const nclgl::Maths::Vector3& v)					{ linVelocity = v; }
+	inline void SetForce(const nclgl::Maths::Vector3& v)							{ force = v; }
+	inline void SetInverseMass(const float& v)										{ invMass = v; }
+
+	inline void SetOrientation(const nclgl::Maths::Quaternion& v)					{ orientation = v; FireOnUpdateCallback(); }
+	inline void SetAngularVelocity(const nclgl::Maths::Vector3& v)					{ angVelocity = v; }
+	inline void SetTorque(const nclgl::Maths::Vector3& v)							{ torque = v; }
+	inline void SetInverseInertia(const nclgl::Maths::Matrix3& v)					{ invInertia = v; }
+
+	inline void SetIsSoft(bool s) { soft = s; }
+
+	inline void SetCollisionShape(CollisionShape* colShape)
+	{ 
+		if (collisionShape) collisionShape->SetParent(NULL);
+		collisionShape = colShape;
+		if (collisionShape) collisionShape->SetParent(this);
+	}
+	
+
+
+
+	//<---------- CALLBACKS ------------>
+	inline void SetOnCollisionCallback(PhysicsCollisionCallback callback) { onCollisionCallback = callback; }
+	inline bool FireOnCollisionEvent(PhysicsNode* obj_a, PhysicsNode* obj_b)
+	{
+		return (onCollisionCallback) ? onCollisionCallback(obj_a, obj_b) : true;
+	}
+
+	inline void SetOnUpdateCallback(PhysicsUpdateCallback callback) { onUpdateCallback = callback; }
+	inline void FireOnUpdateCallback()
+	{
+		//Build world transform
+		worldTransform = orientation.ToMatrix4();
+		worldTransform.SetPositionVector(position);
+			
+		//Fire the OnUpdateCallback, notifying GameObject's and other potential
+		// listeners that this PhysicsNode has a new world transform.
+		if (onUpdateCallback) onUpdateCallback(worldTransform);
+	}
+	
+	void setDynamic(bool isDynamic) {
+		dynamic = isDynamic;
+	}
+
+	bool getDynamic() {
+		return dynamic;
+	}
+
+protected:
+
+
+	//if the object is dynamic or not
+	bool dynamic = false;
+
+
+	float colRadius;
+	bool soft;
+
+	//Useful parameters
+	GameObject*				parent;
+	nclgl::Maths::Matrix4					worldTransform;
+	PhysicsUpdateCallback	onUpdateCallback;
+
+
+//Added in Tutorial 2
+	//<---------LINEAR-------------->
+	nclgl::Maths::Vector3		position;
+	nclgl::Maths::Vector3		linVelocity;
+	nclgl::Maths::Vector3		force;
+	float		invMass;
+
+	//<----------ANGULAR-------------->
+	nclgl::Maths::Quaternion  orientation;
+	nclgl::Maths::Vector3		angVelocity;
+	nclgl::Maths::Vector3		torque;
+	nclgl::Maths::Matrix3     invInertia;
+
+
+//Added in Tutorial 4/5
+	//<----------COLLISION------------>
+	CollisionShape*				collisionShape;
+	PhysicsCollisionCallback	onCollisionCallback;
+
+
+//Added in Tutorial 5
+	//<--------MATERIAL-------------->
+	float				elasticity;		///Value from 0-1 definiing how much the object bounces off other objects
+	float				friction;		///Value from 0-1 defining how much the object can slide off other objects
+
+
+};
