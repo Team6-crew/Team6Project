@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 /*
 Class:OGLWindow
 Author:Rich Davison
@@ -104,3 +105,5 @@ public:
 	OGLWindow(std::string title = "OpenGL Framework", int sizeX = 800, int sizeY = 600, bool fullScreen = false);
 	~OGLWindow(void);
 };
+
+#endif

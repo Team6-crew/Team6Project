@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "Keyboard.h"
 #include <iostream>
 Keyboard::Keyboard(HWND &hwnd)	{
@@ -78,3 +79,5 @@ void Keyboard::Update(RAWINPUT* raw)	{
 	
 }
 
+
+#endif

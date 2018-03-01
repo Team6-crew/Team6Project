@@ -23,7 +23,6 @@ public:
 
 
 	void move();
-	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump);
 
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
@@ -44,7 +43,6 @@ private:
 
 	bool canjump = 1;
 
-	KeyboardKeys move_up, move_down, move_left, move_right , move_jump;
 	
 	
 };

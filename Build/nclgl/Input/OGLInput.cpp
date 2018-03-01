@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLInput.h"
 
 #include <nclgl\Keyboard.h>
@@ -65,3 +66,6 @@ void OGLInput::Update()
 		mouse->Update(event);
 	}
 }
+
+
+#endif

@@ -85,19 +85,19 @@ void OcTree::draw(OcTree* root) {
 		Vector3 c7 = c6 + Vector3(0, 0, -d);
 		Vector3 c8 = c7 + Vector3(-d, 0, 0);
 		
-		NCLDebug::DrawThickLine(c1, c2, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c2, c3, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c3, c4, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c1, c4, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-
-		NCLDebug::DrawThickLine(c5, c6, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c6, c7, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c7, c8, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c5, c8, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-
-		NCLDebug::DrawThickLine(c1, c7, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c4, c6, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c2, c8, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		NCLDebug::DrawThickLine(c3, c5, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c1, c2, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c2, c3, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c3, c4, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c1, c4, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//
+		//NCLDebug::DrawThickLine(c5, c6, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c6, c7, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c7, c8, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c5, c8, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//
+		//NCLDebug::DrawThickLine(c1, c7, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c4, c6, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c2, c8, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		//NCLDebug::DrawThickLine(c3, c5, 0.1f, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 }

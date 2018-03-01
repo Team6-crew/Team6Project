@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 /******************************************************************************
 Class:Keyboard
 Implements:InputDevice
@@ -200,3 +201,4 @@ private:
 
 
 
+#endif

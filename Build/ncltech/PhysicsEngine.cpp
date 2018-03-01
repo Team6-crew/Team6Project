@@ -116,7 +116,7 @@ void PhysicsEngine::Update(float deltaTime)
 
 		if (updateRealTimeAccum >= updateTimestep)
 		{
-			NCLDebug::Log("Physics too slow to run in real time!");
+			//NCLDebug::Log("Physics too slow to run in real time!");
 			//Drop Time in the hope that it can continue to run faster the next frame
 			updateRealTimeAccum = 0.0f;
 		}
@@ -392,8 +392,8 @@ void PhysicsEngine::NarrowPhaseCollisions()
 				// - Have to do this here as colData is only temporary. 
 				if (debugDrawFlags & DEBUGDRAW_FLAGS_COLLISIONNORMALS)
 				{
-					NCLDebug::DrawPointNDT(colData._pointOnPlane, 0.1f, Vector4(0.5f, 0.5f, 1.0f, 1.0f));
-					NCLDebug::DrawThickLineNDT(colData._pointOnPlane, colData._pointOnPlane - colData._normal * colData._penetration, 0.05f, Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+					//NCLDebug::DrawPointNDT(colData._pointOnPlane, 0.1f, Vector4(0.5f, 0.5f, 1.0f, 1.0f));
+					//NCLDebug::DrawThickLineNDT(colData._pointOnPlane, colData._pointOnPlane - colData._normal * colData._penetration, 0.05f, Vector4(0.0f, 0.0f, 1.0f, 1.0f));
 				}
 
 

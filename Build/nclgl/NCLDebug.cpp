@@ -1,3 +1,7 @@
+#ifdef WIN_OGL
+
+
+
 #include "NCLDebug.h"
 #include "WindowBase.h"
 #include "WindowFactory.h"
@@ -1150,3 +1154,5 @@ GLuint NCLDebug::_GenerateFontBitmap(const char* font_name, int font_size, bool 
 
 	return texid;
 }
+
+#endif // WIN_OGL

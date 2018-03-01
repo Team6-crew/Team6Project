@@ -1,3 +1,5 @@
+#ifdef WIN_OGL
+
 #include "Mouse.h"
 
 using namespace nclgl::Maths;
@@ -212,3 +214,4 @@ void Mouse::UpdateDoubleClick(float msec)	{
 		}
 	}	
 }
+#endif

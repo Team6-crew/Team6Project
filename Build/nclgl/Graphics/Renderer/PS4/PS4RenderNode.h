@@ -24,7 +24,7 @@ namespace nclgl
 class PS4RenderNode : public RenderNodeBase
 {
 public:
-	PS4RenderNode(MeshBase* m = NULL, nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1, 1, 1, 1));
+	PS4RenderNode(MeshBase* m = NULL, OBJMeshBase* objm = NULL, nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(1, 1, 1, 1));
 	~PS4RenderNode();
 
 	void	Update(float msec);

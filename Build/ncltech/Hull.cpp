@@ -234,7 +234,7 @@ void Hull::DebugDraw(const Matrix4& transform)
 			{
 				Vector3 polygon_next = transform * m_vVertices[face._vert_ids[idx]]._pos;
 
-				NCLDebug::DrawTriangleNDT(polygon_start, polygon_last, polygon_next, Vector4(1.0f, 1.0f, 1.0f, 0.2f));
+				//NCLDebug::DrawTriangleNDT(polygon_start, polygon_last, polygon_next, Vector4(1.0f, 1.0f, 1.0f, 0.2f));
 				polygon_last = polygon_next;
 			}
 		}
@@ -243,6 +243,6 @@ void Hull::DebugDraw(const Matrix4& transform)
 	//Draw all Hull Edges
 	for (HullEdge& edge : m_vEdges)
 	{
-		NCLDebug::DrawThickLineNDT(transform * m_vVertices[edge._vStart]._pos, transform * m_vVertices[edge._vEnd]._pos, 0.02f, Vector4(1.0f, 0.2f, 1.0f, 1.0f));
+		//NCLDebug::DrawThickLineNDT(transform * m_vVertices[edge._vStart]._pos, transform * m_vVertices[edge._vEnd]._pos, 0.02f, Vector4(1.0f, 0.2f, 1.0f, 1.0f));
 	}
 }

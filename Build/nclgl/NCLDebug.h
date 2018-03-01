@@ -59,6 +59,9 @@ Utility define to automatically add an error log entry. Using this define is pre
 function as it will include the filename and linenumber it was triggered on with the relevant .cpp file.
 
 *//////////////////////////////////////////////////////////////////////////////
+#ifdef  WIN_OGL
+
+
 
 #pragma once
 #include "Matrix4.h"
@@ -257,3 +260,5 @@ protected:
 	static GLuint	g_glLogFontTex;
 	static GLuint	g_glDefaultFontTex;
 };
+
+#endif //  WIN_OGL

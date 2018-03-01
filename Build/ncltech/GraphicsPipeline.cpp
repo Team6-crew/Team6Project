@@ -35,7 +35,7 @@ GraphicsPipeline::GraphicsPipeline()
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
 	LoadShaders();
-	NCLDebug::_LoadShaders();
+//	NCLDebug::_LoadShaders();
 
 	fullscreenQuad = MeshFactory::Instance()->GenerateQuad();
 
@@ -61,7 +61,7 @@ GraphicsPipeline::~GraphicsPipeline()
 	SAFE_DELETE(shaderShadow);
 	SAFE_DELETE(shaderForwardLighting);
 
-	NCLDebug::_ReleaseShaders();
+//	NCLDebug::_ReleaseShaders();
 	SAFE_DELETE(screenFBO);
 	SAFE_DELETE(shadowFBO);
 }
@@ -143,10 +143,10 @@ void GraphicsPipeline::UpdateScene(float dt)
 	renderer->SetViewMatrix(camera->BuildViewMatrix());
 	projViewMatrix = renderer->GetProjMatrix() * renderer->GetViewMatrix();
 
-	NCLDebug::_SetDebugDrawData(
-		renderer->GetProjMatrix(),
-		renderer->GetViewMatrix(),
-		camera->GetPosition());
+	//NCLDebug::_SetDebugDrawData(
+		//renderer->GetProjMatrix(),
+		//renderer->GetViewMatrix(),
+		//camera->GetPosition());
 }
 
 void GraphicsPipeline::RenderScene()
@@ -161,7 +161,7 @@ void GraphicsPipeline::RenderScene()
 	BuildAndSortRenderLists();
 
 	//NCLDebug - Build render lists
-	NCLDebug::_BuildRenderLists();
+//	NCLDebug::_BuildRenderLists();
 
 	//Render scene to screen fbo
 		screenFBO->Activate();
@@ -199,8 +199,8 @@ void GraphicsPipeline::RenderScene()
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		//NCLDEBUG - World Debug Data (anti-aliased)		
-		NCLDebug::_RenderDebugDepthTested();
-		NCLDebug::_RenderDebugNonDepthTested();
+		//NCLDebug::_RenderDebugDepthTested();
+		//NCLDebug::_RenderDebugNonDepthTested();
 	
 
 
@@ -219,8 +219,8 @@ void GraphicsPipeline::RenderScene()
 		fullscreenQuad->Draw();
 
 		//NCLDEBUG - Text Elements (aliased)
-		NCLDebug::_RenderDebugClipSpace();
-		NCLDebug::_ClearDebugLists();
+//		NCLDebug::_RenderDebugClipSpace();
+		//NCLDebug::_ClearDebugLists();
 	
 		renderer->SwapBuffers();
 }

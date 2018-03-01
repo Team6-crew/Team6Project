@@ -1,3 +1,5 @@
+#ifdef WIN_OGL
+
 #include "OGLWindow.h"
 #include "Mouse.h"
 #include "Keyboard.h"
@@ -243,3 +245,5 @@ void	OGLWindow::LockMouseToWindow(bool lock) {
 
 void	OGLWindow::ShowOSPointer(bool show) {
 }
+
+#endif

@@ -83,7 +83,7 @@ void SphereCollisionShape::DebugDraw() const
 	Vector3 pos = Parent()->GetPosition();
 
 	//Draw Filled Circle
-	NCLDebug::DrawPointNDT(pos, m_Radius, Vector4(1.0f, 1.0f, 1.0f, 0.2f));
+	//NCLDebug::DrawPointNDT(pos, m_Radius, Vector4(1.0f, 1.0f, 1.0f, 0.2f));
 
 	//Draw Perimeter Axes
 	Vector3 lastX = pos + Vector3(0.0f, 1.0f, 0.0f) * m_Radius;
@@ -100,9 +100,9 @@ void SphereCollisionShape::DebugDraw() const
 		Vector3 newY = pos + Vector3(alpha, 0.0f, beta);
 		Vector3 newZ = pos + Vector3(alpha, beta, 0.0f);
 
-		NCLDebug::DrawThickLineNDT(lastX, newX, 0.02f, Vector4(1.0f, 0.3f, 1.0f, 1.0f));
-		NCLDebug::DrawThickLineNDT(lastY, newY, 0.02f, Vector4(1.0f, 0.3f, 1.0f, 1.0f));
-		NCLDebug::DrawThickLineNDT(lastZ, newZ, 0.02f, Vector4(1.0f, 0.3f, 1.0f, 1.0f));
+		//NCLDebug::DrawThickLineNDT(lastX, newX, 0.02f, Vector4(1.0f, 0.3f, 1.0f, 1.0f));
+		//NCLDebug::DrawThickLineNDT(lastY, newY, 0.02f, Vector4(1.0f, 0.3f, 1.0f, 1.0f));
+		//NCLDebug::DrawThickLineNDT(lastZ, newZ, 0.02f, Vector4(1.0f, 0.3f, 1.0f, 1.0f));
 
 		lastX = newX;
 		lastY = newY;

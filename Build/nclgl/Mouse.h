@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 /******************************************************************************
 Class:Mouse
 Implements:InputDevice
@@ -110,3 +111,5 @@ public:
 	float		sensitivity;
 };
 
+
+#endif
