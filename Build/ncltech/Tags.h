@@ -10,5 +10,6 @@ enum Tags {
 	TPortal_A1,
 	TPortal_B1 ,
 	TPortal_A2 ,
-	TPortal_B2 
+	TPortal_B2 ,
+	TWash
 };

@@ -25,6 +25,26 @@ void Window::Destroy() {
 	window = NULL;
 }
 
+void Window::ResizeWindow(int x, int y)
+{
+	HWND hWnd = windowHandle;
+	HWND hWndInsertAfter = nullptr;
+	UINT uFlags = NULL;
+
+	size.x = x;
+	size.y = y;
+
+	SetWindowPos(
+		_In_     hWnd,
+		_In_opt_ hWndInsertAfter,
+		_In_     position.x,
+		_In_     position.y,
+		_In_     size.x,
+		_In_     size.y,
+		_In_     uFlags
+	);
+}
+
 Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen) {
 	renderer = NULL;
 	window = this;

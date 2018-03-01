@@ -13,7 +13,7 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-	NCLLOG("[SceneManager] Closing scene manager");
+	//NCLLOG("[SceneManager] Closing scene manager");
 	m_SceneIdx = 0;
 	for (Scene* scene : m_vpAllScenes)
 	{
@@ -38,7 +38,7 @@ void SceneManager::EnqueueScene(Scene* scene)
 	}
 
 	m_vpAllScenes.push_back(scene);
-	NCLLOG("[SceneManager] - Enqueued scene: \"%s\"", scene->GetSceneName().c_str());
+	//NCLLOG("[SceneManager] - Enqueued scene: \"%s\"", scene->GetSceneName().c_str());
 
 	//If this was the first scene, activate it immediately
 	if (m_vpAllScenes.size() == 1)
@@ -61,7 +61,7 @@ void SceneManager::JumpToScene(int idx)
 	//Clear up old scene
 	if (scene)
 	{
-		NCLLOG("[SceneManager] - Exiting scene -");
+		//NCLLOG("[SceneManager] - Exiting scene -");
 		scene->OnCleanupScene();
 		PhysicsEngine::Instance()->RemoveAllPhysicsObjects();	
 		GameLogic::Instance()->clearPlayers();
@@ -69,7 +69,7 @@ void SceneManager::JumpToScene(int idx)
 
 	m_SceneIdx = idx;
 	scene = m_vpAllScenes[idx];
-	NCLLOG("");
+	//NCLLOG("");
 
 	//Initialize new scene
 	PhysicsEngine::Instance()->SetDefaults();

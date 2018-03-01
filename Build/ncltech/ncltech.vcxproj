@@ -147,6 +147,7 @@
     <ClCompile Include="Memory Management\MemoryManager.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="OcTree.cpp" />
+    <ClCompile Include="Paintbomp.cpp" />
     <ClCompile Include="PaintProjectile.cpp" />
     <ClCompile Include="PaintWeaponPickup.cpp" />
     <ClCompile Include="Paintbomp.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="ScreenPicker.cpp" />
     <ClCompile Include="SpeedPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="Washingzone.cpp" />
     <ClCompile Include="StunProjectile.cpp" />
     <ClCompile Include="StunWeaponPickup.cpp" />
     <ClCompile Include="WeaponPickup.cpp" />
@@ -184,6 +186,7 @@
     <ClInclude Include="Memory Management\MemoryManager.h" />
     <ClInclude Include="PaintProjectile.h" />
     <ClInclude Include="PaintWeaponPickup.h" />
+    <ClInclude Include="Paintbomb.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerSoftBody.h" />
     <ClInclude Include="Softbody.h" />
@@ -205,6 +208,7 @@
     <ClInclude Include="ScreenPicker.h" />
     <ClInclude Include="SphereCollisionShape.h" />
     <ClInclude Include="WeaponPickup.h" />
+    <ClInclude Include="Washingzone.h" />
     <ClInclude Include="WorldPartition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

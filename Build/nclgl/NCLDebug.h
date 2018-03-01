@@ -77,8 +77,8 @@ function as it will include the filename and linenumber it was triggered on with
 #define LOG_TEXT_SIZE  		12
 #define LOG_TEXT_FONT       "Verdana"
 
-#define STATUS_TEXT_SIZE	16
-#define STATUS_TEXT_FONT    "Calibri"
+#define STATUS_TEXT_SIZE	60.f
+#define STATUS_TEXT_FONT    "Bariol Bold"
 
 #define LOG_OUTPUT_FILE_DISABLED
 #define LOG_OUTPUT_FILE     "program_output.txt"
@@ -256,4 +256,6 @@ protected:
 
 	static GLuint	g_glLogFontTex;
 	static GLuint	g_glDefaultFontTex;
+
+
 };
