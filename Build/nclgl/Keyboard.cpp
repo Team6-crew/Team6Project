@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "Keyboard.h"
 #include <iostream>
 Keyboard::Keyboard(HWND &hwnd)	{
@@ -66,7 +67,6 @@ Updates the keyboard state with data received from the OS.
 void Keyboard::Update(RAWINPUT* raw)	{
 
 	DWORD key = (DWORD)raw->data.keyboard.VKey;
-	std::cout << "Update: " << key << std::endl;
 	
 	//We should do bounds checking!
 	if (key < 0 || key > KEYBOARD_MAX) {
@@ -78,3 +78,5 @@ void Keyboard::Update(RAWINPUT* raw)	{
 	
 }
 
+
+#endif
