@@ -1,3 +1,5 @@
+#ifdef WIN_OGL
+
 /******************************************************************************
 Class:OBJMesh
 Implements:Mesh, MD5MeshInstance
@@ -71,8 +73,6 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #define OBJ_FIX_TEXTURES
 
-#define WIN_OGL
-#ifdef WIN_OGL
 #pragma once
 #include "OBJMeshBase.h"
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
@@ -101,4 +101,4 @@ protected:
 
 };
 
-#endif
+#endif // WIN_OGL

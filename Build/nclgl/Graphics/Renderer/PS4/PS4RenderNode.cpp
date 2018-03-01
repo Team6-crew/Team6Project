@@ -5,9 +5,10 @@
 
 
 
-PS4RenderNode::PS4RenderNode(MeshBase* m, nclgl::Maths::Vector4 colour)
+PS4RenderNode::PS4RenderNode(MeshBase* m, OBJMeshBase* objm, nclgl::Maths::Vector4 colour)
 {
 	mesh = (PS4Mesh*)m;
+	objmesh = objm;
 	this->colour = nclToPS4(colour);
 }
 

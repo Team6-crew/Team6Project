@@ -1,3 +1,4 @@
+#ifdef WIN_OGL
 #include "OGLGameTimer.h"
 
 
@@ -25,3 +26,5 @@ float	 OGLGameTimer::GetTimedMS() {
 	lastTime = a;
 	return b;
 }
+
+#endif

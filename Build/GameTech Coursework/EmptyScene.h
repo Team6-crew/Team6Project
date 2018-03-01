@@ -61,7 +61,7 @@ public:
 		//Also add body which is used for camera manipulation
 		this->AddGameObject(player1->getBody());
 
-		player1->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE);
+		
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",

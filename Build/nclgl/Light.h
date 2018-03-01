@@ -5,7 +5,7 @@
 class Light {
 public:
 	Light() {}
-	Light(Vector3 position, Vector4 colour, float radius) {
+	Light(nclgl::Maths::Vector3 position, nclgl::Maths::Vector4 colour, float radius) {
 		this -> position = position;
 		this -> colour = colour;
 		this -> radius = radius;
@@ -13,18 +13,18 @@ public:
 	
 	~Light(void) {};
 	
-	Vector3 GetPosition() const { return position; }
-	void SetPosition(Vector3 val) { position = val; }
+	nclgl::Maths::Vector3 GetPosition() const { return position; }
+	void SetPosition(nclgl::Maths::Vector3 val) { position = val; }
 	
 	float GetRadius() const { return radius; }
 	void SetRadius(float val) { radius = val; }
 	
-	Vector4 GetColour() const { return colour; }
-	void SetColour(Vector4 val) { colour = val; }
+	nclgl::Maths::Vector4 GetColour() const { return colour; }
+	void SetColour(nclgl::Maths::Vector4 val) { colour = val; }
 
 protected:
-	Vector3 position;
-	Vector4 colour;
+	nclgl::Maths::Vector3 position;
+	nclgl::Maths::Vector4 colour;
 	float radius;
 };
 

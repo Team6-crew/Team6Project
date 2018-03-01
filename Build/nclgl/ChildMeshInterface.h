@@ -21,7 +21,7 @@ _-_-_-_-_-_-_-""  ""
 
 #pragma once
 
-#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
+#include <nclgl\Graphics\MeshBase.h>
 #include <vector>
 
 class ChildMeshInterface	{

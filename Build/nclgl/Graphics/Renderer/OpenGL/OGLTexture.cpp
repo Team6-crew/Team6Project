@@ -99,10 +99,6 @@ void OGLTexture::SetTextureWrapping(bool repeating)
 	}
 }
 
-int OGLTexture::TempGetID()
-{
-	return textureID;
-}
 
 GLuint OGLTexture::GetID()
 {

@@ -17,6 +17,9 @@ _-_-_-_-_-_-_-|   /\_/\   NYANYANYAN
 _-_-_-_-_-_-_-""  ""      
  
 *//////////////////////////////////////////////////////////////////////////////
+#ifdef WIN_OGL
+
+
 
 #pragma once
 #include<windows.h>
@@ -47,3 +50,4 @@ protected:
 	bool isAwake = true;
 	RAWINPUTDEVICE	rid;			//Windows OS hook 
 };
+#endif // WIN_OGL

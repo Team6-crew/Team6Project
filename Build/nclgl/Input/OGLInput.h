@@ -1,3 +1,7 @@
+#ifdef WIN_OGL
+
+
+
 #pragma once
 
 #include "InputBase.h"
@@ -23,3 +27,4 @@ protected:
 	OGLWindow*  window;
 };
 
+#endif // WIN_OGL

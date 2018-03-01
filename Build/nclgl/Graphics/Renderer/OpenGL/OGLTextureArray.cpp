@@ -56,10 +56,7 @@ void OGLTextureArray::SetTextureWrapping(bool repeating)
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-int OGLTextureArray::TempGetID()
-{
-	return textureID;
-}
+
 
 bool OGLTextureArray::LoadTexture(const std::string& filepath)
 {

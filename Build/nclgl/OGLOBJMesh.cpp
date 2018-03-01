@@ -1,3 +1,8 @@
+#ifdef WIN_OGL
+
+
+
+
 #include "OGLOBJMesh.h"
 #include "NCLDebug.h"
 
@@ -393,3 +398,5 @@ void	OGLOBJMesh::FixTextures(MTLInfo &info) {
 		info.bumpNum = TextureFactory::Instance()->MakeTexture(string(TEXTUREDIR + info.bump));
 	}
 }
+
+#endif // WIN_OGL

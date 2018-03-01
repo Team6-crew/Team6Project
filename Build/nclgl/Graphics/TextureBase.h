@@ -22,9 +22,6 @@ public:
 
 	virtual void SetTextureFiltering(bool nearest = false) = 0;
 	virtual void SetTextureWrapping(bool repeating = false)  = 0;
-
-	//Temporarily need this until Framebuffers are integrated
-	virtual int TempGetID() = 0;
 protected:
 	uint width;
 	uint height;

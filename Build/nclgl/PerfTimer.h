@@ -20,7 +20,7 @@ time of the various components of the game engine.
 #pragma once
 #include "TimerFactory.h"
 #include "GameTimerBase.h"
-#include "NCLDebug.h"
+//#include "NCLDebug.h"
 
 class PerfTimer
 {
@@ -102,7 +102,7 @@ public:
 	// Must be called once per frame in order to be shown.
 	void PrintOutputToStatusEntry(const nclgl::Maths::Vector4& colour, const std::string& name)
 	{
-		NCLDebug::AddStatusEntry(colour, "%s%5.2fms [max:%5.2fms, min:%5.2fms]", name.c_str(), GetAvg(), GetHigh(), GetLow());
+		//NCLDebug::AddStatusEntry(colour, "%s%5.2fms [max:%5.2fms, min:%5.2fms]", name.c_str(), GetAvg(), GetHigh(), GetLow());
 	}
 
 protected:
