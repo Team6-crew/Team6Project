@@ -20,7 +20,6 @@ public:
 	void SetTextureWrapping(bool repeating = false) override;
 
 
-	int TempGetID() override;
 	int GetID() { return textureID; }
 protected:
 	bool LoadTexture(const std::string& filepath) override;

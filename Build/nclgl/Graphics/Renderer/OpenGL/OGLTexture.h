@@ -19,7 +19,6 @@ public:
 	void SetTextureFiltering(bool nearest = false) override;
 	void SetTextureWrapping(bool repeating = false) override;
 
-	int TempGetID() override;
 	GLuint GetID();
 protected:
 	bool LoadTexture(const std::string& filepath) override;
