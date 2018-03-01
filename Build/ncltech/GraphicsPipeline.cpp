@@ -641,6 +641,7 @@ void GraphicsPipeline::FillPaint(float dt) {
 					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
 					paintQuad->SetTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
 					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
+					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
 					paintQuad->Draw();
 				}
 			}

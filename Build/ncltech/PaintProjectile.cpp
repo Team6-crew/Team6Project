@@ -79,10 +79,17 @@ bool PaintProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* othe
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
-		//(*otherNode->GetParent()->Render()->GetChildIteratorStart())->SetColour((*renderNode->GetChildIteratorStart())->GetColour());
-		(*otherNode->GetParent()->Render()->GetChildIteratorStart())->SetBeingPainted(true);
-		(*otherNode->GetParent()->Render()->GetChildIteratorStart())->SetPaintPercentage(0.0f);
+		RenderNodeBase* otherRenderNode = (*otherNode->GetParent()->Render()->GetChildIteratorStart());
+		Vector4 col1 = otherRenderNode->GetColourFromPlayer();
+		Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
+		if (col1.x != col2.x || col1.y != col2.y || col1.z != col2.z) {
+			//(*otherNode->GetParent()->Render()->GetChildIteratorStart())->SetColour((*renderNode->GetChildIteratorStart())->GetColour());
+			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
+			otherRenderNode->SetBeingPainted(true);
+			otherRenderNode->SetPaintPercentage(0.0f);
+		}
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+
 	}
 	return true;
 };

@@ -267,23 +267,16 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		canjump = false;
 		return false;
 	}
-	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
-	{
-		GameObject *portal = FindGameObject("portal_b");
-		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
+	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
+		RenderNodeBase* otherRenderNode = (*otherNode->GetParent()->Render()->GetChildIteratorStart());
+		Vector4 col1 = otherRenderNode->GetColourFromPlayer();
+		Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
+		if (col1.x != col2.x || col1.y!=col2.y || col1.z != col2.z) {
+			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
+			otherRenderNode->SetBeingPainted(true);
+			otherRenderNode->SetPaintPercentage(0.0f);
+		}
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
-	{
-
-	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;

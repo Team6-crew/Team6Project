@@ -1,6 +1,7 @@
 #pragma once
 #include <ncltech\Tags.h>
 #include <vector>
+#include <nclgl\Vector4.h>
 
 namespace nclgl
 {
@@ -35,7 +36,6 @@ public:
 
 	virtual nclgl::Maths::Vector4&			GetColour() = 0;
 	virtual void							SetColour(const nclgl::Maths::Vector4 &c) = 0;
-
 	// Mesh
 	inline MeshBase*						GetMesh() { return mesh; }
 	inline void								SetMesh(MeshBase* newMesh) { mesh = newMesh; } 
@@ -62,6 +62,9 @@ public:
 	float			GetPaintPercentage() const { return paintPercentage; }
 	void			SetPaintPercentage(float p) { paintPercentage = p; }
 
+	nclgl::Maths::Vector4	GetColourFromPlayer() const { return colourFromPlayer; }
+	void			SetColourFromPlayer(nclgl::Maths::Vector4 c) { colourFromPlayer = c; }
+
 	bool			GetBeingPainted() const { return beingPainted; }
 	void			SetBeingPainted(bool p) { beingPainted = p; }
 protected:
@@ -71,6 +74,7 @@ protected:
 	MeshBase*	mesh;
 	float paintPercentage;
 	bool beingPainted;
+	nclgl::Maths::Vector4 colourFromPlayer;
 
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;

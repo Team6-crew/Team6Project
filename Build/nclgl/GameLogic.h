@@ -25,7 +25,7 @@ public:
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
 	void clearPlayers() { players.clear();	softplayers.clear(); }
-
+	nclgl::Maths::Vector4 getColour(int pos) { return colours[pos]; };
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;

@@ -203,7 +203,7 @@ int main()
 		//Finish Timing
 		timer_total.EndTimingSection();		
 	}
-	HeapFactory::Instance()->PrintDebugInfo();
+	//HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
 	system("pause");

@@ -90,6 +90,21 @@ public:
 		testItem->SetTag(Tags::TPaintable);
 		(*testItem->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
 
+		GameObject* testItem2 = CommonUtils::BuildPaintableCube(
+			"Ground",
+			nclgl::Maths::Vector3(10.0f, 5.5f, -5.0f),
+			nclgl::Maths::Vector3(2.0f, 10.0f, 2.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
+		(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_2", Texture::COLOUR, 1024, 1024), 1);
+		this->AddGameObject(testItem2);
+		testItem2->SetTag(Tags::TPaintable);
+		(*testItem2->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
+
 
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
