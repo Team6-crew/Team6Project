@@ -49,7 +49,7 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
-		GameLogic::Instance()->addSoftPlayers(2r);
+		GameLogic::Instance()->addSoftPlayers(2);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());

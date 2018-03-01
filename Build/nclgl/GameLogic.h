@@ -21,7 +21,7 @@ public:
 	float getRadius() { return rad;  }
 	int getNumPlayers() { return players.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	int getNumTotalPlayers() { return players.size() + softplayers.size(); }
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
 	void clearPlayers() { players.clear();	softplayers.clear(); }
