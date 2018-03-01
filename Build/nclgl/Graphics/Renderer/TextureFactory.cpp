@@ -6,6 +6,7 @@
 #include "PS4\PS4Texture.h"
 #include "PS4\PS4TextureArray.h"
 
+
 using namespace Texture;
 
 TextureFactory::TextureFactory()
@@ -18,10 +19,10 @@ TextureFactory::~TextureFactory()
 }
 
 
-TextureBase* TextureFactory::MakeTexture(const std::string& filepath)
+TextureBase* TextureFactory::MakeTexture(std::string& filepath)
 {
 	#ifdef WIN_OGL
-	return new OGLTexture(filepath);//.append(".png"));
+	return new OGLTexture(filepath.append(".tga"));
 	#elif  PSTATION4
 		//return new PS4Texture(filepath.append(".gnf"));
 	#endif 

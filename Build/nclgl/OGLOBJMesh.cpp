@@ -340,7 +340,7 @@ void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 			if (!currentMTL.diffuse.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.diffuse);
 				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
-				currentMTL.diffuseNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
+				currentMTL.diffuseNum = TextureFactory::Instance()->MakeTexture(filename);
 			}
 		}
 		else if (currentLine == MTLBUMPMAP || currentLine == MTLBUMPMAPALT) {
@@ -358,7 +358,7 @@ void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 			if (!currentMTL.bump.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.bump);
 				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
-				currentMTL.bumpNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
+				currentMTL.bumpNum = TextureFactory::Instance()->MakeTexture(filename);
 			}
 		}
 	}
@@ -390,6 +390,6 @@ void	OGLOBJMesh::FixTextures(MTLInfo &info) {
 
 		info.bump = temp;
 
-		info.bumpNum = TextureFactory::Instance()->MakeTexture(string(TEXTUREDIR + info.bump).c_str());
+		info.bumpNum = TextureFactory::Instance()->MakeTexture(string(TEXTUREDIR + info.bump));
 	}
 }
