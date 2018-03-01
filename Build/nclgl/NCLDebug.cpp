@@ -1,11 +1,15 @@
 #include "NCLDebug.h"
-#include "Window.h"
+#include "WindowBase.h"
+#include "WindowFactory.h"
 #include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <SOIL.h>
 #include <algorithm>
 #include <sstream>
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\Renderer\ShaderFactory.h>
+#include <nclgl\Input\ControllerFactory.h>
+#include <nclgl\Input\InputBase.h>
+
 using namespace std;
 
 using namespace nclgl::Maths;
@@ -231,7 +235,7 @@ void NCLDebug::DrawPolygonNDT(int n_verts, const Vector3* verts, const Vector4& 
 
 void NCLDebug::DrawTextCs(const Vector4& cs_pos, const float font_size, const std::string& text, const TextAlignment alignment, const Vector4 color)
 {
-	const Vector2 ss = Window::GetWindow().GetScreenSize();
+	const Vector2 ss = WindowFactory::Instance()->GetWindow()->GetScreenSize();
 	Vector3 cs_size = Vector3(font_size / ss.x, font_size / ss.y, 0.0f);
 	cs_size = cs_size * cs_pos.w;
 
@@ -311,7 +315,7 @@ void NCLDebug::AddStatusEntry(const Vector4& color, const std::string text, ...)
 {
 	if (g_StatusVisible)
 	{
-		const Vector2 ss = Window::GetWindow().GetScreenSize();
+		const Vector2 ss = WindowFactory::Instance()->GetWindow()->GetScreenSize();
 		float cs_size_x = STATUS_TEXT_SIZE / ss.x * 2.0f;
 		float cs_size_y = STATUS_TEXT_SIZE / ss.y * 2.0f;
 
@@ -528,7 +532,7 @@ void NCLDebug::_SortRenderLists()
 
 void NCLDebug::_BuildTextBackgrounds()
 {
-	const Vector2 ss = Window::GetWindow().GetScreenSize();
+	const Vector2 ss = WindowFactory::Instance()->GetWindow()->GetScreenSize();
 	float cs_size_x = LOG_TEXT_SIZE / ss.x * 2.0f;
 	float cs_size_y = LOG_TEXT_SIZE / ss.y * 2.0f;
 
@@ -536,11 +540,11 @@ void NCLDebug::_BuildTextBackgrounds()
 	float rounded_offset_x = 10.f / ss.x * 2.0f;
 	float rounded_offset_y = 10.f / ss.y * 2.0f;
 
-	Vector2 cs_mouse = Vector2(-10.f, -10.f);
-	if (Window::GetWindow().GetMouseScreenPos(&cs_mouse))
-	{
-		cs_mouse = Vector2(cs_mouse.x / ss.x * 2.0f - 1.0f, (1.f - cs_mouse.y / ss.y) * 2.0f - 1.0f);
-	}
+	//Vector2 cs_mouse = Vector2(-10.f, -10.f);
+	//if (WindowFactory::Instance()->GetWindow()->GetMouseScreenPos(&cs_mouse))
+	//{
+	//	cs_mouse = Vector2(cs_mouse.x / ss.x * 2.0f - 1.0f, (1.f - cs_mouse.y / ss.y) * 2.0f - 1.0f);
+	//}
 
 	Vector3 centre;
 	Vector3 last;
@@ -617,21 +621,21 @@ void NCLDebug::_BuildTextBackgrounds()
 			);
 
 
-			//Is MouseOver?
+			////Is MouseOver?
 			Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (cs_mouse.x >= max_x - cs_size.x * 1.2 && cs_mouse.x <= max_x &&
-				cs_mouse.y >= 1.f - cs_size.y * 1.2)
-			{
-				if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-					g_StatusVisible = false;
+			//if (cs_mouse.x >= max_x - cs_size.x * 1.2 && cs_mouse.x <= max_x &&
+			//	cs_mouse.y >= 1.f - cs_size.y * 1.2)
+			//{
+			//	if (ControllerFactory::Instance()->GetController()->IsAction(ACTION_A))
+			//		g_StatusVisible = false;
 
-				DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
-			}
-			else
-			{
+			//	DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
+			//}
+			//else
+			//{
 				DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
-			}
+			//}
 
 		}
 	}
@@ -642,14 +646,14 @@ void NCLDebug::_BuildTextBackgrounds()
 		Vector4 col = log_background_col;
 
 		//Is MouseOver?
-		if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
-			cs_mouse.y >= 1.f - cs_size.y * 1.2 && cs_mouse.y <= 1)
-		{
-			col = log_background_highlight;
+		//if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
+		//	cs_mouse.y >= 1.f - cs_size.y * 1.2 && cs_mouse.y <= 1)
+		//{
+		//	col = log_background_highlight;
 
-			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-				g_StatusVisible = true;
-		}
+		//	if (ControllerFactory::Instance()->GetController()->IsAction(ACTION_A))
+		//		g_StatusVisible = true;
+		//}
 
 		DrawBox_status(
 			Vector3(-1.f + cs_size.x * 1.2f, 1, 0.0f),
@@ -685,6 +689,7 @@ void NCLDebug::_BuildTextBackgrounds()
 
 			DrawTextCs(Vector4(start_x + cs_size_x * 0.5f, -1.0f + ((-base_i - 0.25f) * cs_size_y) + cs_size_y, 0.0f, 1.0f), LOG_TEXT_SIZE, e.text, TEXTALIGN_LEFT, e.color);
 		}
+	
 
 		
 		//Draw Log Background
@@ -706,43 +711,44 @@ void NCLDebug::_BuildTextBackgrounds()
 			//Is MouseOver?
 			Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (cs_mouse.x >= 1.f - cs_size.x * 1.2 &&
+		/*	if (cs_mouse.x >= 1.f - cs_size.x * 1.2 &&
 				cs_mouse.y >= top_y - cs_size.y * 2.f && cs_mouse.y <= top_y)
 			{
-				if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+				if (ControllerFactory::Instance()->GetController()->IsAction(ACTION_A))
 					g_LogVisible = false;
 
 				DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
 			}
-			else
+			else*/
 			{
 				DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
-			}
+			//}
 
-			if (g_vLogEntries.size() > MAX_LOG_SIZE)
-			{
-				//Scroll bar
-				DrawThickLine(
-					invProjView* Vector3(-0.992f, top_y - 0.01f, -0.995f),
-					invProjView* Vector3(-0.992f, -0.99f, -0.995f),
-					0.0002f,
-					Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+				if (g_vLogEntries.size() > MAX_LOG_SIZE)
+				{
+					//Scroll bar
+					DrawThickLine(
+						invProjView* Vector3(-0.992f, top_y - 0.01f, -0.995f),
+						invProjView* Vector3(-0.992f, -0.99f, -0.995f),
+						0.0002f,
+						Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 
-				float total_size = top_y + 1.f - 0.02f;
-				float size = max(total_size * float(MAX_LOG_SIZE) / float(g_vLogEntries.size()), 0.03f);
-				float offset = (g_vLogOffsetIdx - MAX_LOG_SIZE + 1) / float(g_vLogEntries.size() - MAX_LOG_SIZE) * (total_size - size);
+					float total_size = top_y + 1.f - 0.02f;
+					float size = max(total_size * float(MAX_LOG_SIZE) / float(g_vLogEntries.size()), 0.03f);
+					float offset = (g_vLogOffsetIdx - MAX_LOG_SIZE + 1) / float(g_vLogEntries.size() - MAX_LOG_SIZE) * (total_size - size);
 
-				DrawThickLine(
-					invProjView* Vector3(-0.992f, top_y - 0.01f - offset, -1.00f),
-					invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
-					0.0002f);
+					DrawThickLine(
+						invProjView* Vector3(-0.992f, top_y - 0.01f - offset, -1.00f),
+						invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
+						0.0002f);
 
-				g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
+					/*	g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - OGLWindow::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
 
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);
+						if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
+						if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
+						if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
+						if (OGLWindow::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);*/
+				}
 			}
 		}
 	}
@@ -753,14 +759,14 @@ void NCLDebug::_BuildTextBackgrounds()
 		Vector4 col = log_background_col;
 
 		//Is MouseOver?
-		if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
+		/*if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
 			cs_mouse.y >= -1.f && cs_mouse.y <= -1 + cs_size.y * 1.2)
 		{
 			col = log_background_highlight;
 
-			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+			if (ControllerFactory::Instance()->GetController()->IsAction(ACTION_A))
 				g_LogVisible = true;
-		}
+		}*/
 
 		DrawBox_log(
 			Vector3(-1, -1 + cs_size.y * 1.2f, 0),
@@ -891,7 +897,7 @@ void NCLDebug::_BuildRenderVBO()
 
 void NCLDebug::_RenderDrawlist(uint* offsets)
 {
-	float aspectRatio = Window::GetWindow().GetScreenSize().y / Window::GetWindow().GetScreenSize().x;
+	float aspectRatio = WindowFactory::Instance()->GetWindow()->GetScreenSize().y / WindowFactory::Instance()->GetWindow()->GetScreenSize().x;
 
 	uint n_points = (offsets[1] - offsets[0]) >> 1;
 	uint n_tlines = (offsets[2] - offsets[1]) >> 1;

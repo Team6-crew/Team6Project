@@ -2,7 +2,7 @@
 Class:Camera
 Implements:
 Author:Rich Davison	<richard.davison4@newcastle.ac.uk>
-Description:FPS-Style camera. Uses the mouse and keyboard from the Window
+Description:FPS-Style camera. Uses the mouse and keyboard from the OGLWindow
 class to get movement values!
 
 -_-_-_-_-_-_-_,------,
@@ -13,7 +13,7 @@ _-_-_-_-_-_-_-""  ""
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Window.h"
+#include "OGLWindow.h"
 #include "Matrix4.h"
 #include "Vector3.h"
 

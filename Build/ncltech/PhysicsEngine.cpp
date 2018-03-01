@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "CollisionDetectionSAT.h"
 #include <nclgl\NCLDebug.h>
-#include <nclgl\Window.h>
+
 #include <set>
 #include <omp.h>
 #include <algorithm>

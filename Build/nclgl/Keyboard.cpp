@@ -1,5 +1,5 @@
 #include "Keyboard.h"
-
+#include <iostream>
 Keyboard::Keyboard(HWND &hwnd)	{
 	//Initialise the arrays to false!
 	ZeroMemory(keyStates,  KEYBOARD_MAX * sizeof(bool));
@@ -26,10 +26,10 @@ Sends the keyboard to sleep, so it doesn't process any
 keypresses until it receives a Wake()
 */
 void Keyboard::Sleep()	{
-	isAwake = false;	//Night night!
-	//Prevents incorrectly thinking keys have been held / pressed when waking back up
-	ZeroMemory(keyStates,  KEYBOARD_MAX * sizeof(bool));
-	ZeroMemory(holdStates, KEYBOARD_MAX * sizeof(bool));
+	//isAwake = false;	//Night night!
+	////Prevents incorrectly thinking keys have been held / pressed when waking back up
+	//ZeroMemory(keyStates,  KEYBOARD_MAX * sizeof(bool));
+	//ZeroMemory(holdStates, KEYBOARD_MAX * sizeof(bool));
 }
 
 /*
@@ -62,16 +62,19 @@ bool Keyboard::KeyTriggered(KeyboardKeys key)	 {
 /*
 Updates the keyboard state with data received from the OS.
 */
+
 void Keyboard::Update(RAWINPUT* raw)	{
-	if(isAwake)	{
-		DWORD key = (DWORD)raw->data.keyboard.VKey;
 
-		//We should do bounds checking!
-		if(key < 0 || key > KEYBOARD_MAX)	{
-			return;
-		}
-
-		//First bit of the flags tag determines whether the key is down or up
-		keyStates[key] = !(raw->data.keyboard.Flags & RI_KEY_BREAK);
+	DWORD key = (DWORD)raw->data.keyboard.VKey;
+	std::cout << "Update: " << key << std::endl;
+	
+	//We should do bounds checking!
+	if (key < 0 || key > KEYBOARD_MAX) {
+		return;
 	}
+
+	//First bit of the flags tag determines whether the key is down or up
+	keyStates[key] = !(raw->data.keyboard.Flags & RI_KEY_BREAK);
+	
 }
+

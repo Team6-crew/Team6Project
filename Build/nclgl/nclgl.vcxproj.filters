@@ -42,9 +42,6 @@
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderFactory.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
@@ -80,12 +77,19 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
-    <ClCompile Include="InputBase.cpp" />
-    <ClCompile Include="PS4Input.cpp" />
-    <ClCompile Include="OGLInput.cpp" />
     <ClCompile Include="GameTimerBase.cpp" />
     <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="TimerFactory.cpp" />
+    <ClCompile Include="Input\InputBase.cpp" />
+    <ClCompile Include="Input\PS4Input.cpp" />
+    <ClCompile Include="Input\ControllerFactory.cpp" />
+    <ClCompile Include="Input\OGLInput.cpp" />
+    <ClCompile Include="WindowFactory.cpp" />
+    <ClCompile Include="OGLWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowBase.cpp" />
+    <ClCompile Include="PS4Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -101,9 +105,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeightMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Keyboard.h">
@@ -137,9 +138,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vector4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TSingleton.h">
@@ -183,12 +181,22 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4MemoryAware.h" />
     <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
-    <ClInclude Include="InputBase.h" />
-    <ClInclude Include="PS4Input.h" />
-    <ClInclude Include="OGLInput.h" />
     <ClInclude Include="GameTimerBase.h" />
     <ClInclude Include="OGLGameTimer.h" />
     <ClInclude Include="PS4GameTimer.h" />
     <ClInclude Include="TimerFactory.h" />
+    <ClInclude Include="Input\InputBase.h" />
+    <ClInclude Include="Input\InputDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\PS4Input.h" />
+    <ClInclude Include="Input\ControllerFactory.h" />
+    <ClInclude Include="Input\OGLInput.h" />
+    <ClInclude Include="WindowFactory.h" />
+    <ClInclude Include="OGLWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowBase.h" />
+    <ClInclude Include="PS4Window.h" />
   </ItemGroup>
 </Project>

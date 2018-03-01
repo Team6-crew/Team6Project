@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include <nclgl\Window.h>
+#include <nclgl\OGLWindow.h>
 
 #ifndef GLEW_STATIC
 #define GLEW_STATIC
@@ -16,11 +16,11 @@
 using namespace Renderer;
 using namespace nclgl::Maths;
 
-OGLRenderer::OGLRenderer(Window& window)
+OGLRenderer::OGLRenderer(OGLWindow* window)
 {
 	initSuccess = false;
 
-	HWND windowHandle = window.GetHandle();
+	HWND windowHandle = window->GetHandle();
 
 	if (!(deviceContext = GetDC(windowHandle))) 
 	{
@@ -45,7 +45,7 @@ OGLRenderer::OGLRenderer(Window& window)
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);			//When we clear the screen, we want it to be dark grey
 
-	window.SetRenderer(this);					//Tell our window about the new renderer! (Which will in turn resize the renderer window to fit...)
+	window->SetRenderer(this);					//Tell our window about the new renderer! (Which will in turn resize the renderer window to fit...)
 	initSuccess = true;
 }
 

@@ -12,6 +12,15 @@ public:
 
 	void Poll();
 
+	AXIS	GetAxis(unsigned int i);
+	float	GetButton(unsigned int i);
+	bool	GetButtonDown(unsigned int i);
+
+
+protected:
+	AXIS	axis[MAX_AXIS];
+	float   buttons[MAX_BUTTONS];
+
 protected:
 	void InitController();
 

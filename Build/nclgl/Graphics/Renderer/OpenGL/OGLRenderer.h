@@ -5,7 +5,7 @@
 
 #include <windows.h> // Windows specific functions and constants
 
-class Window;
+class OGLWindow;
 
 #include "../../../Matrix4.h"
 
@@ -13,7 +13,7 @@ class Window;
 class OGLRenderer : public RenderBase
 {
 public:
-	OGLRenderer(Window& window);
+	OGLRenderer(OGLWindow* window);
 	~OGLRenderer();
 
 	void SwapBuffers() override;
