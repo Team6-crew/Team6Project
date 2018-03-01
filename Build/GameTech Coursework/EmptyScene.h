@@ -12,6 +12,7 @@
 #include <ncltech\SpeedPickup.h>
 #include <ncltech\WeaponPickup.h>
 #include <ncltech\StunWeaponPickup.h>
+#include <ncltech\PaintWeaponPickup.h>
 #include <ncltech\Paintbomb.h>
 #include <ncltech\Paintbomb.h>
 #include <ncltech\Washingzone.h>
@@ -22,6 +23,7 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include "MainMenu.h"
+#include <nclgl\ResourceManager.h>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -77,7 +79,7 @@ public:
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
-			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
+			nclgl::Maths::Vector3(0.0f, -1.0f, 0.0f),
 			nclgl::Maths::Vector3(WORLD_SIZE, 1.0f, WORLD_SIZE),
 			true,
 			0.0f,
@@ -87,8 +89,38 @@ public:
 
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-		
+
+		GameObject* testItem = CommonUtils::BuildPaintableCube(
+			"Ground",
+			nclgl::Maths::Vector3(-5.0f, 5.5f, -5.0f),
+			nclgl::Maths::Vector3(2.0f, 2.0f, 2.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		(*testItem->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
+		(*testItem->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_1", Texture::COLOUR, 1024, 1024), 1);
+		this->AddGameObject(testItem);
+		testItem->SetTag(Tags::TPaintable);
+		(*testItem->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
+
+		GameObject* testItem2 = CommonUtils::BuildPaintableCube(
+			"Ground",
+			nclgl::Maths::Vector3(10.0f, 5.5f, -5.0f),
+			nclgl::Maths::Vector3(2.0f, 10.0f, 2.0f),
+			true,
+			0.0f,
+			true,
+			false,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
+		(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_2", Texture::COLOUR, 1024, 1024), 1);
+		this->AddGameObject(testItem2);
+		testItem2->SetTag(Tags::TPaintable);
+		(*testItem2->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
 
 
 		SpeedPickup* pickup = new SpeedPickup("pickup",
@@ -101,7 +133,7 @@ public:
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
-		StunWeaponPickup* weapon = new StunWeaponPickup("pickup",
+		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
 			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
 			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
 			true,
@@ -110,6 +142,16 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		weapon->SetPhysics(weapon->Physics());
 		this->AddGameObject(weapon);
+
+		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
+			nclgl::Maths::Vector3(15.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
+		weapon2->SetPhysics(weapon2->Physics());
+		this->AddGameObject(weapon2);
 
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),

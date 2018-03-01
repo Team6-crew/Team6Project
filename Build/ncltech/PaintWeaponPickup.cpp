@@ -65,5 +65,5 @@ PaintWeaponPickup::~PaintWeaponPickup()
 }
 
 void PaintWeaponPickup::effect(Player* player) {
-	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+	player->equipPaintWeapon((*renderNode->GetChildIteratorStart())->GetColour());
 }

@@ -130,7 +130,7 @@ int main()
 		//Render Scene
 
 		GraphicsPipeline::Instance()->UpdateScene(dt);
-		GraphicsPipeline::Instance()->RenderScene();				 //Finish Timing
+		GraphicsPipeline::Instance()->RenderScene(dt);				 //Finish Timing
 	}
 
 	//Cleanup

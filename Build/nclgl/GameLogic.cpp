@@ -63,12 +63,14 @@ void GameLogic::addSoftPlayers(int num_splayers) {
 	}
 }
 void GameLogic::calculatePaintPercentage() {
-	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
+	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
+
 	
 	for (int k = 0; k < players.size(); k++) 
 	{
 		nclgl::Maths::Vector3 position = players[k]->Physics()->GetPosition();
-		if (position.y > 1.0f)
+		if (position.y > gr_pos.y + 1.0f + 1.0f) //ground half dims and player rad
 		{
 			continue;
 		}

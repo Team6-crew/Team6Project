@@ -29,9 +29,11 @@ GraphicsPipeline::GraphicsPipeline()
 	, shaderPresentToWindow(NULL)
 	, shaderShadow(NULL)
 	, shaderForwardLighting(NULL)
+	, shaderPaint(NULL)
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, TrailBuffer(NULL)
+	, ground(NULL)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
@@ -44,7 +46,8 @@ GraphicsPipeline::GraphicsPipeline()
 	tempProj = renderer->GetProjMatrix();
 	tempView = renderer->GetViewMatrix();
 	fullscreenQuad = OGLMesh::GenerateQuad();
-
+	paintQuad = OGLMesh::GenerateQuad();
+	ResourceManager::Instance()->MakeTexture("temp_tex", Texture::COLOUR, 1, 1);
 	renderer->SetDefaultSettings();
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
@@ -61,7 +64,7 @@ GraphicsPipeline::GraphicsPipeline()
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
-
+	PaintBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("temp_tex"), depth);
 	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
@@ -134,6 +137,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
 		SHADERDIR"SceneRenderer/TechFragForwardRender.glsl");
+
+	shaderPaint = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/PaintFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -278,27 +285,10 @@ void GraphicsPipeline::RenderMenu() {
 
 void GraphicsPipeline::RenderScene()
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
-
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
-	}
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"),0);
-
-	}
-	RenderNodeBase * ground = NULL;
-	for (RenderNodeBase* node : allNodes) {
-		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
-		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
-			ground = (*node->GetChildIteratorStart());
-		}
-	}
-
 	GameLogic::Instance()->calculatePaintPercentage();
-
+	FillPaint(dt);
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
-
 	shaderTrail->Activate();
 	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
 
@@ -318,8 +308,6 @@ void GraphicsPipeline::RenderScene()
 	}
 
 	trailQuad->Draw();
-
-
 
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
@@ -485,7 +473,6 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 	float width = renderer->GetWidth();
 	float height = renderer->GetHeight();
 	int num_p = GameLogic::Instance()->getTotalPlayers();
-	//int num_p = GameLogic::Instance()->getNumPlayers();
 	if (j == 0) {
 		if (num_p == 1) {
 			renderer->SetViewPort(width, height);
@@ -505,7 +492,6 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 			if (i == 0) {
 				renderer->SetViewPort(width/4, height / 2, width / 2, height / 2);
 				renderer->Scissor(width / 4, height / 2, width / 2, height / 2);
-
 			}
 			else if (i == 1) {
 				renderer->SetViewPort(0, 0, width / 2, height / 2);
@@ -734,14 +720,31 @@ Camera* GraphicsPipeline::CreateNewCamera() {
 	return cam;
 }
 
-void GraphicsPipeline::ChangeScene() {
-	
-	cameras.clear();
-
-	NCLDebug::_ClearDebugLists();
-	NCLDebug::_ReleaseShaders();
-	renderer->BindScreenFramebuffer();
-	renderer->Clear(Renderer::COLOUR_DEPTH);
-	renderer->SwapBuffers();
-	renderer->Clear(Renderer::COLOUR_DEPTH);
+void GraphicsPipeline::FillPaint(float dt) {
+	TextureBase* depth = NULL;
+	PaintBuffer->Activate();
+	for (RenderNodeBase* node : allNodes) {
+		node->Update(0.0f);
+		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+			ground = (*node->GetChildIteratorStart());
+		}
+		else if ((*node->GetChildIteratorStart())->HasTag(Tags::TPaintable)) {
+			(*node->GetChildIteratorStart())->SetPaintPercentage((*node->GetChildIteratorStart())->GetPaintPercentage()+0.1f);
+			if ((*node->GetChildIteratorStart())->GetPaintPercentage() >= 100) {
+				(*node->GetChildIteratorStart())->SetPaintPercentage(100);
+				(*node->GetChildIteratorStart())->SetBeingPainted(false);
+			}
+			else {
+				if ((*node->GetChildIteratorStart())->GetBeingPainted()) {
+					shaderPaint->Activate();
+					renderer->SetViewPort(1024, 1024);
+					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					paintQuad->SetTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
+					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
+					paintQuad->Draw();
+				}
+			}
+		}
+	}
 }
