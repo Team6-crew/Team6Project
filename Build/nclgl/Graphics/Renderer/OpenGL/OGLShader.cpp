@@ -90,7 +90,7 @@ GLuint	OGLShader::GenerateShader(std::string from, GLenum type) {
 		loadFailed = true;
 		cout << endl;
 
-		//NCLERROR("    ERROR: Cannot compile shader");
+		NCLERROR("    ERROR: Cannot compile shader");
 		return 0;
 	}
 	loadFailed = false;
@@ -112,7 +112,7 @@ bool OGLShader::LinkProgram() {
 		cout << error;
 		loadFailed = true;
 
-		NCLERROR("    -> Linking Shader: Failed!");
+		//NCLERROR("    -> Linking Shader: Failed!");
 		return false;
 	}
 
