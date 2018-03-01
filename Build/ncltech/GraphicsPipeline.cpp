@@ -283,7 +283,7 @@ void GraphicsPipeline::RenderMenu() {
 	
 }
 
-void GraphicsPipeline::RenderScene()
+void GraphicsPipeline::RenderScene(float dt)
 {
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
@@ -747,4 +747,16 @@ void GraphicsPipeline::FillPaint(float dt) {
 			}
 		}
 	}
+}
+
+void GraphicsPipeline::ChangeScene() {
+
+	cameras.clear();
+
+	NCLDebug::_ClearDebugLists();
+	NCLDebug::_ReleaseShaders();
+	renderer->BindScreenFramebuffer();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	renderer->SwapBuffers();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
 }

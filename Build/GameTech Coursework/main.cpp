@@ -196,7 +196,6 @@ int main()
 		//Render Scene
 		timer_render.BeginTimingSection();
 		GraphicsPipeline::Instance()->UpdateScene(dt);
-		GraphicsPipeline::Instance()->RenderScene();
 
 		// Update Audio
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
