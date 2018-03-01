@@ -1,18 +1,17 @@
-#include "Paintbomb.h"
+#include "StunProjectile.h"
 #include "CommonUtils.h"
 #include "SphereCollisionShape.h"
-#include "CuboidCollisionShape.h"
 #include "CommonMeshes.h"
 #include "ScreenPicker.h"
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
-#include <nclgl\Audio\AudioFactory.h>
-#include <nclgl\Audio\AudioEngineBase.h>
+#include "Player.h"
 
 using namespace nclgl::Maths;
 
-Paintbomb::Paintbomb(const std::string& name,
+
+StunProjectile::StunProjectile(const std::string& name,
 	const Vector3& pos,
 	float radius,
 	bool physics_enabled,
@@ -20,7 +19,6 @@ Paintbomb::Paintbomb(const std::string& name,
 	bool collidable,
 	const Vector4& color)
 {
-
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
@@ -56,6 +54,16 @@ Paintbomb::Paintbomb(const std::string& name,
 	friendlyName = name;
 	renderNode = rnode;
 	physicsNode = pnode;
+	SetPhysics(physicsNode);
+	tag = Tags::TProjectile;
+
+	physicsNode->SetOnCollisionCallback(
+		std::bind(
+			&StunProjectile::collisionCallback,		
+			this,					
+			std::placeholders::_1,
+			std::placeholders::_2)		
+	);
 
 	setDynamic(false);
 
@@ -64,11 +72,15 @@ Paintbomb::Paintbomb(const std::string& name,
 }
 
 
-Paintbomb::~Paintbomb()
+StunProjectile::~StunProjectile()
 {
 }
 
-void Paintbomb::effect(Player* player) {
-	player->setadd_rad(0.05f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
-}
+bool StunProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
+	if (otherNode->GetParent()->HasTag(Tags::TPlayer)) {
+		Player* player = (Player*)otherNode->GetParent();
+		player->setStunDuration(3.0f);
+		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+	}
+	return true;
+};

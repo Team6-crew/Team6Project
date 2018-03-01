@@ -201,5 +201,7 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Launchpad.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
 </Project>

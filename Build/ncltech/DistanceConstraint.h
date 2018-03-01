@@ -24,7 +24,7 @@ class DistanceConstraint : public Constraint
 {
 public:
 	DistanceConstraint(PhysicsNode* obj1, PhysicsNode* obj2,
-		const Vector3& globalOnA, const Vector3& globalOnB)
+		const nclgl::Maths::Vector3& globalOnA, const nclgl::Maths::Vector3& globalOnB)
 	{
 		pnodeA = obj1;
 		pnodeB = obj2;
@@ -33,16 +33,16 @@ public:
 		// (ONLY USED FOR BAUMGARTE)
 		// - Ideally we only ever work at the velocity level, so satifying (velA-VelB = 0)
 		//   is enough to ensure the distance never changes.
-		Vector3 ab = globalOnB - globalOnA;
+		nclgl::Maths::Vector3 ab = globalOnB - globalOnA;
 		targetLength = ab.Length();
 
 		//Get the local points (un-rotated) on the two objects where the constraint should
 		// be attached relative to the objects center. So when we rotate the objects
 		// the constraint attachment point will rotate with it.
-		Vector3 r1 = (globalOnA - pnodeA->GetPosition());
-		Vector3 r2 = (globalOnB - pnodeB->GetPosition());
-		relPosA = Matrix3::Transpose(pnodeA->GetOrientation().ToMatrix3()) * r1;
-		relPosB = Matrix3::Transpose(pnodeB->GetOrientation().ToMatrix3()) * r2;
+		nclgl::Maths::Vector3 r1 = (globalOnA - pnodeA->GetPosition());
+		nclgl::Maths::Vector3 r2 = (globalOnB - pnodeB->GetPosition());
+		relPosA = nclgl::Maths::Matrix3::Transpose(pnodeA->GetOrientation().ToMatrix3()) * r1;
+		relPosB = nclgl::Maths::Matrix3::Transpose(pnodeB->GetOrientation().ToMatrix3()) * r2;
 	}
 
 	//Solves the constraint and applies a velocity impulse to the two
@@ -53,32 +53,32 @@ public:
 		// Compute current constraint vars based on object A/B’s
 		// position / rotation
 
-		Vector3 r1 = pnodeA->GetOrientation().ToMatrix3() * relPosA;
-		Vector3 r2 = pnodeB->GetOrientation().ToMatrix3() * relPosB;
+		nclgl::Maths::Vector3 r1 = pnodeA->GetOrientation().ToMatrix3() * relPosA;
+		nclgl::Maths::Vector3 r2 = pnodeB->GetOrientation().ToMatrix3() * relPosB;
 
 		// Get the global contact points in world space
 
-		Vector3 globalOnA = r1 + pnodeA->GetPosition();
-		Vector3 globalOnB = r2 + pnodeB->GetPosition();
+		nclgl::Maths::Vector3 globalOnA = r1 + pnodeA->GetPosition();
+		nclgl::Maths::Vector3 globalOnB = r2 + pnodeB->GetPosition();
 
 		// Get the vector between the two contact points
 
-		Vector3 ab = globalOnB - globalOnA;
-		Vector3 abn = ab;
+		nclgl::Maths::Vector3 ab = globalOnB - globalOnA;
+		nclgl::Maths::Vector3 abn = ab;
 
 		abn.Normalise();
 
 		// Compute the velocity of objects A and B at the point of
 		// contact
 
-		Vector3 v0 = pnodeA->GetLinearVelocity()
-			+ Vector3::Cross(pnodeA->GetAngularVelocity(), r1);
+		nclgl::Maths::Vector3 v0 = pnodeA->GetLinearVelocity()
+			+ nclgl::Maths::Vector3::Cross(pnodeA->GetAngularVelocity(), r1);
 
-		Vector3 v1 = pnodeB->GetLinearVelocity()
-			+ Vector3::Cross(pnodeB->GetAngularVelocity(), r2);
+		nclgl::Maths::Vector3 v1 = pnodeB->GetLinearVelocity()
+			+ nclgl::Maths::Vector3::Cross(pnodeB->GetAngularVelocity(), r2);
 
 		// Relative velocity in constraint direction
-		float abnVel = Vector3::Dot(v0 - v1, abn);
+		float abnVel = nclgl::Maths::Vector3::Dot(v0 - v1, abn);
 
 		// Compute the ’mass ’ of the constraint
 		// e.g. How difficult it is to move the two objects in
@@ -87,11 +87,11 @@ public:
 		float invConstraintMassLin = pnodeA->GetInverseMass()
 			+ pnodeB->GetInverseMass();
 
-		float invConstraintMassRot = Vector3::Dot(abn,
-			Vector3::Cross(pnodeA->GetInverseInertia()
-				* Vector3::Cross(r1, abn), r1)
-			+ Vector3::Cross(pnodeB->GetInverseInertia()
-				* Vector3::Cross(r2, abn), r2));
+		float invConstraintMassRot = nclgl::Maths::Vector3::Dot(abn,
+			nclgl::Maths::Vector3::Cross(pnodeA->GetInverseInertia()
+				* nclgl::Maths::Vector3::Cross(r1, abn), r1)
+			+ nclgl::Maths::Vector3::Cross(pnodeB->GetInverseInertia()
+				* nclgl::Maths::Vector3::Cross(r2, abn), r2));
 
 		float constraintMass = invConstraintMassLin + invConstraintMassRot;
 
@@ -148,11 +148,11 @@ public:
 
 			pnodeA->SetAngularVelocity(pnodeA -> GetAngularVelocity()
 				+ pnodeA -> GetInverseInertia()
-				* Vector3::Cross(r1, abn * jn));
+				* nclgl::Maths::Vector3::Cross(r1, abn * jn));
 
 			pnodeB->SetAngularVelocity(pnodeB -> GetAngularVelocity()
 				- pnodeB -> GetInverseInertia()
-				* Vector3::Cross(r2, abn * jn));
+				* nclgl::Maths::Vector3::Cross(r2, abn * jn));
 		}
 	}
 	
@@ -173,6 +173,6 @@ protected:
 
 	float   targetLength;
 
-	Vector3 relPosA;
-	Vector3 relPosB;
+	nclgl::Maths::Vector3 relPosA;
+	nclgl::Maths::Vector3 relPosB;
 };

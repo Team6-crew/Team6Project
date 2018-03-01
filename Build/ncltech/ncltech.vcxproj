@@ -81,7 +81,7 @@
     <LibraryPath>$(SolutionDir)$(Configuration);$(SolutionDir)ExternalLibs\ENET\lib;$(SolutionDir)ExternalLibs\GLEW\lib;$(SolutionDir)ExternalLibs\SOIL\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\ENET\include;$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)$(Configuration);$(SolutionDir)ExternalLibs\ENET\lib;$(SolutionDir)ExternalLibs\GLEW\lib;$(SolutionDir)ExternalLibs\SOIL\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -100,6 +100,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,6 +126,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN_OGL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -146,14 +148,23 @@
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="OcTree.cpp" />
     <ClCompile Include="Paintbomp.cpp" />
+    <ClCompile Include="PaintProjectile.cpp" />
+    <ClCompile Include="PaintWeaponPickup.cpp" />
+    <ClCompile Include="Paintbomp.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerSoftBody.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenPicker.cpp" />
     <ClCompile Include="SpeedPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="Washingzone.cpp" />
+    <ClCompile Include="StunProjectile.cpp" />
+    <ClCompile Include="StunWeaponPickup.cpp" />
+    <ClCompile Include="WeaponPickup.cpp" />
     <ClCompile Include="WorldPartition.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,8 +184,17 @@
     <ClInclude Include="Memory Management\HeapMemory.h" />
     <ClInclude Include="Memory Management\HeapFactory.h" />
     <ClInclude Include="Memory Management\MemoryManager.h" />
+    <ClInclude Include="PaintProjectile.h" />
+    <ClInclude Include="PaintWeaponPickup.h" />
+    <ClInclude Include="Paintbomb.h" />
     <ClInclude Include="Pickup.h" />
+    <ClInclude Include="PlayerSoftBody.h" />
+    <ClInclude Include="Softbody.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="StunProjectile.h" />
+    <ClInclude Include="StunWeaponPickup.h" />
+    <ClInclude Include="Spring_Constraint.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="Manifold.h" />
@@ -187,6 +207,8 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScreenPicker.h" />
     <ClInclude Include="SphereCollisionShape.h" />
+    <ClInclude Include="WeaponPickup.h" />
+    <ClInclude Include="Washingzone.h" />
     <ClInclude Include="WorldPartition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

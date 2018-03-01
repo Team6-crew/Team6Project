@@ -15,7 +15,7 @@ public:
 	void SendPacket(ENetPeer * peerConnection);
 	void BroadcastPacket(ENetHost * hostConnection);
 	void AddVar(string cur_var);
-	string GetId() { return id; }
+	string GetPacketId() { return id; }
 private:
 	string TruncPacket(string data, int length);
 	string GetPacketId(enet_uint8 * data);

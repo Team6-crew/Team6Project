@@ -7,9 +7,13 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <ncltech\StunProjectile.h>
+#include <ncltech\SceneManager.h>
 #include <nclgl\Launchpad.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -24,7 +28,15 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
+	canpaint = true;
+	time = 0;
+	time = 0.0f;
+	stunDuration = 0.0f;
 
+	stunEffect = true;
+	sensitivity = 0.0f;
+	equippedStunWeapon = NULL;
+	equippedPaintWeapon = NULL;
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
@@ -85,15 +97,20 @@ Player::Player(const std::string& name,
 		false,									//Dragable by the user
 		CommonUtils::GenColor(0.45f, 0.5f));
 
+	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 	//camera = GraphicsPipeline::Instance()->GetCamera1();
 	camera = new Camera();
 	camera->SetYaw(0.f);
+	camera->SetPitch(-20.0f);
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(Matrix4::Translation(Vector3(0, 10, 25)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+
+	tempPitch = camera->GetPitch();
+	tempYaw = camera->GetYaw();
 }
 
 
@@ -112,96 +129,167 @@ void Player::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, 
 }
 
 void Player::move(float dt) {
+	if (!stun(dt)) {
+		Vector3 ball_pos = physicsNode->GetPosition();
+		forward = (camera->GetPosition() - ball_pos).Normalise();
+		forward = Vector3(forward.x, 0.0f, forward.z);
 
-	
-	Vector3 ball_pos = physicsNode->GetPosition();
-	Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
+
+		Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+		worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
+		bodyRenderNode->SetTransform(worldTr);
+
+		physicsNode->SetForce(Vector3(0, 0, 0));
+		handleInput(dt);
+
+		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
+		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
+	}
+
+
+}
+
+void Player::handleInput(float dt) {
 	Vector3 jump(0, 20, 0);
-
-	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
-	Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
-	worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
-	
-	bodyRenderNode->SetTransform(worldTr);
-
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
-
-	physicsNode->SetForce(Vector3(0, 0, 0));
-
-	float rotation = 0.0f;
+	Vector3 up = Vector3(0, 1, 0);
+	Vector3 right = Vector3::Cross(forward, up);
 
 	if (Window::GetKeyboard()->KeyDown(move_up))
 	{
-		physicsNode->SetForce(-forward * speed);
+		physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
-	{   
-		forward.y = -forward.y;
-		physicsNode->SetForce(forward * speed);
+	{
+		physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
-		rotation = dt*110.0f;
-		camera->SetYaw(yaw + rotation);
+		physicsNode->SetForce(physicsNode->GetForce() + right * physicsNode->GetForce().Length() * 0.6f);
+		increaseSensitivity(dt);
+		camera->SetYaw(yaw + sensitivity);
 	}
-
-	if (Window::GetKeyboard()->KeyDown(move_right))
+	else if (Window::GetKeyboard()->KeyDown(move_right))
 	{
-		rotation = -dt*110.0f;
-		camera->SetYaw(yaw + rotation);
+		physicsNode->SetForce(physicsNode->GetForce() - right * physicsNode->GetForce().Length() * 0.6f);
+		decreaseSensitivity(dt);
+		camera->SetYaw(yaw + sensitivity);
 	}
-
-	if ((Window::GetKeyboard()->KeyTriggered(move_jump)) )
-	{  
+	else {
+		resetCamera(dt);
+		camera->SetYaw(yaw + sensitivity);
+	}
+	if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
+	{
 		if (canjump == true) {
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
 			canjump = false;
 		}
-		
 	}
 
-	bodyRenderNode->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
-
-	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
-
+	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
+	{
+		shoot();
+	}
 }
+
+void Player::equipStunWeapon(Vector4 colour) {
+	if (equippedPaintWeapon) {
+		delete equippedPaintWeapon;
+		equippedPaintWeapon = NULL;
+	}
+	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+
+	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
+}
+
+void Player::equipPaintWeapon(Vector4 colour) {
+	if (equippedStunWeapon) {
+		delete equippedStunWeapon;
+		equippedStunWeapon = NULL;
+	}
+	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
+	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+
+	(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
+}
+
+bool Player::stun(float dt) {
+	if (stunDuration > 0.0f) {
+		stunEffect = true;
+		time += dt;
+		stunDuration -= dt;
+		// CC
+		physicsNode->SetLinearVelocity(Vector3(0, 0, 0));
+		if (stunDuration > 2.0f)
+		{	// Shake
+			camera->SetYaw(camera->GetYaw() + 360.0f * 0.0005f * ((rand() % 200 - 100.0f) / 100.0f));
+			camera->SetPitch(camera->GetPitch() + 360.0f * 0.0005f * ((rand() % 200 - 100.0f) / 100.0f));
+			return true;
+		}
+		else {
+			camera->SetYaw(tempYaw);
+			camera->SetPitch(tempPitch);
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void Player::resetCamera(float dt) {
+	if (sensitivity > 0) {
+		sensitivity -= dt * 7;
+		if (sensitivity < 0.0f) sensitivity = 0.0f;
+	}
+	else if (sensitivity < 0) {
+		sensitivity += dt * 7;
+		if (sensitivity > 0.0f) sensitivity = 0.0f;
+	}
+}
+
+
 
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
-		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
 	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"duang.wav", false);
 		Launchpad* launchpad = (Launchpad*)otherNode->GetParent();
 		launchpad->Launch(this);
 		canjump = false;
 		return false;
 	}
-	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
-	{
-		GameObject *portal = FindGameObject("portal_b");
-		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
+	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
+		Washingzone* wash = (Washingzone*)otherNode->GetParent();
+		wash->effect(this);
+		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
-	{
-
-	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;
 	}
 	return true;
 };
+
+void Player::shoot() {
+	if (equippedStunWeapon) {
+		Vector3 up = Vector3(0, 1, 0);
+		Vector3 right = Vector3::Cross(forward, up);
+		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right*1.5f - forward*2.0f;
+		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true, (*renderNode->GetChildIteratorStart())->GetColour());
+		projectile->Physics()->SetLinearVelocity(-forward*40.0f);
+		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
+		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
+	}
+}
