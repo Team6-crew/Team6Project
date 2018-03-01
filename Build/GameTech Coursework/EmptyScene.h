@@ -213,7 +213,7 @@ public:
 
 		Washingzone* washingzone = new Washingzone("washingzone",
 			nclgl::Maths::Vector3(10.0f, -0.389f, 15.0f),
-			nclgl::Maths::Vector3(5.0f, 0.01f, 0.5f),
+			nclgl::Maths::Vector3(5.0f, 0.01f, 3.0f),
 			true,
 			0.0f,
 			true,

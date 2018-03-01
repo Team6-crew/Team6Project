@@ -7,6 +7,8 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 #include "Player.h"
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -78,6 +80,7 @@ StunProjectile::~StunProjectile()
 
 bool StunProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPlayer)) {
+		//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"behit.wav", false);
 		Player* player = (Player*)otherNode->GetParent();
 		player->setStunDuration(3.0f);
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
