@@ -87,6 +87,7 @@
     <ClCompile Include="PS4OBJMesh.cpp" />
     <ClCompile Include="Input\PS4Input.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Frame.cpp" />
+    <ClCompile Include="PS4GameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">

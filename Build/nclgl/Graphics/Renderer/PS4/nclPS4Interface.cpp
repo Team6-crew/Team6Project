@@ -77,6 +77,13 @@ sce::Vectormath::Scalar::Aos::Vector2 nclToPS4(const nclgl::Maths::Vector2& vec)
 	return PSVec;
 }
 
+sce::Vectormath::Scalar::Aos::Vector3 CrossPS4(const sce::Vectormath::Scalar::Aos::Vector3 & a, const sce::Vectormath::Scalar::Aos::Vector3 & b)
+{
+	
+		return sce::Vectormath::Scalar::Aos::Vector3((a.getY()*b.getZ()) - (a.getZ()*b.getY()), (a.getZ()*b.getX()) - (a.getX()*b.getZ()), (a.getX()*b.getY()) - (a.getY()*b.getX()));
+	
+}
+
 sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::Scalar::Aos::Vector3 & a, const sce::Vectormath::Scalar::Aos::Vector3 & b, const sce::Vectormath::Scalar::Aos::Vector3 & c, const sce::Vectormath::Scalar::Aos::Vector2 & ta, const sce::Vectormath::Scalar::Aos::Vector2 & tb, const sce::Vectormath::Scalar::Aos::Vector2 & tc)
 {
 	Vector2 coord1 = tb - ta;
@@ -92,6 +99,20 @@ sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::
 	float invDet = 1.0f / (coord1.getX() * coord2.getY() - coord2.getX() * coord1.getY());
 
 	return axis * invDet;
+}
+
+const sce::Vectormath::Scalar::Aos::Vector3 & NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 & vec)
+{
+	
+		float length = sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY() + vec.getZ() * vec.getZ());
+
+		if (length != 0.0f) {
+			length = 1.0f / length;
+			vec.setX(vec.getX() * length);
+			vec.setY(vec.getY() * length);
+			vec.setZ(vec.getZ() * length);
+		}
+	
 }
 
 // Converts  a PS4 Vector3 to an nclgl Vector3

@@ -11,17 +11,10 @@ public:
 	~PS4GameTimer(void) {}
 
 	//How many milliseconds have passed since the GameTimer was created
-	float	GetMS() {
-		return t.getMilliseconds();
-	}
+	float	GetMS();
 
 	//How many milliseconds have passed since GetTimedMS was last called
-	float	GetTimedMS() {
-		float a = GetMS();
-		float b = a - lastTime;
-		lastTime = a;
-		return b;
-	}
+	float	GetTimedMS();
 
 protected:
 	float	start;			//Start of timer
