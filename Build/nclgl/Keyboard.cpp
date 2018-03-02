@@ -67,7 +67,6 @@ Updates the keyboard state with data received from the OS.
 void Keyboard::Update(RAWINPUT* raw)	{
 
 	DWORD key = (DWORD)raw->data.keyboard.VKey;
-	std::cout << "Update: " << key << std::endl;
 	
 	//We should do bounds checking!
 	if (key < 0 || key > KEYBOARD_MAX) {

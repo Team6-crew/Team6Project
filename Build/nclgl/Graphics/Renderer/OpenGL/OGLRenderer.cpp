@@ -220,4 +220,13 @@ void OGLRenderer::PostRender()
 }
 
 
+void	OGLRenderer::PrepareToRender() {}
+void	OGLRenderer::PostRender() {}
+
+
+void	OGLRenderer::RegisterShader(ShaderBase* s) {}
+void	OGLRenderer::RegisterTexture(TextureBase* s) {}
+void	OGLRenderer::RegisterNode(RenderNodeBase* s) {}
+
+
 #endif
