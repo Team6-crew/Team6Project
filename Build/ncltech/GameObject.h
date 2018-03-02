@@ -155,7 +155,7 @@ protected:
 	//Scene  
 	std::string					friendlyName;
 	Tags						tag;
-	Scene*						scene;
+	Scene*						scene = nullptr;
 
 	//Components
 	RenderNodeBase*					renderNode;

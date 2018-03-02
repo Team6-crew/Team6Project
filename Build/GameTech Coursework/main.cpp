@@ -15,6 +15,9 @@
 #include <string>
 #include <iostream>
 
+unsigned int sceLibcHeapExtendedAlloc = 1;			/* Switch to dynamic allocation */
+size_t       sceLibcHeapSize = 2048* 1024 * 1024;	/* Set up heap area upper limit as 256 MiB */
+
 using namespace nclgl::Maths;
 
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
