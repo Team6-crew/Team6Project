@@ -11,6 +11,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameTech Coursework", "GameTech Coursework\GameTech Coursework.vcxproj", "{1A5C2647-CADD-49B7-861E-4B1339EDCD84}"
 	ProjectSection(ProjectDependencies) = postProject
 		{98D6B51B-CB0A-4389-ADC6-24082B967C3F} = {98D6B51B-CB0A-4389-ADC6-24082B967C3F}
+		{89F05696-5DEE-4694-A2E5-914993E07891} = {89F05696-5DEE-4694-A2E5-914993E07891}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nclgl", "nclgl\nclgl.vcxproj", "{98D6B51B-CB0A-4389-ADC6-24082B967C3F}"
@@ -18,6 +19,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{7D7B3356-FDB3-4FEB-A2EE-BA2F8D8AE6CF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ncltech", "ncltech\ncltech.vcxproj", "{89F05696-5DEE-4694-A2E5-914993E07891}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98D6B51B-CB0A-4389-ADC6-24082B967C3F} = {98D6B51B-CB0A-4389-ADC6-24082B967C3F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,7 +57,8 @@ Global
 		{98D6B51B-CB0A-4389-ADC6-24082B967C3F}.Release|x64.Build.0 = Release|x64
 		{98D6B51B-CB0A-4389-ADC6-24082B967C3F}.Release|x86.ActiveCfg = Release|Win32
 		{98D6B51B-CB0A-4389-ADC6-24082B967C3F}.Release|x86.Build.0 = Release|Win32
-		{89F05696-5DEE-4694-A2E5-914993E07891}.Debug|ORBIS.ActiveCfg = Debug|Win32
+		{89F05696-5DEE-4694-A2E5-914993E07891}.Debug|ORBIS.ActiveCfg = Debug|ORBIS
+		{89F05696-5DEE-4694-A2E5-914993E07891}.Debug|ORBIS.Build.0 = Debug|ORBIS
 		{89F05696-5DEE-4694-A2E5-914993E07891}.Debug|x64.ActiveCfg = Debug|x64
 		{89F05696-5DEE-4694-A2E5-914993E07891}.Debug|x64.Build.0 = Debug|x64
 		{89F05696-5DEE-4694-A2E5-914993E07891}.Debug|x86.ActiveCfg = Debug|Win32

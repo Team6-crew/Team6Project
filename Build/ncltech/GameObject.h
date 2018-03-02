@@ -14,6 +14,7 @@ position/orientation each frame.
 
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
+
 #include <nclgl\Matrix4.h>
 #include "GraphicsPipeline.h"
 #include "PhysicsEngine.h"

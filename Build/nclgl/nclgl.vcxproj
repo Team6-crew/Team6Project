@@ -61,8 +61,11 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Frame.cpp" />
     <ClCompile Include="PS4OBJMesh.cpp" />
     <ClCompile Include="Input\PS4Input.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4ShaderNew.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4TextureNew.cpp" />
     <ClCompile Include="PS4Window.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
@@ -120,8 +123,11 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Frame.h" />
     <ClInclude Include="PS4GameTimer.h" />
     <ClInclude Include="Input\PS4Input.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4ShaderNew.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4TextureNew.h" />
     <ClInclude Include="PS4Window.h" />
     <ClInclude Include="PS4OBJMesh.h" />
     <ClInclude Include="Quaternion.h" />
@@ -227,7 +233,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>\SCE\ORBIS SDKs\5.000\target\include_common;Include\um;C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\winrt;C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\shared;C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\um;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\VS\UnitTest\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\ucrt;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\VS\include;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.12.25827\atlmfc\include;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.12.25827\include;D:\Team Project\Build\ExternalLibs\ENET\include;D:\Team Project\Build\ExternalLibs\SOIL\include;D:\Team Project\Build\ExternalLibs\GLEW\include;D:\Team Project\Build\;C:\Program Files (x86)\SCE\ORBIS SDKs\5.000\target\samples\sample_code\graphics\;C:\Program Files (x86)\SCE\ORBIS SDKs\5.000\target\include_common;C:\Program Files (x86)\SCE\ORBIS SDKs\5.000\target\include;C:\Program Files (x86)\SCE\ORBIS SDKs\5.000\target\samples\sample_code\;C:\Program Files (x86)\SCE\ORBIS SDKs\5.000\target\samples\sample_code\common\include\;$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\common\include\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\;$(IncludePath);$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SCE_ORBIS_SDK_DIR)\host_tools\lib\clang\include;$(SCE_ORBIS_SDK_DIR)\target\include;$(SCE_ORBIS_SDK_DIR)\target\include_common; $(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\api_gnm\toolkit;$(LibraryPath)$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>

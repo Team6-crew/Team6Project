@@ -30,6 +30,7 @@ Description:
 *//////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+
 #include <nclgl\Quaternion.h>
 #include <nclgl\Matrix3.h>
 #include "CollisionShape.h"
