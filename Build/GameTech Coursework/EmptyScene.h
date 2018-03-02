@@ -55,23 +55,21 @@ public:
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
-		if (num_p & 0b0001) GameLogic::Instance()->addPlayer(0);
-		if (num_p & 0b0010) GameLogic::Instance()->addPlayer(1);
-		if (num_p & 0b0100) GameLogic::Instance()->addPlayer(2);
-		if (num_p & 0b1000) GameLogic::Instance()->addPlayer(3);
+		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
-		//GameLogic::Instance()->addSoftPlayers(1);
-		////Add player to scene
-		//for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
-		//	this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
-		//	//this->AddGameObject(GameLogic::Instance()->getPlayer(i));
-		//	this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
-		//}
+		//Add player to scene
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
+			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+		}
 
 
 		//Who doesn't love finding some common ground?
@@ -245,7 +243,7 @@ public:
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->move();
+			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
 		// Pause Menu
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))

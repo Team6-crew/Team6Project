@@ -29,14 +29,20 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 		false,									//Dragable by the user
 		CommonUtils::GenColor(0.45f, 0.5f));
 
+	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
+
 	camera = new Camera();
 	camera->SetYaw(0.f);
+	camera->SetPitch(-20.0f);
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
+
+	tempPitch = camera->GetPitch();
+	tempYaw = camera->GetYaw();
 }
 
 
@@ -67,6 +73,7 @@ GameObject* PlayerSoftBody::getTop() {
 }
 
 GameObject* PlayerSoftBody::getBottom() {
+	getTop();
 	return bottom;
 }
 
@@ -101,34 +108,43 @@ void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKey
 	move_shoot = shoot;
 }
 
-void PlayerSoftBody::move() {
-	nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
-		(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
-		(ball->softball[0]->Physics()->GetPosition().z + ball->softball[181]->Physics()->GetPosition().z) / 2);
+void PlayerSoftBody::resetCamera(float dt) {
+	if (sensitivity > 0) {
+		sensitivity -= dt * 7;
+		if (sensitivity < 0.0f) sensitivity = 0.0f;
+	}
+	else if (sensitivity < 0) {
+		sensitivity += dt * 7;
+		if (sensitivity > 0.0f) sensitivity = 0.0f;
+	}
+}
 
+bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
+	return true;
+}
+
+void PlayerSoftBody::shoot() {
+
+}
+
+void PlayerSoftBody::equipStunWeapon(nclgl::Maths::Vector4 colour) {
+
+}
+
+void PlayerSoftBody::equipPaintWeapon(nclgl::Maths::Vector4 colour) {
+
+}
+
+void PlayerSoftBody::handleInput(float dt) {
 	nclgl::Maths::Vector3 jump(0, 20, 0);
-
-	nclgl::Maths::Vector3 forward = (camera->GetPosition() - ball_pos).Normalise();
-
-	RenderNodeBase* bodyRenderNode = (*body->Render()->GetChildIteratorStart());
-	nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
-	worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
-
-	bodyRenderNode->SetTransform(worldTr);
-
+	float rotation = 0.0f;
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
-
-	//ball->Physics()->SetForce(Vector3(0, 0, 0));
-
-	float rotation = 0.0f;
-
-	getTop();
-	getFront();
-
 	nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 	nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 
+	getTop();
+	getFront();
 
 	if (Window::GetKeyboard()->KeyDown(move_up))
 	{
@@ -168,19 +184,24 @@ void PlayerSoftBody::move() {
 			getBall()->softball[i]->Physics()->SetForce(
 				getBall()->softball[i]->Physics()->GetForce() + right * getBall()->softball[i]->Physics()->GetForce().Length() * 0.00005f);
 		}
-		rotation = 0.5f;
-		camera->SetYaw(yaw + rotation);
+		increaseSensitivity(dt);
+		camera->SetYaw(yaw + sensitivity);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(move_right))
+	else if (Window::GetKeyboard()->KeyDown(move_right))
 	{
 		for (int i = 0; i < 182; ++i)
 		{
 			getBall()->softball[i]->Physics()->SetForce(
 				getBall()->softball[i]->Physics()->GetForce() - right * getBall()->softball[i]->Physics()->GetForce().Length() * 0.00005f);
 		}
-		rotation = -0.5f;
-		camera->SetYaw(yaw + rotation);
+		decreaseSensitivity(dt);
+		camera->SetYaw(yaw + sensitivity);
+	}
+
+	else {
+		resetCamera(dt);
+		camera->SetYaw(yaw + sensitivity);
 	}
 
 	if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
@@ -191,10 +212,28 @@ void PlayerSoftBody::move() {
 			}
 			canjump = false;
 		}
-
 	}
 
-	bodyRenderNode->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, nclgl::Maths::Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
+	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
+	{
+		shoot();
+	}
+}
+
+void PlayerSoftBody::move(float dt) {
+	nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
+		(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
+		(ball->softball[0]->Physics()->GetPosition().z + ball->softball[181]->Physics()->GetPosition().z) / 2);
+
+	forward = (camera->GetPosition() - ball_pos).Normalise();
+
+	nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+	worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
+	bodyRenderNode->SetTransform(worldTr);
+
+	
+	handleInput(dt);
+	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 

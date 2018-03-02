@@ -20,16 +20,20 @@ public:
 	GameObject* getBottom();
 	GameObject* getFront();
 
-	void move();
+	
 	void setRadius(float radius) { rad = radius; }
 	float getRadius() { return rad; }
+	
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys space, KeyboardKeys shoot);
-
-	float getSpeed() { return speed; }
-	void setSpeed(float sp) { speed = sp; }
 
 	void setCamera(Camera* c) { camera = c; }
 	Camera* getCamera() { return camera; }
+	void resetCamera(float dt);
+
+	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
+
+	float getSpeed() { return speed; }
+	void setSpeed(float sp) { speed = sp; }
 
 	float getadd_rad() { return add_rad; }
 	void setadd_rad(float add) { add_rad = add; }
@@ -37,23 +41,73 @@ public:
 	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) { relative_position = rel_pos; }
 	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; }
 
+	void shoot();
+	void equipStunWeapon(nclgl::Maths::Vector4 colour);
+	void equipPaintWeapon(nclgl::Maths::Vector4 colour);
+
+	void setStunDuration(float st) {
+		stunDuration = st;
+		tempYaw = camera->GetYaw();
+		tempPitch = camera->GetPitch();
+	}
+
+	void increaseSensitivity(float dt) {
+		sensitivity += dt * 5;
+		if (sensitivity > 2.0f) sensitivity = 2.0f;
+	}
+
+	void decreaseSensitivity(float dt) {
+		sensitivity -= dt * 5;
+		if (sensitivity < -2.0f) sensitivity = -2.0f;
+	}
+
+	bool setcanpaint(bool canp) { canpaint = canp; return canpaint; }
+	bool getcanpaint() { return canpaint; }
+
+	void settime(float t) { time = t; }
+	float gettime() { return time; }
+
+	void stun(float dt);
+
+	int getDebuffTime() { return debuffTime; }
+	void setDebuffTime(int t) { debuffTime = t; }
+
+	void handleInput(float dt);
+	void move(float dt);
 private:
 
 	Softbody * ball;
 	GameObject* body;
-	RenderNodeBase* camera_transform;
-	Camera* camera;
-	GameObject* top; // Top most sphere used to control soft body
-	GameObject* bottom; // Bottom most sphere for movement and painting
-	GameObject* front;
-	GameObject* back;
-
-	float speed;
-
-	bool canjump = 1;
 
 	KeyboardKeys move_up, move_down, move_left, move_right, move_jump, move_shoot;
+
+	GameObject* top; // Top most sphere used to control soft body
+	GameObject* bottom; // Bottom most sphere for movement and painting
+	GameObject* front; // Front sphere
+	GameObject* back; // You get the idea
+
+	Camera* camera;
+	RenderNodeBase* camera_transform;
+	RenderNodeBase* bodyRenderNode;
+	RenderNodeBase* equippedStunWeapon;
+	RenderNodeBase* equippedPaintWeapon;
+	
+	float speed;
+
 	float add_rad;
 	float rad;
+
 	nclgl::Maths::Vector3 relative_position;
+	nclgl::Maths::Vector3 forward;
+
+	float time;
+
+	float sensitivity;
+	bool canpaint;
+
+	bool canjump = 1;
+	float stunDuration;
+	bool stunEffect;
+	float tempYaw, tempPitch;
+	int debuffTime;
 };
