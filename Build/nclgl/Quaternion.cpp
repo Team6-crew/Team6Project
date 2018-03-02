@@ -204,9 +204,9 @@ Quaternion Quaternion::FromMatrix(const Matrix4 &m) {
 	q.y = sqrt(max(0.0f, (1.0f - m.values[0] + m.values[5] - m.values[10]))) / 2;
 	q.z = sqrt(max(0.0f, (1.0f - m.values[0] - m.values[5] + m.values[10]))) / 2;
 
-	q.x = (float)_copysign(q.x, m.values[9] - m.values[6]);
-	q.y = (float)_copysign(q.y, m.values[2] - m.values[8]);
-	q.z = (float)_copysign(q.z, m.values[4] - m.values[1]);
+	q.x = (float)copysign(q.x, m.values[9] - m.values[6]);
+	q.y = (float)copysign(q.y, m.values[2] - m.values[8]);
+	q.z = (float)copysign(q.z, m.values[4] - m.values[1]);
 
 	return q;
 }

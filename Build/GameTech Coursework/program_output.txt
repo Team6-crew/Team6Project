@@ -1,14 +1,14 @@
-[13:20:56] Loading Shader:
-[13:20:56]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl
-[13:20:56]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragSuperSample.glsl
-[13:20:56]     -> Linking Shader: Success!
-[13:20:56] 
-[13:20:56] Loading Shader:
-[13:20:56]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexFull.glsl
-[13:20:56]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragForwardRender.glsl
-[13:20:56]     -> Linking Shader: Success!
-[13:20:56] 
-[13:20:56] Loading Mesh: ../../Data/Meshes/cube.obj
-[13:20:56] 
-[13:20:56] Loading Mesh: ../../Data/Meshes/sphere.obj
-[13:20:56] 
+[13:26:29] Loading Shader:
+[13:26:29]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl
+[13:26:29]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragSuperSample.glsl
+[13:26:29]     -> Linking Shader: Success!
+[13:26:29] 
+[13:26:29] Loading Shader:
+[13:26:29]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechVertexFull.glsl
+[13:26:29]     -> Compiling Shader: ../../Data/Shaders/SceneRenderer/TechFragForwardRender.glsl
+[13:26:29]     -> Linking Shader: Success!
+[13:26:29] 
+[13:26:29] Loading Mesh: ../../Data/Meshes/cube.obj
+[13:26:29] 
+[13:26:29] Loading Mesh: ../../Data/Meshes/sphere.obj
+[13:26:29] 

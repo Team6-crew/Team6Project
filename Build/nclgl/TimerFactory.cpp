@@ -2,7 +2,6 @@
 #include "OGLGameTimer.h"
 #include "PS4GameTimer.h"
 
-
 GameTimerBase * TimerFactory::MakeGameTimer()
 {
 #ifdef WIN_OGL

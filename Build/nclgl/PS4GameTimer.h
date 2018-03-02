@@ -5,10 +5,10 @@
 
 #include <texture_tool\raw\timer.h>
 
-class GameTimer {
+class PS4GameTimer: public GameTimerBase {
 public:
-	GameTimer(void);
-	~GameTimer(void) {}
+	PS4GameTimer(void);
+	~PS4GameTimer(void) {}
 
 	//How many milliseconds have passed since the GameTimer was created
 	float	GetMS() {
