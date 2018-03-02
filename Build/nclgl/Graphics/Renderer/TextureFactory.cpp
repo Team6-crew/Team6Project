@@ -24,7 +24,7 @@ TextureBase* TextureFactory::MakeTexture(std::string filepath)
 	#ifdef WIN_OGL
 	return new OGLTexture(filepath.append(".tga"));
 	#elif  PSTATION4
-		//return new PS4Texture(filepath.append(".gnf"));
+		return new PS4Texture(filepath.append(".gnf"));
 	#endif 
 
 	

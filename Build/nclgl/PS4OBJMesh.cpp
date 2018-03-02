@@ -353,7 +353,7 @@ void	PS4OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 			if (!currentMTL.bump.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.bump);
-				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
+				//NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
 				currentMTL.bumpNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
 			}
 		}

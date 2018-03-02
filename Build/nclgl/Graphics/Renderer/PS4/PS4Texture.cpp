@@ -24,6 +24,13 @@ PS4Texture::PS4Texture(const std::string& filepath)
 	trilinearSampler.setMipFilterMode(sce::Gnm::kMipFilterModeLinear);
 }
 
+#include <iostream>
+PS4Texture::PS4Texture(TextureTypeNamespace::Type type, int a, int b)
+{
+	std::cout << "Oh no! Texture" << std::endl;
+	apiTexture.initAs2dArray(a, b, 1, 1,
+		sce::Gnm::DataFormat::build(), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1, false);
+}
 
 PS4Texture::~PS4Texture()
 {
@@ -65,8 +72,8 @@ bool PS4Texture::LoadTexture(const std::string& filepath)
 
 	apiTexture = *patchTextures(contentsDesc, 0, 1, &pixelsAddr);
 	apiTexture.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
-	//width =	apiTexture.getWidth();
-	//height = apiTexture.getHeight();
+	width =	apiTexture.getWidth();
+	height = apiTexture.getHeight();
 
 	file.close();
 	delete[] rawContents;

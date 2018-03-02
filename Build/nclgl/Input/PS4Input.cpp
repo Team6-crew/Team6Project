@@ -114,16 +114,7 @@ bool	PS4Input::GetButtonDown(Button i) {
 	return buttons[i] > 0.5f ? true : false;
 }
 
-void PS4Input::ResetInput()
-{
-	for (int i = 0; i < MAX_AXIS; ++i) {
-		axis[i].x = 0.0f;
-		axis[i].y = 0.0f;
-	}
-	for (int i = 0; i < MAX_BUTTONS; ++i) {
-		buttons[i] = 0.0f;
-	}
-}
+
 
 bool PS4Input::IsAction(InputToken action)
 {
