@@ -17,6 +17,7 @@ PS4Input::PS4Input() {
 
 	scePadInit();
 	InitController();
+	ResetInput();
 }
 
 PS4Input::~PS4Input() {

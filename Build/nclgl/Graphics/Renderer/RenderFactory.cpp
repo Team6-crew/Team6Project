@@ -26,6 +26,7 @@ RenderBase* RenderFactory::MakeRenderer()
 	WindowFactory::Instance()->MakeWindow(windowTitle, screenWidth, screenHeight, fullScreen);
 	return new OGLRenderer(static_cast<OGLWindow*>(WindowFactory::Instance()->GetWindow()));
 	#elif PSTATION4
+	WindowFactory::Instance()->MakeWindow(windowTitle, screenWidth, screenHeight, fullScreen);
 	return new PS4Renderer();
 	#endif
 

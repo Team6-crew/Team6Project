@@ -3,7 +3,7 @@
 
 InputBase::InputBase()
 {
-	ResetInput();
+	
 }
 
 
