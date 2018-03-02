@@ -161,7 +161,7 @@ int main()
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 	
 	Window::GetWindow().GetTimer()->GetTimedMS();
-	
+
 	//Create main game-loop
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing

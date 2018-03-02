@@ -39,7 +39,7 @@ public:
 	void UpdateScene(float dt);
 	void RenderMenu();
 	void RenderScene(float dt);
-
+	void LoadingScreen(float frame);
 	void FillPaint(float dt);
 
 	//Utils
@@ -76,7 +76,7 @@ protected:
 	ShaderBase* shaderPresentToWindow;
 	ShaderBase* shaderShadow;
 	ShaderBase* shaderForwardLighting;
-
+	ShaderBase* shaderLoading;
 	ShaderBase* shaderTrail;
 	ShaderBase* shaderCircle;
 	ShaderBase* shaderPaint;
@@ -99,6 +99,7 @@ protected:
 
 	//Common
 	MeshBase* fullscreenQuad;
+
 	MeshBase* paintQuad;
 	Camera* camera;
 	/*Camera* camera1;
@@ -118,6 +119,7 @@ protected:
 
 	FrameBufferBase* TrailBuffer;
 	FrameBufferBase* CircleBuffer;
+	FrameBufferBase* LoadingBuffer;
 	TextureBase* temp_tex;
 	TextureBase* loading_tex;
 	FrameBufferBase* PaintBuffer;

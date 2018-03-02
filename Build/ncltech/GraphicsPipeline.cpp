@@ -60,7 +60,7 @@ GraphicsPipeline::GraphicsPipeline()
 
 	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
-	
+	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"loading.png");
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
@@ -142,6 +142,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderPaint = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/PaintFrag.glsl");
+
+	shaderLoading = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/loadingFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -272,7 +276,7 @@ void GraphicsPipeline::RenderMenu() {
 	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 	 
-	fullscreenQuad->SetTexture(temp_tex);
+	fullscreenQuad->ReplaceTexture(temp_tex,0);
 	fullscreenQuad->Draw();
 
 	//NCLDEBUG - Text Elements (aliased)
@@ -282,9 +286,31 @@ void GraphicsPipeline::RenderMenu() {
 	renderer->SwapBuffers();
 	
 }
+void GraphicsPipeline::LoadingScreen(float frame) {
 
+	renderer->SetViewPort(1024, 1024);
+	shaderLoading->Activate();
+	PaintBuffer->ChangeColourAttachment(loading_tex);
+	paintQuad->ReplaceTexture(loading_tex, 0);
+	shaderLoading->SetUniform("radius_perc", frame);
+	paintQuad->Draw();
+
+	renderer->BindScreenFramebuffer();
+	renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	float superSamples = (float)(numSuperSamples);
+	shaderPresentToWindow->Activate();
+	shaderPresentToWindow->SetUniform("uColorTex", 0);
+	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+	fullscreenQuad->ReplaceTexture(loading_tex,0);
+	fullscreenQuad->Draw();
+	renderer->SwapBuffers();
+}
 void GraphicsPipeline::RenderScene(float dt)
 {
+	
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
 	TrailBuffer->Activate();
@@ -740,7 +766,7 @@ void GraphicsPipeline::FillPaint(float dt) {
 					shaderPaint->Activate();
 					renderer->SetViewPort(1024, 1024);
 					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
-					paintQuad->SetTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					paintQuad->ReplaceTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1),0);
 					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
 					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
 					paintQuad->Draw();
