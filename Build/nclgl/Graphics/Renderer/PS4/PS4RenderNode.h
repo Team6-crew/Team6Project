@@ -43,7 +43,12 @@ public:
 	void							SetColour(const nclgl::Maths::Vector4 &c) override;
 
 
-	inline void SetGraphicsContext(sce::Gnmx::GnmxGfxContext* context) { mesh->SetGraphicsContext(context); }
+	inline void SetGraphicsContext(sce::Gnmx::GnmxGfxContext* context) { 
+		if (mesh)
+		{
+			mesh->SetGraphicsContext(context);
+		}
+	}
 
 protected:
 	sce::Vectormath::Scalar::Aos::Matrix4			worldTransform;

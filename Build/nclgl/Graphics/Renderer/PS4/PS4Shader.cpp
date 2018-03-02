@@ -48,7 +48,7 @@ PS4Shader::PS4Shader(const std::string& vertex, const std::string& pixel)
 	}
 	GenerateVertexShader(vertex);
 	GeneratePixelShader(pixel);
-	//loadSuccess = true;
+	loadFailed = false;
 }
 
 
