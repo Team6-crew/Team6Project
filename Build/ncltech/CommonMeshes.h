@@ -13,7 +13,6 @@ Description:
 
 #pragma once
 #include <nclgl\Graphics\MeshBase.h>
-#include "../ExternalLibs/GLEW/include/GL/glew.h"
 #include <nclgl\OBJMeshBase.h>
 class Scene;
 

@@ -6,7 +6,6 @@
 #include <nclgl\Graphics\Renderer\RenderFactory.h>
 #include <nclgl\Graphics\Renderer\ShaderFactory.h>
 #include <nclgl\Graphics\Renderer\RenderNodeBase.h>
-#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 #include <nclgl\MeshFactory.h>
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\TextureBase.h>

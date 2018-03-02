@@ -35,11 +35,9 @@ in even more annoying.
 
 
 bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
-	NCLDebug::Log("Loading Mesh: %s", filename.c_str());
 
 	std::ifstream f(filename.c_str(), std::ios::in);
 	if (!f) {//Oh dear, it can't find the file :(
-		NCLERROR("    Error: Mesh file does not exist!");
 		return false;
 	}
 
@@ -255,7 +253,6 @@ bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 		delete inputSubMeshes[i];
 		++i;
 	}
-	NCLDebug::Log("");
 
 	return true;
 }
@@ -339,7 +336,6 @@ void	PS4OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 			if (!currentMTL.diffuse.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.diffuse);
-				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
 				currentMTL.diffuseNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
 			}
 		}

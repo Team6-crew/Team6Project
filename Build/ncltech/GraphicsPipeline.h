@@ -3,9 +3,6 @@
 #include <nclgl\TSingleton.h>
 #include <nclgl\Camera.h>
 #include <nclgl\Graphics\RenderConstants.h>
-
-#include <GL/glew.h>
-
 #include <vector>
 
 class FrameBufferBase;

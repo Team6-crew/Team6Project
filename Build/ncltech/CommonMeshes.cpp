@@ -1,7 +1,6 @@
 #include "CommonMeshes.h"
 #include <nclgl\NCLDebug.h>
 #include <nclgl\OBJMeshBase.h>
-#include "../ExternalLibs/SOIL/include/SOIL.h" 
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
 #include "../nclgl/MeshFactory.h"

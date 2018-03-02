@@ -57,12 +57,12 @@ public:
 	// Getters/Setters
 	nclgl::Maths::Matrix4	GetViewMatrix() override;
 	nclgl::Maths::Matrix4   GetProjMatrix() override;
-	void 					SetViewMatrix(nclgl::Maths::Matrix4& mat);
-	void					SetProjMatrix(nclgl::Maths::Matrix4& mat);
+	void 					SetViewMatrix(const nclgl::Maths::Matrix4& mat) override;
+	void					SetProjMatrix(const nclgl::Maths::Matrix4& mat) override;
 
-	void					RegisterShader(PS4Shader* s)  { shaders.push_back(s); }
-	void					RegisterTexture(PS4Texture* s) { textures.push_back(s); }
-	void					RegisterNode(PS4RenderNode* s) { nodes.push_back(s); }
+	void					RegisterShader(ShaderBase* s)  override;
+	void					RegisterTexture(TextureBase* s)override;
+	void					RegisterNode(RenderNodeBase* s)override;
 
 protected:// Setup functions 
 	void			 InitialiseMemoryAllocators();

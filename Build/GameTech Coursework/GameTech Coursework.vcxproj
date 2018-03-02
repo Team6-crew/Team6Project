@@ -115,7 +115,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
     <IncludePath>$(SCE_ORBIS_SDK_DIR)\host_tools\lib\clang\include;$(SCE_ORBIS_SDK_DIR)\target\include;$(SCE_ORBIS_SDK_DIR)\target\include_common; $(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration);$(SolutionDir)ExternalLibs\GLEW\lib;$(SolutionDir)ExternalLibs\ENET\lib;$(SolutionDir)ExternalLibs\SOIL\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\api_gnm\toolkit;$(LibraryPath)$(LibraryPath)$(SolutionDir)$(Configuration);$(SolutionDir)ExternalLibs\GLEW\lib;$(SolutionDir)ExternalLibs\ENET\lib;$(SolutionDir)ExternalLibs\SOIL\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -146,7 +146,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ncltech.lib;nclgl.lib;SOIL.lib;enet.lib;ws2_32.lib;Winmm.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ncltech.lib;nclgl.lib;enet.lib;libSceDbgVideoOut_stub_weak.a;libSceVideoOut_stub_weak.a;libSceGnm.a;libSceGnm_debug.a;libSceGnmx.a;libSceGnmx_debug.a;libSceGpuAddress.a;libSceGnmDriver_stub_weak.a;libSceShaderBinary.a;libSceGnf.a;libSceGnf_debug.a;libScePad_stub_weak.a;libSceUserService_stub_weak.a;libSceSysmodule_stub_weak.a;libSceNgs2_stub_weak.a;libSceAudioOut_stub_weak.a;-lSceAudio3d_stub_weak;toolkit_debug.a;$(GnmAdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>

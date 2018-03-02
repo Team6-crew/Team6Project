@@ -5,7 +5,7 @@
 #include <nclgl\NCLDebug.h>
 
 #include <set>
-#include <omp.h>
+//#include <omp.h>
 #include <algorithm>
 #include <ncltech\Scene.h>
 #include <GameTech Coursework\EmptyScene.h>

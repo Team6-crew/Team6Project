@@ -359,11 +359,11 @@ nclgl::Maths::Matrix4   PS4Renderer::GetProjMatrix()
 {
 	return PS4ToNcl(projMatrix);
 }
-void 					PS4Renderer::SetViewMatrix(nclgl::Maths::Matrix4& mat)
+void 					PS4Renderer::SetViewMatrix(const nclgl::Maths::Matrix4& mat)
 {
 	viewMatrix = nclToPS4(mat);
 }
-void					PS4Renderer::SetProjMatrix(nclgl::Maths::Matrix4& mat)
+void					PS4Renderer::SetProjMatrix(const nclgl::Maths::Matrix4& mat)
 {
 	projMatrix = nclToPS4(mat);
 }
@@ -457,4 +457,20 @@ void	PS4Renderer::SetRenderFrameBuffer(PS4FrameBuffer*buffer, bool clearColour, 
 	currentPS4FrameBuffer->Activate();
 }
 
+void	PS4Renderer::RegisterShader(ShaderBase* s)	 
+{ 
+	PS4Shader* shader = static_cast<PS4Shader*>(s);
+	shaders.push_back(shader);
+}
+void	PS4Renderer::RegisterTexture(TextureBase* s) 
+{
+	PS4Texture* texture = static_cast<PS4Texture*>(s);
+	textures.push_back(texture);
+}
+
+void	PS4Renderer::RegisterNode(RenderNodeBase* s)
+{
+	PS4RenderNode* node = static_cast<PS4RenderNode*>(s);
+	nodes.push_back(node);
+}
 #endif
