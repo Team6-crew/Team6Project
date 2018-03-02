@@ -216,13 +216,13 @@ bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 			m->SetTexturesFromMTL(sm->mtlSrc, sm->mtlType);
 
 			m->numVertices = sm->vertIndices.size();
-			m->vertices = &nclToPS4(*(new nclgl::Maths::Vector3[m->numVertices]));
+			m->vertices = new sce::Vectormath::Scalar::Aos::Vector3[m->numVertices];
 			for (unsigned int j = 0; j < sm->vertIndices.size(); ++j) {
 				m->vertices[j] = nclToPS4(inputVertices[sm->vertIndices[j] - 1]);
 			}
 
 			if (!sm->texIndices.empty()) {
-				m->texCoords = &nclToPS4(*(new nclgl::Maths::Vector2[m->numVertices]));
+				m->texCoords = new sce::Vectormath::Scalar::Aos::Vector2[m->numVertices];
 				for (unsigned int j = 0; j < sm->texIndices.size(); ++j) {
 					m->texCoords[j] = nclToPS4(inputTexCoords[sm->texIndices[j] - 1]);
 				}
