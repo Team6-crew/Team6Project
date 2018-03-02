@@ -20,7 +20,7 @@ protected:
 	float	frequency ;		//Ticks Per Second
 
 	float lastTime = 0;					//Last time GetTimedMS was called
-	sce::TextureTool::Raw::Timer t;
+	//sce::TextureTool::Raw::Timer t;
 };
 
 #endif

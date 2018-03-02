@@ -371,10 +371,9 @@ void					PS4Renderer::SetProjMatrix(const nclgl::Maths::Matrix4& mat)
 
 void PS4Renderer::Resize(int x, int y)
 {
-	// Commented because haven't derived from the base class yet
-	//width = max(x, 1);
-	//height = max(y, 1);
-	//SetViewPort(width, height);
+	width = max(x, 1);
+	height = max(y, 1);
+	SetViewPort(width, height);
 }
 
 void	PS4Renderer::SetClearColour(nclgl::Maths::Vector3& colour)

@@ -132,8 +132,8 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 	}
 
 	//Construct our Shadow Maps and Shadow UBO
-	shadowTex = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
-	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex);
+	//shadowTex = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	//shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
