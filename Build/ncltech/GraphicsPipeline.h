@@ -52,7 +52,8 @@ protected:
 	virtual ~GraphicsPipeline();
 
 	void Resize(int x, int y); //Called by window when it is resized
-
+	float flickerPie;
+	bool toggleFlicker;
 	void LoadShaders();
 	void UpdateAssets(int width, int height);
 	void BuildAndSortRenderLists();

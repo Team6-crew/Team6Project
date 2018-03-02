@@ -34,6 +34,8 @@ GraphicsPipeline::GraphicsPipeline()
 	, shadowFBO(NULL)
 	, TrailBuffer(NULL)
 	, ground(NULL)
+	, flickerPie(0.0f)
+	, toggleFlicker(false)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
@@ -346,13 +348,29 @@ void GraphicsPipeline::RenderScene(float dt)
 	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
+	int max_score = 0;
+	float max_perc = 0.0f;
 	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
 		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
 	}
+	
+	if (flickerPie > 0.5f) {
+		flickerPie = 0.0f;
+		toggleFlicker = !toggleFlicker;
+	}
+	if (toggleFlicker) {
+		max_score = -1;
+	}
 
+	flickerPie += dt;
+	shaderCircle->SetUniform("winning", max_score);
 	trailQuad->Draw();
 
 	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
