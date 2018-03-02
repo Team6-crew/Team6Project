@@ -319,7 +319,7 @@ void GraphicsPipeline::RenderScene()
 		}
 		else {
 			std::string arr = "players[" + std::to_string(i) + "].";
-			float pos_x = GameLogic::Instance()->getSoftPlayer(0)->getRelativePosition().x;
+			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
 			float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
 			float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
 			Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
