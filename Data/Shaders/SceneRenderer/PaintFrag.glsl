@@ -36,6 +36,8 @@ void main(void)
 			}
 		}
 	}
-	
+	if (color.a>0.0f){
+		color.a = 0.9f;
+	}
 	OutFrag = color;
 }

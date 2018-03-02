@@ -119,6 +119,7 @@ protected:
 	FrameBufferBase* TrailBuffer;
 	FrameBufferBase* CircleBuffer;
 	TextureBase* temp_tex;
+	TextureBase* loading_tex;
 	FrameBufferBase* PaintBuffer;
 	float paint_perc;
 

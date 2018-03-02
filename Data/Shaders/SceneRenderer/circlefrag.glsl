@@ -3,6 +3,7 @@
 uniform uint uPickerIdx;
 uniform struct Player {
 	 float angle;
+	 vec4 player_colour;
 } players[4];
 uniform int num_players;
 in Vertex	{
@@ -34,9 +35,6 @@ void main(void)
 			if(wr==-1)
 				wr = num_players-1;
 		}
-	if (wr ==0) color = vec4(1.0f, 0.0f, 0.69f, 1.0f);
-	else if(wr == 1)color = vec4(0.3f, 1.0f, 1.0f, 1.0f);
-	else if(wr == 2)color = vec4(1.0f, 0.68f, 0.33f, 1.0f);
-	else if(wr == 3)color = vec4(0.0f, 1.0f, 0.02f, 1.0f);
+	color = players[wr].player_colour;
 	OutFrag = color;
 }

@@ -69,6 +69,7 @@ GraphicsPipeline::GraphicsPipeline()
 	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
+	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Loading.png");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -172,8 +173,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 void GraphicsPipeline::UpdateScene(float dt)
 {
 
-	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
-		camera->HandleMouse(dt);
+	
 
 	for (int i = 0; i < cameras.size(); i++) {
 		cameras[i]->HandleKeyboard(dt);
@@ -290,14 +290,14 @@ void GraphicsPipeline::RenderScene(float dt)
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
 
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		std::string arr = "players[" + std::to_string(i) + "].";
-		float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAllPlayer(i)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 
 		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
@@ -312,16 +312,17 @@ void GraphicsPipeline::RenderScene(float dt)
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers() - 1; i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
 	}
 
 	trailQuad->Draw();
@@ -750,13 +751,14 @@ void GraphicsPipeline::FillPaint(float dt) {
 }
 
 void GraphicsPipeline::ChangeScene() {
-
+	fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("loading_tex"), 0);
 	cameras.clear();
-
+	fullscreenQuad->Draw();
 	NCLDebug::_ClearDebugLists();
 	NCLDebug::_ReleaseShaders();
 	renderer->BindScreenFramebuffer();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
+	
 }
