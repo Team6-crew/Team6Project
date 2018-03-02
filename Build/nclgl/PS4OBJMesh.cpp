@@ -2,7 +2,6 @@
 #include "PS4OBJMesh.h"
 #include "NCLDebug.h"
 #include "Graphics\Renderer\PS4\nclPS4Interface.h"
-#include <SOIL.h>
 
 #include "Vector2.h"
 #include "Vector3.h"
