@@ -88,6 +88,9 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Launchpad.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="MySocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -194,14 +197,14 @@
     <ClInclude Include="GameLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Launchpad.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="RenderNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="MySocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

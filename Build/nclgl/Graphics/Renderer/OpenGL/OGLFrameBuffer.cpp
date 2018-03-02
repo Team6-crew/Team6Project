@@ -66,6 +66,14 @@ OGLFrameBuffer::OGLFrameBuffer(TextureBase* depthTex, bool colour)
 }
 
 
+void OGLFrameBuffer::ChangeColourAttachment(TextureBase* attachment)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferID);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, static_cast<OGLTexture*>(attachment)->GetID(), 0);
+
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 OGLFrameBuffer::~OGLFrameBuffer()
 {
 	glDeleteFramebuffers(1, &bufferID);

@@ -15,8 +15,6 @@ void Quit(bool error = false, const std::string &reason = "");
 void Initialize()
 {
 	//Initialise the Window
-	if (!Window::Initialise("Game Technologies - Collision Resolution", 1280, 800, false))
-		Quit(true, "Window failed to initialise!");
 
 	//Initialise ENET for networking  //!!!!!!NEW!!!!!!!!
 	if (enet_initialize() != 0)
@@ -44,9 +42,9 @@ void Quit(bool error, const std::string &reason) {
 	PhysicsEngine::Release();
 	enet_deinitialize();  //!!!!!!!!!!!!!!!!!NEW!!!!!!!!!!!!!!
 	Window::Destroy();
-	
 
-						  //Show console reason before exit
+
+	//Show console reason before exit
 	if (error) {
 		std::cout << reason << std::endl;
 		system("PAUSE");
@@ -114,7 +112,7 @@ int main()
 		//Start Timing
 		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
 
-		//Print Status Entries
+																			//Print Status Entries
 		PrintStatusEntries();
 
 		//Handle Keyboard Inputs
@@ -130,7 +128,7 @@ int main()
 		//Render Scene
 
 		GraphicsPipeline::Instance()->UpdateScene(dt);
-		GraphicsPipeline::Instance()->RenderScene();				 //Finish Timing
+		GraphicsPipeline::Instance()->RenderScene(dt);				 //Finish Timing
 	}
 
 	//Cleanup

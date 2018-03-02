@@ -37,8 +37,11 @@ public:
 	//Called by main game loop
 	// - Naming convention from oglrenderer
 	void UpdateScene(float dt);
-	void RenderScene();
 	void RenderMenu();
+	void RenderScene(float dt);
+	void LoadingScreen(float frame);
+	void FillPaint(float dt);
+
 	//Utils
 	inline Camera* GetCamera() { return camera; }
 
@@ -73,9 +76,10 @@ protected:
 	ShaderBase* shaderPresentToWindow;
 	ShaderBase* shaderShadow;
 	ShaderBase* shaderForwardLighting;
-
+	ShaderBase* shaderLoading;
 	ShaderBase* shaderTrail;
 	ShaderBase* shaderCircle;
+	ShaderBase* shaderPaint;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -96,6 +100,7 @@ protected:
 	//Common
 	MeshBase* fullscreenQuad;
 
+	MeshBase* paintQuad;
 	Camera* camera;
 	/*Camera* camera1;
 	Camera* camera2;*/
@@ -114,7 +119,10 @@ protected:
 
 	FrameBufferBase* TrailBuffer;
 	FrameBufferBase* CircleBuffer;
+	FrameBufferBase* LoadingBuffer;
 	TextureBase* temp_tex;
+	TextureBase* loading_tex;
+	FrameBufferBase* PaintBuffer;
 	float paint_perc;
 
 	//Minimap
@@ -122,4 +130,6 @@ protected:
 	MeshBase* piemap;
 	nclgl::Maths::Matrix4 tempProj;
 	nclgl::Maths::Matrix4 tempView;
+
+	RenderNodeBase * ground;
 };
