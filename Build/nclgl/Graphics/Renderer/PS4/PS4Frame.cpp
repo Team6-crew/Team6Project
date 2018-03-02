@@ -1,3 +1,5 @@
+#ifdef PSTATION4
+
 #include "PS4Frame.h"
 #include <gnmx\basegfxcontext.h>
 #include <iostream>
@@ -78,3 +80,5 @@ void PS4Frame::BlockUntilReady() {
 void  PS4Frame::EndFrame() {
 	commandBuffer.writeImmediateAtEndOfPipeWithInterrupt(Gnm::kEopFlushCbDbCaches, newFrameTag, FRAME_DONE, Gnm::kCacheActionNone);
 }
+
+#endif

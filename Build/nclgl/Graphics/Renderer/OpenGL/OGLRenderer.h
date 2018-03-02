@@ -44,8 +44,6 @@ public:
 	void	RegisterTexture(TextureBase* s) override;
 	void	RegisterNode(RenderNodeBase* s) override;
 
-	void	PrepareToRender() override;
-	void	PostRender() override;
 protected:
 	// Windows specific handles
 	HDC		deviceContext;	

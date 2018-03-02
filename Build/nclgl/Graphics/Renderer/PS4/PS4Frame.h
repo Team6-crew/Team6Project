@@ -1,3 +1,4 @@
+#ifdef PSTATION4
 #pragma once
 #include "PS4MemoryAware.h"
 
@@ -24,3 +25,4 @@ protected:
 	uint64_t* newFrameTag;
 };
 
+#endif
