@@ -3,10 +3,9 @@
 #include <nclgl\common.h> //uint
 #include <string>
 
-namespace Texture
-{
-	enum Type { COLOUR, DEPTH, DEPTH_ARRAY };
-}
+
+
+
 
 
 class TextureBase

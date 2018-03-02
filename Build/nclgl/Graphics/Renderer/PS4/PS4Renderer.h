@@ -6,18 +6,14 @@
 
 #include "PS4MemoryAware.h"
 #include <graphics\api_gnm\toolkit\geommath\geommath.h>
-
+#include "../RenderBase.h"
 #include <vector>
 
 class PS4FrameBuffer;
 class PS4Frame;
 class PS4RenderNode;
 
-namespace Renderer
-{
-	enum Clear { COLOUR, DEPTH, COLOUR_DEPTH };
-	enum Culling { FRONT, BACK };
-};
+
 
 namespace nclgl
 {
@@ -34,7 +30,7 @@ class PS4ScreenBuffer;
 class PS4Shader;
 class PS4Texture;
 
-class PS4Renderer : public PS4MemoryAware
+class PS4Renderer : public PS4MemoryAware, public RenderBase
 {
 
 public:
@@ -42,29 +38,29 @@ public:
 	~PS4Renderer();
 
 	// Make override when integrate
-	void	SwapBuffers();
+	void	SwapBuffers() override;
 
-	void	SetViewPort(int width, int height);
-	void	Clear(Renderer::Clear clearType);
-	void	SetClearColour(nclgl::Maths::Vector3& colour);
+	void	SetViewPort(int width, int height) override;
+	void	Clear(Renderer::Clear clearType) override;
+	void	SetClearColour(nclgl::Maths::Vector3& colour) override;
 
 	// PREPARE TO RENDER PREPARE TO RENDER PREPARE TO RENDER PREPARE TO RENDER
-	void	PrepareToRender();
-	void	PostRender();
-	void	BindScreenFramebuffer();
+	void	PrepareToRender() override;
+	void	PostRender() override;
+	void	BindScreenFramebuffer() override;
 
-	void Resize(int x, int y);
+	void Resize(int x, int y) override;
 
-	void	SetScreenCulling(Renderer::Culling type);
-	void	SetDefaultSettings();
+	void	SetScreenCulling(Renderer::Culling type) override;
+	void	SetDefaultSettings() override;
 
 	// Getters/Setters
-	nclgl::Maths::Matrix4	GetViewMatrix();
-	nclgl::Maths::Matrix4   GetProjMatrix();
+	nclgl::Maths::Matrix4	GetViewMatrix() override;
+	nclgl::Maths::Matrix4   GetProjMatrix() override;
 	void 					SetViewMatrix(nclgl::Maths::Matrix4& mat);
 	void					SetProjMatrix(nclgl::Maths::Matrix4& mat);
 
-	void					RegisterShader(PS4Shader* s) { shaders.push_back(s); }
+	void					RegisterShader(PS4Shader* s)  { shaders.push_back(s); }
 	void					RegisterTexture(PS4Texture* s) { textures.push_back(s); }
 	void					RegisterNode(PS4RenderNode* s) { nodes.push_back(s); }
 
