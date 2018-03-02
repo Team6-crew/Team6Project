@@ -1,8 +1,7 @@
 #ifdef PSTATION4
-
-#include "GameTimerBase.h"
 #pragma once
 
+#include "GameTimerBase.h"
 #include <texture_tool\raw\timer.h>
 
 class PS4GameTimer: public GameTimerBase {
@@ -21,7 +20,7 @@ protected:
 	float	frequency ;		//Ticks Per Second
 
 	float lastTime = 0;					//Last time GetTimedMS was called
-	sce::TextureTool::Raw::Timer  t;
+	sce::TextureTool::Raw::Timer t;
 };
 
 #endif
