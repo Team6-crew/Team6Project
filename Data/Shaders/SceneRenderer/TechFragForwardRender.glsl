@@ -31,7 +31,7 @@ in Vertex	{
 out vec4 OutFrag;
 
 const float NORMAL_BIAS = 0.003f;
-const float RAW_BIAS 	= 0.00025f;
+const float RAW_BIAS 	= 0.0025f;
 
 float DoShadowTest(vec3 tsShadow, int tsLayer, vec2 pix)
 {	
@@ -66,11 +66,11 @@ float DoShadowTest(vec3 tsShadow, int tsLayer, vec2 pix)
 
 void main(void)	{
 	vec3 normal 	= normalize(IN.normal);
-	vec4 texColor  	= texture(uDiffuseTex1, IN.texCoord);
-	texColor 		= texColor*texColor.a + texture(uDiffuseTex0, IN.texCoord)*(1-texColor.a);
-	texColor 		= texColor*texColor.a + texture(uDiffuseTex1, IN.texCoord)*(1-texColor.a);
-	vec4 color 		= uColor * texColor;
-
+	vec4 tex1Color 	= texture(uDiffuseTex0, IN.texCoord);
+	vec4 tex2Color  = texture(uDiffuseTex1, IN.texCoord);
+	vec4 color 		= uColor * tex1Color;
+	color  			= tex2Color*tex2Color.a + color*(1-tex2Color.a);
+	color.a			= 1.0f;
 
 //Shadow Calculations
 	vec4 shadowWsPos = vec4(IN.worldPos + normal * NORMAL_BIAS, 1.0f);
@@ -90,6 +90,8 @@ void main(void)	{
 			break;
 		}
 	}
+
+//shadow = 1.0f;
 	
 //Lighting Calculations
 	vec3 viewDir 		= normalize(uCameraPos - IN.worldPos);

@@ -29,9 +29,11 @@ GraphicsPipeline::GraphicsPipeline()
 	, shaderPresentToWindow(NULL)
 	, shaderShadow(NULL)
 	, shaderForwardLighting(NULL)
+	, shaderPaint(NULL)
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, TrailBuffer(NULL)
+	, ground(NULL)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
@@ -44,7 +46,8 @@ GraphicsPipeline::GraphicsPipeline()
 	tempProj = renderer->GetProjMatrix();
 	tempView = renderer->GetViewMatrix();
 	fullscreenQuad = OGLMesh::GenerateQuad();
-
+	paintQuad = OGLMesh::GenerateQuad();
+	ResourceManager::Instance()->MakeTexture("temp_tex", Texture::COLOUR, 1, 1);
 	renderer->SetDefaultSettings();
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
@@ -61,14 +64,16 @@ GraphicsPipeline::GraphicsPipeline()
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
-
+	PaintBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("temp_tex"), depth);
 	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
+	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
 {  
+	//SAFE_DELETE(camera);
 	for (int i = 0; i < cameras.size(); i++) {
 		SAFE_DELETE(cameras[i]);
 	}
@@ -132,6 +137,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
 		SHADERDIR"SceneRenderer/TechFragForwardRender.glsl");
+
+	shaderPaint = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/PaintFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -162,6 +171,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 
 void GraphicsPipeline::UpdateScene(float dt)
 {
+
 	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 		camera->HandleMouse(dt);
 
@@ -177,31 +187,108 @@ void GraphicsPipeline::UpdateScene(float dt)
 		camera->GetPosition());
 }
 
+void GraphicsPipeline::RenderMenu() {
+	//Build World Transforms
+	// - Most scene objects will probably end up being static, so we really should only be updating
+	//   modelMatrices for objects (and their children) who have actually moved since last frame
+	//for (RenderNodeBase* node : allNodes)
+	//	node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+
+							//Build Transparent/Opaque Renderlists
 
 
-void GraphicsPipeline::RenderScene()
+	BuildAndSortRenderLists();
+
+	//NCLDebug - Build render lists
+	NCLDebug::_BuildRenderLists();
+
+
+	//Build shadowmaps
+	//BuildShadowTransforms();
+	shadowFBO->Activate();
+	renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+	renderer->Clear(Renderer::DEPTH);
+
+	shaderShadow->Activate();
+	shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+
+	RenderAllObjects(true,
+		[&](RenderNodeBase* node)
+	{
+		shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
+	}
+	);
+
+	//Render scene to screen fbo
+	screenFBO->Activate();
+	renderer->SetViewPort(screenTexWidth, screenTexHeight);
+	renderer->SetClearColour(backgroundColor);
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+
+	shaderForwardLighting->Activate();
+	shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
+	//shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+	shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
+	shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
+	shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
+	shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
+	//shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+	//shaderForwardLighting->SetUniform("uShadowTex", 2);
+	//shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
+
+	//ResourceManager::Instance()->getTexture("shadowTex")->Bind(2);
+
+	RenderAllObjects(false,
+		[&](RenderNodeBase* node)
+	{
+		shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
+		shaderForwardLighting->SetUniform("uColor", node->GetColour());
+	}
+	);
+
+	// Render Screen Picking ID's
+	// - This needs to be somewhere before we lose our depth buffer
+	//   BUT at the moment that means our screen picking is super sampled and rendered at 
+	//   a much higher resolution. Which is silly.
+	//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
+
+	screenFBO->Activate();
+	renderer->SetViewPort(screenTexWidth, screenTexHeight);
+	//NCLDEBUG - World Debug Data (anti-aliased)		
+	NCLDebug::_RenderDebugDepthTested();
+	NCLDebug::_RenderDebugNonDepthTested();
+
+
+
+	//Downsample and present to screen
+	renderer->BindScreenFramebuffer();
+	renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+
+	float superSamples = (float)(numSuperSamples);
+	shaderPresentToWindow->Activate();
+	shaderPresentToWindow->SetUniform("uColorTex", 0);
+	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+	 
+	fullscreenQuad->SetTexture(temp_tex);
+	fullscreenQuad->Draw();
+
+	//NCLDEBUG - Text Elements (aliased)
+	NCLDebug::_RenderDebugClipSpace();
+	NCLDebug::_ClearDebugLists();
+	
+	renderer->SwapBuffers();
+	
+}
+
+void GraphicsPipeline::RenderScene(float dt)
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
-
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
-	}
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"),0);
-
-	}
-	RenderNodeBase * ground = NULL;
-	for (RenderNodeBase* node : allNodes) {
-		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
-		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
-			ground = (*node->GetChildIteratorStart());
-		}
-	}
-
 	GameLogic::Instance()->calculatePaintPercentage();
-
+	FillPaint(dt);
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
-
 	shaderTrail->Activate();
 	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
 
@@ -221,8 +308,6 @@ void GraphicsPipeline::RenderScene()
 	}
 
 	trailQuad->Draw();
-
-
 
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
@@ -252,11 +337,9 @@ void GraphicsPipeline::RenderScene()
 		for (RenderNodeBase* node : allNodes)
 			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
-		//Build Transparent/Opaque Renderlists
-		BuildAndSortRenderLists();
 
 		//NCLDebug - Build render lists
-		
+		NCLDebug::_BuildRenderLists();
 
 		//Build shadowmaps
 		BuildShadowTransforms();
@@ -311,11 +394,17 @@ void GraphicsPipeline::RenderScene()
 		// - This needs to be somewhere before we lose our depth buffer
 		//   BUT at the moment that means our screen picking is super sampled and rendered at 
 		//   a much higher resolution. Which is silly.
-		ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
+		//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
-		
+
+		//NCLDEBUG - World Debug Data (anti-aliased)		
+		NCLDebug::_RenderDebugDepthTested();
+		NCLDebug::_RenderDebugNonDepthTested();
+
+
+
 		//Downsample and present to screen
 
 
@@ -364,6 +453,7 @@ void GraphicsPipeline::RenderScene()
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
 			}
+			
 		}
 	}
 
@@ -628,4 +718,45 @@ Camera* GraphicsPipeline::CreateNewCamera() {
 	projViewMatrices.push_back(renderer->GetProjMatrix());
 	cam->SetPitch(-20.0f);
 	return cam;
+}
+
+void GraphicsPipeline::FillPaint(float dt) {
+	TextureBase* depth = NULL;
+	PaintBuffer->Activate();
+	for (RenderNodeBase* node : allNodes) {
+		node->Update(0.0f);
+		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+			ground = (*node->GetChildIteratorStart());
+		}
+		else if ((*node->GetChildIteratorStart())->HasTag(Tags::TPaintable)) {
+			(*node->GetChildIteratorStart())->SetPaintPercentage((*node->GetChildIteratorStart())->GetPaintPercentage()+0.1f);
+			if ((*node->GetChildIteratorStart())->GetPaintPercentage() >= 100) {
+				(*node->GetChildIteratorStart())->SetPaintPercentage(100);
+				(*node->GetChildIteratorStart())->SetBeingPainted(false);
+			}
+			else {
+				if ((*node->GetChildIteratorStart())->GetBeingPainted()) {
+					shaderPaint->Activate();
+					renderer->SetViewPort(1024, 1024);
+					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					paintQuad->SetTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
+					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
+					paintQuad->Draw();
+				}
+			}
+		}
+	}
+}
+
+void GraphicsPipeline::ChangeScene() {
+
+	cameras.clear();
+
+	NCLDebug::_ClearDebugLists();
+	NCLDebug::_ReleaseShaders();
+	renderer->BindScreenFramebuffer();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	renderer->SwapBuffers();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
 }

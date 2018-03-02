@@ -29,3 +29,10 @@ TextureBase * TextureManager::makeTexture(std::string & name, Texture::Type & ty
 	textureMap.insert(std::make_pair(name, newTexture));
 	return textureMap.at(name);
 }
+
+TextureBase* TextureManager::makeTexture(std::string name)
+{
+	TextureBase* newTexture = TextureFactory::Instance()->MakeTexture(name);
+	textureMap.insert(std::make_pair(name, newTexture));
+	return textureMap.at(name);
+}

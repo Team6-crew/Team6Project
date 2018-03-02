@@ -31,3 +31,4 @@ FrameBufferBase* FrameBufferFactory::MakeFramebuffer(TextureBase* depthTex, bool
 		return new OGLFrameBuffer(depthTex, colour);
 	#endif
 }
+

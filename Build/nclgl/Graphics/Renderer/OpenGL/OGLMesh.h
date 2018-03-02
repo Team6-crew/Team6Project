@@ -75,7 +75,7 @@ public:
 	void	SetTexture(TextureBase* texture)	override;
 	void	ReplaceTexture(TextureBase* texture, int pos)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
-	GLuint  GetTexture(int n)			{return texture[n];}
+	
 
 	//Sets the Mesh's bump map. Takes an OpenGL texture 'name'
 	void	SetBumpMap(GLuint tex)	{bumpTexture = tex;}

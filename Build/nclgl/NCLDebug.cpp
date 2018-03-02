@@ -7,6 +7,7 @@
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\Renderer\ShaderFactory.h>
 using namespace std;
+#include <ncltech\SceneManager.h>
 
 using namespace nclgl::Maths;
 
@@ -604,13 +605,13 @@ void NCLDebug::_BuildTextBackgrounds()
 		centre = invProjView * C;
 		last = invProjView * D;
 
-		NextTri(invProjView * Vector3(B.x - rounded_offset_x, B.y, 0.0f), col);
-		for (int i = 0; i < 5; ++i)
-		{
-			Vector3 round_offset = Vector3(
-				sinf((float)DegToRad(i * 22.5f)) * rounded_offset_x,
-				cosf((float)DegToRad(i * 22.5f)) * rounded_offset_y,
-				0.0f);
+	//	NextTri(invProjView * Vector3(B.x - rounded_offset_x, B.y, 0.0f), col);
+	//	for (int i = 0; i < 5; ++i)
+	//	{
+	//		Vector3 round_offset = Vector3(
+	//			sinf((float)DegToRad(i * 22.5f)) * rounded_offset_x,
+	//			cosf((float)DegToRad(i * 22.5f)) * rounded_offset_y,
+	//			0.0f);
 
 			NextTri(invProjView * Vector3(B.x + round_offset.x - rounded_offset_x, B.y - round_offset.y + rounded_offset_y, 0.0f), col);
 		}
@@ -622,16 +623,16 @@ void NCLDebug::_BuildTextBackgrounds()
 	const Vector4 log_background_highlight(0.3f, 0.2f, 0.1f, 0.5f);
 
 
-	if (g_StatusVisible)
-	{
-		//Draw Status Background
-		if (g_NumStatusEntries > 0)
-		{
-			float cs_size_x = STATUS_TEXT_SIZE / ss.x * 2.0f;
-			float cs_size_y = STATUS_TEXT_SIZE / ss.y * 2.0f;
+	//if (g_StatusVisible)
+	//{
+	//	//Draw Status Background
+	//	if (g_NumStatusEntries > 0)
+	//	{
+	//		float cs_size_x = STATUS_TEXT_SIZE / ss.x * 2.0f;
+	//		float cs_size_y = STATUS_TEXT_SIZE / ss.y * 2.0f;
 
-			float btm_y = 1 - g_NumStatusEntries * cs_size_y - cs_size_y;
-			float max_x = -1 + cs_size_x + g_MaxStatusEntryWidth;
+	//		float btm_y = 1 - g_NumStatusEntries * cs_size_y - cs_size_y;
+	//		float max_x = -1 + cs_size_x + g_MaxStatusEntryWidth;
 
 			/*DrawBox_status(
 				Vector3(max_x, 1, 0.0f),
@@ -642,39 +643,39 @@ void NCLDebug::_BuildTextBackgrounds()
 			);*/
 
 
-			//Is MouseOver?
-			Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//		//Is MouseOver?
+	//		/*Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (cs_mouse.x >= max_x - cs_size.x * 1.2 && cs_mouse.x <= max_x &&
-				cs_mouse.y >= 1.f - cs_size.y * 1.2)
-			{
-				if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-					g_StatusVisible = false;
+	//		if (cs_mouse.x >= max_x - cs_size.x * 1.2 && cs_mouse.x <= max_x &&
+	//			cs_mouse.y >= 1.f - cs_size.y * 1.2)
+	//		{
+	//			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//				SceneManager::Instance()->JumpToScene("Team Project");
 
-				DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
-			}
-			else
-			{
-				DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
-			}
+	//			DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "New Game", TEXTALIGN_RIGHT, log_background_highlight);
+	//		}
+	//		else
+	//		{
+	//			DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "New Game", TEXTALIGN_RIGHT);
+	//		}*/
 
-		}
-	}
-	else
-	{
-		Vector3 cs_size = Vector3(STATUS_TEXT_SIZE / ss.x * 5.f, STATUS_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//	}
+	//}
+	//else
+	//{
+	//	Vector3 cs_size = Vector3(STATUS_TEXT_SIZE / ss.x * 5.f, STATUS_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-		Vector4 col = log_background_col;
+	//	Vector4 col = log_background_col;
 
-		//Is MouseOver?
-		if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
-			cs_mouse.y >= 1.f - cs_size.y * 1.2 && cs_mouse.y <= 1)
-		{
-			col = log_background_highlight;
+	//	//Is MouseOver?
+	//	if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
+	//		cs_mouse.y >= 1.f - cs_size.y * 1.2 && cs_mouse.y <= 1)
+	//	{
+	//		col = log_background_highlight;
 
-			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-				g_StatusVisible = true;
-		}
+	//		if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//			g_StatusVisible = true;
+	//	}
 
 		/*DrawBox_status(
 			Vector3(-1.f + cs_size.x * 1.2f, 1, 0.0f),
@@ -684,8 +685,8 @@ void NCLDebug::_BuildTextBackgrounds()
 			col
 		);*/
 
-		DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, 1.f - cs_size.y * 0.6f, -1.f, 1.f), STATUS_TEXT_SIZE, "Status");
-	}
+	//	DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, 1.f - cs_size.y * 0.6f, -1.f, 1.f), STATUS_TEXT_SIZE, "Status");
+	//}
 
 	g_vCharsLogStart = (uint)g_vChars.size();
 

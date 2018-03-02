@@ -8,10 +8,13 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 #include <ncltech\StunProjectile.h>
+#include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 #include <nclgl\Launchpad.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -26,6 +29,8 @@ Player::Player(const std::string& name,
 	const Vector4& color)
 {   
 	speed = 20.0f;
+	canpaint = true;
+	time = 0;
 	time = 0.0f;
 	stunDuration = 0.0f;
 
@@ -180,6 +185,7 @@ void Player::handleInput(float dt) {
 	if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
 	{
 		if (canjump == true) {
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
 			canjump = false;
 		}
@@ -187,12 +193,14 @@ void Player::handleInput(float dt) {
 
 	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
 	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		shoot();
 	}
 }
 
 void Player::equipStunWeapon(Vector4 colour) {
 	if (equippedPaintWeapon) {
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
 		delete equippedPaintWeapon;
 		equippedPaintWeapon = NULL;
 	}
@@ -204,6 +212,7 @@ void Player::equipStunWeapon(Vector4 colour) {
 
 void Player::equipPaintWeapon(Vector4 colour) {
 	if (equippedStunWeapon) {
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
 		delete equippedStunWeapon;
 		equippedStunWeapon = NULL;
 	}
@@ -259,28 +268,27 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
 	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"duang.wav", false);
 		Launchpad* launchpad = (Launchpad*)otherNode->GetParent();
 		launchpad->Launch(this);
 		canjump = false;
 		return false;
 	}
-	/*else if (otherNode->GetParent()->HasTag(Tags::TPortal_A1))
-	{
-		GameObject *portal = FindGameObject("portal_b");
-		physicsNode->SetPosition(physicsNode->GetPosition() + Vector3(-1.5, 0, 0));
+	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
+		RenderNodeBase* otherRenderNode = (*otherNode->GetParent()->Render()->GetChildIteratorStart());
+		Vector4 col1 = otherRenderNode->GetColourFromPlayer();
+		Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
+		if (col1.x != col2.x || col1.y!=col2.y || col1.z != col2.z) {
+			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
+			otherRenderNode->SetBeingPainted(true);
+			otherRenderNode->SetPaintPercentage(0.0f);
+		}
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_A2))
-	{
-
+	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
+		Washingzone* wash = (Washingzone*)otherNode->GetParent();
+		wash->effect(this);
+		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B1))
-	{
-
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TPortal_B2))
-	{
-
-	}*/
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
 	{ 
 		canjump = true;
@@ -295,6 +303,15 @@ void Player::shoot() {
 		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right*1.5f - forward*2.0f;
 		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true, (*renderNode->GetChildIteratorStart())->GetColour());
 		projectile->Physics()->SetLinearVelocity(-forward*40.0f);
+		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
+		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
+	}
+	else if (equippedPaintWeapon) {
+		Vector3 up = Vector3(0, 1, 0);
+		Vector3 right = Vector3::Cross(forward, up);
+		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
+		PaintProjectile* projectile = new PaintProjectile("p", pos, 0.3f, true, 0.5f, true, (*renderNode->GetChildIteratorStart())->GetColour());
+		projectile->Physics()->SetLinearVelocity(-forward * 40.0f);
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}

@@ -194,6 +194,9 @@
     <ClInclude Include="GameLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Launchpad.h" />

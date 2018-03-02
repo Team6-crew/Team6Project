@@ -17,6 +17,7 @@ public:
 	OGLFrameBuffer(TextureBase* colourTex, TextureBase* depthTex);
 	OGLFrameBuffer(std::vector<TextureBase*> colourTex, TextureBase* depthTex);
 	OGLFrameBuffer(TextureBase* depthTex, bool colour);
+	void ChangeColourAttachment(TextureBase* attachment) override;
 	~OGLFrameBuffer();
 
 	uint GetWidth() override;
