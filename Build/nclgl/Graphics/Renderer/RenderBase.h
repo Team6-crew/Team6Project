@@ -12,6 +12,9 @@ namespace nclgl
 }
 
 
+class ShaderBase;
+class RenderNodeBase;
+class TextureBase;
 
 namespace Renderer
 {
@@ -33,6 +36,13 @@ public:
 
 	bool WasInitialised() { return initSuccess;  }
 
+	virtual void	PrepareToRender() = 0;
+	virtual void	PostRender() = 0;
+
+
+	virtual void	RegisterShader(ShaderBase* s) = 0;
+	virtual void	RegisterTexture(TextureBase* s) = 0;
+	virtual void	RegisterNode(RenderNodeBase* s) = 0;
 
 	inline int GetWidth()  { return width; }
 	inline int GetHeight() { return height; }

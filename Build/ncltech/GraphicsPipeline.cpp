@@ -83,8 +83,11 @@ void GraphicsPipeline::InitializeDefaults()
 
 void GraphicsPipeline::AddRenderNode(RenderNodeBase* node)
 {
-	if (std::find(allNodes.begin(), allNodes.end(), node) == allNodes.end())
+	if (std::find(allNodes.begin(), allNodes.end(), node) == allNodes.end()) {
 		allNodes.push_back(node);
+		renderer->RegisterNode(node);
+	}
+		
 }
 
 void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
@@ -97,7 +100,7 @@ void GraphicsPipeline::LoadShaders()
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexBasic",
 		SHADERDIR"SceneRenderer/TechFragSuperSample");
-
+	renderer->RegisterShader(shaderPresentToWindow);
 	//shaderShadow = ShaderFactory::Instance()->MakeShader(
 	//	SHADERDIR"SceneRenderer/TechVertexShadow.glsl",
 	//	SHADERDIR"Common/EmptyFragment.glsl",
@@ -106,6 +109,7 @@ void GraphicsPipeline::LoadShaders()
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull",
 		SHADERDIR"SceneRenderer/TechFragForwardRender");
+	renderer->RegisterShader(shaderForwardLighting);
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -119,10 +123,13 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 
 		//Color Texture
 		screenTexColor = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, screenTexWidth, screenTexHeight);
+		renderer->RegisterTexture(screenTexColor);
 		//Depth Texture
 		screenTexDepth = TextureFactory::Instance()->MakeTexture(Texture::DEPTH, screenTexWidth, screenTexHeight);
+		renderer->RegisterTexture(screenTexDepth);
 		//Generate our Framebuffer
 		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
+
 	}
 
 	//Construct our Shadow Maps and Shadow UBO
@@ -151,6 +158,7 @@ void GraphicsPipeline::UpdateScene(float dt)
 
 void GraphicsPipeline::RenderScene()
 {
+	renderer->PrepareToRender();
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
@@ -221,7 +229,7 @@ void GraphicsPipeline::RenderScene()
 		//NCLDEBUG - Text Elements (aliased)
 //		NCLDebug::_RenderDebugClipSpace();
 		//NCLDebug::_ClearDebugLists();
-	
+		renderer->PostRender();
 		renderer->SwapBuffers();
 }
 

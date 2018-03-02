@@ -133,6 +133,15 @@
     <ClInclude Include="OcTree.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PhysicsNode.h" />
+    <ClInclude Include="Pickup.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScreenPicker.h" />
+    <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="SphereCollisionShape.h" />
+    <ClInclude Include="Tags.h" />
+    <ClInclude Include="WorldPartition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp" />
@@ -148,6 +157,12 @@
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsNode.cpp" />
     <ClCompile Include="Pickup.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScreenPicker.cpp" />
+    <ClCompile Include="SpeedPickup.cpp" />
+    <ClCompile Include="SphereCollisionShape.cpp" />
+    <ClCompile Include="WorldPartition.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
