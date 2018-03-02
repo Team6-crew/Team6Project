@@ -289,9 +289,11 @@ void GraphicsPipeline::RenderMenu() {
 void GraphicsPipeline::LoadingScreen(float frame) {
 
 	renderer->SetViewPort(1024, 1024);
+
 	shaderLoading->Activate();
 	PaintBuffer->ChangeColourAttachment(loading_tex);
 	paintQuad->ReplaceTexture(loading_tex, 0);
+	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
 	shaderLoading->SetUniform("radius_perc", frame);
 	paintQuad->Draw();
 

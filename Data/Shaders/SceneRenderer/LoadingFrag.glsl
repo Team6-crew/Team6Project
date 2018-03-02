@@ -1,5 +1,5 @@
 #version 330 core
-
+uniform sampler2D uDiffuseTex;
 uniform float radius_perc;
 in Vertex	{
 	vec2 texCoord;
@@ -45,6 +45,10 @@ void main(void)
 			}
 		}
 	}
-
+	vec4 texColor 	= texture(uDiffuseTex, IN.texCoord);
+	
+	if(texColor == vec4 (1.0f, 1.0f ,1.0f,1.0f)){
+		color = texColor;
+	}
 	OutFrag = color;
 }
