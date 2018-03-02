@@ -10,7 +10,7 @@
 class OGLTextureArray : public TextureBase
 {
 public:
-	OGLTextureArray(Texture::Type type, int width, int height);
+	OGLTextureArray(TextureTypeNamespace::Type type, int width, int height);
 	~OGLTextureArray();
 
 

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cassert>
 
-using namespace Texture;
+using namespace TextureTypeNamespace;
 
 OGLTexture::OGLTexture(const std::string& filepath)
 {

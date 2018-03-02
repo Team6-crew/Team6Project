@@ -11,7 +11,7 @@ public:
 	// Load a texture from a file
 	OGLTexture(const std::string& filePath);
 	// Create a texture of given width and height
-	OGLTexture(Texture::Type type, int width, int height);
+	OGLTexture(TextureTypeNamespace::Type type, int width, int height);
 	~OGLTexture();
 
 	void Bind(int textureUnit = 0) override;

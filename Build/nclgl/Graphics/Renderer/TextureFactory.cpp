@@ -7,7 +7,7 @@
 #include "PS4\PS4TextureArray.h"
 
 
-using namespace Texture;
+using namespace TextureTypeNamespace;
 
 TextureFactory::TextureFactory()
 {
@@ -30,7 +30,7 @@ TextureBase* TextureFactory::MakeTexture(std::string filepath)
 	
 }
 
-TextureBase* TextureFactory::MakeTexture(Texture::Type type, int a, int b)
+TextureBase* TextureFactory::MakeTexture(TextureTypeNamespace::Type type, int a, int b)
 {
 	switch (type)
 	{

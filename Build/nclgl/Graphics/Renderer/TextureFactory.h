@@ -9,10 +9,12 @@ class TextureFactory : public TSingleton<TextureFactory>
 {
 	friend class TSingleton<TextureFactory>;
 public:
+	// Meaning of a and b depend on type of texture
+	TextureBase * MakeTexture(TextureTypeNamespace::Type type, int a, int b);
+
 	TextureBase* MakeTexture(std::string filepath);
 
-	// Meaning of a and b depend on type of texture
-	TextureBase* MakeTexture(Texture::Type type, int a, int b);
+
 private:
 	TextureFactory();
 	~TextureFactory();

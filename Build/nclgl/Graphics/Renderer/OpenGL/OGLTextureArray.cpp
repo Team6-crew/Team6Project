@@ -1,7 +1,7 @@
 #ifdef WIN_OGL
 #include "OGLTextureArray.h"
 
-using namespace Texture;
+using namespace TextureTypeNamespace;
 
 #include <iostream>
 #include <cassert>

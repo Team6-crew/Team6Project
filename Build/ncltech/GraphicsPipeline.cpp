@@ -122,10 +122,10 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		//ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
 		//Color Texture
-		screenTexColor = TextureFactory::Instance()->MakeTexture(Texture::COLOUR, screenTexWidth, screenTexHeight);
+		screenTexColor = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::COLOUR, screenTexWidth, screenTexHeight);
 		renderer->RegisterTexture(screenTexColor);
 		//Depth Texture
-		screenTexDepth = TextureFactory::Instance()->MakeTexture(Texture::DEPTH, screenTexWidth, screenTexHeight);
+		screenTexDepth = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::DEPTH, screenTexWidth, screenTexHeight);
 		renderer->RegisterTexture(screenTexDepth);
 		//Generate our Framebuffer
 		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
@@ -133,7 +133,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 	}
 
 	//Construct our Shadow Maps and Shadow UBO
-	shadowTex = TextureFactory::Instance()->MakeTexture(Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	shadowTex = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
 	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(shadowTex);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
