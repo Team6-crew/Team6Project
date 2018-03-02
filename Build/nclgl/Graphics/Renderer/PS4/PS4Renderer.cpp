@@ -14,8 +14,8 @@ using namespace Gnm;
 
 #include "PS4FrameBuffer.h"
 #include "PS4Frame.h"
-#include "PS4ShaderNew.h"
-#include "PS4TextureNew.h"
+#include "PS4Shader.h"
+#include "PS4Texture.h"
 #include "PS4RenderNode.h"
 
 #include "nclPS4Interface.h"
@@ -302,10 +302,10 @@ PS4FrameBuffer*	PS4Renderer::GenerateScreenFrameBuffer(uint width, uint height, 
 	depthT.initFromDepthRenderTarget(&buffer->depthTarget, false);
 
 
-	PS4TextureNew* colorps4Text = new PS4TextureNew();
+	PS4Texture* colorps4Text = new PS4Texture();
 	colorps4Text->apiTexture = colorT;
 
-	PS4TextureNew* depthps4Text = new PS4TextureNew();
+	PS4Texture* depthps4Text = new PS4Texture();
 	depthps4Text->apiTexture = depthT;
 
 	PS4FrameBuffer* FrameBuffer = new PS4FrameBuffer(colorps4Text, depthps4Text);

@@ -64,8 +64,8 @@ public:
 	void 					SetViewMatrix(nclgl::Maths::Matrix4& mat);
 	void					SetProjMatrix(nclgl::Maths::Matrix4& mat);
 
-	void					RegisterShader(PS4ShaderNew* s) { shaders.push_back(s); }
-	void					RegisterTexture(PS4TextureNew* s) { textures.push_back(s); }
+	void					RegisterShader(PS4Shader* s) { shaders.push_back(s); }
+	void					RegisterTexture(PS4Texture* s) { textures.push_back(s); }
 	void					RegisterNode(PS4RenderNode* s) { nodes.push_back(s); }
 
 protected:// Setup functions 
@@ -121,9 +121,9 @@ protected: // Swap buffer
 	sce::Vectormath::Scalar::Aos::Matrix4 projMatrix;
 	sce::Vectormath::Scalar::Aos::Matrix4 viewMatrix;
 
-	std::vector<PS4TextureNew*> textures;
+	std::vector<PS4Texture*> textures;
 	std::vector<PS4RenderNode*> nodes;
-	std::vector<PS4ShaderNew*> shaders;
+	std::vector<PS4Shader*> shaders;
 };
 
 #endif

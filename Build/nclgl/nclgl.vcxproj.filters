@@ -87,8 +87,6 @@
     <ClCompile Include="PS4OBJMesh.cpp" />
     <ClCompile Include="Input\PS4Input.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Frame.cpp" />
-    <ClCompile Include="Graphics\Renderer\PS4\PS4ShaderNew.cpp" />
-    <ClCompile Include="Graphics\Renderer\PS4\PS4TextureNew.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -196,7 +194,5 @@
     <ClInclude Include="OGLOBJMesh.h" />
     <ClInclude Include="PS4OBJMesh.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Frame.h" />
-    <ClInclude Include="Graphics\Renderer\PS4\PS4ShaderNew.h" />
-    <ClInclude Include="Graphics\Renderer\PS4\PS4TextureNew.h" />
   </ItemGroup>
 </Project>

@@ -1,36 +1,35 @@
 #ifdef PSTATION4
 #pragma once
-
+#include "PS4Texture.h"
 #include <vector>
 #include <gnm.h>
 #include <gnmx\fetchshaderhelper.h>
 #include "PS4MemoryAware.h"
 #include <..\samples\sample_code\graphics\api_gnm\toolkit\toolkit.h>
-#include <nclgl\common.h>
 
-#include "../../FrameBufferBase.h"
 using namespace sce;
 using namespace Gnmx;
 using namespace Gnmx::Toolkit;
 
-class PS4Texture;
 class TextureBase;
 
-class PS4FrameBuffer : public PS4MemoryAware, public FrameBufferBase
+class PS4FrameBuffer : public PS4MemoryAware
 {
 public:
 	void InitialiseMemoryAllocators();
 	~PS4FrameBuffer();
-
+	
 	PS4FrameBuffer(TextureBase* colourTex, TextureBase* depthTex);
 	void SetMem(void * colourMemory, void * depthMemory);
-	PS4FrameBuffer(std::vector<TextureBase*> colourTex, PS4Texture* depthTex);
+	PS4FrameBuffer(std::vector<TextureBase*> colourTex, TextureBase* depthTex);
 	PS4FrameBuffer(TextureBase* depthTex, bool colour);
 
-	uint GetWidth() override;
-	uint GetHeight() override;
+	void SetMem(std::vector<void*> colourMemory, void * depthMemory);
 
-	void Activate() override;
+	uint GetWidth();
+	uint GetHeight();
+
+	void Activate();
 
 
 	inline void SetGraphicsContext(sce::Gnmx::GnmxGfxContext* cmdList) { currentGFXContext = cmdList; }
@@ -40,16 +39,18 @@ public:
 	uint bufferID;
 
 
-	sce::Gnm::RenderTarget		colourTarget;
+	std::vector<sce::Gnm::RenderTarget>		colourTarget;
 	sce::Gnm::DepthRenderTarget depthTarget;
 protected:
 
 	uint width;
 	uint height;
 
+	bool hasColor = false;
+	bool hasDepth = false;
 
-	PS4Texture* colourTexture;
-	PS4Texture* depthTexture;
+	std::vector<PS4TextureNew*> colourTexture;
+	PS4TextureNew* depthTexture;
 
 	// Current graphics context
 	sce::Gnmx::GnmxGfxContext*	   currentGFXContext = nullptr;
