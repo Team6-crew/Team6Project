@@ -6,14 +6,14 @@
 #include <gnmx\fetchshaderhelper.h>
 #include "PS4MemoryAware.h"
 #include <..\samples\sample_code\graphics\api_gnm\toolkit\toolkit.h>
-
+#include "../../FrameBufferBase.h"
 using namespace sce;
 using namespace Gnmx;
 using namespace Gnmx::Toolkit;
 
 class TextureBase;
 
-class PS4FrameBuffer : public PS4MemoryAware
+class PS4FrameBuffer : public PS4MemoryAware, public FrameBufferBase
 {
 public:
 	void InitialiseMemoryAllocators();
@@ -49,8 +49,8 @@ protected:
 	bool hasColor = false;
 	bool hasDepth = false;
 
-	std::vector<PS4TextureNew*> colourTexture;
-	PS4TextureNew* depthTexture;
+	std::vector<PS4Texture*> colourTexture;
+	PS4Texture* depthTexture;
 
 	// Current graphics context
 	sce::Gnmx::GnmxGfxContext*	   currentGFXContext = nullptr;

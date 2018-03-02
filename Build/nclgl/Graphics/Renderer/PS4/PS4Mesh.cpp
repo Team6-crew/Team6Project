@@ -114,7 +114,7 @@ void PS4Mesh::DefineQuadVertices()
 	vertices[3] = Vector3(1.0f, 1.0f, 0.0f);
 }
 
-void PS4Mesh::SetupQugadVectors()
+void PS4Mesh::SetupQuadVectors()
 {
 	for (int i = 0; i < numVertices; ++i) {
 		normals[i] = Vector3(0, 0, 1);

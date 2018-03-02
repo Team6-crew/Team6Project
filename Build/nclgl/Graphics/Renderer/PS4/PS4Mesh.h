@@ -103,7 +103,7 @@ protected:
 	PS4Texture* bumpTexture;
 
 
-	void PS4Mesh::GenerateNormals() {
+	void GenerateNormals() {
 		if (!normals) {
 			normals = new sce::Vectormath::Scalar::Aos::Vector3[numVertices];
 		}

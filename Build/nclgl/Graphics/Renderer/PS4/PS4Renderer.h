@@ -31,8 +31,8 @@ namespace nclgl
 //class Vector3;
 class PS4ScreenBuffer;
 
-class PS4ShaderNew;
-class PS4TextureNew;
+class PS4Shader;
+class PS4Texture;
 
 class PS4Renderer : public PS4MemoryAware
 {

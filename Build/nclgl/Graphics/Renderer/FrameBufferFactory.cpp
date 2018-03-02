@@ -35,6 +35,6 @@ FrameBufferBase* FrameBufferFactory::MakeFramebuffer(TextureBase* depthTex)
 	#ifdef WIN_OGL
 		return new OGLFrameBuffer(depthTex);
 	#elif PSTATION4
-	return new PS4FrameBuffer(depthTex);
+	return new PS4FrameBuffer(depthTex,false);
 	#endif
 }

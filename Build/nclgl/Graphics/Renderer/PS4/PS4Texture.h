@@ -8,11 +8,6 @@
 #include "PS4MemoryAware.h"
 #include "../../TextureBase.h"
 
-namespace Texture
-{
-	enum Type { COLOUR, DEPTH, DEPTH_ARRAY };
-}
-
 class PS4Texture : public PS4MemoryAware, public TextureBase
 {
 public:

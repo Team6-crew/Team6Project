@@ -1,7 +1,7 @@
 #pragma once
 
 #include <nclgl\common.h> // uint
-
+#
 class TextureBase;
 
 class FrameBufferBase
