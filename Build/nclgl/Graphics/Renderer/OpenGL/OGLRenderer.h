@@ -23,8 +23,8 @@ public:
 
 	nclgl::Maths::Matrix4	GetViewMatrix() override;
 	nclgl::Maths::Matrix4 GetProjMatrix() override;
-	void 	SetViewMatrix(nclgl::Maths::Matrix4& mat) override;
-	void	SetProjMatrix(nclgl::Maths::Matrix4& mat) override;
+	void 	SetViewMatrix(const nclgl::Maths::Matrix4& mat) override;
+	void	SetProjMatrix(const nclgl::Maths::Matrix4& mat) override;
 
 	void	SetViewPort(int width, int height) override;
 	void	Clear(Renderer::Clear clearType) override;

@@ -71,11 +71,11 @@ void OGLRenderer::Resize(int x, int y)
 	glViewport(0, 0, width, height);
 }
 
-void 	OGLRenderer::SetViewMatrix(Matrix4& mat) 
+void 	OGLRenderer::SetViewMatrix(const Matrix4& mat) 
 {
 	viewMatrix = mat;
 }
-void	OGLRenderer::SetProjMatrix(Matrix4& mat)
+void	OGLRenderer::SetProjMatrix(const Matrix4& mat)
 {
 	projMatrix = mat;
 }

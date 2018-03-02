@@ -49,8 +49,8 @@ public:
 
 	virtual nclgl::Maths::Matrix4	GetViewMatrix() = 0;
 	virtual nclgl::Maths::Matrix4   GetProjMatrix() = 0;
-	virtual void 					SetViewMatrix(nclgl::Maths::Matrix4& mat) = 0;
-	virtual void					SetProjMatrix(nclgl::Maths::Matrix4& mat) = 0;
+	virtual void 					SetViewMatrix(const nclgl::Maths::Matrix4& mat) = 0;
+	virtual void					SetProjMatrix(const nclgl::Maths::Matrix4& mat) = 0;
 
 	virtual void	SetViewPort(int width, int height) = 0;
 	virtual void	Clear(Renderer::Clear clearType) = 0;

@@ -19,7 +19,7 @@ TextureFactory::~TextureFactory()
 }
 
 
-TextureBase* TextureFactory::MakeTexture(std::string& filepath)
+TextureBase* TextureFactory::MakeTexture(std::string filepath)
 {
 	#ifdef WIN_OGL
 	return new OGLTexture(filepath.append(".tga"));
