@@ -7,6 +7,7 @@ PS4GameTimer::PS4GameTimer(void){
 
 float PS4GameTimer::GetMS()
 {
+	return 0.0f;
 	return t.getMilliseconds();
 }
 

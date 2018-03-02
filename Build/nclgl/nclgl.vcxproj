@@ -230,7 +230,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\common\include\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\;$(IncludePath);$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SCE_ORBIS_SDK_DIR)\host_tools\lib\clang\include;$(SCE_ORBIS_SDK_DIR)\target\include;$(SCE_ORBIS_SDK_DIR)\target\include_common; $(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\common\include\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\;$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\;$(IncludePath);$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SCE_ORBIS_SDK_DIR)\host_tools\lib\clang\include;$(SCE_ORBIS_SDK_DIR)\target\include;$(SCE_ORBIS_SDK_DIR)\target\include_common;$(SCE_ORBIS_SAMPLE_DIR)\sample_code</IncludePath>
     <LibraryPath>$(SCE_ORBIS_SAMPLE_DIR)\sample_code\graphics\api_gnm\toolkit;$(LibraryPath)$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

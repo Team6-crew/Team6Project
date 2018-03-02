@@ -27,7 +27,6 @@ PS4Texture::PS4Texture(const std::string& filepath)
 #include <iostream>
 PS4Texture::PS4Texture(TextureTypeNamespace::Type type, int a, int b)
 {
-	std::cout << "Oh no! Texture" << std::endl;
 	apiTexture.initAs2dArray(a, b, 1, 1,
 		sce::Gnm::DataFormat::build(), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1, false);
 }
