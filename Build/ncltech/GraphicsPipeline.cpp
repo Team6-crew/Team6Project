@@ -72,6 +72,7 @@ GraphicsPipeline::GraphicsPipeline()
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
 	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Loading.png");
+	splat_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"splat.png");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -148,6 +149,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderLoading = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/loadingFrag.glsl");
+
+	shaderSplat = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/SplatFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -321,7 +326,7 @@ void GraphicsPipeline::RenderScene(float dt)
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
 	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
-
+	int splatPlayer = -1;
 	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		std::string arr = "players[" + std::to_string(i) + "].";
 		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
@@ -332,12 +337,32 @@ void GraphicsPipeline::RenderScene(float dt)
 
 		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-		shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		if(rad<=0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		else {
+			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+			splatPlayer = i;
+		}
 		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+	}
+	trailQuad->Draw();
 
+	if (splatPlayer != -1) {
+		shaderSplat->Activate();
+		splat_tex->Bind(0);
+		shaderSplat->SetUniform("uDiffuseTex", 0);
+		std::string arr = "players[" + std::to_string(splatPlayer) + "].";
+		float pos_x = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(splatPlayer)->Render()->GetChildIteratorStart())->GetColour();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+		shaderSplat->SetUniform("pos_x", pos_x);
+		shaderSplat->SetUniform("pos_z", pos_z);
+		shaderSplat->SetUniform("rad", rad);
+		shaderSplat->SetUniform("trailColor", trailColor);
+		trailQuad->Draw();
 	}
 
-	trailQuad->Draw();
 
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);

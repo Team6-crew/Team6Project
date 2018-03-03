@@ -81,6 +81,7 @@ protected:
 	ShaderBase* shaderTrail;
 	ShaderBase* shaderCircle;
 	ShaderBase* shaderPaint;
+	ShaderBase* shaderSplat;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -123,6 +124,7 @@ protected:
 	FrameBufferBase* LoadingBuffer;
 	TextureBase* temp_tex;
 	TextureBase* loading_tex;
+	TextureBase* splat_tex;
 	FrameBufferBase* PaintBuffer;
 	float paint_perc;
 
