@@ -1,3 +1,5 @@
+#pragma once
+#define WIN32_LEAN_AND_MEAN
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\SceneManager.h>
 
@@ -5,10 +7,11 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include "MainMenu.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
-#include "MainMenu.h"
+
 
 #include <ncltech\Memory Management\HeapFactory.h>
 using namespace nclgl::Maths;

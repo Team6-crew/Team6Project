@@ -1,5 +1,5 @@
 #pragma once
-
+#include <nclgl/MySocket.h>
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\OcTree.h>
@@ -19,14 +19,16 @@
 #include <fstream>
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
-
+#include <nclgl/GameLogic.h>
+#include <ncltech\NetworkBase.h>
+void Win32_PrintAllAdapterIPAddresses();
 //#include <iomanip> // for extra field in seconds output std::setfill ('x') << std::setw (10) delete later
 class MainMenu : public Scene
 {
 public:
 	int numOfPlayers;
 	int numOfAi;
-	
+
 	int volumelevel = 5;
 
 	int humanOrAi[4] = { 0 };
@@ -36,8 +38,12 @@ public:
 	int seconds = 60;
 
 	MainMenu(const std::string& friendly_name)
-		: Scene(friendly_name)
+		: Scene(friendly_name), entering_IP(false), string_IP(""), connecting(false)
 	{
+		if (enet_initialize() != 0)
+		{
+			//Quit(true, "ENET failed to initialize!");
+		}
 		waitsInput = false;
 		mapKeys();
 		//std::cout << glGetError() << std::endl;
@@ -82,7 +88,7 @@ public:
 		optionsMenu->AddMenuItem("Resolution");
 		optionsMenu->AddMenuItem("Sound");
 		optionsMenu->AddMenuItem("Controls");
-		optionsMenu->AddMenuItem("Game Time " + std::to_string(seconds/60) + ":" + std::to_string(seconds % 60) + "0");
+		optionsMenu->AddMenuItem("Game Time " + std::to_string(seconds / 60) + ":" + std::to_string(seconds % 60) + "0");
 		optionsMenu->AddMenuItem("Back");
 		optionsMenu->setSelection(0);
 		mainMenu->addToMenu(optionsMenu, 2);
@@ -151,7 +157,7 @@ public:
 		// Join Server Menu
 		JoinServerMenu = new Menu();
 		JoinServerMenu->visible = false;
-		JoinServerMenu->AddMenuItem("Dummy Server");
+		JoinServerMenu->AddMenuItem("Enter Server IP");
 		JoinServerMenu->AddMenuItem("Back");
 		multiPlayerMenu->addToMenu(JoinServerMenu, 2);
 		JoinServerMenu->addToMenu(multiPlayerMenu, 1);
@@ -161,9 +167,20 @@ public:
 		ServerListMenu->visible = false;
 		ServerListMenu->AddMenuItem("Dummy IP");
 		ServerListMenu->AddMenuItem("Back");
-		JoinServerMenu->addToMenu(ServerListMenu, 0);
+		//JoinServerMenu->addToMenu(ServerListMenu, 0);
 		ServerListMenu->addToMenu(JoinServerMenu, 1);
 		ServerListMenu->set_id(11);
+
+
+		if (listen.Initialize(0))
+		{
+			NCLDebug::Log("Network: Initialized!");
+
+			//Attempt to connect to the server on localhost:1234
+			//serverConnection = listen.ConnectPeer(127, 0, 0, 1, 1234);
+			//NCLDebug::Log("Network: Attempting to connect to server.");
+		}
+
 	}
 
 	virtual ~MainMenu()
@@ -176,7 +193,7 @@ public:
 		GraphicsPipeline::Instance()->CreateNewCamera();
 		cam = RenderNodeFactory::Instance()->MakeRenderNode();
 		cam->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
-		
+
 	}
 
 
@@ -208,36 +225,58 @@ public:
 				}
 			}
 		}
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
-		{
-			GameLogic::Instance()->setnumOfPlayersMp(1);
-			GraphicsPipeline::Instance()->ChangeScene();
-			SceneManager::Instance()->JumpToScene("Team Project");
-			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+		if (activeMenu->get_id() != 10) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+			{
+				GameLogic::Instance()->setnumOfPlayersMp(1);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Team Project");
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
+			{
+				numOfPlayers = 0b0011;
+				GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Team Project");
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
+			{
+				numOfPlayers = 0b0111;
+				GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Team Project");
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
+			{
+				numOfPlayers = 0b1111;
+				GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Team Project");
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+			}
 		}
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
-		{
-			numOfPlayers = 0b0011;
-			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
-			GraphicsPipeline::Instance()->ChangeScene();
-			SceneManager::Instance()->JumpToScene("Team Project");
-			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
-		}
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
-		{
-			numOfPlayers = 0b0111;
-			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
-			GraphicsPipeline::Instance()->ChangeScene();
-			SceneManager::Instance()->JumpToScene("Team Project");
-			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
-		}
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
-		{
-			numOfPlayers = 0b1111;
-			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
-			GraphicsPipeline::Instance()->ChangeScene();
-			SceneManager::Instance()->JumpToScene("Team Project");
-			AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+		else {
+			for (int i = 48; i < 58; i++) {
+				if (Window::GetKeyboard()->KeyTriggered((KeyboardKeys)i) || Window::GetKeyboard()->KeyTriggered((KeyboardKeys)(i + 48))) {
+					string_IP += to_string(i - 48);
+					activeMenu->replaceMenuItem(0, "IP: " + string_IP);
+				}
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DECIMAL) || Window::GetKeyboard()->KeyTriggered(KEYBOARD_PERIOD)) {
+				string_IP += ".";
+				activeMenu->replaceMenuItem(0, "IP: " + string_IP);
+			}
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_BACK)) {
+				string_IP = string_IP.substr(0, string_IP.size() - 1);
+				activeMenu->replaceMenuItem(0, "IP: " + string_IP);
+			}
+			else if (Window::GetKeyboard()->KeyTriggered((KeyboardKeys)186)) {
+				string_IP += ":";
+				activeMenu->replaceMenuItem(0, "IP: " + string_IP);
+			}
 		}
 		//Navigate choices
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
@@ -261,7 +300,7 @@ public:
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
 				volumelevel -= 1;
 				AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
-				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg",false);
+				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
 			}
 			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
 				volumelevel += 1;
@@ -295,7 +334,10 @@ public:
 		// MutiplayerMenu : 2
 		// SplitScreen : 3
 		// Main menu selection 0 is 100 (id = 1 & selection = 00)
-		
+
+
+
+
 
 
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN)) {
@@ -305,111 +347,136 @@ public:
 				activeMenu->setSelection(0);
 			}
 			switch (id) {
-				case (901): {
+			case (901): {
+				getControls();
+				// add num of AI as well
+				GameLogic::Instance()->setnumOfPlayersMp(1);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Team Project");
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+				break;
+			}
+			case (103): {
+				exit(0);
+				break;
+			}
+			case (304): { // change to reflect how many players are given
+				for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
+					if (humanOrAi[i] == 1) {
+						numOfPlayers += pow(2, i);
+
+					}
+					else if (humanOrAi[i] == 2) {
+						numOfAi++;
+					}
+				}
+				if (numOfPlayers != 0) {
 					getControls();
-					// add num of AI as well
-					GameLogic::Instance()->setnumOfPlayersMp(1);
+					GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
-					AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
-					break;
-				}
-				case (103): {
-					exit(0);
-					break;
-				}
-				case (304): { // change to reflect how many players are given
-					for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
-						if (humanOrAi[i] == 1) {
-							numOfPlayers += pow (2,i);
 
-						}
-						else if (humanOrAi[i] == 2) {
-							numOfAi++;
-						}
-					}
-					if (numOfPlayers != 0) {
-						getControls();
-						GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
-						GraphicsPipeline::Instance()->ChangeScene();
-						SceneManager::Instance()->JumpToScene("Team Project");
+					break;
+				}
+				else {
+					break;
+				}
+			}
+			case (500): {
+				(Window::GetWindow()).ResizeWindow(1920, 1080);
+				break;
+			}
+			case (501): {
+				(Window::GetWindow()).ResizeWindow(1600, 900);
+				break;
+			}
+			case (502): {
+				(Window::GetWindow()).ResizeWindow(1366, 768);
+				break;
+			}
+			case (503): {
+				(Window::GetWindow()).ResizeWindow(1280, 720);
+				break;
+			}
+			case (700): {
+				player_c = 0;
+				show_controls();
+				break;
+			}
+			case (701): {
+				player_c = 1;
+				show_controls();
+				break;
+			}
+			case (702): {
+				player_c = 2;
+				show_controls();
+				break;
+			}
+			case (703): {
+				player_c = 3;
+				show_controls();
+				break;
+			}
+			case (800): case (801):	case (802):	case (803):	case (804):	case (805):
+			{
+				waitsInput = !waitsInput;
+				if (waitsInput == false) playerControlsMenu->replaceMenuItem(activeMenu->getSelection(), con[activeMenu->getSelection()]
+					+ "	" + KEYS[GameLogic::Instance()->getControls(player_c, activeMenu->getSelection())]);
+				else
+					playerControlsMenu->replaceMenuItem(activeMenu->getSelection(), "");
+				break;
+			}
+			case (1000):
+			{
+				if (!entering_IP) {
+					string_IP = "10.70.33.2:1234";
+					entering_IP = true;
+					activeMenu->replaceMenuItem(0, "IP: " + string_IP);
+				}
+				else {
+					entering_IP = false;
+					connecting = true;
+					scanServers();
+				}
+			}
 
-						break;
-					}
-					else {
-						break;
-					}
-				}
-				case (500): {
-					(Window::GetWindow()).ResizeWindow(1920, 1080);
-					break;
-				}
-				case (501): {
-					(Window::GetWindow()).ResizeWindow(1600, 900);
-					break;
-				}
-				case (502): {
-					(Window::GetWindow()).ResizeWindow(1366, 768);
-					break;
-				}
-				case (503): {
-					(Window::GetWindow()).ResizeWindow(1280, 720);
-					break;
-				}
-				case (700): {
-					player_c = 0;
-					show_controls();
-					break;
-				}
-				case (701): {
-					player_c = 1;
-					show_controls();
-					break;
-				}
-				case (702): {
-					player_c = 2;
-					show_controls();
-					break;
-				}
-				case (703): {
-					player_c = 3;
-					show_controls();
-					break;
-				}
-				case (800): case (801):	case (802):	case (803):	case (804):	case (805):
-				{
-					waitsInput = !waitsInput;
-					if (waitsInput == false) playerControlsMenu->replaceMenuItem(activeMenu->getSelection(), con[activeMenu->getSelection()] 
-						+ "	" + KEYS[GameLogic::Instance()->getControls(player_c, activeMenu->getSelection())]);
-					else
-						playerControlsMenu->replaceMenuItem(activeMenu->getSelection(), "");
-					break;
-				}
-				
 			}
 
 		}
-		else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_BACK) && activeMenu->get_id() != 1 && !waitsInput) {
+		else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_ESCAPE) && activeMenu->get_id() != 1 && !waitsInput) {
 			activeMenu->setSelection(activeMenu->lastElement());
 			activeMenu = activeMenu->onMenuSelect();
 			activeMenu->setSelection(0);
 		}
 		else if (activeMenu->get_id() == 8 && waitsInput) {
-			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_BACK)) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_ESCAPE)) {
 				waitsInput = !waitsInput;
 				activeMenu->setSelection(activeMenu->lastElement());
 				activeMenu = activeMenu->onMenuSelect();
 				activeMenu->setSelection(0);
 			}
 		}
-
+		if (activeMenu->get_id() == 10 && connecting) {
+			auto callback = std::bind(
+				&MainMenu::ProcessNetworkEvent,	// Function to call
+				this,								// Associated class instance
+				std::placeholders::_1);				// Where to place the first parameter
+			listen.ServiceNetwork(dt, callback);
+		}
 
 	}
 private:
+	bool connecting;
+	string string_IP;
+	int temp_counter = -1;
+	bool entering_IP;
+	void ProcessNetworkEvent(const ENetEvent& evnt) {};
+	ENetPeer * serverConnection;
+	NetworkBase listen;
 	TextureBase*	tex;
-
 	OGLMesh* backgroundMesh;
-	std::string con[6] = {"Forward", "Backward", "Turn Left", "Turn Right", "Jump", "Shoot"};
+	std::string con[6] = { "Forward", "Backward", "Turn Left", "Turn Right", "Jump", "Shoot" };
 	RenderNodeBase * cam;
 	RenderNodeBase * backTexture;
 	int player_c;
@@ -431,7 +498,20 @@ private:
 	Menu * ServerListMenu;
 
 	std::map <int, std::string> KEYS;
-
+	void scanServers() {
+		int ipPrefix[5] = { 0 };
+		int dotPos = string_IP.find(".");
+		ipPrefix[0] = stoi(string_IP.substr(0, dotPos));
+		int dotPos2 = string_IP.find(".", dotPos + 1);
+		ipPrefix[1] = stoi(string_IP.substr(dotPos + 1, dotPos2 - dotPos - 1));
+		int dotPos3 = string_IP.find(".", dotPos2 + 1);
+		ipPrefix[2] = stoi(string_IP.substr(dotPos2 + 1, dotPos3 - dotPos2 - 1));
+		int dotPos4 = string_IP.find(":", dotPos3 + 1);
+		ipPrefix[3] = stoi(string_IP.substr(dotPos3 + 1, dotPos4 - dotPos3 - 1));
+		int dotPos5 = string_IP.length();
+		ipPrefix[4] = stoi(string_IP.substr(dotPos4 + 1, dotPos5 - dotPos4 - 1));
+		serverConnection = listen.ConnectPeer(ipPrefix[0], ipPrefix[1], ipPrefix[2], ipPrefix[3], ipPrefix[4]);
+	}
 	void replaceControl(int con, int line_num) {
 		std::string line;
 		std::ifstream filein("../../Data/controls.txt");
@@ -457,7 +537,7 @@ private:
 			perror("Error deleting file");
 		else
 			puts("File successfully deleted");
-		if (rename("../../Data/temp.txt","../../Data/controls.txt") != 0)
+		if (rename("../../Data/temp.txt", "../../Data/controls.txt") != 0)
 			perror("Error deleting file");
 		else
 			puts("File successfully deleted");
@@ -470,7 +550,7 @@ private:
 		{
 			while (getline(myfile, line))
 			{
-				GameLogic::Instance()->setControls(i/6,i%6,(KeyboardKeys)(stoi(line)));
+				GameLogic::Instance()->setControls(i / 6, i % 6, (KeyboardKeys)(stoi(line)));
 				i++;
 			}
 			myfile.close();
@@ -490,7 +570,7 @@ private:
 			while (getline(myfile, line))
 			{
 				if (i / 6 == player_c) {
-					playerControlsMenu->replaceMenuItem(i%6, con[i % 6]+"	"+KEYS[stoi(line)]);
+					playerControlsMenu->replaceMenuItem(i % 6, con[i % 6] + "	" + KEYS[stoi(line)]);
 				}
 				i++;
 			}
@@ -598,5 +678,5 @@ private:
 		KEYS[190] = ".";
 
 	}
-};
 
+};

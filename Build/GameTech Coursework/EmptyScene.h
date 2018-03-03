@@ -22,7 +22,7 @@
 #include <nclgl/GameLogic.h>
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
-#include "MainMenu.h"
+#include "Menu.h"
 #include <nclgl\ResourceManager.h>
 
 //Fully striped back scene to use as a template for new scenes.
