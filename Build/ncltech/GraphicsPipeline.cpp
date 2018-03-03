@@ -348,9 +348,8 @@ void GraphicsPipeline::RenderScene(float dt)
 
 	if (splatPlayer != -1) {
 		shaderSplat->Activate();
-		splat_tex->Bind(0);
-		shaderSplat->SetUniform("uDiffuseTex", 0);
-		std::string arr = "players[" + std::to_string(splatPlayer) + "].";
+		splat_tex->Bind(3);
+		shaderSplat->SetUniform("uDiffuseTex", 3);
 		float pos_x = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().x;
 		float pos_z = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().z;
 		float rad = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRadius();
