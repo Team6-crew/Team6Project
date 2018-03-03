@@ -34,6 +34,8 @@ GraphicsPipeline::GraphicsPipeline()
 	, shadowFBO(NULL)
 	, TrailBuffer(NULL)
 	, ground(NULL)
+	, flickerPie(0.0f)
+	, toggleFlicker(false)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
@@ -60,7 +62,7 @@ GraphicsPipeline::GraphicsPipeline()
 
 	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
-	
+	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"loading.png");
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
@@ -69,6 +71,7 @@ GraphicsPipeline::GraphicsPipeline()
 	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
+	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Loading.png");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -141,6 +144,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderPaint = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/PaintFrag.glsl");
+
+	shaderLoading = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/loadingFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -172,8 +179,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 void GraphicsPipeline::UpdateScene(float dt)
 {
 
-	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
-		camera->HandleMouse(dt);
+	
 
 	for (int i = 0; i < cameras.size(); i++) {
 		cameras[i]->HandleKeyboard(dt);
@@ -272,7 +278,7 @@ void GraphicsPipeline::RenderMenu() {
 	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 	 
-	fullscreenQuad->SetTexture(temp_tex);
+	fullscreenQuad->ReplaceTexture(temp_tex,0);
 	fullscreenQuad->Draw();
 
 	//NCLDEBUG - Text Elements (aliased)
@@ -282,22 +288,46 @@ void GraphicsPipeline::RenderMenu() {
 	renderer->SwapBuffers();
 	
 }
+void GraphicsPipeline::LoadingScreen(float frame) {
 
+	renderer->SetViewPort(1024, 1024);
+
+	shaderLoading->Activate();
+	PaintBuffer->ChangeColourAttachment(loading_tex);
+	paintQuad->ReplaceTexture(loading_tex, 0);
+	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+	shaderLoading->SetUniform("radius_perc", frame);
+	paintQuad->Draw();
+
+	renderer->BindScreenFramebuffer();
+	renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	float superSamples = (float)(numSuperSamples);
+	shaderPresentToWindow->Activate();
+	shaderPresentToWindow->SetUniform("uColorTex", 0);
+	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+	fullscreenQuad->ReplaceTexture(loading_tex,0);
+	fullscreenQuad->Draw();
+	renderer->SwapBuffers();
+}
 void GraphicsPipeline::RenderScene(float dt)
 {
+	
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
 
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		std::string arr = "players[" + std::to_string(i) + "].";
-		float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAllPlayer(i)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 
 		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
@@ -312,18 +342,35 @@ void GraphicsPipeline::RenderScene(float dt)
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers() - 1; i++) {
+	int max_score = 0;
+	float max_perc = 0.0f;
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
+	}
+	
+	if (flickerPie > 0.5f) {
+		flickerPie = 0.0f;
+		toggleFlicker = !toggleFlicker;
+	}
+	if (toggleFlicker) {
+		max_score = -1;
 	}
 
+	flickerPie += dt;
+	shaderCircle->SetUniform("winning", max_score);
 	trailQuad->Draw();
 
 	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
@@ -739,7 +786,7 @@ void GraphicsPipeline::FillPaint(float dt) {
 					shaderPaint->Activate();
 					renderer->SetViewPort(1024, 1024);
 					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
-					paintQuad->SetTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					paintQuad->ReplaceTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1),0);
 					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
 					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
 					paintQuad->Draw();
@@ -750,13 +797,14 @@ void GraphicsPipeline::FillPaint(float dt) {
 }
 
 void GraphicsPipeline::ChangeScene() {
-
+	fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("loading_tex"), 0);
 	cameras.clear();
-
+	fullscreenQuad->Draw();
 	NCLDebug::_ClearDebugLists();
 	NCLDebug::_ReleaseShaders();
 	renderer->BindScreenFramebuffer();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
+	
 }

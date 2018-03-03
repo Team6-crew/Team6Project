@@ -20,9 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Net1_Client.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EmptyScene.h" />
+    <ClInclude Include="Net1_Client.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7853B949-BD5A-46A6-908A-DA83E04F9BB9}</ProjectGuid>

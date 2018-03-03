@@ -34,6 +34,7 @@ public:
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
+
 		// Pause Menu
 		pauseMenu = new Menu();
 		pauseMenu->visible = false;
@@ -54,6 +55,9 @@ public:
 
 	virtual void OnInitializeScene() override
 	{
+		float step = 6.7f;
+		float frame = 0.0f;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
@@ -66,7 +70,8 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
-
+		frame += step * 2.0f;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		//GameLogic::Instance()->addSoftPlayers(1);
 		////Add player to scene
 		//for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
@@ -91,7 +96,8 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		GameObject* testItem = CommonUtils::BuildPaintableCube(
 			"Ground",
 			nclgl::Maths::Vector3(-5.0f, 5.5f, -5.0f),
@@ -106,7 +112,8 @@ public:
 		this->AddGameObject(testItem);
 		testItem->SetTag(Tags::TPaintable);
 		(*testItem->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		GameObject* testItem2 = CommonUtils::BuildPaintableCube(
 			"Ground",
 			nclgl::Maths::Vector3(10.0f, 5.5f, -5.0f),
@@ -122,7 +129,8 @@ public:
 		testItem2->SetTag(Tags::TPaintable);
 		(*testItem2->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
 
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
@@ -132,7 +140,8 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
 			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
 			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
@@ -142,7 +151,8 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		weapon->SetPhysics(weapon->Physics());
 		this->AddGameObject(weapon);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
 			nclgl::Maths::Vector3(15.0f, 1.f, 0.0f),
 			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
@@ -152,7 +162,8 @@ public:
 			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
 		weapon2->SetPhysics(weapon2->Physics());
 		this->AddGameObject(weapon2);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
 			0.5f,
@@ -162,7 +173,8 @@ public:
 			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
 		paintbomb->SetPhysics(paintbomb->Physics());
 		this->AddGameObject(paintbomb);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		Launchpad* launchpad = new Launchpad(
 			"launchpad",
 			nclgl::Maths::Vector3(-10.0f, -0.3f, -30.0f),
@@ -173,7 +185,8 @@ public:
 			nclgl::Maths::Vector4(0.7f, 0.5f, 0.7f, 1.0f));
 		launchpad->SetPhysics(launchpad->Physics());
 		this->AddGameObject(launchpad);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		//portal a1
 		Portal* portal_a1 = new Portal(
 			"portal_a1",
@@ -192,7 +205,8 @@ public:
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
 		this->AddGameObject(portal_a1);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		//portal a2
 		Portal* portal_a2 = new Portal(
 			"portal_a2",
@@ -211,7 +225,8 @@ public:
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
 		this->AddGameObject(portal_a2);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		//portal b1
 		Portal* portal_b1 = new Portal(
 			"portal_b1",
@@ -230,7 +245,8 @@ public:
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
 		this->AddGameObject(portal_b1);
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		//portal b2
 		Portal* portal_b2 = new Portal(
 			"portal_b2",
@@ -252,7 +268,8 @@ public:
 
 
 
-
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		Washingzone* washingzone = new Washingzone("washingzone",
 			nclgl::Maths::Vector3(10.0f, -0.389f, 15.0f),
 			nclgl::Maths::Vector3(5.0f, 0.01f, 3.0f),
@@ -266,6 +283,8 @@ public:
 
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
+
+		
 	}
 
 
