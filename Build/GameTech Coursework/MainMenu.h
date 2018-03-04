@@ -439,8 +439,14 @@ public:
 					connecting = true;
 					scanServers();
 				}
+				break;
 			}
-
+			case (1100):
+			{
+				MySocket Ready("REDY");
+				Ready.BroadcastPacket(listen.m_pNetwork);
+				break;
+			}
 			}
 
 		}
@@ -695,8 +701,9 @@ private:
 				ConfirmConnect.SendPacket(evnt.peer);
 			}
 			else if (SocketId == "PLCN") {
-				players_connected = stoi(Received.TruncPacket(0));
-				ServerListMenu->replaceMenuItem(0, "Players Ready: " + to_string(players_connected));
+				players_connected = stoi(Received.TruncPacket(1));
+				int readys = stoi(Received.TruncPacket(0));
+				ServerListMenu->replaceMenuItem(0, "Players Ready: " + to_string(readys)+ "/" + to_string(players_connected));
 			}
 			enet_packet_destroy(evnt.packet);
 		}

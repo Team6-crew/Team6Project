@@ -39,7 +39,7 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 #include <nclgl\Vector3.h>
 #include <nclgl\common.h>
 #include <ncltech\NetworkBase.h>
-
+#include <map>
 //Needed to get computer adapter IPv4 addresses via windows
 #include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
@@ -53,7 +53,7 @@ GameTimer timer;
 float accum_time = 0.0f;
 float rotation = 0.0f;
 vector <ENetPeer *> PlayerMap;
-
+std::map <ENetPeer *, bool> ReadyMap;
 void Win32_PrintAllAdapterIPAddresses();
 
 int onExit(int exitcode)
@@ -99,14 +99,25 @@ int main(int arcg, char** argv)
 				MySocket LobbyConnection("LBCN");
 				LobbyConnection.SendPacket(evnt.peer);
 				PlayerMap.push_back(evnt.peer);
+				ReadyMap[evnt.peer] = FALSE;
 			}
 			else if (evnt.type == ENET_EVENT_TYPE_RECEIVE){
 				MySocket Received(evnt.packet);
 				string SocketId = Received.GetPacketId();
-				if (SocketId == "CNCN") {
+				if (SocketId == "CNCN" || SocketId == "REDY") {
+					if (SocketId == "REDY") ReadyMap[evnt.peer] = !ReadyMap[evnt.peer];
+					int readys = 0;
+					map <ENetPeer*, bool> ::iterator itr;
+					for (itr = ReadyMap.begin(); itr != ReadyMap.end();++itr) {
+						readys += itr->second;
+					}
 					MySocket PlayersConnected("PLCN");
+					PlayersConnected.AddVar(to_string(readys));
 					PlayersConnected.AddVar(to_string(PlayerMap.size()));
 					PlayersConnected.BroadcastPacket(server.m_pNetwork);
+					if (SocketId == "REDY" && PlayerMap.size()>1 && PlayerMap.size() == readys) {
+						printf("GAME STARTING \n");
+					}
 				}
 				enet_packet_destroy(evnt.packet);
 			}
