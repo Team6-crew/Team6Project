@@ -34,7 +34,7 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 
 #pragma once
 
-#include <enet\enet.h>
+#include <nclgl/MySocket.h>
 #include <nclgl\GameTimer.h>
 #include <nclgl\Vector3.h>
 #include <nclgl\common.h>
@@ -47,12 +47,12 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 
 #define SERVER_PORT 1234
 #define UPDATE_TIMESTEP (1.0f / 30.0f) //send 30 position updates per second
-
+void eraseElement(ENetPeer* Item);
 NetworkBase server;
 GameTimer timer;
 float accum_time = 0.0f;
 float rotation = 0.0f;
-
+vector <ENetPeer *> PlayerMap;
 
 void Win32_PrintAllAdapterIPAddresses();
 
@@ -93,40 +93,36 @@ int main(int arcg, char** argv)
 		//Handle All Incoming Packets and Send any enqued packets
 		server.ServiceNetwork(dt, [&](const ENetEvent& evnt)
 		{
-			switch (evnt.type)
+			if (evnt.type == ENET_EVENT_TYPE_CONNECT)
 			{
-			case ENET_EVENT_TYPE_CONNECT:
 				printf("- New Client Connected\n");
-				break;
-
-			case ENET_EVENT_TYPE_RECEIVE:
-				printf("\t Client %d says: %s\n", evnt.peer->incomingPeerID, evnt.packet->data);
+				MySocket LobbyConnection("LBCN");
+				LobbyConnection.SendPacket(evnt.peer);
+				PlayerMap.push_back(evnt.peer);
+			}
+			else if (evnt.type == ENET_EVENT_TYPE_RECEIVE){
+				MySocket Received(evnt.packet);
+				string SocketId = Received.GetPacketId();
+				if (SocketId == "CNCN") {
+					MySocket PlayersConnected("PLCN");
+					PlayersConnected.AddVar(to_string(PlayerMap.size()));
+					PlayersConnected.BroadcastPacket(server.m_pNetwork);
+				}
 				enet_packet_destroy(evnt.packet);
-				break;
-
-			case ENET_EVENT_TYPE_DISCONNECT:
+			}
+			else if (ENET_EVENT_TYPE_DISCONNECT) {
+				
+				eraseElement(evnt.peer);
+				MySocket PlayersConnected("PLCN");
+				PlayersConnected.AddVar(to_string(PlayerMap.size()));
+				PlayersConnected.BroadcastPacket(server.m_pNetwork);
 				printf("- Client %d has disconnected.\n", evnt.peer->incomingPeerID);
-				break;
 			}
 		});
 		
 		//Broadcast update packet to all connected clients at a rate of UPDATE_TIMESTEP updates per second
 		if (accum_time >= UPDATE_TIMESTEP)
 		{
-
-			//Packet data
-			// - At the moment this is just a position update that rotates around the origin of the world
-			//   though this can be any variable, structure or class you wish. Just remember that everything 
-			//   you send takes up valuable network bandwidth so no sending every PhysicsObject struct each frame ;)
-			accum_time = 0.0f;
-			nclgl::Maths::Vector3 pos = nclgl::Maths::Vector3(
-				cos(rotation) * 2.0f,
-				1.5f,
-				sin(rotation) * 2.0f);
-
-			//Create the packet and broadcast it (unreliable transport) to all clients
-			ENetPacket* position_update = enet_packet_create(&pos, sizeof(nclgl::Maths::Vector3), 0);
-			enet_host_broadcast(server.m_pNetwork, 0, position_update);
 		}
 
 		Sleep(0);
@@ -136,7 +132,17 @@ int main(int arcg, char** argv)
 	server.Release();
 }
 
-
+void eraseElement(ENetPeer* Item) {
+	bool isFound = false;
+	vector <ENetPeer*>::iterator it;
+	for (it = PlayerMap.begin(); it != PlayerMap.end(); ++it) {
+		if (*it == Item) {
+			it = PlayerMap.erase(it); // After erasing, it3 is now pointing the next location.
+			--it; // Go to the prev location because of ++it3 in the end of for loop.
+			isFound = true;
+		}
+	}
+}
 
 
 //Yay Win32 code >.>

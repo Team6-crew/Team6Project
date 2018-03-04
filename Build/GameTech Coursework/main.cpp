@@ -60,7 +60,7 @@ void Initialize()
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 	
 	// Move this once main menu is hooked up
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
+	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
 // Print Debug Info
@@ -175,7 +175,7 @@ int main()
 		timer_physics.UpdateRealElapsedTime(dt);
 		timer_update.UpdateRealElapsedTime(dt);
 		timer_render.UpdateRealElapsedTime(dt);
-		std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
+		//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
 		//Print Status Entries
 		//PrintStatusEntries();
 

@@ -165,7 +165,7 @@ public:
 		// Server List Menu
 		ServerListMenu = new Menu();
 		ServerListMenu->visible = false;
-		ServerListMenu->AddMenuItem("Dummy IP");
+		ServerListMenu->AddMenuItem("Players Connected: " + to_string(players_connected));
 		ServerListMenu->AddMenuItem("Back");
 		//JoinServerMenu->addToMenu(ServerListMenu, 0);
 		ServerListMenu->addToMenu(JoinServerMenu, 1);
@@ -430,7 +430,7 @@ public:
 			case (1000):
 			{
 				if (!entering_IP) {
-					string_IP = "10.70.33.2:1234";
+					string_IP = "10.58.207.248:1234";
 					entering_IP = true;
 					activeMenu->replaceMenuItem(0, "IP: " + string_IP);
 				}
@@ -457,21 +457,22 @@ public:
 				activeMenu->setSelection(0);
 			}
 		}
-		if (activeMenu->get_id() == 10 && connecting) {
+		if (activeMenu->get_id() == 10 || activeMenu->get_id() == 11) {
 			auto callback = std::bind(
 				&MainMenu::ProcessNetworkEvent,	// Function to call
 				this,								// Associated class instance
 				std::placeholders::_1);				// Where to place the first parameter
 			listen.ServiceNetwork(dt, callback);
 		}
-
+		
 	}
 private:
+	int players_connected = 0;
 	bool connecting;
 	string string_IP;
 	int temp_counter = -1;
 	bool entering_IP;
-	void ProcessNetworkEvent(const ENetEvent& evnt) {};
+	
 	ENetPeer * serverConnection;
 	NetworkBase listen;
 	TextureBase*	tex;
@@ -678,5 +679,29 @@ private:
 		KEYS[190] = ".";
 
 	}
-
+	void ProcessNetworkEvent(const ENetEvent& evnt) {
+		
+		if (evnt.type == ENET_EVENT_TYPE_CONNECT)
+		{
+			printf("Connected to Server\n");
+		}
+		else if (evnt.type == ENET_EVENT_TYPE_RECEIVE) {
+			MySocket Received (evnt.packet);
+			string SocketId = Received.GetPacketId();
+			if (SocketId == "LBCN") {
+				
+				activeMenu = ServerListMenu;
+				MySocket ConfirmConnect("CNCN");
+				ConfirmConnect.SendPacket(evnt.peer);
+			}
+			else if (SocketId == "PLCN") {
+				players_connected = stoi(Received.TruncPacket(0));
+				ServerListMenu->replaceMenuItem(0, "Players Ready: " + to_string(players_connected));
+			}
+			enet_packet_destroy(evnt.packet);
+		}
+		else if (ENET_EVENT_TYPE_DISCONNECT) {
+			printf("Disconnected from server");
+		}
+	};
 };
