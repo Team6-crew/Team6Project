@@ -280,6 +280,7 @@ GameObject* CommonUtils::BuildPaintableCube(
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::PaintableCube(), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
+	dummy->SetHalfDims(halfdims);
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(Matrix4::Translation(pos));
@@ -320,7 +321,7 @@ GameObject* CommonUtils::BuildPaintableCube(
 			std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
 		);
 	}
-
+	GraphicsPipeline::Instance()->pushPaintableObject(obj);
 	return obj;
 }
 GameObject* CommonUtils::BuildCuboidObjectNoTexture(
