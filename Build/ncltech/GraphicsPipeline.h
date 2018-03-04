@@ -17,7 +17,7 @@ class RenderBase;
 class RenderNodeBase;
 class MeshBase;
 class TextureBase;
-
+class GameObject;
 typedef std::pair<RenderNodeBase*, float> TransparentPair;
 
 
@@ -44,7 +44,7 @@ public:
 
 	//Utils
 	inline Camera* GetCamera() { return camera; }
-
+	void pushPaintableObject(GameObject * Paintable) { paintableObjects.push_back(Paintable); };
 	Camera* CreateNewCamera();
 	void ChangeScene();
 protected:
@@ -82,6 +82,8 @@ protected:
 	ShaderBase* shaderCircle;
 	ShaderBase* shaderPaint;
 	ShaderBase* shaderSplat;
+	ShaderBase* shaderPaintable;
+	ShaderBase* shaderMap;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -108,7 +110,7 @@ protected:
 	Camera* camera2;*/
 	bool isVsyncEnabled;
 	std::vector<RenderNodeBase*> allNodes;
-
+	std::vector<GameObject*> paintableObjects;
 	std::vector<RenderNodeBase*> renderlistOpaque;
 	std::vector<TransparentPair> renderlistTransparent;	//Also stores cameraDist in the second argument for sorting purposes
 	std::vector<Camera*> cameras;

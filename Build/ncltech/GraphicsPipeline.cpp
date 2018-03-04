@@ -61,6 +61,7 @@ GraphicsPipeline::GraphicsPipeline()
 	paint_perc = 0.0f;
 
 	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
+	ResourceManager::Instance()->MakeTexture("paintable_tex", Texture::COLOUR, 2048, 2048);
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
 	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"loading.png");
 	TextureBase* depth = NULL;
@@ -153,6 +154,14 @@ void GraphicsPipeline::LoadShaders()
 	shaderSplat = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/SplatFrag.glsl");
+
+	shaderPaintable = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/PaintableFrag.glsl");
+
+	shaderMap = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/MapFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -322,6 +331,32 @@ void GraphicsPipeline::RenderScene(float dt)
 	
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
+	if (paintableObjects.size() > 0) {
+
+		renderer->SetViewPort(2048, 2048);
+		PaintBuffer->ChangeColourAttachment(ResourceManager::Instance()->getTexture("paintable_tex"));
+		shaderPaintable->Activate();
+		paintQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("paintable_tex"), 0);
+		GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+		nclgl::Maths::Vector3 gr_pos = grnd->Physics()->GetPosition();
+		int i = 0;
+		for (std::vector<GameObject*>::iterator it = paintableObjects.begin(); it != paintableObjects.end(); it++) {
+			std::string arr = "objects[" + std::to_string(i) + "].";
+			nclgl::Maths::Vector3 halfDims = (*(*it)->Render()->GetChildIteratorStart())->GetHalfDims();
+
+			nclgl::Maths::Vector3 position = (*it)->Physics()->GetPosition();
+			float posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+			float posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+			nclgl::Maths::Vector4 objectColor = (*(*it)->Render()->GetChildIteratorStart())->GetColourFromPlayer();
+			shaderPaintable->SetUniform((arr + "pos_x").c_str(), posX);
+			shaderPaintable->SetUniform((arr + "pos_z").c_str(), posZ);
+			shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x/ WORLD_SIZE, halfDims.z/ WORLD_SIZE));
+			shaderPaintable->SetUniform((arr + "objColor").c_str(), objectColor);
+			i++;
+		}
+		shaderPaintable->SetUniform("num_objects", i);
+		paintQuad->Draw();
+	}
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
@@ -509,7 +544,10 @@ void GraphicsPipeline::RenderScene(float dt)
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
 				renderer->GetViewMatrix().ToIdentity();
-
+				ResourceManager::Instance()->getTexture("paintable_tex")->Bind(3);
+				shaderMap->Activate();
+				shaderMap->SetUniform("uColorTex", 0);
+				shaderMap->SetUniform("uColorTex2", 3);
 				minimap->Draw();
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
