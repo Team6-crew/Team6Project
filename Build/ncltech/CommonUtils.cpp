@@ -316,7 +316,7 @@ GameObject* CommonUtils::BuildCuboidObjectNoTexture(
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(nullptr,MeshFactory::Instance()->MakeOBJMesh(MESHDIR"cube.obj"), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(nullptr,MeshFactory::Instance()->MakeOBJMesh("cube.obj"), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
 	rnode->AddChild(dummy);
 

@@ -6,12 +6,15 @@
 #include <nclgl\Graphics\Renderer\PS4\PS4OBJMesh.h>
 #include <nclgl\Graphics\Renderer\PS4\PS4Mesh.h>
 
+
+
+
 OBJMeshBase * MeshFactory::MakeOBJMesh(std::string file)
 {
 #ifdef WIN_OGL
-	return new OGLOBJMesh(file);
+	return new OGLOBJMesh(MESHDIR + file);
 #elif PSTATION4
-	return new PS4OBJMesh(file);
+	return new PS4OBJMesh(MESHDIR + file);
 #endif
 }
 

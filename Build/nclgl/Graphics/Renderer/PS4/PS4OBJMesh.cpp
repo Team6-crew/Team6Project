@@ -2,6 +2,7 @@
 #include "PS4OBJMesh.h"
 #include "nclPS4Interface.h"
 
+#include "../../MeshFactory.h"
 #include <nclgl\Vector2.h>
 #include <nclgl\Vector3.h>
 #include <nclgl\Vector4.h>

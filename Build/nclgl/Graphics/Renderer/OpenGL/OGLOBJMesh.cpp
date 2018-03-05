@@ -12,6 +12,7 @@
 #include <nclgl/Vector3.h>
 #include <nclgl/Vector4.h>
 
+#include "../../MeshFactory.h"
 using std::string;
 using namespace nclgl::Maths;
 

@@ -37,7 +37,7 @@ typedef unsigned int uint;
 #define min(a,b)    (((a) < (b)) ? (a) : (b))
 
 
-#define MESHDIR		"../../Data/Meshes/"
+
 #define TEXTUREDIR  "../../Data/Textures/"
 #define SOUNDSDIR	"../../Data/Sounds/"
 
