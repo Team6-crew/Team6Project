@@ -67,7 +67,21 @@ SpeedPickup::~SpeedPickup()
 {
 }
 
-void SpeedPickup::effect(Player* player) {
+void SpeedPickup::eff_speed(Player* player) 
+{
 	player->setSpeed(50.0f);
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+}
+
+void SpeedPickup::eff_paint(Player* player) 
+{
+	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+}
+
+void SpeedPickup::eff_stun(Player* player) 
+{
+	player->setStunDuration(3.0f);
+	player->stun(0.2f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
 }

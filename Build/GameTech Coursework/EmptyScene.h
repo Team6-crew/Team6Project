@@ -53,7 +53,7 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
-		GameLogic::Instance()->addSoftPlayers(1);
+		GameLogic::Instance()->addSoftPlayers(0);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
@@ -79,15 +79,35 @@ public:
 		
 
 
-		SpeedPickup* pickup = new SpeedPickup("pickup",
-			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
+		SpeedPickup* pickup1 = new SpeedPickup("pickup",
+			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
 			0.5f,
 			true,
 			0.0f,
 			true,
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup->SetPhysics(pickup->Physics());
-		this->AddGameObject(pickup);
+		pickup1->SetPhysics(pickup1->Physics());
+		this->AddGameObject(pickup1);
+
+		SpeedPickup* pickup2 = new SpeedPickup("pickup",
+			nclgl::Maths::Vector3(-10.0f, 1.f, 3.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup2->SetPhysics(pickup2->Physics());
+		this->AddGameObject(pickup2);
+
+		SpeedPickup* pickup3 = new SpeedPickup("pickup",
+			nclgl::Maths::Vector3(-10.0f, 1.f, 6.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup3->SetPhysics(pickup3->Physics());
+		this->AddGameObject(pickup3);
 
 		StunWeaponPickup* weapon = new StunWeaponPickup("pickup",
 			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
@@ -99,7 +119,7 @@ public:
 		weapon->SetPhysics(weapon->Physics());
 		this->AddGameObject(weapon);
 
-		Paintbomb* paintbomb = new Paintbomb("paintbomb",
+		/*Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
 			0.5f,
 			true,
@@ -107,7 +127,7 @@ public:
 			true,
 			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
 		paintbomb->SetPhysics(paintbomb->Physics());
-		this->AddGameObject(paintbomb);
+		this->AddGameObject(paintbomb);*/
 
 		Launchpad* launchpad = new Launchpad(
 			"launchpad",

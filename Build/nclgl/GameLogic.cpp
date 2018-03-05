@@ -4,6 +4,7 @@
 
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
+#include <iostream>
 
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
@@ -85,11 +86,15 @@ void GameLogic::calculatePaintPercentage() {
 			}
 			continue;
 		}
-		/*else if (position.y < -3.0f)
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
-			continue;
-		}*/
+		//else if (position.y < -3.0f)
+		//{
+		//	if (players[k]->getgameover == true)
+		//	{
+		//		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
+		//		players[k]->setgameover(false);
+		//	}
+		//	continue;
+		//}
 		else
 		{
 			add_rad = players[k]->getadd_rad();
@@ -120,6 +125,8 @@ void GameLogic::calculatePaintPercentage() {
 							paint_perc[world_paint[i][j] - 1] -= increment;
 						}
 						world_paint[i][j] = k + 1;
+						players[k]->setscore(paint_perc[k]);
+						//std::cout << paint_perc[k] << std::endl;
 					}
 				}
 			}

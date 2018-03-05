@@ -258,7 +258,21 @@ void Player::resetCamera(float dt) {
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		pickup->effect(this);
+		float prob = (rand() % 100);
+		float score = getscore();
+		int temp = (int)(score) / 5;
+		if (prob < (33 - temp))
+		{
+			pickup->eff_speed(this);
+		}
+		else if (prob > (66 - temp * 2))
+		{
+			pickup->eff_stun(this);
+		}
+		else
+		{
+			pickup->eff_paint(this);
+		}
 		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
 		return false;
 	}
