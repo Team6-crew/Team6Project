@@ -1,6 +1,5 @@
 #version 330 core
 
-uniform uint uPickerIdx;
 uniform struct Player {
 	 float pos_x;
 	 float pos_z;

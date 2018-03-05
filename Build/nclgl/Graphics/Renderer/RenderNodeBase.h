@@ -65,6 +65,9 @@ public:
 	nclgl::Maths::Vector4	GetColourFromPlayer() const { return colourFromPlayer; }
 	void			SetColourFromPlayer(nclgl::Maths::Vector4 c) { colourFromPlayer = c; }
 
+	nclgl::Maths::Vector3	GetHalfDims() const { return halfDims; }
+	void			SetHalfDims(nclgl::Maths::Vector3 c) { halfDims = c; }
+
 	bool			GetBeingPainted() const { return beingPainted; }
 	void			SetBeingPainted(bool p) { beingPainted = p; }
 protected:
@@ -75,7 +78,7 @@ protected:
 	float paintPercentage;
 	bool beingPainted;
 	nclgl::Maths::Vector4 colourFromPlayer;
-
+	nclgl::Maths::Vector3 halfDims;
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;
 };

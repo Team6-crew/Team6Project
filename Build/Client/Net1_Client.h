@@ -1,9 +1,9 @@
 
 #pragma once
-
+#include <enet\enet.h>
 #include <ncltech/Scene.h>
 #include <ncltech/NetworkBase.h>
-#include <enet\enet.h>
+
 
 #include <ncltech\SceneManager.h>
 #include <ncltech\PhysicsEngine.h>

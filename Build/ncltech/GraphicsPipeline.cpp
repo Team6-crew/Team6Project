@@ -34,6 +34,8 @@ GraphicsPipeline::GraphicsPipeline()
 	, shadowFBO(NULL)
 	, TrailBuffer(NULL)
 	, ground(NULL)
+	, flickerPie(0.0f)
+	, toggleFlicker(false)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
@@ -59,6 +61,7 @@ GraphicsPipeline::GraphicsPipeline()
 	paint_perc = 0.0f;
 
 	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
+	ResourceManager::Instance()->MakeTexture("paintable_tex", Texture::COLOUR, 2048, 2048);
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
 	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"loading.png");
 	TextureBase* depth = NULL;
@@ -70,6 +73,7 @@ GraphicsPipeline::GraphicsPipeline()
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
 	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Loading.png");
+	splat_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"splat.png");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -146,6 +150,18 @@ void GraphicsPipeline::LoadShaders()
 	shaderLoading = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/loadingFrag.glsl");
+
+	shaderSplat = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/SplatFrag.glsl");
+
+	shaderPaintable = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/PaintableFrag.glsl");
+
+	shaderMap = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/MapFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -315,11 +331,37 @@ void GraphicsPipeline::RenderScene(float dt)
 	
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
+	if (paintableObjects.size() > 0) {
+
+		renderer->SetViewPort(2048, 2048);
+		PaintBuffer->ChangeColourAttachment(ResourceManager::Instance()->getTexture("paintable_tex"));
+		shaderPaintable->Activate();
+		paintQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("paintable_tex"), 0);
+		GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+		nclgl::Maths::Vector3 gr_pos = grnd->Physics()->GetPosition();
+		int i = 0;
+		for (std::vector<GameObject*>::iterator it = paintableObjects.begin(); it != paintableObjects.end(); it++) {
+			std::string arr = "objects[" + std::to_string(i) + "].";
+			nclgl::Maths::Vector3 halfDims = (*(*it)->Render()->GetChildIteratorStart())->GetHalfDims();
+
+			nclgl::Maths::Vector3 position = (*it)->Physics()->GetPosition();
+			float posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+			float posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+			nclgl::Maths::Vector4 objectColor = (*(*it)->Render()->GetChildIteratorStart())->GetColourFromPlayer();
+			shaderPaintable->SetUniform((arr + "pos_x").c_str(), posX);
+			shaderPaintable->SetUniform((arr + "pos_z").c_str(), posZ);
+			shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x/ WORLD_SIZE, halfDims.z/ WORLD_SIZE));
+			shaderPaintable->SetUniform((arr + "objColor").c_str(), objectColor);
+			i++;
+		}
+		shaderPaintable->SetUniform("num_objects", i);
+		paintQuad->Draw();
+	}
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
 	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
-
+	int splatPlayer = -1;
 	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		std::string arr = "players[" + std::to_string(i) + "].";
 		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
@@ -330,12 +372,31 @@ void GraphicsPipeline::RenderScene(float dt)
 
 		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-		shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		if(rad<=0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		else {
+			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+			splatPlayer = i;
+		}
 		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+	}
+	trailQuad->Draw();
 
+	if (splatPlayer != -1) {
+		shaderSplat->Activate();
+		splat_tex->Bind(3);
+		shaderSplat->SetUniform("uDiffuseTex", 3);
+		float pos_x = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(splatPlayer)->Render()->GetChildIteratorStart())->GetColour();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+		shaderSplat->SetUniform("pos_x", pos_x);
+		shaderSplat->SetUniform("pos_z", pos_z);
+		shaderSplat->SetUniform("rad", rad);
+		shaderSplat->SetUniform("trailColor", trailColor);
+		trailQuad->Draw();
 	}
 
-	trailQuad->Draw();
 
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
@@ -346,13 +407,29 @@ void GraphicsPipeline::RenderScene(float dt)
 	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
+	int max_score = 0;
+	float max_perc = 0.0f;
 	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
 		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
 	}
+	
+	if (flickerPie > 0.5f) {
+		flickerPie = 0.0f;
+		toggleFlicker = !toggleFlicker;
+	}
+	if (toggleFlicker) {
+		max_score = -1;
+	}
 
+	flickerPie += dt;
+	shaderCircle->SetUniform("winning", max_score);
 	trailQuad->Draw();
 
 	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
@@ -467,7 +544,10 @@ void GraphicsPipeline::RenderScene(float dt)
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
 				renderer->GetViewMatrix().ToIdentity();
-
+				ResourceManager::Instance()->getTexture("paintable_tex")->Bind(3);
+				shaderMap->Activate();
+				shaderMap->SetUniform("uColorTex", 0);
+				shaderMap->SetUniform("uColorTex2", 3);
 				minimap->Draw();
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
