@@ -309,7 +309,6 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	shaderLoading->Activate();
 	PaintBuffer->ChangeColourAttachment(loading_tex);
 	paintQuad->ReplaceTexture(loading_tex, 0);
-	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
 	shaderLoading->SetUniform("radius_perc", frame);
 	paintQuad->Draw();
 
@@ -343,7 +342,6 @@ void GraphicsPipeline::SplatProjectile(float pos_x, float pos_z, float rad, Vect
 	Vector3 trailColor = Vector3(colour.x, colour.y, colour.z);
 	shaderSplat->SetUniform("trailColor", trailColor);
 	trailQuad->Draw();
-	renderer->SwapBuffers();
 }
 
 void GraphicsPipeline::RenderScene(float dt)
