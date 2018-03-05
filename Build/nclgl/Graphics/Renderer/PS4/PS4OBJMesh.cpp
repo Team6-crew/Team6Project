@@ -37,6 +37,7 @@ bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 
 	std::ifstream f(filename.c_str(), std::ios::in);
 	if (!f) {//Oh dear, it can't find the file :(
+		std::cout << "Failed to load OBJ Mesh:" << filename << std::endl;
 		return false;
 	}
 
