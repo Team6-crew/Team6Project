@@ -40,6 +40,7 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 #include <nclgl\common.h>
 #include <ncltech\NetworkBase.h>
 #include <map>
+#include <ncltech/PhysicsEngine.h>
 //Needed to get computer adapter IPv4 addresses via windows
 #include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
@@ -82,10 +83,11 @@ int main(int arcg, char** argv)
 
 
 	Win32_PrintAllAdapterIPAddresses();
-
+	PhysicsEngine::Instance();
 	timer.GetTimedMS();
 	while (true)
 	{
+
 		float dt = timer.GetTimedMS() * 0.001f;
 		accum_time += dt;
 		rotation += 0.5f * PI * dt;
@@ -97,9 +99,10 @@ int main(int arcg, char** argv)
 			{
 				printf("- New Client Connected\n");
 				MySocket LobbyConnection("LBCN");
-				LobbyConnection.SendPacket(evnt.peer);
 				PlayerMap.push_back(evnt.peer);
 				ReadyMap[evnt.peer] = FALSE;
+				LobbyConnection.AddVar(to_string(PlayerMap.size()-1));
+				LobbyConnection.SendPacket(evnt.peer);
 			}
 			else if (evnt.type == ENET_EVENT_TYPE_RECEIVE){
 				MySocket Received(evnt.packet);
@@ -116,7 +119,8 @@ int main(int arcg, char** argv)
 					PlayersConnected.AddVar(to_string(PlayerMap.size()));
 					PlayersConnected.BroadcastPacket(server.m_pNetwork);
 					if (SocketId == "REDY" && PlayerMap.size()>1 && PlayerMap.size() == readys) {
-						printf("GAME STARTING \n");
+						MySocket StartGame("STRT");
+						StartGame.BroadcastPacket(server.m_pNetwork);
 					}
 				}
 				enet_packet_destroy(evnt.packet);

@@ -35,9 +35,11 @@ public:
 
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
+	void setnumOfNetPlayers(int nMp) { numOfNetPlayers = nMp; };
 	void setnumAI(int nAI) { numAI = nAI; };
 	void updateControls();
 	int getnumOfPlayersMp(void) { return numOfPlayersMp; };
+	int getnumOfNetPlayers(void) { return numOfNetPlayers; };
 	int getnumAI(void) { return numAI; };
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
@@ -55,6 +57,7 @@ private:
 
 	// split screen ui integration
 	int numOfPlayersMp;
+	int numOfNetPlayers;
 	int numAI;
 	KeyboardKeys controls[4][6] = {
 	{ KEYBOARD_W, KEYBOARD_S, KEYBOARD_A, KEYBOARD_D, KEYBOARD_SPACE, KEYBOARD_Q },

@@ -6,6 +6,7 @@
 #include <nclgl\NCLDebug.h>
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
+#include "LanScene.h"
 #include "EmptyScene.h"
 #include "MainMenu.h"
 #include <nclgl\Audio\AudioFactory.h>
@@ -58,70 +59,11 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
-	
+	SceneManager::Instance()->EnqueueScene(new LanScene("Lan Project"));
 	// Move this once main menu is hooked up
 	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
-// Print Debug Info
-//  - Prints a list of status entries to the top left
-//    hand corner of the screen each frame.
-//void PrintStatusEntries()
-//{
-//	//Print Engine Options
-//	NCLDebug::AddStatusEntry(status_colour_header, "NCLTech Settings");
-//	NCLDebug::AddStatusEntry(status_colour, "     Physics Engine: %s (Press P to toggle)", PhysicsEngine::Instance()->IsPaused() ? "Paused  " : "Enabled ");
-//	NCLDebug::AddStatusEntry(status_colour, "     Monitor V-Sync: %s (Press V to toggle)", GraphicsPipeline::Instance()->GetVsyncEnabled() ? "Enabled " : "Disabled");
-//	NCLDebug::AddStatusEntry(status_colour, "");
-//
-//	//Print Current Scene Name
-//	NCLDebug::AddStatusEntry(status_colour_header, "[%d/%d]: %s",
-//		SceneManager::Instance()->GetCurrentSceneIndex() + 1,
-//		SceneManager::Instance()->SceneCount(),
-//		SceneManager::Instance()->GetCurrentScene()->GetSceneName().c_str()
-//		);
-//	NCLDebug::AddStatusEntry(status_colour, "     \x01 T/Y to cycle or R to reload scene");
-//
-//	//Print Performance Timers
-//	NCLDebug::AddStatusEntry(status_colour, "     FPS: %5.2f  (Press G for %s info)", 1000.f / timer_total.GetAvg(), show_perf_metrics ? "less" : "more");
-//	if (show_perf_metrics)
-//	{
-//		timer_total.PrintOutputToStatusEntry(status_colour, "          Total Time     :");
-//		timer_update.PrintOutputToStatusEntry(status_colour, "          Scene Update   :");
-//		timer_physics.PrintOutputToStatusEntry(status_colour, "          Physics Update :");
-//		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
-//	}
-//	NCLDebug::AddStatusEntry(status_colour, "");
-//	
-//}
-
-	//Print Current Scene Name
-//	NCLDebug::AddStatusEntry(status_colour_header, "[%d/%d]: %s",
-//		SceneManager::Instance()->GetCurrentSceneIndex() + 1,
-//		SceneManager::Instance()->SceneCount(),
-//		SceneManager::Instance()->GetCurrentScene()->GetSceneName().c_str()
-//		);
-//	NCLDebug::AddStatusEntry(status_colour, "     \x01 T/Y to cycle or R to reload scene");
-//
-//	//Print Performance Timers
-//	NCLDebug::AddStatusEntry(status_colour, "     FPS: %5.2f  (Press G for %s info)", 1000.f / timer_total.GetAvg(), show_perf_metrics ? "less" : "more");
-//	if (show_perf_metrics)
-//	{
-//		timer_total.PrintOutputToStatusEntry(status_colour, "          Total Time     :");
-//		timer_update.PrintOutputToStatusEntry(status_colour, "          Scene Update   :");
-//		timer_physics.PrintOutputToStatusEntry(status_colour, "          Physics Update :");
-//		timer_render.PrintOutputToStatusEntry(status_colour, "          Render Scene   :");
-//	}
-//	NCLDebug::AddStatusEntry(status_colour, "");
-//
-//
-//}
-
-
-// Process Input
-//  - Handles all program wide keyboard inputs for
-//    things such toggling the physics engine and 
-//    cycling through scenes.
 void HandleKeyboardInputs()
 {
 

@@ -24,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EmptyScene.h" />
-    <ClInclude Include="LanClient.h" />
+    <ClInclude Include="LanScene.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Menu.h" />
   </ItemGroup>

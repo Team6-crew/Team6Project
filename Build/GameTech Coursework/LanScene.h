@@ -26,12 +26,12 @@
 #include <nclgl\ResourceManager.h>
 
 //Fully striped back scene to use as a template for new scenes.
-class EmptyScene : public Scene
+class LanScene : public Scene
 {
 public:
 
 	float rotation = 0.0f;
-	EmptyScene(const std::string& friendly_name)
+	LanScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
 
@@ -46,7 +46,7 @@ public:
 		pauseMenu->setSelection(-1);
 	}
 
-	virtual ~EmptyScene()
+	virtual ~LanScene()
 	{
 		delete player1;
 	}
@@ -69,6 +69,15 @@ public:
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+		}
+		num_p = GameLogic::Instance()->getnumOfNetPlayers();
+		if (num_p & 0b0001) GameLogic::Instance()->addNetPlayer(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addNetPlayer(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addNetPlayer(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addNetPlayer(3);
+		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
+			this->AddGameObject(GameLogic::Instance()->getNetPlayer(i));
+			this->AddGameObject(GameLogic::Instance()->getNetPlayer(i)->getBody());
 		}
 		frame += step * 2.0f;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
@@ -202,7 +211,7 @@ public:
 		portal_a1->SetPhysics(portal_a1->Physics());
 		portal_a1->SetTag(Tags::TPortal_A1);
 		portal_a1->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a1,		// Function to call
+			std::bind(&LanScene::collisionCallback_a1,		// Function to call
 				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
 				std::placeholders::_1,
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
@@ -222,7 +231,7 @@ public:
 		portal_a2->SetPhysics(portal_a2->Physics());
 		portal_a2->SetTag(Tags::TPortal_A2);
 		portal_a2->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a2,		// Function to call
+			std::bind(&LanScene::collisionCallback_a2,		// Function to call
 				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
 				std::placeholders::_1,
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
@@ -242,7 +251,7 @@ public:
 		portal_b1->SetPhysics(portal_b1->Physics());
 		portal_b1->SetTag(Tags::TPortal_B1);
 		portal_b1->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b1,		// Function to call
+			std::bind(&LanScene::collisionCallback_b1,		// Function to call
 				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
 				std::placeholders::_1,
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
@@ -262,7 +271,7 @@ public:
 		portal_b2->SetPhysics(portal_b2->Physics());
 		portal_b2->SetTag(Tags::TPortal_B2);
 		portal_b2->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b2,		// Function to call
+			std::bind(&LanScene::collisionCallback_b2,		// Function to call
 				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
 				std::placeholders::_1,
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function

@@ -28,7 +28,7 @@ class MainMenu : public Scene
 public:
 	int numOfPlayers;
 	int numOfAi;
-
+	int myPlayerNum;
 	int volumelevel = 5;
 
 	int humanOrAi[4] = { 0 };
@@ -695,7 +695,7 @@ private:
 			MySocket Received (evnt.packet);
 			string SocketId = Received.GetPacketId();
 			if (SocketId == "LBCN") {
-				
+				myPlayerNum = stoi(Received.TruncPacket(0));
 				activeMenu = ServerListMenu;
 				MySocket ConfirmConnect("CNCN");
 				ConfirmConnect.SendPacket(evnt.peer);
@@ -704,6 +704,20 @@ private:
 				players_connected = stoi(Received.TruncPacket(1));
 				int readys = stoi(Received.TruncPacket(0));
 				ServerListMenu->replaceMenuItem(0, "Players Ready: " + to_string(readys)+ "/" + to_string(players_connected));
+			}
+			else if (SocketId == "STRT") {
+				getControls();
+				GameLogic::Instance()->setnumOfPlayersMp(pow (2, myPlayerNum));
+				int numEnemies = 0b0000;
+				for (int i = 0; i < players_connected; i++) {
+					if (i != myPlayerNum) numEnemies += pow(2, i);
+				}
+				for (int i = 0; i < 6; i++) {
+					GameLogic::Instance()->setControls(myPlayerNum, i, GameLogic::Instance()->getControls(0, i));
+				}
+				GameLogic::Instance()->setnumOfNetPlayers(numEnemies);
+				GraphicsPipeline::Instance()->ChangeScene();
+				SceneManager::Instance()->JumpToScene("Lan Project");
 			}
 			enet_packet_destroy(evnt.packet);
 		}

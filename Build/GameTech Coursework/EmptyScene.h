@@ -70,6 +70,7 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
+
 		frame += step * 2.0f;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		//GameLogic::Instance()->addSoftPlayers(1);
