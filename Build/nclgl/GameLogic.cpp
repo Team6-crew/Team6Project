@@ -25,7 +25,7 @@ GameLogic::GameLogic() {
 
 void GameLogic::addPlayer(int num_player) {
 	Player * player = new Player("Player_"+ num_player,
-		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+		nclgl::Maths::Vector3(3.0f*num_player, 10.0f, 3.0f*num_player),
 		1.0f,
 		true,
 		1.0f,
@@ -35,9 +35,23 @@ void GameLogic::addPlayer(int num_player) {
 	player->setControls(controls[num_player][0], controls[num_player][1], controls[num_player][2], controls[num_player][3], controls[num_player][4], controls[num_player][5]);
 	player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
 	players.push_back(player);
+	allPlayers.push_back(player);
 	paint_perc.push_back(0.0f);
 }
 
+void GameLogic::addNetPlayer(int num_player) {
+	Player * player = new Player("Player_" + num_player,
+		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+		1.0f,
+		true,
+		1.0f,
+		true,
+		colours[num_player]);
+	player->SetPhysics(player->Physics());
+	netPlayers.push_back(player);
+	allPlayers.push_back(player);
+	paint_perc.push_back(0.0f);
+}
 
 
 void GameLogic::addSoftPlayer(int num_splayers) {
@@ -98,8 +112,8 @@ void GameLogic::calculatePaintPercentage() {
 
 				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
-				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+			for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+				for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
 					float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 					if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {

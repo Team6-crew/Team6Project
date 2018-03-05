@@ -4,6 +4,7 @@
 #include <nclgl\NCLDebug.h>
 #include "GraphicsPipeline.h"
 #include "../nclgl/GameLogic.h"
+#include <nclgl\LevelLoader.h>
 
 SceneManager::SceneManager() 
 	: m_SceneIdx(NULL)
@@ -74,6 +75,23 @@ void SceneManager::JumpToScene(int idx)
 	//Initialize new scene
 	PhysicsEngine::Instance()->SetDefaults();
 	GraphicsPipeline::Instance()->InitializeDefaults();
+
+
+	if (idx == 1)
+	{
+		LevelLoader loader;
+		loader.BuildLevel("SimpleLevel.txt", scene);
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
+		{
+			scene->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			scene->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+
+		}
+
+	}
+
+
+
 	scene->OnInitializeScene();
 	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
 }

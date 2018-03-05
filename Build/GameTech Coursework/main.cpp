@@ -161,7 +161,7 @@ int main()
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 	
 	Window::GetWindow().GetTimer()->GetTimedMS();
-	
+
 	//Create main game-loop
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
@@ -196,7 +196,6 @@ int main()
 		//Render Scene
 		timer_render.BeginTimingSection();
 		GraphicsPipeline::Instance()->UpdateScene(dt);
-		//GraphicsPipeline::Instance()->RenderScene();
 
 		// Update Audio
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
@@ -210,7 +209,7 @@ int main()
 		}
 		else
 		{
-			GraphicsPipeline::Instance()->RenderScene();
+			GraphicsPipeline::Instance()->RenderScene(dt);
 		}
 
 		
@@ -229,7 +228,7 @@ int main()
 		//Finish Timing
 		timer_total.EndTimingSection();		
 	}
-	HeapFactory::Instance()->PrintDebugInfo();
+	//HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
 	//system("pause");

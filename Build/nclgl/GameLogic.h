@@ -14,14 +14,21 @@ public:
 
 	void calculatePaintPercentage();
 	void addPlayer(int num_players);
+	void addNetPlayer(int num_players);
 	void addSoftPlayer(int num_players);
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }
 	std::vector<float> * getPaintPerc() { return &paint_perc; }
 	float getRadius() { return rad;  }
 	int getNumPlayers() { return players.size(); }
+	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
-	int getNumTotalPlayers() { return players.size() + softplayers.size(); }
+	int getTotalPlayers() { return players.size() + softplayers.size(); }
+
+	int getNumAllPlayers() { return allPlayers.size(); }
+	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
+	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
+
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
 	void clearPlayers() { players.clear();	softplayers.clear(); }
@@ -41,6 +48,8 @@ private:
 	float rad;
 	float add_rad;
 	std::vector <Player*> players;
+	std::vector <Player*> allPlayers;
+	std::vector <Player*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
 	nclgl::Maths::Vector4 colours[4];
 
