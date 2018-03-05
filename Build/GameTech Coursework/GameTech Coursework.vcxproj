@@ -39,6 +39,40 @@
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">false</TreatOutputAsContent>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragForwardRender.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_ps_orbis</Profile>
+    </OrbisWavePsslc>
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragSuperSample.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_ps_orbis</Profile>
+    </OrbisWavePsslc>
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechVertexBasic.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_vs_vs_orbis</Profile>
+    </OrbisWavePsslc>
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechVertexFull.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_vs_vs_orbis</Profile>
+    </OrbisWavePsslc>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1A5C2647-CADD-49B7-861E-4B1339EDCD84}</ProjectGuid>
     <RootNamespace>GameTechCoursework</RootNamespace>
@@ -86,6 +120,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -156,6 +191,9 @@
       <AdditionalDependencies>libSceDbgVideoOut_stub_weak.a;libSceVideoOut_stub_weak.a;libSceGnm.a;libSceGnm_debug.a;libSceGnmx.a;libSceGnmx_debug.a;libSceGpuAddress.a;libSceGnmDriver_stub_weak.a;libSceShaderBinary.a;libSceGnf.a;libSceGnf_debug.a;libScePad_stub_weak.a;libSceUserService_stub_weak.a;libSceSysmodule_stub_weak.a;libSceNgs2_stub_weak.a;libSceAudioOut_stub_weak.a;-lSceAudio3d_stub_weak;toolkit_debug.a;libSceTextureTool.a;ncltech.a;nclgl.a;$(GnmAdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
+    <OrbisWavePsslc>
+      <OutputFileName>$(SolutionDir)..\Data\Shaders\SceneRenderer\%(FileName).sb</OutputFileName>
+    </OrbisWavePsslc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -214,5 +252,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.targets" />
   </ImportGroup>
 </Project>

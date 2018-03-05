@@ -27,4 +27,10 @@
   <ItemGroup>
     <CustomBuild Include="..\..\Data\Textures\checkerboard.tga" />
   </ItemGroup>
+  <ItemGroup>
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechVertexBasic.pssl" />
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechVertexFull.pssl" />
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragSuperSample.pssl" />
+    <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragForwardRender.pssl" />
+  </ItemGroup>
 </Project>

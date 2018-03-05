@@ -17,7 +17,7 @@ ShaderBase* ShaderFactory::MakeShader(std::string vertex, std::string fragment, 
 #ifdef WIN_OGL
 	return new OGLShader(vertex.append(".glsl"), fragment.append(".glsl"), geometry.append(".glsl"));
 #elif PSTATION4
-	return new PS4Shader(vertex.append(".pssl"), fragment.append(".pssl"));
+	return new PS4Shader(vertex.append(".sb"), fragment.append(".sb"));
 #endif
 
 }
