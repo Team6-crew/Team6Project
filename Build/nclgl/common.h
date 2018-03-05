@@ -36,9 +36,6 @@ typedef unsigned int uint;
 #define max(a,b)    (((a) > (b)) ? (a) : (b))
 #define min(a,b)    (((a) < (b)) ? (a) : (b))
 
-
-
-#define TEXTUREDIR  "../../Data/Textures/"
 #define SOUNDSDIR	"../../Data/Sounds/"
 
 #define SAFE_DELETE(x) if(x) { delete x; x = NULL; }
