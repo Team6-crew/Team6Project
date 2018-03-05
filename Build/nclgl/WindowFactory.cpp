@@ -5,7 +5,7 @@
 class WindowBase;
 
 
-#include "OGLWindow.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLWindow.h>
 #include "WindowBase.h"
 
 WindowFactory::WindowFactory()

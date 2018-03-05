@@ -1,7 +1,7 @@
 #include "RenderFactory.h"
 
 #include <nclgl\WindowFactory.h>
-#include <nclgl\OGLWindow.h>
+#include <nclgl\Graphics\Renderer\OpenGL\OGLWindow.h>
 #include "OpenGL\OGLRenderer.h"
 #include "PS4\PS4Renderer.h"
 #include "../RenderConstants.h"

@@ -1,8 +1,10 @@
 #include "MeshFactory.h"
-#include "Graphics\Renderer\OpenGL\OGLMesh.h"
-#include "Graphics\Renderer\PS4\PS4Mesh.h"
-#include "OGLOBJMesh.h"
-#include "PS4OBJMesh.h"
+
+#include <nclgl\Graphics\Renderer\OpenGL\OGLOBJMesh.h>
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
+
+#include <nclgl\Graphics\Renderer\PS4\PS4OBJMesh.h>
+#include <nclgl\Graphics\Renderer\PS4\PS4Mesh.h>
 
 OBJMeshBase * MeshFactory::MakeOBJMesh(std::string file)
 {

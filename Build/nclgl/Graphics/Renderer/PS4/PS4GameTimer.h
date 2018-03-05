@@ -1,7 +1,7 @@
 #ifdef PSTATION4
 #pragma once
 
-#include "GameTimerBase.h"
+#include <nclgl\GameTimerBase.h>
 //#include <texture_tool\raw\timer.h>
 
 //#include <chrono>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <nclgl\TSingleton.h>
-#include <nclgl\OBJMeshBase.h>
+class OBJMeshBase;
 class RenderNodeBase;
 class MeshBase;
 

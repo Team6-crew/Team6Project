@@ -13,7 +13,7 @@ Description:
 
 #pragma once
 #include <nclgl\Graphics\MeshBase.h>
-#include <nclgl\OBJMeshBase.h>
+#include <nclgl\Graphics\Renderer\OBJMeshBase.h>
 class Scene;
 
 class TextureBase;

@@ -1,9 +1,9 @@
 #ifdef WIN_OGL
 
 #include "OGLWindow.h"
-#include "Mouse.h"
-#include "Keyboard.h"
-#include "TimerFactory.h"
+#include <nclgl\Mouse.h>
+#include <nclgl\Keyboard.h>
+#include <nclgl\TimerFactory.h>
 
 
 using namespace nclgl::Maths;

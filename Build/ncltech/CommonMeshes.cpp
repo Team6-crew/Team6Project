@@ -1,9 +1,9 @@
 #include "CommonMeshes.h"
 #include <nclgl\NCLDebug.h>
-#include <nclgl\OBJMeshBase.h>
+#include <nclgl\Graphics\Renderer\OBJMeshBase.h>
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\TextureFactory.h>
-#include "../nclgl/MeshFactory.h"
+#include <nclgl\Graphics\MeshFactory.h>
 
 OBJMeshBase*	  CommonMeshes::m_pCube		= NULL;
 OBJMeshBase*	  CommonMeshes::m_pSphere	= NULL;

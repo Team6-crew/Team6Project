@@ -13,7 +13,8 @@ _-_-_-_-_-_-_-""  ""
 *//////////////////////////////////////////////////////////////////////////////
 #ifdef WIN_OGL
 #pragma once
-#include "GameTimerBase.h"
+#include <nclgl/GameTimerBase.h>
+
 
 #include "Windows.h"
 class OGLGameTimer : public GameTimerBase{

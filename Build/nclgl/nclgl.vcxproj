@@ -44,15 +44,15 @@
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
     <ClCompile Include="Graphics\MeshBase.cpp" />
-    <ClCompile Include="MeshFactory.cpp" />
+    <ClCompile Include="Graphics\MeshFactory.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NCLDebug.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
-    <ClCompile Include="OGLGameTimer.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLGameTimer.cpp" />
     <ClCompile Include="Input\OGLInput.cpp" />
-    <ClCompile Include="OGLOBJMesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLOBJMesh.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
@@ -62,10 +62,10 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Frame.cpp" />
-    <ClCompile Include="PS4GameTimer.cpp" />
-    <ClCompile Include="PS4OBJMesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4GameTimer.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4OBJMesh.cpp" />
     <ClCompile Include="Input\PS4Input.cpp" />
-    <ClCompile Include="PS4Window.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Window.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -79,7 +79,7 @@
     <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
     <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
     <ClCompile Include="TimerFactory.cpp" />
-    <ClCompile Include="OGLWindow.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLWindow.cpp" />
     <ClCompile Include="WindowBase.cpp" />
     <ClCompile Include="WindowFactory.cpp" />
   </ItemGroup>
@@ -103,15 +103,15 @@
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />
     <ClInclude Include="Graphics\MeshBase.h" />
-    <ClInclude Include="MeshFactory.h" />
+    <ClInclude Include="Graphics\MeshFactory.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="NCLDebug.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
-    <ClInclude Include="OBJMeshBase.h" />
-    <ClInclude Include="OGLGameTimer.h" />
-    <ClInclude Include="OGLOBJMesh.h" />
+    <ClInclude Include="Graphics\Renderer\OBJMeshBase.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLGameTimer.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLOBJMesh.h" />
     <ClInclude Include="Input\OGLInput.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Plane.h" />
@@ -123,10 +123,10 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Frame.h" />
-    <ClInclude Include="PS4GameTimer.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4GameTimer.h" />
     <ClInclude Include="Input\PS4Input.h" />
-    <ClInclude Include="PS4Window.h" />
-    <ClInclude Include="PS4OBJMesh.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Window.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4OBJMesh.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
@@ -144,7 +144,7 @@
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
-    <ClInclude Include="OGLWindow.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLWindow.h" />
     <ClInclude Include="WindowBase.h" />
     <ClInclude Include="WindowFactory.h" />
   </ItemGroup>

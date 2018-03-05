@@ -71,23 +71,23 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4MemoryAware.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\nclPS4Interface.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Renderer.cpp" />
-    <ClCompile Include="OGLGameTimer.cpp" />
     <ClCompile Include="TimerFactory.cpp" />
     <ClCompile Include="Input\InputBase.cpp" />
     <ClCompile Include="Input\ControllerFactory.cpp" />
     <ClCompile Include="Input\OGLInput.cpp" />
     <ClCompile Include="WindowFactory.cpp" />
-    <ClCompile Include="OGLWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WindowBase.cpp" />
-    <ClCompile Include="PS4Window.cpp" />
-    <ClCompile Include="MeshFactory.cpp" />
-    <ClCompile Include="OGLOBJMesh.cpp" />
-    <ClCompile Include="PS4OBJMesh.cpp" />
     <ClCompile Include="Input\PS4Input.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Frame.cpp" />
-    <ClCompile Include="PS4GameTimer.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLGameTimer.cpp" />
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer\OpenGL\OGLOBJMesh.cpp" />
+    <ClCompile Include="Graphics\MeshFactory.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4Window.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4OBJMesh.cpp" />
+    <ClCompile Include="Graphics\Renderer\PS4\PS4GameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -174,8 +174,6 @@
     <ClInclude Include="Graphics\Renderer\PS4\nclPS4Interface.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Renderer.h" />
     <ClInclude Include="GameTimerBase.h" />
-    <ClInclude Include="OGLGameTimer.h" />
-    <ClInclude Include="PS4GameTimer.h" />
     <ClInclude Include="TimerFactory.h" />
     <ClInclude Include="Input\InputBase.h" />
     <ClInclude Include="Input\InputDevice.h">
@@ -185,15 +183,17 @@
     <ClInclude Include="Input\ControllerFactory.h" />
     <ClInclude Include="Input\OGLInput.h" />
     <ClInclude Include="WindowFactory.h" />
-    <ClInclude Include="OGLWindow.h">
+    <ClInclude Include="WindowBase.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Frame.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowBase.h" />
-    <ClInclude Include="PS4Window.h" />
-    <ClInclude Include="MeshFactory.h" />
-    <ClInclude Include="OBJMeshBase.h" />
-    <ClInclude Include="OGLOBJMesh.h" />
-    <ClInclude Include="PS4OBJMesh.h" />
-    <ClInclude Include="Graphics\Renderer\PS4\PS4Frame.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLOBJMesh.h" />
+    <ClInclude Include="Graphics\Renderer\OpenGL\OGLGameTimer.h" />
+    <ClInclude Include="Graphics\Renderer\OBJMeshBase.h" />
+    <ClInclude Include="Graphics\MeshFactory.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4Window.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4OBJMesh.h" />
+    <ClInclude Include="Graphics\Renderer\PS4\PS4GameTimer.h" />
   </ItemGroup>
 </Project>

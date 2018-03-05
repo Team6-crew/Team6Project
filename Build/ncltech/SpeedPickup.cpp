@@ -4,7 +4,7 @@
 #include "CuboidCollisionShape.h"
 #include "CommonMeshes.h"
 #include "ScreenPicker.h"
-#include <nclgl\OBJMeshBase.h>
+#include <nclgl\Graphics\Renderer\OBJMeshBase.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 

@@ -5,7 +5,7 @@
 #include <nclgl\Mouse.h>
 
 #include <nclgl\WindowFactory.h>
-#include <nclgl\OGLWindow.h>
+#include <nclgl\Graphics\Renderer\OpenGL\OGLWindow.h>
 
 OGLInput::OGLInput()
 {

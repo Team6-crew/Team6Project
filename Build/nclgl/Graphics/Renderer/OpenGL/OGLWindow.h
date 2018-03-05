@@ -14,11 +14,11 @@ Description:Creates and handles the OGLWindow, including the initialisation of t
 #include <stdio.h>
 #include <fcntl.h>
 
-#include "../nclgl/Graphics/Renderer/OpenGL/OGLRenderer.h"
+#include "OGLRenderer.h"
 
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "GameTimerBase.h"
+#include <nclgl\Keyboard.h>
+#include <nclgl\Mouse.h>
+#include <nclgl\GameTimerBase.h>
 
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
@@ -35,7 +35,7 @@ enum CursorStyle
 	CURSOR_STYLE_MAX
 };
 
-#include "WindowBase.h"
+#include <nclgl\WindowBase.h>
 
 class OGLWindow  : public WindowBase
 {

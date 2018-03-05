@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include <nclgl\OGLWindow.h>
+#include "OGLWindow.h"
 
 #ifndef GLEW_STATIC
 #define GLEW_STATIC

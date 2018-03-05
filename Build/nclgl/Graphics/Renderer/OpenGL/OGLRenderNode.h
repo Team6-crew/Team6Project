@@ -22,7 +22,7 @@ _-_-_-_-_-_-_-""  ""
 #include "../../../Matrix4.h"
 #include "../../../Vector3.h"
 #include "../../../Vector4.h"
-#include "../../../OBJMeshBase.h"
+#include "../OBJMeshBase.h"
 #include "../RenderNodeBase.h"
 
 class MeshBase;

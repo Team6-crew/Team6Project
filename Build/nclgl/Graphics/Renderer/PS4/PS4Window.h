@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WindowBase.h"
+#include <nclgl\WindowBase.h>
 
 class PS4Window : public WindowBase
 {

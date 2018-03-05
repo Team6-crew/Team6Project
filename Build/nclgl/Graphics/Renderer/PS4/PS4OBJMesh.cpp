@@ -1,16 +1,10 @@
-#ifdef WIN_OGL
+#ifdef PSTATION4
+#include "PS4OBJMesh.h"
+#include "nclPS4Interface.h"
 
-
-
-
-#include "OGLOBJMesh.h"
-#include "NCLDebug.h"
-
-#include <SOIL.h>
-
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
+#include <nclgl\Vector2.h>
+#include <nclgl\Vector3.h>
+#include <nclgl\Vector4.h>
 
 using std::string;
 using namespace nclgl::Maths;
@@ -38,12 +32,10 @@ in even more annoying.
 */
 
 
-bool	OGLOBJMesh::LoadOBJMesh(std::string filename) {
-	NCLDebug::Log("Loading Mesh: %s", filename.c_str());
+bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 
 	std::ifstream f(filename.c_str(), std::ios::in);
 	if (!f) {//Oh dear, it can't find the file :(
-		NCLERROR("    Error: Mesh file does not exist!");
 		return false;
 	}
 
@@ -93,17 +85,17 @@ bool	OGLOBJMesh::LoadOBJMesh(std::string filename) {
 			currentMesh->mtlType = currentMtlType;
 		}
 		else if (currentLine == OBJVERT) {	//This line is a vertex
-			Vector3 vertex;
+			nclgl::Maths::Vector3 vertex;
 			f >> vertex.x; f >> vertex.y; f >> vertex.z;
 			inputVertices.push_back(vertex);
 		}
 		else if (currentLine == OBJNORM) {	//This line is a Normal!
-			Vector3 normal;
+			nclgl::Maths::Vector3 normal;
 			f >> normal.x; f >> normal.y; f >> normal.z;
 			inputNormals.push_back(normal);
 		}
 		else if (currentLine == OBJTEX) {	//This line is a texture coordinate!
-			Vector2 texCoord;
+			nclgl::Maths::Vector2 texCoord;
 			f >> texCoord.x; f >> texCoord.y;
 			/*
 			TODO! Some OBJ files might have 3D tex coords...
@@ -210,28 +202,27 @@ bool	OGLOBJMesh::LoadOBJMesh(std::string filename) {
 			continue;
 		}
 		else {
-			OGLOBJMesh*m;
+			PS4OBJMesh*m;
 
 			if (i == 0) {
 				m = this;
 			}
 			else {
-				m = new OGLOBJMesh();
+				m = new PS4OBJMesh();
 			}
 
 			m->SetTexturesFromMTL(sm->mtlSrc, sm->mtlType);
-	
-			m->numVertices = sm->vertIndices.size();
 
-			m->vertices = new Vector3[m->numVertices];
+			m->numVertices = sm->vertIndices.size();
+			m->vertices = new sce::Vectormath::Scalar::Aos::Vector3[m->numVertices];
 			for (unsigned int j = 0; j < sm->vertIndices.size(); ++j) {
-				m->vertices[j] = inputVertices[sm->vertIndices[j] - 1];
+				m->vertices[j] = nclToPS4(inputVertices[sm->vertIndices[j] - 1]);
 			}
 
 			if (!sm->texIndices.empty()) {
-				m->textureCoords = new Vector2[m->numVertices];
+				m->texCoords = new sce::Vectormath::Scalar::Aos::Vector2[m->numVertices];
 				for (unsigned int j = 0; j < sm->texIndices.size(); ++j) {
-					m->textureCoords[j] = inputTexCoords[sm->texIndices[j] - 1];
+					m->texCoords[j] = nclToPS4(inputTexCoords[sm->texIndices[j] - 1]);
 				}
 			}
 
@@ -240,10 +231,10 @@ bool	OGLOBJMesh::LoadOBJMesh(std::string filename) {
 				m->GenerateNormals();
 			}
 			else {
-				m->normals = new Vector3[m->numVertices];
+				m->normals = new sce::Vectormath::Scalar::Aos::Vector3[m->numVertices];
 
 				for (unsigned int j = 0; j < sm->normIndices.size(); ++j) {
-					m->normals[j] = inputNormals[sm->normIndices[j] - 1];
+					m->normals[j] = nclToPS4(inputNormals[sm->normIndices[j] - 1]);
 				}
 			}
 #endif
@@ -260,7 +251,6 @@ bool	OGLOBJMesh::LoadOBJMesh(std::string filename) {
 		delete inputSubMeshes[i];
 		++i;
 	}
-	NCLDebug::Log("");
 
 	return true;
 }
@@ -273,14 +263,14 @@ you've been building up in the Mesh class as the tutorials go on, will
 automatically be used by this overloaded function. Once 'this' has been drawn,
 all of the children of 'this' will be drawn
 */
-void OGLOBJMesh::Draw() {
-	OGLMesh::Draw();
+void PS4OBJMesh::Draw() {
+	PS4Mesh::Draw();
 	for (unsigned int i = 0; i < children.size(); ++i) {
 		children.at(i)->Draw();
 	}
 };
 
-void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
+void	PS4OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 	if (mtlType.empty() || mtlFile.empty()) {
 		return;
 	}
@@ -289,11 +279,11 @@ void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 	if (i != materials.end()) {
 		if (!i->second.diffuse.empty()) {
-			texture = (OGLTexture*)i->second.diffuseNum;
+			texture =(PS4Texture*) i->second.diffuseNum;
 		}
 #ifdef OBJ_USE_TANGENTS_BUMPMAPS
 		if (!i->second.bump.empty()) {
-			bumpTexture = (OGLTexture*)i->second.bumpNum;
+			bumpTexture = (PS4Texture*)i->second.bumpNum;
 		}
 #endif
 		return;
@@ -344,8 +334,7 @@ void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 			if (!currentMTL.diffuse.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.diffuse);
-				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
-				currentMTL.diffuseNum = TextureFactory::Instance()->MakeTexture(filename);
+				currentMTL.diffuseNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
 			}
 		}
 		else if (currentLine == MTLBUMPMAP || currentLine == MTLBUMPMAPALT) {
@@ -362,8 +351,8 @@ void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 			if (!currentMTL.bump.empty()) {
 				string filename = (string(TEXTUREDIR) + currentMTL.bump);
-				NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
-				currentMTL.bumpNum = TextureFactory::Instance()->MakeTexture(filename);
+				//NCLDebug::Log("    -> Loading Texture: %s", filename.c_str());
+				currentMTL.bumpNum = TextureFactory::Instance()->MakeTexture(filename.c_str());
 			}
 		}
 	}
@@ -381,7 +370,7 @@ void	OGLOBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 /*
 The mtl files in that big pack of city buildings haven't been exported correctly...
 */
-void	OGLOBJMesh::FixTextures(MTLInfo &info) {
+void	PS4OBJMesh::FixTextures(MTLInfo &info) {
 	if (!info.bumpNum) {
 
 		string temp = info.diffuse;
@@ -394,9 +383,8 @@ void	OGLOBJMesh::FixTextures(MTLInfo &info) {
 		}
 
 		info.bump = temp;
-
-		info.bumpNum = TextureFactory::Instance()->MakeTexture(string(TEXTUREDIR + info.bump));
+	
+		info.bumpNum = TextureFactory::Instance()->MakeTexture(string(TEXTUREDIR + info.bump).c_str());
 	}
 }
-
-#endif // WIN_OGL
+#endif //pstation4

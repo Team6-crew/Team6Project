@@ -1,6 +1,7 @@
 #include "TimerFactory.h"
-#include "OGLGameTimer.h"
-#include "PS4GameTimer.h"
+// Refactor using chrono
+#include <nclgl\Graphics\Renderer\OpenGL\OGLGameTimer.h>
+#include <nclgl\Graphics\Renderer\PS4\PS4GameTimer.h>
 
 GameTimerBase * TimerFactory::MakeGameTimer()
 {

@@ -1,3 +1,5 @@
+#ifdef WIN_OGL
+
 /******************************************************************************
 Class:OBJMesh
 Implements:Mesh, MD5MeshInstance
@@ -71,35 +73,32 @@ time lighting tutorial, uncomment both OBJ_USE_NORMALS and OBJ_USE_TANGENTS_BUMP
 
 #define OBJ_FIX_TEXTURES
 
-#ifdef PSTATION4
 #pragma once
-#include "OBJMeshBase.h"
-#include <nclgl\Graphics\Renderer\PS4\PS4Mesh.h>
-
+#include "../OBJMeshBase.h"
+#include <nclgl\Graphics\Renderer\OpenGL\OGLMesh.h>
 /*
 OBJSubMesh structs are used to temporarily keep the data loaded
 in from the OBJ files, before being parsed into a series of
 Meshes
 */
 
-class PS4OBJMesh : public PS4Mesh, public OBJMeshBase {
+class OGLOBJMesh : public OGLMesh, public OBJMeshBase {
 public:
-	PS4OBJMesh(void) {};
-	PS4OBJMesh(std::string filename) { LoadOBJMesh(filename); };
-	~PS4OBJMesh(void) {};
+	OGLOBJMesh(void) {};
+	OGLOBJMesh(std::string filename) { LoadOBJMesh(filename); };
+	~OGLOBJMesh(void) {};
 	bool	LoadOBJMesh(std::string filename);
 
 	virtual void Draw();
 
 	virtual void SetTexture(TextureBase* t) {
-		texture = (PS4Texture*)t;
+		texture = (OGLTexture*)t;
 	}
 protected:
 	void	SetTexturesFromMTL(std::string &mtlFile, std::string &mtlType);
 
 	void	FixTextures(MTLInfo &info);
 
-	std::map <std::string, MTLInfo> materials;
 };
 
-#endif //pstation4
+#endif // WIN_OGL

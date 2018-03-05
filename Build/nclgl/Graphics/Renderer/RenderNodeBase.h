@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "../../OBJMeshBase.h"
+#include "OBJMeshBase.h"
 namespace nclgl
 {
 	namespace Maths

@@ -13,7 +13,6 @@ _-_-_-_-_-_-_-""  ""
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "OGLWindow.h"
 #include "Matrix4.h"
 #include "Vector3.h"
 
