@@ -6,6 +6,8 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <ncltech\GraphicsPipeline.h>
+#include <nclgl\GameLogic.h>
 #include "Player.h"
 
 using namespace nclgl::Maths;
@@ -77,6 +79,8 @@ PaintProjectile::~PaintProjectile()
 bool PaintProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TGround)) {
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+		GraphicsPipeline::Instance()->SplatProjectile(thisNode->GetPosition().x, thisNode->GetPosition().z, thisNode->GetColRadius(), (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
+		GameLogic::Instance()->calculateProjectilePaint(thisNode->GetPosition().x, thisNode->GetPosition().z, thisNode->GetColRadius(), (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour().z);
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
 		RenderNodeBase* otherRenderNode = (*otherNode->GetParent()->Render()->GetChildIteratorStart());

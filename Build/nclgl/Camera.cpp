@@ -47,26 +47,26 @@ void Camera::HandleKeyboard(float dt)
 	}
 
 
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_W)) {
-		position += Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(0, 0, -1) * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_S)) {
-		position -= Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(0, 0, -1) * speed;
-	}
+	//if (Window::GetKeyboard()->KeyDown(KEYBOARD_W)) {
+	//	position += Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(0, 0, -1) * speed;
+	//}
+	//if (Window::GetKeyboard()->KeyDown(KEYBOARD_S)) {
+	//	position -= Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(0, 0, -1) * speed;
+	//}
 
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_A)) {
-		position += Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(-1, 0, 0) * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_D)) {
-		position -= Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(-1, 0, 0) * speed;
-	}
+	//if (Window::GetKeyboard()->KeyDown(KEYBOARD_A)) {
+	//	position += Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(-1, 0, 0) * speed;
+	//}
+	//if (Window::GetKeyboard()->KeyDown(KEYBOARD_D)) {
+	//	position -= Matrix4::Rotation(yaw, Vector3(0, 1, 0)) * Vector3(-1, 0, 0) * speed;
+	//}
 
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_SHIFT)) {
-		position.y += speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(KEYBOARD_SPACE)) {
-		position.y -= speed;
-	}
+	//if (Window::GetKeyboard()->KeyDown(KEYBOARD_SHIFT)) {
+	//	position.y += speed;
+	//}
+	//if (Window::GetKeyboard()->KeyDown(KEYBOARD_SPACE)) {
+	//	position.y -= speed;
+	//}
 }
 
 /*
