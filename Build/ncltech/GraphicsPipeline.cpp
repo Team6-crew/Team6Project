@@ -242,8 +242,8 @@ void GraphicsPipeline::RenderMenu() {
 	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-
-	fullscreenQuad->ReplaceTexture(temp_tex, 0);
+	 
+	fullscreenQuad->ReplaceTexture(temp_tex,0);
 	fullscreenQuad->Draw();
 
 	//NCLDEBUG - Text Elements (aliased)
@@ -265,20 +265,20 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
 	shaderLoading->SetUniform("radius_perc", frame);
 	paintQuad->Draw();
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"), 0);
-		renderer->BindScreenFramebuffer();
-		renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
-		renderer->Clear(Renderer::COLOUR_DEPTH);
-		float superSamples = (float)(numSuperSamples);
-		shaderPresentToWindow->Activate();
-		shaderPresentToWindow->SetUniform("uColorTex", 0);
-		shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
-		shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
-		shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-		fullscreenQuad->ReplaceTexture(loading_tex, 0);
-		fullscreenQuad->Draw();
-		renderer->SwapBuffers();
-	}
+
+	renderer->BindScreenFramebuffer();
+	renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	float superSamples = (float)(numSuperSamples);
+	shaderPresentToWindow->Activate();
+	shaderPresentToWindow->SetUniform("uColorTex", 0);
+	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+	fullscreenQuad->ReplaceTexture(loading_tex,0);
+	fullscreenQuad->Draw();
+	renderer->SwapBuffers();
+}
 void GraphicsPipeline::RenderScene(float dt)
 {
 	
@@ -752,14 +752,14 @@ void GraphicsPipeline::BuildShadowTransforms()
 		//Build Bounding Box around frustum section (Axis Aligned)
 		BoundingBox bb;
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, 1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3(1.0f, -1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3(1.0f, 1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(-1.0f,  1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3( 1.0f, -1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3( 1.0f,  1.0f, norm_near));
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, 1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3(1.0f, -1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3(1.0f, 1.0f, norm_far));
-
+		bb.ExpandToFit(invCamProjView * Vector3(-1.0f,  1.0f, norm_far));
+		bb.ExpandToFit(invCamProjView * Vector3( 1.0f, -1.0f, norm_far));
+		bb.ExpandToFit(invCamProjView * Vector3( 1.0f,  1.0f, norm_far));
+		
 		//Rotate bounding box so it's orientated in the lights direction
 		// - Rotates bounding box and creates a new AABB that encompasses it
 		bb = bb.Transform(shadowViewMtx);
