@@ -96,11 +96,6 @@ void GameLogic::calculatePaintPercentage() {
 			}
 			continue;
 		}
-		/*else if (position.y < -3.0f)
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
-			continue;
-		}*/
 		else
 		{
 			add_rad = allPlayers[k]->getadd_rad();
@@ -126,6 +121,7 @@ void GameLogic::calculatePaintPercentage() {
 							paint_perc[world_paint[i][j] - 1] -= increment;
 						}
 						world_paint[i][j] = k + 1;
+						players[k]->setscore(paint_perc[k]);
 					}
 				}
 			}

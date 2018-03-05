@@ -274,10 +274,31 @@ void Player::resetCamera(float dt) {
 
 
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
-	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+	if (otherNode->GetParent()->HasTag(Tags::TRandomPickup)) {
+		Pickup* pickup = (Pickup*)otherNode->GetParent();
+		float prob = (rand() % 100);
+		float score = getscore();
+		int temp = (int)(score) / 5;
+		if (prob < (33 - temp))
+		{
+			pickup->eff_speed(this);
+		}
+		else if (prob > (66 - temp * 2))
+		{
+			pickup->eff_stun(this);
+		}
+		else
+		{
+			pickup->eff_paint(this);
+		}
+		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
+		return false;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TWeapon))
+	{
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->effect(this);
-		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
+		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
@@ -293,6 +314,7 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		Vector4 col1 = otherRenderNode->GetColourFromPlayer();
 		Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
 		if (col1.x != col2.x || col1.y!=col2.y || col1.z != col2.z) {
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
 			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
 			otherRenderNode->SetBeingPainted(true);
 			otherRenderNode->SetPaintPercentage(0.0f);

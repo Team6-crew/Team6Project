@@ -14,7 +14,9 @@ public:
 		const nclgl::Maths::Vector4& color);
 	~SpeedPickup();
 	
-	virtual void effect(Player* player);
+	virtual void eff_speed(Player* player) ;
+	virtual void eff_paint(Player* player) ;
+	virtual void eff_stun(Player* player) ;
 	
 
 };

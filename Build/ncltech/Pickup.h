@@ -10,7 +10,10 @@ public:
 	~Pickup();
 
 	virtual void effect(Player* player) {};
-	
+	virtual void eff_speed(Player* player) {};
+	virtual void eff_paint(Player* player) {};
+	virtual void eff_stun(Player* player) {};
+
 private:
 
 };
