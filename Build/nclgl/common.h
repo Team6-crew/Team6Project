@@ -36,7 +36,7 @@ typedef unsigned int uint;
 #define max(a,b)    (((a) > (b)) ? (a) : (b))
 #define min(a,b)    (((a) < (b)) ? (a) : (b))
 
-#define SHADERDIR	"../../Data/Shaders/"
+
 #define MESHDIR		"../../Data/Meshes/"
 #define TEXTUREDIR  "../../Data/Textures/"
 #define SOUNDSDIR	"../../Data/Sounds/"

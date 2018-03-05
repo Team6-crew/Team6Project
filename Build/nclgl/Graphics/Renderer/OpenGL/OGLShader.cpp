@@ -24,10 +24,10 @@ OGLShader::OGLShader(std::string vFile, std::string fFile, std::string gFile) {
 	objects[SHADER_FRAGMENT] = GenerateShader(fFile, GL_FRAGMENT_SHADER);
 	objects[SHADER_GEOMETRY] = 0;
 
-	if (gFile.compare(".glsl") != 0) {
-		objects[SHADER_GEOMETRY] = GenerateShader(gFile, GL_GEOMETRY_SHADER);
-		glAttachShader(program, objects[SHADER_GEOMETRY]);
-	}
+	//if (gFile.compare(".glsl") != 0) {
+	//	objects[SHADER_GEOMETRY] = GenerateShader(gFile, GL_GEOMETRY_SHADER);
+	//	glAttachShader(program, objects[SHADER_GEOMETRY]);
+	//}
 
 	glAttachShader(program, objects[SHADER_VERTEX]);
 	glAttachShader(program, objects[SHADER_FRAGMENT]);

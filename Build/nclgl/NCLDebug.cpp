@@ -987,9 +987,9 @@ void NCLDebug::_RenderDebugClipSpace()
 void NCLDebug::_LoadShaders()
 {
 	g_pShaderPoints = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"DebugShaders/PointVertex",
-		SHADERDIR"DebugShaders/PointFragment",
-		SHADERDIR"DebugShaders/PointGeometry");
+		"DebugShaders/PointVertex",
+		"DebugShaders/PointFragment",
+		"DebugShaders/PointGeometry");
 	//if (!g_pShaderPoints->LinkProgram())
 	//{
 	//	NCLERROR("NCLDebug Point shader could not be loaded");
@@ -997,9 +997,9 @@ void NCLDebug::_LoadShaders()
 	//}
 	
 	g_pShaderLines = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"DebugShaders/Vertex",
-		SHADERDIR"DebugShaders/Fragment",
-		SHADERDIR"DebugShaders/LineGeometry");
+		"DebugShaders/Vertex",
+		"DebugShaders/Fragment",
+		"DebugShaders/LineGeometry");
 	//if (!g_pShaderLines->LinkProgram())
 	//{
 	//	NCLERROR("NCLDebug ThickLine shader could not be loaded");
@@ -1007,8 +1007,8 @@ void NCLDebug::_LoadShaders()
 	//}
 
 	g_pShaderHairLines = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"DebugShaders/VertexColOnly",
-		SHADERDIR"DebugShaders/Fragment");
+		"DebugShaders/VertexColOnly",
+		"DebugShaders/Fragment");
 	//if (!g_pShaderHairLines->LinkProgram())
 	//{
 	//	NCLERROR("NCLDebug HairLine shader could not be loaded");
@@ -1016,9 +1016,9 @@ void NCLDebug::_LoadShaders()
 	//}
 
 	g_pShaderText = ShaderFactory::Instance()->MakeShader(
-		SHADERDIR"DebugShaders/TextVertex",
-		SHADERDIR"DebugShaders/TextFragment",
-		SHADERDIR"DebugShaders/TextGeometry");
+		"DebugShaders/TextVertex",
+		"DebugShaders/TextFragment",
+		"DebugShaders/TextGeometry");
 	//if (!g_pShaderText->LinkProgram())
 	//{
 	//	NCLERROR("NCLDebug Text shader could not be loaded");

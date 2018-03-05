@@ -127,37 +127,37 @@ void PS4Shader::GenerateVertexShader(const std::string& vertex)
 }
 
 bool PS4Shader::LoadShaderBinary(const string &name, char*& into, int& dataSize) {
-	std::ifstream binFile6("ps4ToDo.txt");
-	if (!binFile6.is_open())            //is it ok?
-	{
-		std::cout << "Input file did not open please check it\n";
-	}
-	std::ifstream binFile5("../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl");
-	if (!binFile5.is_open())            //is it ok?
-	{
-		std::cout << "Input file did not open please check it\n";
-	}
-	std::ifstream binFile4;
-	binFile4.open(name.c_str());
-	if (binFile4.fail())            //is it ok?
-	{
-		std::cout << "Input file did not open please check it\n";
-	}
-	std::ifstream binFile3;
-	binFile3.open("D:\\NewteamProject\\Data\\Shaders\\SceneRenderer\\TechVertexBasic.glsl");
-	if (binFile3.fail())            //is it ok?
-	{
-		std::cout << "Input file did not open please check it\n";
-	}
-	if (!binFile3)
-	{
-		return false;
-	}
-	std::ifstream binFile2("D:/NewteamProject/Data/Shaders/SceneRenderer/TechVertexBasic.sb", std::ios::binary);
-	if (!binFile2)
-	{
-		return false;
-	}
+	//std::ifstream binfile6("/app0/ps4todo.txt");
+	//if (!binfile6.is_open())            //is it ok?
+	//{
+	//	std::cout << "input file did not open please check it\n";
+	//}
+	//std::ifstream binFile5("../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl");
+	//if (!binFile5.is_open())            //is it ok?
+	//{
+	//	std::cout << "Input file did not open please check it\n";
+	//}
+	//std::ifstream binFile4;
+	//binFile4.open(name.c_str());
+	//if (binFile4.fail())            //is it ok?
+	//{
+	//	std::cout << "Input file did not open please check it\n";
+	//}
+	//std::ifstream binFile3;
+	//binFile3.open("D:\\NewteamProject\\Data\\Shaders\\SceneRenderer\\TechVertexBasic.glsl");
+	//if (binFile3.fail())            //is it ok?
+	//{
+	//	std::cout << "Input file did not open please check it\n";
+	//}
+	//if (!binFile3)
+	//{
+	//	return false;
+	//}
+	//std::ifstream binFile2("D:/NewteamProject/Data/Shaders/SceneRenderer/TechVertexBasic.sb", std::ios::binary);
+	//if (!binFile2)
+	//{
+	//	return false;
+	//}
 
 
 	std::ifstream binFile(name, std::ios::binary);
