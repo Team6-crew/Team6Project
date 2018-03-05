@@ -258,7 +258,10 @@ void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4&
 
 		// Send uniform data to correct shader location
 		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
-		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		if (uniformLocation.second >= 0)
+		{
+			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
 	}
 	else
 	{
@@ -281,7 +284,11 @@ void PS4Shader::SetUniform(const std::string & name, int i)
 
 		// Send uniform data to correct shader location
 		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
-		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		if (uniformLocation.second >= 0)
+		{
+			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
+	
 	}
 	else
 	{
@@ -304,7 +311,10 @@ void PS4Shader::SetUniform(const std::string & name, float f)
 
 		// Send uniform data to correct shader location
 		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
-		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		if (uniformLocation.second >= 0)
+		{
+			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
 	}
 	else
 	{
@@ -328,7 +338,10 @@ void PS4Shader::SetUniform(const std::string & name, const nclgl::Maths::Vector2
 
 		// Send uniform data to correct shader location
 		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
-		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		if (uniformLocation.second >= 0)
+		{
+			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
 	}
 	else
 	{
@@ -351,7 +364,10 @@ void PS4Shader::SetUniform(const std::string & name, const nclgl::Maths::Vector3
 
 		// Send uniform data to correct shader location
 		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
-		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		if (uniformLocation.second >= 0)
+		{
+			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
 	}
 	else
 	{
@@ -374,7 +390,10 @@ void PS4Shader::SetUniform(const std::string & name, const nclgl::Maths::Vector4
 
 		// Send uniform data to correct shader location
 		pair<ShaderStage, int> uniformLocation = GetConstantBuffer(name);
-		currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		if (uniformLocation.second >= 0)
+		{
+			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
 	}
 	else
 	{

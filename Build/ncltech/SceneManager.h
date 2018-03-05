@@ -60,5 +60,5 @@ protected:
 protected:
 	uint				m_SceneIdx;
 	std::vector<Scene*> m_vpAllScenes;
-	Scene*				scene; //Current Scene
+	Scene*				scene = nullptr; //Current Scene
 };
