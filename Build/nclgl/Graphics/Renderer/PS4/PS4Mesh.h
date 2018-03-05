@@ -80,10 +80,10 @@ protected: // Vertex Data
 	unsigned int numVertices = 0;
 	unsigned int numIndices = 0;
 
-	sce::Vectormath::Scalar::Aos::Vector3* vertices;
-	sce::Vectormath::Scalar::Aos::Vector2* texCoords;
-	sce::Vectormath::Scalar::Aos::Vector3* normals;
-	sce::Vectormath::Scalar::Aos::Vector3* tangents;
+	sce::Vectormath::Scalar::Aos::Vector3* vertices = nullptr;
+	sce::Vectormath::Scalar::Aos::Vector2* texCoords = nullptr;
+	sce::Vectormath::Scalar::Aos::Vector3* normals = nullptr;
+	sce::Vectormath::Scalar::Aos::Vector3* tangents = nullptr;
 
 	int*	 indices;
 
