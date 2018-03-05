@@ -67,6 +67,9 @@ public:
 	bool setcanpaint(bool canp) { canpaint = canp; return canpaint; }
 	void settime(float t) { time = t; }
 
+	void setscore(float s) { score = s; }
+	float getscore() { return score; }
+
 	bool stun(float dt);
 
 	int getDebuffTime() { return debuffTime; }
@@ -89,6 +92,7 @@ private:
 
 	KeyboardKeys move_up, move_down, move_left, move_right , move_jump, move_shoot;
 	float time;
+	float score;
 
 	float sensitivity;
 	bool canpaint;

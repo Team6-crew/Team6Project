@@ -63,4 +63,7 @@ private:
 	{ KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9 }
 	};
 	float increment;
+	float gametime;
+	float playerscore[4];
+	float temp[4];
 };
