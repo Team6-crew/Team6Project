@@ -6,6 +6,7 @@ uniform struct Player {
 	 vec4 player_colour;
 } players[4];
 uniform int num_players;
+uniform int winning;
 in Vertex	{
 	vec2 texCoord;
 } IN;
@@ -36,5 +37,10 @@ void main(void)
 				wr = num_players-1;
 		}
 	color = players[wr].player_colour;
+	if (winning == wr){
+		color.x*= 0.7f;
+		color.y*= 0.7f;
+		color.z*= 0.7f;
+	}
 	OutFrag = color;
 }

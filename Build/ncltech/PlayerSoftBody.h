@@ -16,17 +16,26 @@ public:
 
 	GameObject* getBody() { return body; }
 	Softbody* getBall() { return ball; }
-	GameObject* getControl();
+	GameObject* getTop();
+	GameObject* getBottom();
+	GameObject* getFront();
 
 	void move();
+	void setRadius(float radius) { rad = radius; }
+	float getRadius() { return rad; }
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys space, KeyboardKeys shoot);
 
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
 
 	void setCamera(Camera* c) { camera = c; }
-
 	Camera* getCamera() { return camera; }
+
+	float getadd_rad() { return add_rad; }
+	void setadd_rad(float add) { add_rad = add; }
+
+	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) { relative_position = rel_pos; }
+	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; }
 
 private:
 
@@ -34,14 +43,17 @@ private:
 	GameObject* body;
 	RenderNodeBase* camera_transform;
 	Camera* camera;
-	GameObject* control; // Top most sphere used to control soft body
-	GameObject* oppcontrol; // Bottom most sphere
+	GameObject* top; // Top most sphere used to control soft body
+	GameObject* bottom; // Bottom most sphere for movement and painting
+	GameObject* front;
+	GameObject* back;
 
 	float speed;
 
 	bool canjump = 1;
 
 	KeyboardKeys move_up, move_down, move_left, move_right, move_jump, move_shoot;
-
-
+	float add_rad;
+	float rad;
+	nclgl::Maths::Vector3 relative_position;
 };

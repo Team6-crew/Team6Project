@@ -96,8 +96,10 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
+		
 		frame += step;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
+		
 		GameObject* testItem = CommonUtils::BuildPaintableCube(
 			"Ground",
 			nclgl::Maths::Vector3(-5.0f, 5.5f, -5.0f),
@@ -131,6 +133,7 @@ public:
 
 		frame += step;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
+		
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
 			0.5f,
