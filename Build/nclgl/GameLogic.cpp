@@ -25,7 +25,7 @@ GameLogic::GameLogic() {
 
 void GameLogic::addPlayer(int num_player) {
 	Player * player = new Player("Player_"+ num_player,
-		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+		nclgl::Maths::Vector3(3.0f*num_player, 10.0f, 3.0f*num_player),
 		1.0f,
 		true,
 		1.0f,

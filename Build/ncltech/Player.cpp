@@ -151,20 +151,33 @@ void Player::move(float dt) {
 }
 
 void Player::handleInput(float dt) {
-	Vector3 jump(0, 20, 0);
+	Vector3 jump(0, 15, 0);
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 right = Vector3::Cross(forward, up);
 
+	if (justJumped) justJumped = !justJumped;
+
 	if (Window::GetKeyboard()->KeyDown(move_up))
-	{
-		physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
+	{    
+		if (canjump) {
+			physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
+		}
+		else {
+			physicsNode->SetForce(Vector3(-forward.x, 0.0f, -forward.z) * speed);
+		}
+		
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
 	{
-		physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
+		if (canjump) {
+			physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
+		}
+		else {
+			physicsNode->SetForce(Vector3(forward.x, 0.0f, forward.z) * speed);
+		}
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
@@ -187,6 +200,7 @@ void Player::handleInput(float dt) {
 		if (canjump == true) {
 			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
+			justJumped = true;
 			canjump = false;
 		}
 	}
@@ -205,7 +219,7 @@ void Player::equipStunWeapon(Vector4 colour) {
 		equippedPaintWeapon = NULL;
 	}
 	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 3.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 }
@@ -217,7 +231,7 @@ void Player::equipPaintWeapon(Vector4 colour) {
 		equippedStunWeapon = NULL;
 	}
 	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 3.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
 }
@@ -290,8 +304,7 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
-	{ 
-		canjump = true;
+	{    if(!justJumped) canjump = true;
 	}
 	return true;
 };

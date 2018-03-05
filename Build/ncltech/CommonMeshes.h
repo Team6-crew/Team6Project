@@ -35,6 +35,10 @@ public:
 	//Sphere
 	static MeshBase* Sphere()		{ return NewSphere(); }
 
+	static MeshBase* StaticSphere() { return m_pSphere; }
+
+	static MeshBase* StaticCube() { return m_pCube; }
+
 
 
 	//PhysicsEngine Checkerboard - Hidden here for reasons of laziness
@@ -43,6 +47,7 @@ public:
 
 protected:
 	//Called by SceneRenderer
+	static void InitializeMeshes();
 	static void ReleaseMeshes();
 	static MeshBase * NewCube();
 	static MeshBase * NewPaintableCube();
