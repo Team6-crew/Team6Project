@@ -27,7 +27,7 @@ public:
 	void shoot();
 	
 	float getSpeed() { return speed; }
-	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; }
+	
 	float getRadius() { return rad; }
 
 	void equipStunWeapon(nclgl::Maths::Vector4 colour);
@@ -37,6 +37,7 @@ public:
 
 	void setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot);
 	void setRelativePosition(nclgl::Maths::Vector3 rel_pos) { relative_position = rel_pos; }
+	nclgl::Maths::Vector3 getRelativePosition() { return relative_position; }
 	void setRadius(float radius) { rad = radius; }
 	void setCamera(Camera* c) { camera = c; }
 	void setStunDuration(float st) { stunDuration = st;
