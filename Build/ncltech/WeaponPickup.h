@@ -8,7 +8,8 @@ public:
 
 	~WeaponPickup();
 
-	virtual void effect(Player* player) {};
-	virtual void shoot() {};
+	virtual void Effect(Player* player) {};
+	virtual void SoftEffect(PlayerSoftBody* player) {};
+	virtual void Shoot() {};
 };
 

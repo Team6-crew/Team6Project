@@ -82,5 +82,25 @@ bool StunProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 		player->setStunDuration(3.0f);
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
 	}
+	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer1)) {
+		PlayerSoftBody* player = (PlayerSoftBody*)otherNode->GetParent();
+		player->setStunDuration(3.0f);
+		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer2)) {
+		PlayerSoftBody* player = (PlayerSoftBody*)otherNode->GetParent();
+		player->setStunDuration(3.0f);
+		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer3)) {
+		PlayerSoftBody* player = (PlayerSoftBody*)otherNode->GetParent();
+		player->setStunDuration(3.0f);
+		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer4)) {
+		PlayerSoftBody* player = (PlayerSoftBody*)otherNode->GetParent();
+		player->setStunDuration(3.0f);
+		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
+	}
 	return true;
 };

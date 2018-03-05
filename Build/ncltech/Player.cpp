@@ -258,7 +258,7 @@ void Player::resetCamera(float dt) {
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		pickup->effect(this);
+		pickup->Effect(this);
 		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
 		return false;
 	}
@@ -272,7 +272,7 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	}
 	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
 		Washingzone* wash = (Washingzone*)otherNode->GetParent();
-		wash->effect(this);
+		wash->Effect(this);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))

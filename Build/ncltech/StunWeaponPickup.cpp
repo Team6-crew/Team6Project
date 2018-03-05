@@ -63,6 +63,10 @@ StunWeaponPickup::~StunWeaponPickup()
 {
 }
 
-void StunWeaponPickup::effect(Player* player) {
+void StunWeaponPickup::Effect(Player* player) {
+	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+}
+
+void StunWeaponPickup::SoftEffect(PlayerSoftBody* player) {
 	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
 }

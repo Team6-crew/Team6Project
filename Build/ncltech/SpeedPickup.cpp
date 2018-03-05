@@ -67,7 +67,14 @@ SpeedPickup::~SpeedPickup()
 {
 }
 
-void SpeedPickup::effect(Player* player) {
+void SpeedPickup::Effect(Player* player) {
 	player->setSpeed(50.0f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+}
+
+void SpeedPickup::SoftEffect(PlayerSoftBody* player) {
+	for (int i = 0; i < 182; ++i) {
+		player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
+	}
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }

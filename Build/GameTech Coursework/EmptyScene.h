@@ -317,6 +317,62 @@ public:
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer1))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer2))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer3))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer4))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
 		return true;
 	}
 
@@ -329,6 +385,62 @@ public:
 			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer1))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer2))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer3))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer4))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_a2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
 		}
 		return true;
 	}
@@ -343,6 +455,62 @@ public:
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer1))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer2))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer3))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer4))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b1")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+			}
+		}
 		return true;
 	};
 
@@ -355,6 +523,62 @@ public:
 			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
 			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer1))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(0)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer2))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(1)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer3))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(2)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
+		}
+		else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer4))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			for (int i = 0; i < 182; ++i)
+			{
+				GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->SetPosition(
+					GameLogic::Instance()->getSoftPlayer(3)->getBall()->softball[i]->Physics()->GetPosition()
+					- FindGameObject("portal_b2")->Physics()->GetPosition()
+					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+			}
 		}
 		return true;
 	};

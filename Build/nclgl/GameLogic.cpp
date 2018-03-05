@@ -46,7 +46,8 @@ void GameLogic::addSoftPlayer(int num_splayers) {
 		nclgl::Maths::Vector3(3.0f * num_splayers, 1.f, 3.0f * num_splayers),
 		1.0f,
 		1.0f,
-		colours[num_splayers]);
+		colours[num_splayers],
+		num_splayers);
 	for (int j = 0; j < 182; ++j)
 		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
 	softplayer->setControls(controls[num_splayers][0], controls[num_splayers][1], controls[num_splayers][2], controls[num_splayers][3], controls[num_splayers][4], controls[num_splayers][5]);
@@ -61,11 +62,11 @@ void GameLogic::calculatePaintPercentage() {
 	for (int k = 0; k < softplayers.size(); k++) 
 	{
 		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
-		/*if (position.y > 1.0f)
+		if (position.y > 1.0f)
 		{
 			continue;
-		}*/
-		//else 
+		}
+		else 
 			if (softplayers[k]->getcanpaint() == false)
 		{
 			softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);

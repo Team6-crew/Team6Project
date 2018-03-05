@@ -1,6 +1,8 @@
 #pragma once
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Softbody.h>
+#include <ncltech\Pickup.h>
+#include <ncltech\Washingzone.h>
 
 
 class PlayerSoftBody
@@ -10,7 +12,8 @@ public:
 		nclgl::Maths::Vector3& pos,
 		float radius,
 		float inverse_mass,
-		nclgl::Maths::Vector4& color);
+		nclgl::Maths::Vector4& color,
+		int tg);
 
 	~PlayerSoftBody();
 
@@ -67,7 +70,7 @@ public:
 	void settime(float t) { time = t; }
 	float gettime() { return time; }
 
-	void stun(float dt);
+	bool stun(float dt);
 
 	int getDebuffTime() { return debuffTime; }
 	void setDebuffTime(int t) { debuffTime = t; }
@@ -101,6 +104,7 @@ private:
 	nclgl::Maths::Vector3 forward;
 
 	float time;
+	int tag;
 
 	float sensitivity;
 	bool canpaint;
@@ -110,4 +114,6 @@ private:
 	bool stunEffect;
 	float tempYaw, tempPitch;
 	int debuffTime;
+
+	nclgl::Maths::Vector4 colour;
 };
