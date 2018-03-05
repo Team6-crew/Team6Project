@@ -11,5 +11,6 @@ public:
 		bool collidable,
 		const nclgl::Maths::Vector4& color);
 	~PaintProjectile();
+	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
 };
 

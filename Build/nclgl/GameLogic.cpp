@@ -25,7 +25,7 @@ GameLogic::GameLogic() {
 
 void GameLogic::addPlayer(int num_player) {
 	Player * player = new Player("Player_"+ num_player,
-		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+		nclgl::Maths::Vector3(3.0f*num_player, 10.0f, 3.0f*num_player),
 		1.0f,
 		true,
 		1.0f,
@@ -35,10 +35,23 @@ void GameLogic::addPlayer(int num_player) {
 	player->setControls(controls[num_player][0], controls[num_player][1], controls[num_player][2], controls[num_player][3], controls[num_player][4], controls[num_player][5]);
 	player->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
 	players.push_back(player);
+	allPlayers.push_back(player);
 	paint_perc.push_back(0.0f);
 }
 
-
+void GameLogic::addNetPlayer(int num_player) {
+	Player * player = new Player("Player_" + num_player,
+		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+		1.0f,
+		true,
+		1.0f,
+		true,
+		colours[num_player]);
+	player->SetPhysics(player->Physics());
+	netPlayers.push_back(player);
+	allPlayers.push_back(player);
+	paint_perc.push_back(0.0f);
+}
 
 void GameLogic::addSoftPlayers(int num_splayers) {
 	for (int i = 0; i < num_splayers; i++) {
@@ -63,21 +76,23 @@ void GameLogic::addSoftPlayers(int num_splayers) {
 	}
 }
 void GameLogic::calculatePaintPercentage() {
-	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
+	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
+
 	
-	for (int k = 0; k < players.size(); k++) 
+	for (int k = 0; k < allPlayers.size(); k++) 
 	{
-		nclgl::Maths::Vector3 position = players[k]->Physics()->GetPosition();
-		if (position.y > 1.0f)
+		nclgl::Maths::Vector3 position = allPlayers[k]->Physics()->GetPosition();
+		if (position.y > gr_pos.y + 1.0f + 1.0f) //ground half dims and player rad
 		{
 			continue;
 		}
-		else if (players[k]->getcanpaint() == false)
+		else if (allPlayers[k]->getcanpaint() == false)
 		{
-			players[k]->settime((players[k]->gettime()) + 1.0f);
-			if (players[k]->gettime() > players[k]->getDebuffTime())
+			allPlayers[k]->settime((allPlayers[k]->gettime()) + 1.0f);
+			if (allPlayers[k]->gettime() > allPlayers[k]->getDebuffTime())
 			{
-				players[k]->setcanpaint(true);
+				allPlayers[k]->setcanpaint(true);
 			}
 			continue;
 		}
@@ -88,20 +103,15 @@ void GameLogic::calculatePaintPercentage() {
 		}*/
 		else
 		{
-			add_rad = players[k]->getadd_rad();
-			if (add_rad == 0)
-			{
-				rad = (rand() % 100)*0.0001f;
-			}
-			else
-			{
-				rad = (rand() % 100)*0.0001f + add_rad;
-			}
-			players[k]->setRadius(rad);
+			add_rad = allPlayers[k]->getadd_rad();
+
+			rad = (rand() % 100)*0.0001f + add_rad;
+
+			allPlayers[k]->setRadius(rad);
 			posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 			posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-			players[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+			allPlayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
 			for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
 				for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
@@ -119,7 +129,7 @@ void GameLogic::calculatePaintPercentage() {
 					}
 				}
 			}
-			players[k]->setadd_rad(0.0f);
+			allPlayers[k]->setadd_rad(0.0f);
 		}
 	}
 }

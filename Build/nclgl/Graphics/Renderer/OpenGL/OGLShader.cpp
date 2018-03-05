@@ -112,7 +112,7 @@ bool OGLShader::LinkProgram() {
 		cout << error;
 		loadFailed = true;
 
-		NCLERROR("    -> Linking Shader: Failed!");
+		//NCLERROR("    -> Linking Shader: Failed!");
 		return false;
 	}
 

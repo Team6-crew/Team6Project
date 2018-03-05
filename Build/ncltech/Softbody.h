@@ -47,8 +47,8 @@ public:
 						dragable,
 						colour);
 					sphere->Physics()->SetElasticity(0.5f);
-					sphere->Physics()->SetFriction(0.5f);
-					sphere->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+					sphere->Physics()->SetFriction(0.05f);
+					sphere->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(100, 0, 0, 100, 0, 0, 100, 0, 0));
 					++k;
 					softball[k] = sphere;
 				}
@@ -65,8 +65,8 @@ public:
 			dragable,
 			colour);
 		endsphere1->Physics()->SetElasticity(0.5f);
-		endsphere1->Physics()->SetFriction(0.5f);
-		endsphere1->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+		endsphere1->Physics()->SetFriction(0.05f);
+		endsphere1->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(100, 0, 0, 100, 0, 0, 100, 0, 0));
 		softball[181] = endsphere1;
 
 		GameObject* endsphere2 = CommonUtils::BuildSphereObject(
@@ -79,8 +79,8 @@ public:
 			dragable,
 			colour);
 		endsphere2->Physics()->SetElasticity(0.5f);
-		endsphere2->Physics()->SetFriction(0.5f);
-		endsphere2->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+		endsphere2->Physics()->SetFriction(0.05f);
+		endsphere2->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(100, 0, 0, 100, 0, 0, 100, 0, 0));
 		softball[0] = endsphere2;
 
 

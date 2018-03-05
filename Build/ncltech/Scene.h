@@ -59,7 +59,7 @@ public:
 
 	float Score = 0.0f;
 	Scene(const std::string& friendly_name)	//Called once at program start - all scene initialization should be done in 'OnInitializeScene'
-		: m_SceneName(friendly_name)
+		: m_SceneName(friendly_name),  loading(false), loaded (0)
 	{}; 
 
 	~Scene()
@@ -184,7 +184,8 @@ public:
 		}
 	}
 
-	
+	bool isLoading() { return loading; }
+	int hasLoaded() { return loaded; }
 
 protected:
 	// Delete all contained Objects
@@ -204,6 +205,8 @@ protected:
 
 
 protected:
+	bool loading;
+	int loaded;
 	std::string					m_SceneName;
 	std::vector<GameObject*>	m_vpObjects;
 	SceneUpdateMap				m_UpdateCallbacks;

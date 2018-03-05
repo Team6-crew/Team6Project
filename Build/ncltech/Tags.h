@@ -3,6 +3,7 @@ enum Tags {
 	Default = 0,
 	TPlayer ,
 	TPickup ,
+	TPaintable,
 	TProjectile,
 	TGround,
 	TCanKiLL,
@@ -11,5 +12,6 @@ enum Tags {
 	TPortal_B1 ,
 	TPortal_A2 ,
 	TPortal_B2 ,
-	TWash
+	TWash,
+	TRamp
 };

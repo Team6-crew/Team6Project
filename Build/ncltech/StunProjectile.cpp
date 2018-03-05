@@ -7,6 +7,8 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 #include "Player.h"
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -23,7 +25,7 @@ StunProjectile::StunProjectile(const std::string& name,
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticSphere(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 
@@ -78,6 +80,7 @@ StunProjectile::~StunProjectile()
 
 bool StunProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPlayer)) {
+		//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"behit.wav", false);
 		Player* player = (Player*)otherNode->GetParent();
 		player->setStunDuration(3.0f);
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);

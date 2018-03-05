@@ -8,6 +8,7 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 #include <ncltech\StunProjectile.h>
+#include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 #include <nclgl\Launchpad.h>
 
@@ -150,20 +151,33 @@ void Player::move(float dt) {
 }
 
 void Player::handleInput(float dt) {
-	Vector3 jump(0, 20, 0);
+	Vector3 jump(0, 15, 0);
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 right = Vector3::Cross(forward, up);
 
+	if (justJumped) justJumped = !justJumped;
+
 	if (Window::GetKeyboard()->KeyDown(move_up))
-	{
-		physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
+	{    
+		if (canjump) {
+			physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
+		}
+		else {
+			physicsNode->SetForce(Vector3(-forward.x, 0.0f, -forward.z) * speed);
+		}
+		
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
 	{
-		physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
+		if (canjump) {
+			physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
+		}
+		else {
+			physicsNode->SetForce(Vector3(forward.x, 0.0f, forward.z) * speed);
+		}
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
@@ -186,34 +200,38 @@ void Player::handleInput(float dt) {
 		if (canjump == true) {
 			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
+			justJumped = true;
 			canjump = false;
 		}
 	}
 
 	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
 	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		shoot();
 	}
 }
 
 void Player::equipStunWeapon(Vector4 colour) {
 	if (equippedPaintWeapon) {
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
 		delete equippedPaintWeapon;
 		equippedPaintWeapon = NULL;
 	}
 	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 3.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 }
 
 void Player::equipPaintWeapon(Vector4 colour) {
 	if (equippedStunWeapon) {
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
 		delete equippedStunWeapon;
 		equippedStunWeapon = NULL;
 	}
 	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 3.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
 }
@@ -270,14 +288,23 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		canjump = false;
 		return false;
 	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
+		RenderNodeBase* otherRenderNode = (*otherNode->GetParent()->Render()->GetChildIteratorStart());
+		Vector4 col1 = otherRenderNode->GetColourFromPlayer();
+		Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
+		if (col1.x != col2.x || col1.y!=col2.y || col1.z != col2.z) {
+			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
+			otherRenderNode->SetBeingPainted(true);
+			otherRenderNode->SetPaintPercentage(0.0f);
+		}
+	}
 	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
 		Washingzone* wash = (Washingzone*)otherNode->GetParent();
 		wash->effect(this);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))
-	{ 
-		canjump = true;
+	{    if(!justJumped) canjump = true;
 	}
 	return true;
 };
@@ -289,6 +316,15 @@ void Player::shoot() {
 		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right*1.5f - forward*2.0f;
 		StunProjectile* projectile = new StunProjectile("p",pos,0.3f,true,0.5f,true, (*renderNode->GetChildIteratorStart())->GetColour());
 		projectile->Physics()->SetLinearVelocity(-forward*40.0f);
+		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
+		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
+	}
+	else if (equippedPaintWeapon) {
+		Vector3 up = Vector3(0, 1, 0);
+		Vector3 right = Vector3::Cross(forward, up);
+		Vector3 pos = physicsNode->GetPosition() + Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
+		PaintProjectile* projectile = new PaintProjectile("p", pos, 0.3f, true, 0.5f, true, (*renderNode->GetChildIteratorStart())->GetColour());
+		projectile->Physics()->SetLinearVelocity(-forward * 40.0f);
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}

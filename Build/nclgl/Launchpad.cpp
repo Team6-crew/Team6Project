@@ -1,7 +1,6 @@
 #include"Launchpad.h"
 #include <ncltech\CommonMeshes.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
-
 Launchpad::Launchpad(const std::string& name,
 	const nclgl::Maths::Vector3& pos,
 	const nclgl::Maths::Vector3& scale,
@@ -9,52 +8,48 @@ Launchpad::Launchpad(const std::string& name,
 	float inverse_mass,
 	bool collidable,
 	const nclgl::Maths::Vector4& color)
-{
-	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
-
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
+	 {
+	RenderNodeBase * rnode = RenderNodeFactory::Instance()->MakeRenderNode();
+	
+	RenderNodeBase * dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
 	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(scale));
 	rnode->AddChild(dummy);
-
 	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));
 	rnode->SetBoundingRadius(0.5f);
-
-	PhysicsNode* pnode = NULL;
+	PhysicsNode * pnode = NULL;
 	if (physics_enabled)
-	{
+		{
 		pnode = new PhysicsNode();
 		pnode->SetPosition(pos);
 		pnode->SetInverseMass(inverse_mass);
 		pnode->SetColRadius(0.5f);
-
 		if (!collidable)
-		{
-			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
-			pnode->SetInverseInertia(CuboidCollisionShape(scale).BuildInverseInertia(inverse_mass));
-		}
+			{
+						//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape	
+				pnode->SetInverseInertia(CuboidCollisionShape(scale).BuildInverseInertia(inverse_mass));
+			}
 		else
-		{
-			CollisionShape* pColshape = new CuboidCollisionShape(scale);
+			{
+			CollisionShape * pColshape = new CuboidCollisionShape(scale);
 			pnode->SetCollisionShape(pColshape);
 			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
+			}
 		}
-	}
-
+	
 	friendlyName = name;
 	renderNode = rnode;
 	physicsNode = pnode;
-
+	
 	setDynamic(false);
-
 	tag = Tags::TLaunch;
-
+	
 	RegisterPhysicsToRenderTransformCallback();
-}
+	}
 
 
 Launchpad::~Launchpad()
-{
-}
+ {
+	}
 
 void Launchpad::Launch(Player* player)
 {

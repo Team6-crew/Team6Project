@@ -29,52 +29,60 @@ GraphicsPipeline::GraphicsPipeline()
 	, shaderPresentToWindow(NULL)
 	, shaderShadow(NULL)
 	, shaderForwardLighting(NULL)
+	, shaderPaint(NULL)
 	, fullscreenQuad(NULL)
 	, shadowFBO(NULL)
 	, TrailBuffer(NULL)
+	, ground(NULL)
+	, flickerPie(0.0f)
+	, toggleFlicker(false)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
 
 	LoadShaders();
 	NCLDebug::_LoadShaders();
-	
+
 	trailQuad = OGLMesh::GenerateQuad();
 	minimap = OGLMesh::GenerateQuad();
 	piemap = OGLMesh::GenerateQuad();
 	tempProj = renderer->GetProjMatrix();
 	tempView = renderer->GetViewMatrix();
 	fullscreenQuad = OGLMesh::GenerateQuad();
-
+	paintQuad = OGLMesh::GenerateQuad();
+	ResourceManager::Instance()->MakeTexture("temp_tex", Texture::COLOUR, 1, 1);
 	renderer->SetDefaultSettings();
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
 	InitializeDefaults();
-	
+
 
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 
 	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
+	ResourceManager::Instance()->MakeTexture("paintable_tex", Texture::COLOUR, 2048, 2048);
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
-	
+	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"loading.png");
 	TextureBase* depth = NULL;
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
-
+	PaintBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("temp_tex"), depth);
 	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
+	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Loading.png");
+	splat_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"splat.png");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
-{  
+{
 	//SAFE_DELETE(camera);
 	for (int i = 0; i < cameras.size(); i++) {
 		SAFE_DELETE(cameras[i]);
 	}
-	
+
 	SAFE_DELETE(fullscreenQuad);
 
 	SAFE_DELETE(shaderPresentToWindow);
@@ -117,7 +125,7 @@ void GraphicsPipeline::LoadShaders()
 	shaderTrail = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/testfrag.glsl");
-	
+
 	shaderCircle = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/circlefrag.glsl");
@@ -134,6 +142,26 @@ void GraphicsPipeline::LoadShaders()
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/TechVertexFull.glsl",
 		SHADERDIR"SceneRenderer/TechFragForwardRender.glsl");
+
+	shaderPaint = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/PaintFrag.glsl");
+
+	shaderLoading = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/loadingFrag.glsl");
+
+	shaderSplat = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/SplatFrag.glsl");
+
+	shaderPaintable = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/PaintableFrag.glsl");
+
+	shaderMap = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/MapFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -146,15 +174,15 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
 		//Color Texture
-		ResourceManager::Instance()->MakeTexture("screenTexColor",Texture::COLOUR, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexColor", Texture::COLOUR, screenTexWidth, screenTexHeight);
 		//Depth Texture
-		ResourceManager::Instance()->MakeTexture("screenTexDepth",Texture::DEPTH, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexDepth", Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
 		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("screenTexColor"), ResourceManager::Instance()->getTexture("screenTexDepth"));
 	}
-	
+
 	//Construct our Shadow Maps and Shadow UBO
-	ResourceManager::Instance()->MakeTexture("shadowTex",Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	ResourceManager::Instance()->MakeTexture("shadowTex", Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
 	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("shadowTex"), false);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
@@ -165,8 +193,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 void GraphicsPipeline::UpdateScene(float dt)
 {
 
-	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
-		camera->HandleMouse(dt);
+	
 
 	for (int i = 0; i < cameras.size(); i++) {
 		cameras[i]->HandleKeyboard(dt);
@@ -187,7 +214,7 @@ void GraphicsPipeline::RenderMenu() {
 	//for (RenderNodeBase* node : allNodes)
 	//	node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
-							//Build Transparent/Opaque Renderlists
+	//Build Transparent/Opaque Renderlists
 
 
 	BuildAndSortRenderLists();
@@ -195,55 +222,6 @@ void GraphicsPipeline::RenderMenu() {
 	//NCLDebug - Build render lists
 	NCLDebug::_BuildRenderLists();
 
-
-	//Build shadowmaps
-	//BuildShadowTransforms();
-	shadowFBO->Activate();
-	renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
-	renderer->Clear(Renderer::DEPTH);
-
-	shaderShadow->Activate();
-	shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-
-	RenderAllObjects(true,
-		[&](RenderNodeBase* node)
-	{
-		shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
-	}
-	);
-
-	//Render scene to screen fbo
-	screenFBO->Activate();
-	renderer->SetViewPort(screenTexWidth, screenTexHeight);
-	renderer->SetClearColour(backgroundColor);
-	renderer->Clear(Renderer::COLOUR_DEPTH);
-
-	shaderForwardLighting->Activate();
-	shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
-	//shaderForwardLighting->SetUniform("uDiffuseTex", 0);
-	shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
-	shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
-	shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
-	shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
-	//shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-	//shaderForwardLighting->SetUniform("uShadowTex", 2);
-	//shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
-
-	//ResourceManager::Instance()->getTexture("shadowTex")->Bind(2);
-
-	RenderAllObjects(false,
-		[&](RenderNodeBase* node)
-	{
-		shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
-		shaderForwardLighting->SetUniform("uColor", node->GetColour());
-	}
-	);
-
-	// Render Screen Picking ID's
-	// - This needs to be somewhere before we lose our depth buffer
-	//   BUT at the moment that means our screen picking is super sampled and rendered at 
-	//   a much higher resolution. Which is silly.
-	//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 	screenFBO->Activate();
 	renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -264,78 +242,147 @@ void GraphicsPipeline::RenderMenu() {
 	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-	 
-	fullscreenQuad->SetTexture(temp_tex);
+
+	fullscreenQuad->ReplaceTexture(temp_tex, 0);
 	fullscreenQuad->Draw();
 
 	//NCLDEBUG - Text Elements (aliased)
 	NCLDebug::_RenderDebugClipSpace();
 	NCLDebug::_ClearDebugLists();
-	
+
+	renderer->BindScreenFramebuffer();
 	renderer->SwapBuffers();
-	
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+
 }
+void GraphicsPipeline::LoadingScreen(float frame) {
 
-void GraphicsPipeline::RenderScene()
+	renderer->SetViewPort(1024, 1024);
+
+	shaderLoading->Activate();
+	PaintBuffer->ChangeColourAttachment(loading_tex);
+	paintQuad->ReplaceTexture(loading_tex, 0);
+	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
+	shaderLoading->SetUniform("radius_perc", frame);
+	paintQuad->Draw();
+		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"), 0);
+		renderer->BindScreenFramebuffer();
+		renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+		renderer->Clear(Renderer::COLOUR_DEPTH);
+		float superSamples = (float)(numSuperSamples);
+		shaderPresentToWindow->Activate();
+		shaderPresentToWindow->SetUniform("uColorTex", 0);
+		shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
+		shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+		shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
+		fullscreenQuad->ReplaceTexture(loading_tex, 0);
+		fullscreenQuad->Draw();
+		renderer->SwapBuffers();
+	}
+void GraphicsPipeline::RenderScene(float dt)
 {
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C) && GameLogic::Instance()->getNumPlayers()>1) {
-
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("circle_tex"),0);
-	}
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Z)) {
-		minimap->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"),0);
-
-	}
-	RenderNodeBase * ground = NULL;
-	for (RenderNodeBase* node : allNodes) {
-		node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
-		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
-			ground = (*node->GetChildIteratorStart());
-		}
-	}
-
+	
 	GameLogic::Instance()->calculatePaintPercentage();
+	FillPaint(dt);
+	if (paintableObjects.size() > 0) {
 
+		renderer->SetViewPort(2048, 2048);
+		PaintBuffer->ChangeColourAttachment(ResourceManager::Instance()->getTexture("paintable_tex"));
+		shaderPaintable->Activate();
+		paintQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("paintable_tex"), 0);
+		GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+		nclgl::Maths::Vector3 gr_pos = grnd->Physics()->GetPosition();
+		int i = 0;
+		for (std::vector<GameObject*>::iterator it = paintableObjects.begin(); it != paintableObjects.end(); it++) {
+			std::string arr = "objects[" + std::to_string(i) + "].";
+			nclgl::Maths::Vector3 halfDims = (*(*it)->Render()->GetChildIteratorStart())->GetHalfDims();
+
+			nclgl::Maths::Vector3 position = (*it)->Physics()->GetPosition();
+			float posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+			float posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+			nclgl::Maths::Vector4 objectColor = (*(*it)->Render()->GetChildIteratorStart())->GetColourFromPlayer();
+			shaderPaintable->SetUniform((arr + "pos_x").c_str(), posX);
+			shaderPaintable->SetUniform((arr + "pos_z").c_str(), posZ);
+			shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x/ WORLD_SIZE, halfDims.z/ WORLD_SIZE));
+			shaderPaintable->SetUniform((arr + "objColor").c_str(), objectColor);
+			i++;
+		}
+		shaderPaintable->SetUniform("num_objects", i);
+		paintQuad->Draw();
+	}
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
-
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
-
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
+	int splatPlayer = -1;
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		std::string arr = "players[" + std::to_string(i) + "].";
-		float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAllPlayer(i)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 
 		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-		shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		if(rad<=0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		else {
+			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+			splatPlayer = i;
+		}
 		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
-
 	}
-
 	trailQuad->Draw();
 
+	if (splatPlayer != -1) {
+		shaderSplat->Activate();
+		splat_tex->Bind(3);
+		shaderSplat->SetUniform("uDiffuseTex", 3);
+		float pos_x = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(splatPlayer)->Render()->GetChildIteratorStart())->GetColour();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+		shaderSplat->SetUniform("pos_x", pos_x);
+		shaderSplat->SetUniform("pos_z", pos_z);
+		shaderSplat->SetUniform("rad", rad);
+		shaderSplat->SetUniform("trailColor", trailColor);
+		trailQuad->Draw();
+	}
 
 
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
-	for (int i = 0; i < GameLogic::Instance()->getNumPlayers() - 1; i++) {
+	int max_score = 0;
+	float max_perc = 0.0f;
+	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
+	}
+	
+	if (flickerPie > 0.5f) {
+		flickerPie = 0.0f;
+		toggleFlicker = !toggleFlicker;
+	}
+	if (toggleFlicker) {
+		max_score = -1;
 	}
 
+	flickerPie += dt;
+	shaderCircle->SetUniform("winning", max_score);
 	trailQuad->Draw();
 
 	ground->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture("gr_tex"), 1);
@@ -350,10 +397,10 @@ void GraphicsPipeline::RenderScene()
 			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
 
-		//NCLDebug - Build render lists
-		NCLDebug::_BuildRenderLists();
+								//NCLDebug - Build render lists
+								//NCLDebug::_BuildRenderLists();
 
-		//Build shadowmaps
+								//Build shadowmaps
 		BuildShadowTransforms();
 		shadowFBO->Activate();
 		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -450,12 +497,15 @@ void GraphicsPipeline::RenderScene()
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
 				renderer->GetViewMatrix().ToIdentity();
-
+				ResourceManager::Instance()->getTexture("paintable_tex")->Bind(3);
+				shaderMap->Activate();
+				shaderMap->SetUniform("uColorTex", 0);
+				shaderMap->SetUniform("uColorTex2", 3);
 				minimap->Draw();
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
-			}		
-			else{
+			}
+			else {
 				tempProj = renderer->GetProjMatrix();
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
@@ -465,7 +515,7 @@ void GraphicsPipeline::RenderScene()
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
 			}
-			
+
 		}
 	}
 
@@ -479,13 +529,13 @@ void GraphicsPipeline::RenderScene()
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->BindScreenFramebuffer();
 	renderer->SwapBuffers();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
 }
 
 void GraphicsPipeline::AdjustViewport(int i, int j) {
 	float width = renderer->GetWidth();
 	float height = renderer->GetHeight();
 	int num_p = GameLogic::Instance()->getTotalPlayers();
-	//int num_p = GameLogic::Instance()->getNumPlayers();
 	if (j == 0) {
 		if (num_p == 1) {
 			renderer->SetViewPort(width, height);
@@ -503,9 +553,8 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 		}
 		else if (num_p == 3) {
 			if (i == 0) {
-				renderer->SetViewPort(width/4, height / 2, width / 2, height / 2);
+				renderer->SetViewPort(width / 4, height / 2, width / 2, height / 2);
 				renderer->Scissor(width / 4, height / 2, width / 2, height / 2);
-
 			}
 			else if (i == 1) {
 				renderer->SetViewPort(0, 0, width / 2, height / 2);
@@ -540,23 +589,23 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 			renderer->Scissor(4 * width / 5, height - width / 5, width / 5, width / 5);
 			renderer->SetViewPort(4 * width / 5, height - width / 5, width / 5, width / 5);
 		}
-		else if (num_p == 2 ) {
-			renderer->Scissor(4 * width / 5, height/2 - width/10, width / 5, width / 5);
+		else if (num_p == 2) {
+			renderer->Scissor(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
 			renderer->SetViewPort(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
 		}
 		else if (num_p == 3) {
 			float size = width / 4.0f;
-			renderer->SetViewPort(0, height / 2 + size/8, size, size);
+			renderer->SetViewPort(0, height / 2 + size / 8, size, size);
 			renderer->Scissor(0, height / 2 + size / 8, size, size);
 		}
 		else if (num_p == 4) {
-			renderer->Scissor(9*width/10, height / 2 - width / 20, width / 10, width / 10);
+			renderer->Scissor(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
 			renderer->SetViewPort(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
 		}
 	}
 	else {
 		if (num_p == 1) {
-			renderer->Scissor(0, height - width/5, width / 5, width / 5);
+			renderer->Scissor(0, height - width / 5, width / 5, width / 5);
 			renderer->SetViewPort(0, height - width / 5, width / 5, width / 5);
 		}
 		else if (num_p == 2) {
@@ -565,7 +614,7 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 		}
 		else if (num_p == 3) {
 			float size = width / 4.0f;
-			renderer->SetViewPort(3*width / 4, height / 2 + size/8, size, size);
+			renderer->SetViewPort(3 * width / 4, height / 2 + size / 8, size, size);
 			renderer->Scissor(3 * width / 4, height / 2 + size / 8, size, size);
 		}
 		else if (num_p == 4) {
@@ -583,7 +632,7 @@ void GraphicsPipeline::Resize(int x, int y)
 		x = 1;
 		y = 1;
 	}
-	
+
 	//Generate/Resize any screen textures (if needed)
 	UpdateAssets(x, y);
 
@@ -605,15 +654,15 @@ void GraphicsPipeline::BuildAndSortRenderLists()
 
 	for (RenderNodeBase* node : allNodes)
 		RecursiveAddToRenderLists(node);
-	
+
 	//Sort transparent objects back to front
 	std::sort(
 		renderlistTransparent.begin(),
 		renderlistTransparent.end(),
 		[](const TransparentPair& a, const TransparentPair& b)
-		{
-			return a.second > b.second;
-		}
+	{
+		return a.second > b.second;
+	}
 	);
 }
 
@@ -699,18 +748,18 @@ void GraphicsPipeline::BuildShadowTransforms()
 		//True non-linear depth ranging from -1.0f (near) to 1.0f (far)
 		float norm_near = compute_depth(lin_near);
 		float norm_far = compute_depth(lin_far);
-		
+
 		//Build Bounding Box around frustum section (Axis Aligned)
 		BoundingBox bb;
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3(-1.0f,  1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f, -1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f,  1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, 1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, -1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, 1.0f, norm_near));
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3(-1.0f,  1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f, -1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f,  1.0f, norm_far));
-		
+		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, 1.0f, norm_far));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, -1.0f, norm_far));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, 1.0f, norm_far));
+
 		//Rotate bounding box so it's orientated in the lights direction
 		// - Rotates bounding box and creates a new AABB that encompasses it
 		bb = bb.Transform(shadowViewMtx);
@@ -734,14 +783,44 @@ Camera* GraphicsPipeline::CreateNewCamera() {
 	return cam;
 }
 
-void GraphicsPipeline::ChangeScene() {
-	
-	cameras.clear();
+void GraphicsPipeline::FillPaint(float dt) {
+	TextureBase* depth = NULL;
+	PaintBuffer->Activate();
+	for (RenderNodeBase* node : allNodes) {
+		node->Update(0.0f);
+		if ((*node->GetChildIteratorStart())->HasTag(Tags::TGround)) {
+			ground = (*node->GetChildIteratorStart());
+		}
+		else if ((*node->GetChildIteratorStart())->HasTag(Tags::TPaintable)) {
+			(*node->GetChildIteratorStart())->SetPaintPercentage((*node->GetChildIteratorStart())->GetPaintPercentage()+0.1f);
+			if ((*node->GetChildIteratorStart())->GetPaintPercentage() >= 100) {
+				(*node->GetChildIteratorStart())->SetPaintPercentage(100);
+				(*node->GetChildIteratorStart())->SetBeingPainted(false);
+			}
+			else {
+				if ((*node->GetChildIteratorStart())->GetBeingPainted()) {
+					shaderPaint->Activate();
+					renderer->SetViewPort(1024, 1024);
+					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
+					paintQuad->ReplaceTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1),0);
+					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
+					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
+					paintQuad->Draw();
+				}
+			}
+		}
+	}
+}
 
+void GraphicsPipeline::ChangeScene() {
+	fullscreenQuad->ReplaceTexture(ResourceManager::Instance()->getTexture("loading_tex"), 0);
+	cameras.clear();
+	fullscreenQuad->Draw();
 	NCLDebug::_ClearDebugLists();
-	NCLDebug::_ReleaseShaders();
+	//NCLDebug::_ReleaseShaders();
 	renderer->BindScreenFramebuffer();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
+	
 }
