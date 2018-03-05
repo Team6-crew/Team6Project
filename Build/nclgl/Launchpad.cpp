@@ -11,7 +11,7 @@ Launchpad::Launchpad(const std::string& name,
 	 {
 	RenderNodeBase * rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	
-	RenderNodeBase * dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
+	RenderNodeBase * dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
 	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(scale));
 	rnode->AddChild(dummy);
 	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));
