@@ -41,7 +41,7 @@ public:
 	void RenderScene(float dt);
 	void LoadingScreen(float frame);
 	void FillPaint(float dt);
-
+	void SplatProjectile(float pos_x, float pos_z, float rad, nclgl::Maths::Vector4 trailColor);
 	//Utils
 	inline Camera* GetCamera() { return camera; }
 	void pushPaintableObject(GameObject * Paintable) { paintableObjects.push_back(Paintable); };
@@ -61,6 +61,7 @@ protected:
 	void RenderAllObjects(bool isShadowPass, std::function<void(RenderNodeBase*)> perObjectFunc = NULL);
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
 	void AdjustViewport(int i, int j);
+
 
 protected:
 

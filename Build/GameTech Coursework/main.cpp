@@ -143,8 +143,6 @@ void HandleKeyboardInputs()
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_G))
 		show_perf_metrics = !show_perf_metrics;
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
-		OcTree::toggle();
 
 
 	

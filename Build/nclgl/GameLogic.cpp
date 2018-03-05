@@ -75,6 +75,40 @@ void GameLogic::addSoftPlayers(int num_splayers) {
 		paint_perc.push_back(0.0f);
 	}
 }
+
+void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, float colourZ) {
+	int playerIndex = 0;
+	for (int i = 0; i < allPlayers.size() ; i++) {
+		if ((*allPlayers[i]->Render()->GetChildIteratorStart())->GetColour().z == colourZ) {
+			playerIndex = i;
+		}
+	}
+
+	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
+	
+	posX = (posX - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+	posZ = 1 - (posZ - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+	radius = radius / WORLD_SIZE;
+
+	for (int i = max((posX - radius) * GROUND_TEXTURE_SIZE, 0); i < min((posX + radius) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+		for (int j = max((posZ - radius) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + radius) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+
+			float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+			if (in_circle < radius*radius * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+				if (world_paint[i][j] == 0) {
+					paint_perc[playerIndex] += increment;
+				}
+				else if (world_paint[i][j] != playerIndex + 1) {
+					paint_perc[playerIndex] += increment;
+					paint_perc[world_paint[i][j] - 1] -= increment;
+				}
+				world_paint[i][j] = playerIndex + 1;
+			}
+		}
+	}
+}
+
 void GameLogic::calculatePaintPercentage() {
 	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
 	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
