@@ -36,5 +36,5 @@ sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::
 	const sce::Vectormath::Scalar::Aos::Vector2 &tb,
 	const sce::Vectormath::Scalar::Aos::Vector2 &tc);
 
-const sce::Vectormath::Scalar::Aos::Vector3& NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 &vec);
+void NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 &vec);
 #endif

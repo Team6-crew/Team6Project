@@ -85,7 +85,7 @@ protected: // Vertex Data
 	sce::Vectormath::Scalar::Aos::Vector3* normals = nullptr;
 	sce::Vectormath::Scalar::Aos::Vector3* tangents = nullptr;
 
-	int*	 indices;
+	int*	 indices = nullptr;
 
 
 protected: // 

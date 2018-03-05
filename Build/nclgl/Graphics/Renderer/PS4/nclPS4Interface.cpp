@@ -101,13 +101,15 @@ sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::
 	return axis * invDet;
 }
 
-const sce::Vectormath::Scalar::Aos::Vector3 & NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 & vec)
+void NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 & vec)
 {
-	
-		float length = sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY() + vec.getZ() * vec.getZ());
+	std::cout << "Vec: " << vec.getX() << ", " << vec.getY() << ", " << vec.getZ() << std::endl;
+	float length = sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY() + vec.getZ() * vec.getZ());
 
-		if (length != 0.0f) {
-			length = 1.0f / length;
+		
+		if (length) 
+		{
+			float norm = 1.0f / length;
 			vec.setX(vec.getX() * length);
 			vec.setY(vec.getY() * length);
 			vec.setZ(vec.getZ() * length);
