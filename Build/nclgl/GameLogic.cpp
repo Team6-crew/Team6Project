@@ -10,6 +10,7 @@ GameLogic::GameLogic() {
 	
 	rad = 0.01f;
 	add_rad = 0.01f;
+	gametime = new GameTimer();   // one min
 	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
 	colours[1] = nclgl::Maths::Vector4(0.3f, 1.0f, 1.0f, 1.0f);
 	colours[2] = nclgl::Maths::Vector4(1.0f, 0.68f, 0.33f, 1.0f);
@@ -112,7 +113,6 @@ void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, f
 void GameLogic::calculatePaintPercentage() {
 	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
 	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
-
 	
 	for (int k = 0; k < allPlayers.size(); k++) 
 	{
@@ -130,11 +130,6 @@ void GameLogic::calculatePaintPercentage() {
 			}
 			continue;
 		}
-		/*else if (position.y < -3.0f)
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
-			continue;
-		}*/
 		else
 		{
 			add_rad = allPlayers[k]->getadd_rad();
@@ -160,12 +155,37 @@ void GameLogic::calculatePaintPercentage() {
 							paint_perc[world_paint[i][j] - 1] -= increment;
 						}
 						world_paint[i][j] = k + 1;
+						allPlayers[k]->setscore(paint_perc[k]);
+						//std::cout << (gametime->GetMS()) << std::endl;
 					}
 				}
 			}
 			allPlayers[k]->setadd_rad(0.0f);
 		}
 	}
+	//std::cout << (gametime->GetMS()) << std::endl;
+	if (gametime->GetMS() >= 10.0f*1000)
+	{
+		for (int i = 0; i < allPlayers.size(); ++i)
+		{
+			playerscore[i] = getPlayer(i)->getscore();
+			temp[i] = getPlayer(i)->getscore();
+		}
+		for (int i = 0; i < allPlayers.size(); i++)
+		{
+			for (int j = 0; j < (allPlayers.size()-1); j++)
+			{
+				if (temp[j] < temp[j + 1])
+					std::swap(temp[j], temp[j + 1]);
+			}
+		}
+		for (int i = 0; i < allPlayers.size(); i++)
+		{
+			if (playerscore[i] == temp[0])
+				std::cout << "The winner is player " << i + 1 << std::endl;
+		}
+	}
+
 }
 
 void GameLogic::setControls(int x, int y, KeyboardKeys key) {

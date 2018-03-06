@@ -5,6 +5,7 @@
 #include <ncltech\Scene.h>
 #include <vector>
 #include <ncltech\PlayerSoftBody.h>
+#include <nclgl\GameTimer.h>
 
 class GameLogic : public TSingleton<GameLogic> {
 
@@ -64,4 +65,8 @@ private:
 	{ KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9 }
 	};
 	float increment;
+	GameTimer* gametime;
+	float start;
+	float playerscore[4];
+	float temp[4];
 };
