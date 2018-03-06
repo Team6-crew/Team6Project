@@ -64,6 +64,7 @@ public:
 		{
 			objMesh->SetGraphicsContext(context);
 		}
+		gfxContext = context;
 	}
 
 protected:
@@ -76,6 +77,8 @@ protected:
 	// Temp - should be a MeshBase* inherited from RenderNoseBase
 	PS4Mesh*	psMesh;
 	PS4OBJMesh* objMesh;
+
+	sce::Gnmx::GnmxGfxContext* gfxContext = nullptr;
 };
 
 #endif

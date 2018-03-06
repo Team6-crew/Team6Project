@@ -26,9 +26,11 @@ void	PS4RenderNode::Draw()
 {
 	if (psMesh)
 	{
+		psMesh->SetGraphicsContext(gfxContext);
 		psMesh->Draw();
 	}
 	if (objMesh) {
+		objMesh->SetGraphicsContext(gfxContext);
 		objMesh->Draw();
 	}
 }
