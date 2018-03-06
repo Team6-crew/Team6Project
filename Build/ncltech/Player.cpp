@@ -303,7 +303,7 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		wash->effect(this);
 		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TGround))
+	else if ((otherNode->GetParent()->physicsNode->GetPosition().y)<(physicsNode->GetPosition().y))
 	{    if(!justJumped) canjump = true;
 	}
 	return true;
