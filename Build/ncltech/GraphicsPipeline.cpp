@@ -262,7 +262,6 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	shaderLoading->Activate();
 	PaintBuffer->ChangeColourAttachment(loading_tex);
 	paintQuad->ReplaceTexture(loading_tex, 0);
-	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
 	shaderLoading->SetUniform("radius_perc", frame);
 	paintQuad->Draw();
 
@@ -279,6 +278,25 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	fullscreenQuad->Draw();
 	renderer->SwapBuffers();
 }
+
+void GraphicsPipeline::SplatProjectile(float pos_x, float pos_z, float rad, Vector4 colour) {
+	TrailBuffer->Activate();
+	GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+	nclgl::Maths::Vector3 gr_pos = grnd->Physics()->GetPosition();
+	renderer->SetViewPort(2048, 2048);
+	shaderSplat->Activate();
+	splat_tex->Bind(3);
+	float posX = (pos_x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+	float posZ = 1 - (pos_z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+	shaderSplat->SetUniform("uDiffuseTex", 3);
+	shaderSplat->SetUniform("pos_x", posX);
+	shaderSplat->SetUniform("pos_z", posZ);
+	shaderSplat->SetUniform("rad", rad/WORLD_SIZE*2.0f);
+	Vector3 trailColor = Vector3(colour.x, colour.y, colour.z);
+	shaderSplat->SetUniform("trailColor", trailColor);
+	trailQuad->Draw();
+}
+
 void GraphicsPipeline::RenderScene(float dt)
 {
 	
