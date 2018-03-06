@@ -219,7 +219,7 @@ void Player::equipStunWeapon(Vector4 colour) {
 		equippedPaintWeapon = NULL;
 	}
 	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 3.0f)));
+	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f,0.3f,1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 }
@@ -231,7 +231,7 @@ void Player::equipPaintWeapon(Vector4 colour) {
 		equippedStunWeapon = NULL;
 	}
 	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 3.0f)));
+	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
 }
@@ -303,8 +303,10 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		wash->effect(this);
 		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TGround))
-	{    if(!justJumped) canjump = true;
+	else if ((otherNode->GetParent()->physicsNode->GetPosition().y + (*otherNode->GetParent()->Render()->GetChildIteratorStart())->GetHalfDims().y*0.97f)
+		<=(physicsNode->GetPosition().y)-physicsNode->GetColRadius())
+	{   
+		if(!justJumped) canjump = true;
 	}
 	return true;
 };

@@ -104,7 +104,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 {
 	Load(filename);
 
-	float step = 6.7f;
+	float step = mapObjects.size()/100.0f;
 	float frame = 0.0f;
 	int paintable_counter = 0;
 	for (auto& object : mapObjects)
@@ -204,6 +204,8 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 			scene->AddGameObject(geometry);
 			break;
 		}
+		frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
 
 
