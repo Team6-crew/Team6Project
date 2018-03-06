@@ -101,8 +101,8 @@ public:
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+		/*frame += step;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);*/
 		
 		//GameObject* testItem = CommonUtils::BuildPaintableCube(
 		//	"Test Item 1",
