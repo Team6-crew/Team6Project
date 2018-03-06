@@ -134,7 +134,7 @@ void PS4Mesh::Draw()
 	if (currentGfxContext)
 	{
 		texture->Bind(0);
-		bumpTexture->Bind(1);
+		//bumpTexture->Bind(1);
 		currentGfxContext->setVertexBuffers(sce::Gnm::ShaderStage::kShaderStageVs, 0, numAttributes, attributeBuffers);
 		currentGfxContext->setPrimitiveType(primitiveType);
 		currentGfxContext->setIndexSize(indexType);
