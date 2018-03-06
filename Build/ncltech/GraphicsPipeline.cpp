@@ -183,9 +183,9 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
 		shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
-		shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-		shaderForwardLighting->SetUniform("uShadowTex", 2);
-		shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
+		//shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
+		//shaderForwardLighting->SetUniform("uShadowTex", 2);
+		//shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
 		//shadowTex->Bind(2);
 
