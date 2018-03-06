@@ -364,31 +364,31 @@ void PlayerSoftBody::move(float dt) {
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 
-		if (bottom->Physics()->GetPosition().y > 500) {
+		if (bottom->Physics()->GetPosition().y > 50) {
 			for (int i = 0; i < 182; ++i) {
 				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			}
 		}
 
-		if (bottom->Physics()->GetLinearVelocity().z < -11) {
+		if (bottom->Physics()->GetLinearVelocity().z < -10) {
 			for (int i = 0; i < 182; ++i) {
 				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			}
 		}
 
-		else if (bottom->Physics()->GetLinearVelocity().z > 11) {
+		else if (bottom->Physics()->GetLinearVelocity().z > 10) {
 			for (int i = 0; i < 182; ++i) {
 				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			}
 		}
 
-		else if (bottom->Physics()->GetLinearVelocity().x > 11) {
+		else if (bottom->Physics()->GetLinearVelocity().x > 10) {
 			for (int i = 0; i < 182; ++i) {
 				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			}
 		}
 
-		else if (bottom->Physics()->GetLinearVelocity().x < -11) {
+		else if (bottom->Physics()->GetLinearVelocity().x < -10) {
 			for (int i = 0; i < 182; ++i) {
 				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 			}
