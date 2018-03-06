@@ -57,7 +57,7 @@ void GameLogic::addNetPlayer(int num_player) {
 void GameLogic::addSoftPlayer(int num_splayers) {
 
 	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
-		nclgl::Maths::Vector3(3.0f * num_splayers, 1.f, 3.0f * num_splayers),
+		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
 		1.0f,
 		1.0f,
 		colours[num_splayers],
@@ -76,7 +76,7 @@ void GameLogic::calculatePaintPercentage() {
 	for (int k = 0; k < softplayers.size(); k++) 
 	{
 		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
-		if (position.y > 1.0f)
+		if (position.y > 10.0f)
 		{
 			continue;
 		}

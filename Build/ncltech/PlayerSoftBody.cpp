@@ -7,6 +7,7 @@
 #include "CommonMeshes.h"
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <ncltech\StunProjectile.h>
+#include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 
 
@@ -170,6 +171,16 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 		canjump = false;
 		return false;
 	}
+	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
+		RenderNodeBase* otherRenderNode = (*otherNode->GetParent()->Render()->GetChildIteratorStart());
+		nclgl::Maths::Vector4 col1 = otherRenderNode->GetColourFromPlayer();
+		nclgl::Maths::Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
+		if (col1.x != col2.x || col1.y != col2.y || col1.z != col2.z) {
+			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
+			otherRenderNode->SetBeingPainted(true);
+			otherRenderNode->SetPaintPercentage(0.0f);
+		}
+	}
 	else if (otherNode->GetParent()->HasTag(Tags::TWash)) {
 		Washingzone* wash = (Washingzone*)otherNode->GetParent();
 		wash->SoftEffect(this);
@@ -188,6 +199,15 @@ void PlayerSoftBody::shoot() {
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
 		StunProjectile* projectile = new StunProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
+		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 40.0f, 0.f, -forward.z * 40.0f));
+		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
+		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
+	}
+	else if (equippedPaintWeapon) {
+		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
+		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
+		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
+		PaintProjectile* projectile = new PaintProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
 		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 40.0f, 0.f, -forward.z * 40.0f));
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
@@ -327,51 +347,53 @@ void PlayerSoftBody::handleInput(float dt) {
 }
 
 void PlayerSoftBody::move(float dt) {
-	nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
-		(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
-		(ball->softball[0]->Physics()->GetPosition().z + ball->softball[181]->Physics()->GetPosition().z) / 2);
+	if (!stun(dt)) {
+		nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
+			(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
+			(ball->softball[0]->Physics()->GetPosition().z + ball->softball[181]->Physics()->GetPosition().z) / 2);
 
-	forward = (camera->GetPosition() - ball_pos).Normalise();
+		forward = (camera->GetPosition() - ball_pos).Normalise();
 
-	nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
-	worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
-	bodyRenderNode->SetTransform(worldTr);
+		nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+		worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
+		bodyRenderNode->SetTransform(worldTr);
 
-	
-	handleInput(dt);
-	bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
-	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
+		handleInput(dt);
+		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
-	if (bottom->Physics()->GetPosition().y >5) {
-		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
+
+		if (bottom->Physics()->GetPosition().y > 500) {
+			for (int i = 0; i < 182; ++i) {
+				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			}
 		}
-	}
 
-	if (bottom->Physics()->GetLinearVelocity().z < -12) {
-		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+		if (bottom->Physics()->GetLinearVelocity().z < -11) {
+			for (int i = 0; i < 182; ++i) {
+				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			}
 		}
-	}
 
-	else if (bottom->Physics()->GetLinearVelocity().z > 12) {
-		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+		else if (bottom->Physics()->GetLinearVelocity().z > 11) {
+			for (int i = 0; i < 182; ++i) {
+				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			}
 		}
-	}
 
-	else if (bottom->Physics()->GetLinearVelocity().x > 12) {
-		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+		else if (bottom->Physics()->GetLinearVelocity().x > 11) {
+			for (int i = 0; i < 182; ++i) {
+				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			}
 		}
-	}
 
-	else if (bottom->Physics()->GetLinearVelocity().x < -12) {
-		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+		else if (bottom->Physics()->GetLinearVelocity().x < -11) {
+			for (int i = 0; i < 182; ++i) {
+				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			}
 		}
+		else
+			return;
 	}
-	else
-		return;
 }

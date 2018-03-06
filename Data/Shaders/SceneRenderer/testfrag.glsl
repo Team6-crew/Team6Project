@@ -4,7 +4,7 @@ uniform struct Player {
 	 float pos_x;
 	 float pos_z;
 	 float rad;
-	vec3 trailColor;
+	 vec3 trailColor;
 } players[4];
 uniform int num_players;
 in Vertex	{

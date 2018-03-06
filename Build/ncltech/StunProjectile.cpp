@@ -7,8 +7,10 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
 #include "Player.h"
+#include "PlayerSoftBody.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
+#include <nclgl\GameLogic.h>
 
 using namespace nclgl::Maths;
 
@@ -86,13 +88,11 @@ bool StunProjectile::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer1)) {
-		PlayerSoftBody* player = (PlayerSoftBody*)otherNode->GetParent();
-		player->setStunDuration(3.0f);
+		GameLogic::Instance()->getSoftPlayer(0)->setStunDuration(3.0f);
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer2)) {
-		PlayerSoftBody* player = (PlayerSoftBody*)otherNode->GetParent();
-		player->setStunDuration(3.0f);
+		GameLogic::Instance()->getSoftPlayer(1)->setStunDuration(3.0f);
 		PhysicsEngine::Instance()->DeleteAfter(this, 0.0f);
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TSoftPlayer3)) {
