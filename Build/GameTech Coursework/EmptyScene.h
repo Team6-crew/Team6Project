@@ -12,6 +12,7 @@
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
 #include <nclgl/GameLogic.h>
+#include <nclgl/MapNavigation.h>
 
 
 //Fully striped back scene to use as a template for new scenes.
@@ -36,8 +37,8 @@ public:
 	virtual void OnInitializeScene() override
 	{
 		Scene::OnInitializeScene();
-	
-		int players = 3;
+		
+		int players = 1;
 		GameLogic::Instance()->addPlayers(players);
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers();i++) {
@@ -45,10 +46,12 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 		int aiPlayers = 4 - players;
-		BallAI::addBallAIPlayers(aiPlayers);
+		BallAI::addBallAIPlayers(1);
 		for (int i = 0; i < GameLogic::Instance()->getNumAIPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(i));
 		}
+		//MapNavigation::MapNavigation();
+		
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",

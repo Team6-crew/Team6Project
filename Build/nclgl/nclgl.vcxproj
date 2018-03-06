@@ -36,6 +36,7 @@
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="MapNavigation.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MapNavigation.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />

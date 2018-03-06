@@ -13,6 +13,7 @@
 #include <algorithm> //used for remove
 #include "RoamingState.h"
 #include <nclgl\CollectandUsePickupState.h>
+
 float maxVel = 5.0f;
 
 using namespace std;
@@ -100,6 +101,8 @@ void BallAI::addBallAIPlayers(int numBallAI)
 	nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(255.0f, 255.0f, 255.0f, 1.0f);
 	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
 
+	
+
 	for (int i = 0; i < numBallAI; i++)
 	{
 		BallAI * AIBall = new BallAI("AIPlayer"+(i),
@@ -112,9 +115,12 @@ void BallAI::addBallAIPlayers(int numBallAI)
 		AIBall->SetPhysics(AIBall->Physics());
 
 		GameLogic::Instance()->addAIPlayer(AIBall);
+		MapNavigation *mp = new MapNavigation();
 		AIBall->AIStateMachine = new StateMachine(AIBall);
 		AIBall->AIStateMachine->setCurrentState(AIBall->AIStateMachine, RoamingState::GetInstance());
 		AIBall->setStateMachine(AIBall->AIStateMachine);
+		
+		AIBall->setMapNavigation(mp);
 
 		cout << "AI Player " << i << " created \n";
 
@@ -174,7 +180,8 @@ void BallAI::addBallAIPlayers(int numBallAI)
 
 void BallAI::move()
 {	
-		BallAI::getStateMachine()->getCurrentState()->update(BallAI::getStateMachine());
+	BallAI::getMapNavigation()->usePath();
+	//BallAI::getStateMachine()->getCurrentState()->update(BallAI::getStateMachine());
 	
 }
 

@@ -87,6 +87,9 @@
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="AI\BallAI.cpp" />
+    <ClCompile Include="MapNavigation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -199,5 +202,8 @@
     <ClInclude Include="AI\StateMachine.h" />
     <ClInclude Include="CollectandUsePickupState.h" />
     <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="MapNavigation.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

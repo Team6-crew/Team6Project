@@ -2,6 +2,7 @@
 #include <ncltech\CommonUtils.h>
 #include <vector>
 #include "Messenger.h"
+#include <nclgl\MapNavigation.h>
 
 class StateMachine;
 
@@ -31,6 +32,8 @@ public:
 	bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode);
 	void setStateMachine(StateMachine* a) { AIStateMachine = a; }
 	StateMachine* getStateMachine() { return AIStateMachine; }
+	void setMapNavigation(MapNavigation* a) { MapNav = a; }
+	MapNavigation* getMapNavigation() { return MapNav; }
 	int getCurrentNode() { return currentNode; }
 	void increaseCurrentNode() { currentNode = (currentNode + 1) % nodesList.size();; }
 	void resetCurrentNode() { currentNode = 0; }
@@ -45,6 +48,7 @@ private:
 	nclgl::Maths::Vector3 relative_position;
 	std::vector<StateMachine*> stateMachines;
 	StateMachine * AIStateMachine;
+	MapNavigation * MapNav;
 	
 };
 
