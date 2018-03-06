@@ -24,6 +24,8 @@ _-_-_-_-_-_-_-""  ""
 #include "../../../Vector4.h"
 #include "../OBJMeshBase.h"
 #include "../RenderNodeBase.h"
+#include "OGLMesh.h"
+#include "OGLOBJMesh.h"
 
 class MeshBase;
 
@@ -48,7 +50,24 @@ public:
 	const  nclgl::Maths::Vector3	GetModelScale()		const			override;
 	void							SetModelScale(const  nclgl::Maths::Vector3 &s)		override;
 
+
+	// Mesh
+	inline MeshBase*						GetMesh() { return mesh; }
+	inline void								SetMesh(MeshBase* newMesh) { mesh = (OGLMesh*)newMesh; }
+
+	//obj Mesh
+	inline OBJMeshBase*						GetOBJMesh() { return objmesh; }
+	inline void								SetOBJMesh(OBJMeshBase* newMesh) { objmesh = (OGLOBJMesh*)newMesh; }
+
+
+
+	inline bool								IsRenderable() { return (mesh != nullptr || objmesh != nullptr); }
+
 protected:
+
+	OGLMesh * mesh;
+	OGLOBJMesh* objmesh;
+
 	 nclgl::Maths::Matrix4		worldTransform;
 	 nclgl::Maths::Matrix4		transform;
 

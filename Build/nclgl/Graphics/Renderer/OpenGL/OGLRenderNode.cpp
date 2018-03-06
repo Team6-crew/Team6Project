@@ -9,8 +9,8 @@ using namespace nclgl::Maths;
 OGLRenderNode::OGLRenderNode(MeshBase* mesh,OBJMeshBase * objm, Vector4 colour) :
 	RenderNodeBase()
 {
-	this->mesh			= mesh;
-	this->objmesh = objm;
+	this->mesh			= (OGLMesh*)mesh;
+	this->objmesh = (OGLOBJMesh*)objm;
 	this->colour		= colour;
 	modelScale			= Vector3(1,1,1);
 }

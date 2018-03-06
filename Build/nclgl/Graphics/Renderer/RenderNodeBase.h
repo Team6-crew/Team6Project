@@ -36,16 +36,16 @@ public:
 	virtual void							SetColour(const nclgl::Maths::Vector4 &c) = 0;
 
 	// Mesh
-	inline MeshBase*						GetMesh() { return mesh; }
-	inline void								SetMesh(MeshBase* newMesh) { mesh = newMesh; } 
+	virtual MeshBase*						GetMesh() = 0;
+	virtual void								SetMesh(MeshBase* newMesh) = 0;
 
 	//obj Mesh
-	inline OBJMeshBase*						GetOBJMesh() { return objmesh; }
-	inline void								SetOBJMesh(OBJMeshBase* newMesh) { objmesh = newMesh; }
+	virtual OBJMeshBase*						GetOBJMesh() = 0;
+	virtual void								SetOBJMesh(OBJMeshBase* newMesh) = 0;
 
 
 
-	inline bool								IsRenderable() { return (mesh != nullptr || objmesh != nullptr); }
+	virtual bool								IsRenderable() = 0;
 
 	// Children
 	void	AddChild(RenderNodeBase* s);
@@ -67,8 +67,6 @@ protected:
 	std::vector<RenderNodeBase*> children;
 	RenderNodeBase*	parent = nullptr;
 
-	MeshBase*	mesh;
-	OBJMeshBase* objmesh;
 
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;
