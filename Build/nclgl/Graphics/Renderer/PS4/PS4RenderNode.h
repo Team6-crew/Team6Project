@@ -65,6 +65,13 @@ public:
 			objMesh->SetGraphicsContext(context);
 		}
 		gfxContext = context;
+		for (auto itr = GetChildIteratorStart(); itr != GetChildIteratorEnd(); itr++)
+		{
+			PS4RenderNode* iter = (PS4RenderNode*) *itr;
+			iter->SetGraphicsContext(context);
+		}
+			
+
 	}
 
 protected:

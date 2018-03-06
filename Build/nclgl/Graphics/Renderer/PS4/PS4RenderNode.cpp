@@ -19,7 +19,7 @@ PS4RenderNode::~PS4RenderNode()
 
 void	PS4RenderNode::Update(float msec)
 {
-	//RenderNodeBase::Update(msec);
+	RenderNodeBase::Update(msec);
 }
 
 void	PS4RenderNode::Draw()
