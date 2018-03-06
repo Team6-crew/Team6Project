@@ -1,0 +1,7 @@
+List of known erros:
+
+what if uniform not present
+check default settings function/primative setup in wrong place?
+set texture filtering/wraping not implemented or wrong place?
+screen framebuffer probably not working
+inverse in shader
