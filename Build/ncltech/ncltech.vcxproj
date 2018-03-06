@@ -145,6 +145,7 @@
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="Manifold.cpp" />
     <ClCompile Include="Memory Management\MemoryManager.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
     <ClCompile Include="OcTree.cpp" />
     <ClCompile Include="Paintbomp.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Paintbomb.h" />
     <ClInclude Include="Memory Management\HeapMemory.h" />
     <ClInclude Include="Memory Management\HeapFactory.h" />

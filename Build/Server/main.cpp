@@ -40,12 +40,16 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 #include <nclgl\common.h>
 #include <ncltech\NetworkBase.h>
 #include <map>
+#include <ncltech/Menu.h>
 #include <ncltech/PhysicsEngine.h>
+#include <ncltech/GraphicsPipeline.h>
+#include <ncltech/SceneManager.h>
+#include "../GameTech Coursework/LanScene.h"
 //Needed to get computer adapter IPv4 addresses via windows
 #include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
-
-
+class Menu;
+bool gameStarted = false;
 #define SERVER_PORT 1234
 #define UPDATE_TIMESTEP (1.0f / 30.0f) //send 30 position updates per second
 void eraseElement(ENetPeer* Item);
@@ -83,15 +87,19 @@ int main(int arcg, char** argv)
 
 
 	Win32_PrintAllAdapterIPAddresses();
+	GraphicsPipeline::Instance();
 	PhysicsEngine::Instance();
+	SceneManager::Instance()->EnqueueScene(new LanScene("Lan Project"));
 	timer.GetTimedMS();
 	while (true)
 	{
-
-		float dt = timer.GetTimedMS() * 0.001f;
+		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
+																			//Update Performance Timers (Show results every second)
 		accum_time += dt;
 		rotation += 0.5f * PI * dt;
+		if (gameStarted) {
 
+		}
 		//Handle All Incoming Packets and Send any enqued packets
 		server.ServiceNetwork(dt, [&](const ENetEvent& evnt)
 		{
@@ -120,6 +128,7 @@ int main(int arcg, char** argv)
 					PlayersConnected.BroadcastPacket(server.m_pNetwork);
 					if (SocketId == "REDY" && PlayerMap.size()>1 && PlayerMap.size() == readys) {
 						MySocket StartGame("STRT");
+						gameStarted = true;
 						StartGame.BroadcastPacket(server.m_pNetwork);
 					}
 				}

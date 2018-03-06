@@ -138,6 +138,10 @@
     <ClInclude Include="Washingzone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Paintbomb.h" />
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -234,6 +238,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Washingzone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Paintbomp.cpp" />
+    <ClCompile Include="Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

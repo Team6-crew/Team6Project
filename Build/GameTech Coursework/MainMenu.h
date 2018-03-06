@@ -4,7 +4,7 @@
 #include <ncltech\CommonUtils.h>
 #include <ncltech\OcTree.h>
 #include "../ncltech/ScreenPicker.h"
-#include "Menu.h"
+#include <ncltech/Menu.h>
 #include <map>
 #include <ncltech\GameObject.h>
 #include <ncltech\CommonMeshes.h>
@@ -430,7 +430,7 @@ public:
 			case (1000):
 			{
 				if (!entering_IP) {
-					string_IP = "10.58.207.248:1234";
+					string_IP = "10.70.33.2:1234";
 					entering_IP = true;
 					activeMenu->replaceMenuItem(0, "IP: " + string_IP);
 				}
