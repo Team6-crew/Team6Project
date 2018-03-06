@@ -65,7 +65,11 @@ StunWeaponPickup::~StunWeaponPickup()
 {
 }
 
-void StunWeaponPickup::effect(Player* player) {
+void StunWeaponPickup::Effect(Player* player) {
 	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
+}
+
+void StunWeaponPickup::SoftEffect(PlayerSoftBody* player) {
+	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
 }

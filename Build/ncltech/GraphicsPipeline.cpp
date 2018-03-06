@@ -331,35 +331,54 @@ void GraphicsPipeline::RenderScene(float dt)
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers());
 	int splatPlayer = -1;
-	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
-		std::string arr = "players[" + std::to_string(i) + "].";
-		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getAllPlayer(i)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
-		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+	for (int i = 0; i < GameLogic::Instance()->getTotalPlayers(); i++) {
+		if (i < GameLogic::Instance()->getNumPlayers()) {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			else {
+				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+				splatPlayer = i;
+			}
+			trailQuad->Draw();
 
-		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
-		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-		if(rad<=0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-		else {
-			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-			splatPlayer = i;
 		}
-		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+		else {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			else {
+				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+				splatPlayer = i;
+			}
+			trailQuad->Draw();
+		}
 	}
-	trailQuad->Draw();
 
 	if (splatPlayer != -1) {
 		shaderSplat->Activate();
 		splat_tex->Bind(3);
 		shaderSplat->SetUniform("uDiffuseTex", 3);
-		float pos_x = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(splatPlayer)->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(splatPlayer)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 		shaderSplat->SetUniform("pos_x", pos_x);
 		shaderSplat->SetUniform("pos_z", pos_z);
@@ -372,15 +391,15 @@ void GraphicsPipeline::RenderScene(float dt)
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumSoftPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
 	int max_score = 0;
 	float max_perc = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
 			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
 			max_score = i;
@@ -388,7 +407,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
-		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 	}
 	
 	if (flickerPie > 0.5f) {

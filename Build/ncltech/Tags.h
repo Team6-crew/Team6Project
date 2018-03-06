@@ -2,6 +2,10 @@
 enum Tags {
 	Default = 0,
 	TPlayer ,
+	TSoftPlayer1 ,
+	TSoftPlayer2,
+	TSoftPlayer3,
+	TSoftPlayer4,
 	TPickup ,
 	TPaintable,
 	TProjectile,
