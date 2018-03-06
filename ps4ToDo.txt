@@ -5,3 +5,9 @@ check default settings function/primative setup in wrong place?
 set texture filtering/wraping not implemented or wrong place?
 screen framebuffer probably not working
 inverse in shader
+
+When stuck:
+Fix RenderNode horribleness
+
+AFTER/LOW PROBABILITY
+Set sampler in register texture not general

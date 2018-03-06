@@ -4,7 +4,7 @@
 #include "nclPS4Interface.h"
 
 #include "PS4Mesh.h"
-
+#include "PS4OBJMesh.h"
 #include "../RenderNodeBase.h"
 #include <nclgl\Vector4.h>
 
@@ -44,9 +44,13 @@ public:
 
 
 	inline void SetGraphicsContext(sce::Gnmx::GnmxGfxContext* context) { 
-		if (mesh)
+		if (psMesh)
 		{
-			mesh->SetGraphicsContext(context);
+			psMesh->SetGraphicsContext(context);
+		}
+		if (objMesh)
+		{
+			objMesh->SetGraphicsContext(context);
 		}
 	}
 
@@ -58,7 +62,8 @@ protected:
 	sce::Vectormath::Scalar::Aos::Vector3			modelScale;
 
 	// Temp - should be a MeshBase* inherited from RenderNoseBase
-	PS4Mesh*	mesh;
+	PS4Mesh*	psMesh;
+	PS4OBJMesh* objMesh;
 };
 
 #endif

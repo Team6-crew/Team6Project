@@ -7,8 +7,10 @@
 
 PS4RenderNode::PS4RenderNode(MeshBase* m, OBJMeshBase* objm, nclgl::Maths::Vector4 colour)
 {
-	mesh = (PS4Mesh*)m;
+	mesh = m;
 	objmesh = objm;
+	objMesh = (PS4OBJMesh*)objm;
+	psMesh = (PS4Mesh*)m;
 	this->colour = nclToPS4(colour);
 }
 
@@ -27,6 +29,9 @@ void	PS4RenderNode::Draw()
 	if (mesh)
 	{
 		mesh->Draw();
+	}
+	if (objmesh) {
+		objmesh->Draw();
 	}
 }
 

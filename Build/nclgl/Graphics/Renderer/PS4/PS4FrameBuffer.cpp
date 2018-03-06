@@ -1,6 +1,6 @@
 #ifdef PSTATION4
 #include "PS4FrameBuffer.h"
-
+#include <iostream>
 
 PS4FrameBuffer::~PS4FrameBuffer()
 {
@@ -109,6 +109,7 @@ uint PS4FrameBuffer::GetHeight()
 void PS4FrameBuffer::Activate()
 {
 	if (currentGFXContext == nullptr) {
+		std::cout << "CurrentGFXContext is nullptr, returning. \n";
 		return;
 	}
 	else {
