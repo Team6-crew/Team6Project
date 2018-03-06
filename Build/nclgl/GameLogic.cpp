@@ -97,16 +97,11 @@ void GameLogic::calculatePaintPercentage() {
 		}*/
 		else
 		{
-			add_rad = softplayers[k]->getadd_rad();
-			if (add_rad == 0)
-			{
-				rad = (rand() % 100)*0.0001f;
-			}
-			else
-			{
-				rad = (rand() % 100)*0.0001f + add_rad;
-			}
-			softplayers[k]->setRadius(rad);
+			add_rad = allPlayers[k]->getadd_rad();
+			float x = allPlayers[k]->Physics()->GetColRadius();
+			rad = (rand() % 100)*allPlayers[k]->Physics()->GetColRadius()/ (WORLD_SIZE*100.0f) + add_rad;
+			
+			allPlayers[k]->setRadius(rad);
 			posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 			posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 

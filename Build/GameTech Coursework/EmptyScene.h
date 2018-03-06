@@ -31,6 +31,9 @@ class EmptyScene : public Scene
 public:
 
 	float rotation = 0.0f;
+	int volumelevel = 5;
+	int tempvolumelevel = 0;
+	bool isPaused = false;
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
@@ -40,24 +43,30 @@ public:
 		pauseMenu->visible = false;
 		pauseMenu->AddMenuItem("Resume");
 		pauseMenu->AddMenuItem("Sound");
-		pauseMenu->AddMenuItem("Controls");
 		pauseMenu->AddMenuItem("Back to Main Menu");
 		pauseMenu->AddMenuItem("Exit Game");
-		pauseMenu->setSelection(-1);
+		pauseMenu->setSelection(0);
+		pauseMenu->set_id(1);
+		activeMenu = NULL;
+		// Sound Menu
+		soundMenu = new Menu();
+		soundMenu->visible = false;
+		soundMenu->AddMenuItem("Volume " + std::to_string(volumelevel));
+		soundMenu->AddMenuItem("Back");
+		soundMenu->setSelection(0);
+		soundMenu->set_id(2);
 	}
 
 	virtual ~EmptyScene()
 	{
-		delete player1;
+
 	}
 
 	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
 	{
-		float step = 6.7f;
-		float frame = 0.0f;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
@@ -70,8 +79,6 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
-		frame += step * 2.0f;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
 
 		//Add player to scene
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
@@ -129,8 +136,7 @@ public:
 		//testItem2->SetTag(Tags::TPaintable);
 		//(*testItem2->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 		
 		SpeedPickup* pickup = new SpeedPickup("pickup",
 			nclgl::Maths::Vector3(-88.0f, 10.0f, -88.0f),
@@ -142,8 +148,6 @@ public:
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
 
 		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
 			nclgl::Maths::Vector3(10.0f, 5.0f, 0.0f),
@@ -155,8 +159,7 @@ public:
 		weapon->SetPhysics(weapon->Physics());
 		this->AddGameObject(weapon);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 
 		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
 			nclgl::Maths::Vector3(-10.0f, 5.0f, 0.0f),
@@ -168,8 +171,7 @@ public:
 		weapon2->SetPhysics(weapon2->Physics());
 		this->AddGameObject(weapon2);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(0.0f, 2.0f, -88.0f),
@@ -181,8 +183,7 @@ public:
 		paintbomb->SetPhysics(paintbomb->Physics());
 		this->AddGameObject(paintbomb);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+		
 
 		Launchpad* launchpad = new Launchpad(
 			"launchpad",
@@ -195,8 +196,6 @@ public:
 		launchpad->SetPhysics(launchpad->Physics());
 		this->AddGameObject(launchpad);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
 
 		//portal a1
 		Portal* portal_a1 = new Portal(
@@ -216,8 +215,7 @@ public:
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
 		this->AddGameObject(portal_a1);
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 
 		//portal a2
 		Portal* portal_a2 = new Portal(
@@ -238,8 +236,6 @@ public:
 		);
 		this->AddGameObject(portal_a2);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
 
 		//portal b1
 		Portal* portal_b1 = new Portal(
@@ -260,8 +256,7 @@ public:
 		);
 		this->AddGameObject(portal_b1);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 
 		//portal b2
 		Portal* portal_b2 = new Portal(
@@ -282,8 +277,7 @@ public:
 		);
 		this->AddGameObject(portal_b2);
 
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 
 		Washingzone* washingzone = new Washingzone("washingzone",
 			nclgl::Maths::Vector3(0.0f, 3.0f, 50.0f),
@@ -309,67 +303,112 @@ public:
 		}
 
 		Scene::OnUpdateScene(dt);
-		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
 		rotation = 0.1f;
-		if(pickup)
-		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
-			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
+		if (pickup)
+			(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation,
+				nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
+
 		// Pause Menu
+
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
 		{
-
-			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-			if (pauseMenu->visible == false) {
-				pauseMenu->setSelection(0);
-				pauseMenu->visible = true;
+			isPaused = !isPaused;
+			if (activeMenu == NULL) {
+				activeMenu = pauseMenu;
 			}
-			else {
-				pauseMenu->setSelection(-1);
+			else if (activeMenu != NULL) {
+				activeMenu = NULL;
+			}
+			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+			tempvolumelevel = 0;
+			if (!isPaused)
+			{
+				tempvolumelevel = volumelevel;
+			}
+			AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
+
+
+			//if (pauseMenu->visible == false) {
+			//	pauseMenu->setSelection(0);
+			//	pauseMenu->visible = true;
+			//}
+			//else {
+			//	pauseMenu->setSelection(-1);
+			//	pauseMenu->visible = false;
+			//}
+		}
+		if (activeMenu != NULL) {
+			activeMenu->ShowPauseMenu();
+			if (activeMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN)) {
+				if (activeMenu == pauseMenu) {
+					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+					activeMenu = NULL;
+					//tempvolumelevel = 0;
+					isPaused = !isPaused;
+					if (!isPaused)
+					{
+						tempvolumelevel = volumelevel;
+					}
+					AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
+				}
+			}
+			else if (activeMenu->getSelection() == 0 && activeMenu == soundMenu) {
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
+					volumelevel -= 1;
+					//AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
+					//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
+					tempvolumelevel = volumelevel;
+				}
+				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
+					volumelevel += 1;
+
+					tempvolumelevel = volumelevel;
+					//AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
+					//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
+				}
+				activeMenu->replaceMenuItem(activeMenu->getSelection(), "Volume " + std::to_string(volumelevel));
+			}
+			else if (pauseMenu->getSelection() == 1 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN)) {
+				if (activeMenu == pauseMenu) {
+					pauseMenu->visible = false;
+					activeMenu = soundMenu;
+					//activeMenu->ShowMenu();
+				}
+				else if (activeMenu == soundMenu) {
+					activeMenu = pauseMenu;
+				}
+			}
+			else if (pauseMenu->getSelection() == 2 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+			{
 				pauseMenu->visible = false;
+				SceneManager::Instance()->JumpToScene("Main Menu");
+				//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+				activeMenu = NULL;
+
+				//Delete objects from the scene
 			}
-		}
-		//Navigate choices
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
-		{
-			if (pauseMenu->visible == true) { pauseMenu->MoveUp(); }
-			else { pauseMenu->MoveUp(); }
-		}
-
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN))
-		{
-			if (pauseMenu->visible == true) { pauseMenu->MoveDown(); }
-			else { pauseMenu->MoveDown(); }
-		}
-		if (pauseMenu->visible == true) {
-			pauseMenu->ShowMenu();
+			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
+			{
+				exit(0);
+			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
 		}
 
+		
 
-		//Change Menus
-		if (pauseMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
-		{
-			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-			pauseMenu->visible = false;
-		}
-		else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
-		{
-			pauseMenu->visible = false;
-			SceneManager::Instance()->JumpToScene("Main Menu");
-			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-		}
-		else if (pauseMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
-		{
-			exit(0);
-		}
 
-		//camera->SetPosition(cam->GetWorldTransform().GetPositionVector());
+
+
+
+
 	}
 
 
@@ -378,8 +417,8 @@ public:
 		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
 		{
 			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
-			PhysicsEngine::Instance()->DeleteAfter(kill_ob,0.0f);
-		}	
+			PhysicsEngine::Instance()->DeleteAfter(kill_ob, 0.0f);
+		}
 		return true;
 	}
 
@@ -658,14 +697,16 @@ public:
 		}
 		return true;
 	};
-
 private:
 	RenderNode * cam;
-
 	GameObject *body;
 	GameObject *ball;
 
 	Menu * pauseMenu;
+	Menu * activeMenu;
+	Menu * activeSubmenu;
+	Menu * soundMenu;
 
 	float Score = 0.0f;
+
 };
