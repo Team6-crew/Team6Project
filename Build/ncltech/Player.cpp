@@ -303,8 +303,10 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		wash->effect(this);
 		return false;
 	}
-	else if ((otherNode->GetParent()->physicsNode->GetPosition().y)<(physicsNode->GetPosition().y))
-	{    if(!justJumped) canjump = true;
+	else if ((otherNode->GetParent()->physicsNode->GetPosition().y + (*otherNode->GetParent()->Render()->GetChildIteratorStart())->GetHalfDims().y*0.97f)
+		<=(physicsNode->GetPosition().y)-physicsNode->GetColRadius())
+	{   
+		if(!justJumped) canjump = true;
 	}
 	return true;
 };

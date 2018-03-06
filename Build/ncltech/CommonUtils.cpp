@@ -221,6 +221,7 @@ GameObject* CommonUtils::BuildCuboidObject(
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
+	dummy->SetHalfDims(halfdims);
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(Matrix4::Translation(pos));
@@ -281,6 +282,7 @@ GameObject* CommonUtils::BuildGroundCuboidObject(
 
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
 	dummy->SetTransform(Matrix4::Scale(halfdims));
+	dummy->SetHalfDims(halfdims);
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(Matrix4::Translation(pos));
