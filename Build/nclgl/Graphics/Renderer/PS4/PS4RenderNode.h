@@ -42,6 +42,18 @@ public:
 	nclgl::Maths::Vector4			GetColour() override;
 	void							SetColour(const nclgl::Maths::Vector4 &c) override;
 
+	// Mesh
+	inline MeshBase*						GetMesh() { return psMesh; }
+	inline void								SetMesh(MeshBase* newMesh) { psMesh = (PS4Mesh*)newMesh; }
+
+	//obj Mesh
+	inline OBJMeshBase*						GetOBJMesh() { return objMesh; }
+	inline void								SetOBJMesh(OBJMeshBase* newMesh) { objMesh = (PS4OBJMesh*)newMesh; }
+
+
+
+	inline bool								IsRenderable() { return (psMesh != nullptr || objMesh != nullptr); }
+
 
 	inline void SetGraphicsContext(sce::Gnmx::GnmxGfxContext* context) { 
 		if (psMesh)
