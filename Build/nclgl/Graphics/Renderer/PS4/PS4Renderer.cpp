@@ -85,7 +85,7 @@ void	PS4Renderer::Clear(Renderer::Clear clearType)
 
 void	PS4Renderer::BindScreenFramebuffer()
 {
-
+	FrameBuffers[currentScreenBuffer]->Activate();
 }
 
 
