@@ -36,6 +36,9 @@ PS4Renderer::PS4Renderer() :
 	currentScreenBuffer = 0;
 	prevScreenBuffer = 0;
 
+	width = 1920;
+	height = 1080;
+
 	InitialiseMemoryAllocators();
 	InitialiseGCMRendering();
 	InitialiseVideoSystem();
@@ -107,6 +110,10 @@ void	PS4Renderer::SetDefaultSettings()
 	primitiveSetup.init();
 	primitiveSetup.setCullFace(kPrimitiveSetupCullFaceFront);
 	primitiveSetup.setFrontFace(kPrimitiveSetupFrontFaceCcw);
+	if (currentGFXContext)
+	{
+		currentGFXContext->setPrimitiveSetup(primitiveSetup);
+	}
 
 	// Setup depth testing
 	depthControlSetup.init();
@@ -126,6 +133,18 @@ void	PS4Renderer::SetDefaultSettings()
 	// Not implemented 
 	//glEnable(GL_FRAMEBUFFER_SRGB);
 	//glEnable(GL_FRAMEBUFFER_SRGB);
+
+//	____________________________________
+		// Put this temporarily here for now
+		//Primitive Setup State
+
+
+	////Screen Access State
+	Gnm::DepthStencilControl dsc;
+	dsc.init();
+	dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
+	dsc.setDepthEnable(true);
+	currentGFXContext->setDepthStencilControl(dsc);
 
 }
 
@@ -407,23 +426,7 @@ void	PS4Renderer::PrepareToRender()
 		buffer->SetGraphicsContext(currentGFXContext);
 	}
 		
-	
 
-	// Put this temporarily here for now
-	//Primitive Setup State
-	Gnm::PrimitiveSetup primitiveSetup;
-	primitiveSetup.init();
-	primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceNone);
-	primitiveSetup.setFrontFace(Gnm::kPrimitiveSetupFrontFaceCcw);
-	//primitiveSetup.setPolygonMode()
-	currentGFXContext->setPrimitiveSetup(primitiveSetup);
-
-	////Screen Access State
-	Gnm::DepthStencilControl dsc;
-	dsc.init();
-	dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
-	dsc.setDepthEnable(true);
-	currentGFXContext->setDepthStencilControl(dsc);
 }
 
 void PS4Renderer::SwapScreenBuffer()

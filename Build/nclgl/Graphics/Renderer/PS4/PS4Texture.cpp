@@ -5,6 +5,8 @@
 
 #include <gnf.h>
 
+using namespace TextureTypeNamespace;
+using namespace sce;
 PS4Texture::PS4Texture()
 {
 	trilinearSampler.init();
@@ -25,10 +27,18 @@ PS4Texture::PS4Texture(const std::string& filepath)
 }
 
 #include <iostream>
-PS4Texture::PS4Texture(TextureTypeNamespace::Type type, int a, int b)
+PS4Texture::PS4Texture(Type type, int a, int b)
 {
-	apiTexture.initAs2dArray(a, b, 1, 1,
-		sce::Gnm::DataFormat::build(), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1, false);
+	switch (type)
+	{
+	case COLOUR:
+		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(Gnm::RenderTargetFormat::kRenderTargetFormat8_8_8_8, Gnm::RenderTargetChannelType::kRenderTargetChannelTypeSrgb,  Gnm::RenderTargetChannelOrder::kRenderTargetChannelOrderStandard), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
+		break;
+
+	case DEPTH:
+		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::ZFormat::kZFormat32Float), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
+		break;
+	}
 }
 
 PS4Texture::~PS4Texture()

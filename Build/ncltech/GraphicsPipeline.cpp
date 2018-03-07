@@ -128,6 +128,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		renderer->RegisterTexture(screenTexDepth);
 		//Generate our Framebuffer
 		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
+		
 		renderer->RegisterBuffer(screenFBO);
 	}
 

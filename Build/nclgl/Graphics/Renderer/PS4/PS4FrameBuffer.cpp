@@ -18,7 +18,6 @@ PS4FrameBuffer::PS4FrameBuffer(TextureBase * colourTexBase, TextureBase * depthT
 	colourTexture.push_back(colourTex);
 
 	hasColor = true;
-
 	depthTarget.initFromTexture(&depthTex->apiTexture, 0);
 	depthTexture = depthTex;
 
