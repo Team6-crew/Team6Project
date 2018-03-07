@@ -361,8 +361,6 @@ void PlayerSoftBody::move(float dt) {
 		bodyRenderNode->SetTransform(worldTr);
 
 		handleInput(dt);
-
-		handleInput(dt);
 		
 		speedLimit();
 		wallLimit();
