@@ -76,7 +76,11 @@ GraphicsPipeline::GraphicsPipeline()
 	tex_1 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"1.png");
 	tex_2 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"2.png");
 	tex_3 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"3.png");
-	CounterBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
+	buff_paint_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"paint.png");
+	buff_speed_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"speed.png");
+	buff_stun_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"stun.png");
+
+	BuffBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -169,6 +173,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderCounter = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/CounterFrag.glsl");
+
+	shaderBuff = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/BuffFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -343,7 +351,6 @@ void GraphicsPipeline::RenderScene(float dt)
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
 	if (paintableObjects.size() > 0) {
-
 		renderer->SetViewPort(2048, 2048);
 		PaintBuffer->ChangeColourAttachment(ResourceManager::Instance()->getTexture("paintable_tex"));
 		shaderPaintable->Activate();
@@ -471,7 +478,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		// - Most scene objects will probably end up being static, so we really should only be updating
 		//   modelMatrices for objects (and their children) who have actually moved since last frame
 		for (RenderNodeBase* node : allNodes)
-			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+			node->Update(0.0f); 
 
 
 								//NCLDebug - Build render lists
@@ -539,6 +546,18 @@ void GraphicsPipeline::RenderScene(float dt)
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
 
+		renderer->SetViewPort(0, 0, renderer->GetWidth(), renderer->GetHeight() / 2);
+		paintQuad->ReplaceTexture(buff_paint_tex, 0);
+		shaderBuff->Activate();
+		shaderBuff->SetUniform("DiffuseTex", 0);
+		shaderBuff->SetUniform("DiffuseTex", 0);
+		tempProj = renderer->GetProjMatrix();
+		tempView = renderer->GetViewMatrix();
+		renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
+		renderer->GetViewMatrix().ToIdentity();
+		paintQuad->Draw();
+		renderer->SetProjMatrix(tempProj);
+		renderer->SetViewMatrix(tempView);
 
 
 		//Downsample and present to screen
