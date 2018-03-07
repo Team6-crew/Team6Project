@@ -382,41 +382,79 @@ void PlayerSoftBody::move(float dt) {
 		bodyRenderNode->SetTransform(worldTr);
 
 		handleInput(dt);
-
+		
+		speedLimit();
+		wallLimit();
+		jumpSlow();
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
 
-		if (bottom->Physics()->GetPosition().y > 50) {
-			for (int i = 0; i < 182; ++i) {
-				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			}
-		}
+		
+	}
+}
 
-		if (bottom->Physics()->GetLinearVelocity().z < -10) {
-			for (int i = 0; i < 182; ++i) {
-				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			}
-		}
+void PlayerSoftBody::speedLimit() {
+	
 
-		else if (bottom->Physics()->GetLinearVelocity().z > 10) {
-			for (int i = 0; i < 182; ++i) {
-				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			}
+	if (bottom->Physics()->GetLinearVelocity().z < -11) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 		}
+	}
 
-		else if (bottom->Physics()->GetLinearVelocity().x > 10) {
-			for (int i = 0; i < 182; ++i) {
-				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			}
+	else if (bottom->Physics()->GetLinearVelocity().z > 11) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 		}
+	}
 
-		else if (bottom->Physics()->GetLinearVelocity().x < -10) {
-			for (int i = 0; i < 182; ++i) {
-				getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			}
+	else if (bottom->Physics()->GetLinearVelocity().x > 11) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
 		}
-		else
-			return;
+	}
+
+	else if (bottom->Physics()->GetLinearVelocity().x < -11) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+		}
+	}
+	else
+		return;
+}
+
+void PlayerSoftBody::wallLimit() {
+	if (WORLD_SIZE - front->Physics()->GetPosition().x < 3) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetLinearVelocity(
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+		}
+	}
+	else if (WORLD_SIZE + front->Physics()->GetPosition().x < 3) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetLinearVelocity(
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+		}
+	}
+	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 3) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetLinearVelocity(
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+		}
+	}
+	else if (WORLD_SIZE + front->Physics()->GetPosition().z < 3) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetLinearVelocity(
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+		}
+	}
+}
+
+void PlayerSoftBody::jumpSlow() {
+	if (bottom->Physics()->GetLinearVelocity().y < 0 && top->Physics()->GetLinearVelocity().y < 0) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetLinearVelocity(getBall()->softball[i]->Physics()->GetLinearVelocity()*0.99);
+		}
 	}
 }
