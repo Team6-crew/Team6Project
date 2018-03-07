@@ -45,7 +45,7 @@ public:
 		pauseMenu->AddMenuItem("Back to Main Menu");
 		pauseMenu->AddMenuItem("Exit Game");
 		pauseMenu->setSelection(-1);
-		myPlayerNum = GameLogic::Instance()->getMyNetNum();
+		
 	}
 
 	virtual ~LanScene()
@@ -298,12 +298,13 @@ public:
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
 		sendVelocityUpdate();
-
+		myPlayerNum = GameLogic::Instance()->getMyNetNum();
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		
 		auto callback = std::bind(
 			&LanScene::ProcessNetworkEvent,	// Function to call
 			this,								// Associated class instance
@@ -484,6 +485,7 @@ private:
 					
 				}
 				sendVelocityUpdate();
+				std::cout << myPlayerNum;
 			}
 			enet_packet_destroy(evnt.packet);
 		}
