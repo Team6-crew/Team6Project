@@ -13,6 +13,8 @@ public:
 	//Heap* GetDefaultHeap();
 	Heap * GetHeap(const char* name);
 	int PrintDebugInfo();
+	int PrintPeakInfo();
+	int PrintNetAllocInfo();
 private:
 	Heap * FindHeap(const char* name);
 	HeapFactory();

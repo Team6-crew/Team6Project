@@ -38,7 +38,6 @@ GraphicsPipeline::GraphicsPipeline()
 	, toggleFlicker(false)
 {
 	renderer = RenderFactory::Instance()->MakeRenderer();
-
 	LoadShaders();
 	NCLDebug::_LoadShaders();
 
@@ -55,7 +54,7 @@ GraphicsPipeline::GraphicsPipeline()
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
 	InitializeDefaults();
-
+	sound321played = false;
 
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
@@ -68,12 +67,16 @@ GraphicsPipeline::GraphicsPipeline()
 	TrailBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("gr_tex"), depth);
 	CircleBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("circle_tex"), depth);
 	PaintBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("temp_tex"), depth);
+
 	minimap->SetTexture(ResourceManager::Instance()->getTexture("gr_tex"));
 	piemap->SetTexture(ResourceManager::Instance()->getTexture("circle_tex"));
 	Resize(renderer->GetWidth(), renderer->GetHeight());
 	temp_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Background.jpg");
-	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"Loading.png");
 	splat_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"splat.png");
+	tex_1 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"1.png");
+	tex_2 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"2.png");
+	tex_3 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"3.png");
+	CounterBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -162,6 +165,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderMap = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/MapFrag.glsl");
+
+	shaderCounter = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/CounterFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -255,6 +262,40 @@ void GraphicsPipeline::RenderMenu() {
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 
 }
+
+void GraphicsPipeline::StartCounter() {
+
+	renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
+	shaderCounter->Activate();
+	float tempTime = GameLogic::Instance()->getTotalTime();
+	if (tempTime <= 1.0f) {
+		if (!sound321played) {
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"countdown.ogg", false);
+			sound321played = true;
+		}
+		fullscreenQuad->ReplaceTexture(tex_3, 0);
+	}
+	else if (tempTime <= 2.0f) {
+		fullscreenQuad->ReplaceTexture(tex_2, 0);
+		tempTime -= 1.0f;
+	}
+	else if (tempTime <= 3.0f) {
+		fullscreenQuad->ReplaceTexture(tex_1, 0);
+		tempTime -= 2.0f;
+	}
+
+	shaderCounter->SetUniform("DiffuseTex", 0);
+	shaderCounter->SetUniform("seconds", tempTime);
+	tempProj = renderer->GetProjMatrix();
+	tempView = renderer->GetViewMatrix();
+	renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
+	renderer->GetViewMatrix().ToIdentity();
+	fullscreenQuad->Draw();
+	renderer->SetProjMatrix(tempProj);
+	renderer->SetViewMatrix(tempView);
+
+}
+
 void GraphicsPipeline::LoadingScreen(float frame) {
 
 	renderer->SetViewPort(1024, 1024);
@@ -298,8 +339,7 @@ void GraphicsPipeline::SplatProjectile(float pos_x, float pos_z, float rad, Vect
 }
 
 void GraphicsPipeline::RenderScene(float dt)
-{
-	
+{   
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
 	if (paintableObjects.size() > 0) {
@@ -547,7 +587,6 @@ void GraphicsPipeline::RenderScene(float dt)
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
 				renderer->GetViewMatrix().ToIdentity();
-
 				piemap->Draw();
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
@@ -555,7 +594,10 @@ void GraphicsPipeline::RenderScene(float dt)
 
 		}
 	}
-
+	if (GameLogic::Instance()->getTotalTime() <= 3.0f) {
+		StartCounter();
+	}
+	
 	NCLDebug::_BuildRenderLists();
 	renderer->SetViewPort(screenTexWidth / 4, screenTexHeight / 4);
 	//NCLDEBUG - Text Elements (aliased)
@@ -565,6 +607,7 @@ void GraphicsPipeline::RenderScene(float dt)
 
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->BindScreenFramebuffer();
+	
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 }
