@@ -481,13 +481,12 @@ private:
 					}
 					else {
 						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
-						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
 						cntNet++;
 					}
 					
 				}
 				sendVelocityUpdate();
-				std::cout << myPlayerNum;
 			}
 			enet_packet_destroy(evnt.packet);
 		}
