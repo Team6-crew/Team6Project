@@ -57,7 +57,7 @@ void Initialize()
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 
 	// Move this once main menu is hooked up
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
+	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
 // Print Debug Info
@@ -134,7 +134,8 @@ int main()
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 
 	Window::GetWindow().GetTimer()->GetTimedMS();
-
+	GameLogic::Instance()->setLevelIsLoaded(false);
+	GameLogic::Instance()->setGameHasStarted(false);
 	//Create main game-loop
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
@@ -145,7 +146,7 @@ int main()
 		timer_physics.UpdateRealElapsedTime(dt);
 		timer_update.UpdateRealElapsedTime(dt);
 		timer_render.UpdateRealElapsedTime(dt);
-		std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
+		//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
 		//Print Status Entries
 		//PrintStatusEntries();
 
@@ -182,7 +183,6 @@ int main()
 		}
 		else
 		{
-			GraphicsPipeline::Instance()->RenderScene(dt);
 			//Print Status Entries
 			if (show_status_menu)
 			{
@@ -192,6 +192,13 @@ int main()
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
 				show_status_menu = !show_status_menu;
 			}
+			if (GameLogic::Instance()->levelIsLoaded())
+			{
+				GameLogic::Instance()->increaseTotalTime(dt);
+				GraphicsPipeline::Instance()->RenderScene(dt);
+				
+			}
+			
 		}
 
 

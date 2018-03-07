@@ -17,8 +17,7 @@ GameLogic::GameLogic() {
 
 	setnumAI(0);
 	setnumOfPlayersMp(0);
-
-	
+	gameStarted = false;
 
 	increment = 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 }
