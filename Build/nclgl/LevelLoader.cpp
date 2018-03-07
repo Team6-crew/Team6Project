@@ -20,7 +20,7 @@ LevelLoader::~LevelLoader()
 bool LevelLoader::Load(const std::string& filename)
 {
 	string info;
-	ifstream levelfile("SimpleLevel.txt"); // make generic for all levels
+	ifstream levelfile("SimpleLevel2.txt"); // make generic for all levels
 	if (levelfile.is_open()) {
 		cout << "File opened" << endl;
 
@@ -109,9 +109,28 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 	int paintable_counter = 0;
 	for (auto& object : mapObjects)
 	{
-		GameObject* geometry;
+		GameObject * geometry;
 		switch (object.type)
 		{
+		case GEOMETRY_GROUND_CUBOID:
+			geometry = CommonUtils::BuildGroundCuboidObject(
+				object.name,
+				object.position,
+				object.scale,
+				true,
+				object.inverseMass,
+				true,
+				false,
+				object.colour);
+
+			scene->AddGameObject(geometry);
+			if (object.name == "Ground")
+			{
+				geometry->SetTag(Tags::TGround);
+				(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
+			}
+			break;
+
 		case GEOMETRY_CUBOID:
 			geometry = CommonUtils::BuildCuboidObject(
 				object.name,
@@ -146,6 +165,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 			++paintable_counter;
 
 			break;
+
 
 		case GEOMETRY_SPHERE:
 			geometry = CommonUtils::BuildSphereObject(

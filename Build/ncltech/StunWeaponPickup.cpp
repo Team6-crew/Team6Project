@@ -56,6 +56,7 @@ StunWeaponPickup::StunWeaponPickup(const std::string& name,
 
 	setDynamic(false);
 
+
 	RegisterPhysicsToRenderTransformCallback();
 }
 

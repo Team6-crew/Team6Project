@@ -86,18 +86,6 @@ PickupType PickUpLoader::StringToType(const std::string& line)
 	{
 		return LAUNCH_PAD;
 	}
-	else if (line == "STUN_WEAPON")
-	{
-		return STUN_WEAPON;
-	}
-	else if (line == "PAINT_WEAPON")
-	{
-		return PAINT_WEAPON;
-	}
-	else if (line == "WASHING_ZONE")
-	{
-		return WASHING_ZONE;
-	}
 	
 	
 }
@@ -112,11 +100,10 @@ void PickUpLoader::CreatePickUps(const std::string& filename, Scene* scene)
 	for (auto& object : pickupObjects)
 	{
 		SpeedPickup* speed;
-		StunWeaponPickup* stunweapon;
+		StunWeaponPickup* stun;
 		PaintWeaponPickup* paintweapon;
 		//PaintBomb* paintbomb;
 		Launchpad* launchpad;
-		Washingzone* washingzone;
 		
 		switch (object.type)
 		{
@@ -147,52 +134,11 @@ void PickUpLoader::CreatePickUps(const std::string& filename, Scene* scene)
 			launchpad->SetTag(Tags::TLaunch);
 			launchpad->SetPhysics(launchpad->Physics());
 			scene->AddGameObject(launchpad);
-			/*++paintable_counter;*/
+			++paintable_counter;
+
+			frame += step;
+			GraphicsPipeline::Instance()->LoadingScreen(frame);
 			break;	
-
-		case STUN_WEAPON:
-			stunweapon = new StunWeaponPickup(
-				object.name,
-				object.position,
-				object.scale,
-				true,
-				object.inverseMass,
-				true,
-				object.colour);
-
-			stunweapon->SetPhysics(stunweapon->Physics());
-			scene->AddGameObject(stunweapon);
-			break;
-
-		case PAINT_WEAPON:
-			paintweapon = new PaintWeaponPickup(
-				object.name,
-				object.position,
-				object.scale,
-				true,
-				object.inverseMass,
-				true,
-				object.colour
-			);
-
-			paintweapon->SetPhysics(paintweapon->Physics());
-			scene->AddGameObject(paintweapon);		
-			break;
-
-		case WASHING_ZONE:
-			washingzone = new Washingzone(
-				object.name,
-				object.position,
-				object.scale,
-				true,
-				object.inverseMass,
-				true,
-				object.colour
-			);
-
-			washingzone->SetPhysics(washingzone->Physics());
-			scene->AddGameObject(washingzone);
-			break;
 		}
 	}
 

@@ -17,7 +17,5 @@ enum Tags {
 	TPortal_A2 ,
 	TPortal_B2 ,
 	TWash,
-	TRandomPickup,
-	TWeapon,	
 	TRamp
 };
