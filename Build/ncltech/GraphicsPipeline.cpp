@@ -168,12 +168,11 @@ void GraphicsPipeline::RenderScene()
 	
 	//Build Transparent/Opaque Renderlists
 	BuildAndSortRenderLists();
-	
+
+
 	//Render scene to screen fbo
 		screenFBO->Activate();
-		renderer->PostRender();
-		renderer->SwapBuffers();
-		return;
+
 
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		renderer->SetClearColour(backgroundColor);

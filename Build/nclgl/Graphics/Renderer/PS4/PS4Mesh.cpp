@@ -7,6 +7,8 @@
 
 PS4Mesh::PS4Mesh()
 {
+	indexType = sce::Gnm::IndexSize::kIndexSize32;
+	primitiveType = sce::Gnm::PrimitiveType::kPrimitiveTypeTriList;
 }
 
 

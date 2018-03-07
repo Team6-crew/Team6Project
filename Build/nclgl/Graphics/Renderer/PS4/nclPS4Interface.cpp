@@ -103,7 +103,6 @@ sce::Vectormath::Scalar::Aos::Vector3 GenerateTangentPS4(const sce::Vectormath::
 
 void NormalisePS4(sce::Vectormath::Scalar::Aos::Vector3 & vec)
 {
-	std::cout << "Vec: " << vec.getX() << ", " << vec.getY() << ", " << vec.getZ() << std::endl;
 	float length = sqrt(vec.getX() * vec.getX() + vec.getY() * vec.getY() + vec.getZ() * vec.getZ());
 
 		

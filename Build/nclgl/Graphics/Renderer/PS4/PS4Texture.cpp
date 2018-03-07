@@ -33,10 +33,10 @@ PS4Texture::PS4Texture(Type type, int a, int b)
 	{
 	case COLOUR:
 		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(Gnm::RenderTargetFormat::kRenderTargetFormat8_8_8_8, Gnm::RenderTargetChannelType::kRenderTargetChannelTypeSrgb,  Gnm::RenderTargetChannelOrder::kRenderTargetChannelOrderStandard), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
-		apiTexture.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+		//apiTexture.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
 		apiTexture.setTextureType(sce::Gnm::kTextureType2d);
-		apiTexture.setChannelType(sce::Gnm::kTextureChannelTypeFloat);
-		apiTexture.setChannelOrder(sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX);
+	//	apiTexture.setChannelType(sce::Gnm::kTextureChannelTypeFloat);
+	//	apiTexture.setChannelOrder(sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX);
 		break;
 
 	case DEPTH:
