@@ -9,6 +9,7 @@
 #include <ncltech\StunProjectile.h>
 #include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
+#include <nclgl\GameLogic.h>
 
 
 PlayerSoftBody::PlayerSoftBody(const std::string& name,
@@ -271,78 +272,79 @@ void PlayerSoftBody::handleInput(float dt) {
 
 	getTop();
 	getFront();
-
-	if (Window::GetKeyboard()->KeyDown(move_up))
-	{
-		if (forward.z > 0) {
-			top->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 - forward.z * speed));
-			bottom->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 - forward.z * speed));
-			front->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -forward.y * speed, -speed - forward.z * speed));
-			back->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, forward.y * speed, -speed - forward.z * speed));
-		}
-		else {
-			top->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 - forward.z * speed));
-			bottom->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 - forward.z * speed));
-			front->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -forward.y * speed, speed - forward.z * speed));
-			back->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, forward.y * speed, speed - forward.z * speed));
-		}
-	}
-
-	if (Window::GetKeyboard()->KeyDown(move_down))
-	{
-		if (forward.z > 0) {
-			top->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 + forward.z * speed));
-			bottom->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 + forward.z * speed));
-			front->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -forward.y * speed, speed + forward.z * speed));
-			back->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, forward.y * speed, speed + forward.z * speed));
-		}
-		else {
-			top->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 + forward.z * speed));
-			bottom->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 + forward.z * speed));
-			front->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -forward.y * speed, -speed + forward.z * speed));
-			back->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, forward.y * speed, -speed + forward.z * speed));
-		}
-	}
-	if (Window::GetKeyboard()->KeyDown(move_left))
-	{
-		for (int i = 0; i < 182; ++i)
+	if (GameLogic::Instance()->gameHasStarted()) {
+		if (Window::GetKeyboard()->KeyDown(move_up))
 		{
-			getBall()->softball[i]->Physics()->SetForce(
-				getBall()->softball[i]->Physics()->GetForce() + right * getBall()->softball[i]->Physics()->GetForce().Length() * 0.00005f);
-		}
-		increaseSensitivity(dt);
-		camera->SetYaw(yaw + sensitivity);
-	}
-
-	else if (Window::GetKeyboard()->KeyDown(move_right))
-	{
-		for (int i = 0; i < 182; ++i)
-		{
-			getBall()->softball[i]->Physics()->SetForce(
-				getBall()->softball[i]->Physics()->GetForce() - right * getBall()->softball[i]->Physics()->GetForce().Length() * 0.00005f);
-		}
-		decreaseSensitivity(dt);
-		camera->SetYaw(yaw + sensitivity);
-	}
-
-	else {
-		resetCamera(dt);
-		camera->SetYaw(yaw + sensitivity);
-	}
-
-	if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
-	{
-		if (canjump == true) {
-			for (int i = 0; i < 182; ++i) {
-				ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
+			if (forward.z > 0) {
+				top->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 - forward.z * speed));
+				bottom->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 - forward.z * speed));
+				front->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -forward.y * speed, -speed - forward.z * speed));
+				back->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, forward.y * speed, -speed - forward.z * speed));
 			}
-			canjump = false;
+			else {
+				top->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 - forward.z * speed));
+				bottom->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 - forward.z * speed));
+				front->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, -forward.y * speed, speed - forward.z * speed));
+				back->Physics()->SetForce(nclgl::Maths::Vector3(-forward.x * speed, forward.y * speed, speed - forward.z * speed));
+			}
 		}
-	}
 
-	if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
-	{
-		shoot();
+		if (Window::GetKeyboard()->KeyDown(move_down))
+		{
+			if (forward.z > 0) {
+				top->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 + forward.z * speed));
+				bottom->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, 5 + forward.z * speed));
+				front->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -forward.y * speed, speed + forward.z * speed));
+				back->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, forward.y * speed, speed + forward.z * speed));
+			}
+			else {
+				top->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, (ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 + forward.z * speed));
+				bottom->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -(ball->GetRadius() - (forward.z * speed) * (forward.z * speed)) / 5, -5 + forward.z * speed));
+				front->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, -forward.y * speed, -speed + forward.z * speed));
+				back->Physics()->SetForce(nclgl::Maths::Vector3(forward.x * speed, forward.y * speed, -speed + forward.z * speed));
+			}
+		}
+		if (Window::GetKeyboard()->KeyDown(move_left))
+		{
+			for (int i = 0; i < 182; ++i)
+			{
+				getBall()->softball[i]->Physics()->SetForce(
+					getBall()->softball[i]->Physics()->GetForce() + right * getBall()->softball[i]->Physics()->GetForce().Length() * 0.00005f);
+			}
+			increaseSensitivity(dt);
+			camera->SetYaw(yaw + sensitivity);
+		}
+
+		else if (Window::GetKeyboard()->KeyDown(move_right))
+		{
+			for (int i = 0; i < 182; ++i)
+			{
+				getBall()->softball[i]->Physics()->SetForce(
+					getBall()->softball[i]->Physics()->GetForce() - right * getBall()->softball[i]->Physics()->GetForce().Length() * 0.00005f);
+			}
+			decreaseSensitivity(dt);
+			camera->SetYaw(yaw + sensitivity);
+		}
+
+		else {
+			resetCamera(dt);
+			camera->SetYaw(yaw + sensitivity);
+		}
+
+		if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
+		{
+			if (canjump == true) {
+				for (int i = 0; i < 182; ++i) {
+					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
+				}
+				canjump = false;
+			}
+		}
+
+		if ((Window::GetKeyboard()->KeyTriggered(move_shoot)))
+		{
+			shoot();
+		}
 	}
 }
 
@@ -358,8 +360,8 @@ void PlayerSoftBody::move(float dt) {
 		worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
 		bodyRenderNode->SetTransform(worldTr);
 
-
 		handleInput(dt);
+
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
