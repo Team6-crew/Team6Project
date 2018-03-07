@@ -14,7 +14,6 @@
 #include <ncltech\StunWeaponPickup.h>
 #include <ncltech\PaintWeaponPickup.h>
 #include <ncltech\Paintbomb.h>
-#include <ncltech\Paintbomb.h>
 #include <ncltech\Washingzone.h>
 
 #include <ncltech\WorldPartition.h>
@@ -25,7 +24,6 @@
 #include "MainMenu.h"
 #include <nclgl\ResourceManager.h>
 
-//Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
 public:
@@ -65,8 +63,9 @@ public:
 		if (num_p & 0b0010) GameLogic::Instance()->addPlayer(1);
 		if (num_p & 0b0100) GameLogic::Instance()->addPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addPlayer(3);
+		
 		//Add player to scene
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+	 for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
@@ -81,6 +80,9 @@ public:
 		//	this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		//}
 
+		frame += step * 2.0f;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);
+
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f),
@@ -93,7 +95,7 @@ public:
 
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup_new.png"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 		
 		frame += step;
@@ -186,7 +188,7 @@ public:
 		frame += step;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 
-		Launchpad* launchpad = new Launchpad(
+		/*Launchpad* launchpad = new Launchpad(
 			"launchpad",
 			nclgl::Maths::Vector3(0.0f, 1.0f, -88.0f),
 			nclgl::Maths::Vector3(2.0f, 0.25f, 2.0f),
@@ -198,12 +200,12 @@ public:
 		this->AddGameObject(launchpad);
 
 		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+		GraphicsPipeline::Instance()->LoadingScreen(frame);*/
 
 		//portal a1
 		Portal* portal_a1 = new Portal(
 			"portal_a1",
-			nclgl::Maths::Vector3(0.0f, 36.0f, 0.0f),
+			nclgl::Maths::Vector3(-30.0f, 36.0f, 30.0f),
 			true,
 			100.0f,
 			true,

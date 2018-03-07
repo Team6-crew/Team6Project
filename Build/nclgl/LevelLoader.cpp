@@ -20,7 +20,7 @@ LevelLoader::~LevelLoader()
 bool LevelLoader::Load(const std::string& filename)
 {
 	string info;
-	ifstream levelfile("SimpleLevel.txt");
+	ifstream levelfile("SimpleLevel2.txt"); // make generic for all levels
 	if (levelfile.is_open()) {
 		cout << "File opened" << endl;
 
@@ -76,11 +76,11 @@ Type LevelLoader::StringToType(const std::string& line)
 	{
 		return GEOMETRY_CUBOID;
 	}
-	if (line == "GEOMETRY_GROUND_CUBOID")
+	else  if (line == "GEOMETRY_GROUND_CUBOID")
 	{
 		return GEOMETRY_GROUND_CUBOID;
 	}
-	if (line == "PAINTABLE_CUBE")
+	else if (line == "PAINTABLE_CUBE")
 	{
 		return PAINTABLE_CUBE;
 	}

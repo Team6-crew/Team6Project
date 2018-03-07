@@ -56,7 +56,7 @@ void GameLogic::addNetPlayer(int num_player) {
 void GameLogic::addSoftPlayers(int num_splayers) {
 	for (int i = 0; i < num_splayers; i++) {
 		PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + i,
-			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
+			nclgl::Maths::Vector3(3.0f*i, 10.0f, 3.0f*i),
 			1.0f,
 			1.0f,
 			colours[i]);

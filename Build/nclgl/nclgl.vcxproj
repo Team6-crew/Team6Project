@@ -46,6 +46,7 @@
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTexture.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLTextureArray.cpp" />
+    <ClCompile Include="PickUpLoader.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Texture.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4FrameBuffer.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTexture.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLTextureArray.h" />
     <ClInclude Include="PerfTimer.h" />
+    <ClInclude Include="PickUpLoader.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Texture.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />

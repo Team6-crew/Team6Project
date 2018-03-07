@@ -13,7 +13,7 @@ MeshBase*	  CommonMeshes::m_pSphere	= NULL;
 MeshBase * CommonMeshes::NewCube() {
 	TextureBase* m_pCheckerboardTex = NULL;
 	TextureBase* m_secondTex = NULL;
-	m_pCheckerboardTex = ResourceManager::Instance()->getTexture(TEXTUREDIR"checkerboard.tga");
+	m_pCheckerboardTex = ResourceManager::Instance()->getTexture(TEXTUREDIR"Blank.tga");
 	m_pCheckerboardTex->SetTextureFiltering(true);
 	m_pCheckerboardTex->SetTextureWrapping(true);
 	m_secondTex = ResourceManager::Instance()->getTexture(TEXTUREDIR"transparent.png");

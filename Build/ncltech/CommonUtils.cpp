@@ -234,6 +234,7 @@ GameObject* CommonUtils::BuildCuboidObject(
 		pnode->SetInverseMass(inverse_mass);
 		float rad = sqrt(halfdims.x*halfdims.x + halfdims.y*halfdims.y + halfdims.z*halfdims.z);
 		pnode->SetColRadius(rad*1.5f);
+		pnode->SetFriction(-1000.0);
 
 		if (!collidable)
 		{

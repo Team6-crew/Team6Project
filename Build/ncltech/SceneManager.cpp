@@ -5,6 +5,7 @@
 #include "GraphicsPipeline.h"
 #include "../nclgl/GameLogic.h"
 #include <nclgl\LevelLoader.h>
+#include <nclgl\PickUpLoader.h>
 
 SceneManager::SceneManager() 
 	: m_SceneIdx(NULL)
@@ -77,19 +78,34 @@ void SceneManager::JumpToScene(int idx)
 	GraphicsPipeline::Instance()->InitializeDefaults();
 
 
-	if (idx == 1)
+	if (idx == 1) // ball
 	{
 		LevelLoader loader;
 		loader.BuildLevel("SimpleLevel.txt", scene);
+		PickUpLoader creator;
+		creator.CreatePickUps("PickUpFile2.txt", scene);
+
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 		{
-			scene->AddGameObject(GameLogic::Instance()->getPlayer(i));
+		    scene->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			scene->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
-
+			
 		}
 
 	}
 
+	//if (idx == 1) // soft body
+	//{
+	//	LevelLoader loader;
+	//	loader.BuildLevel("SimpleLevel.txt", scene);
+	//	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i)
+	//	{
+	//		scene->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+	//		scene->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+
+	//	}
+
+	//}
 
 
 	scene->OnInitializeScene();
