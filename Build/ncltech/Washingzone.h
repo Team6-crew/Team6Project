@@ -2,8 +2,10 @@
 #pragma once
 #include <ncltech\GameObject.h>
 #include <ncltech\Player.h>
+#include <ncltech\PlayerSoftBody.h>
 
 class Player;
+class PlayerSoftBody;
 class Washingzone : public GameObject
 {
 public:
@@ -17,7 +19,8 @@ public:
 		const nclgl::Maths::Vector4& color);
 	~Washingzone();
 
-	void effect(Player* player);
+	void Effect(Player* player);
+	void SoftEffect(PlayerSoftBody* player);
 	
 private:
 

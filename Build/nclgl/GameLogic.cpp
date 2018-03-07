@@ -53,40 +53,35 @@ void GameLogic::addNetPlayer(int num_player) {
 	paint_perc.push_back(0.0f);
 }
 
-void GameLogic::addSoftPlayers(int num_splayers) {
-	for (int i = 0; i < num_splayers; i++) {
-		PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + i,
-			nclgl::Maths::Vector3(3.0f*i, 1.f, 3.0f*i),
-			1.0f,
-			1.0f,
-			colours[i]);
-		for (int j = 0; j < 182; ++j)
-			softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
-		switch (i) {
-		case 0:
-			softplayer->setControls(KEYBOARD_I, KEYBOARD_K, KEYBOARD_J, KEYBOARD_L, KEYBOARD_SPACE, KEYBOARD_N);
-			break;
-		case 1:
-			softplayer->setControls(KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9);
-			break;
-		}
-		softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
-		softplayers.push_back(softplayer);
-		paint_perc.push_back(0.0f);
-	}
+
+void GameLogic::addSoftPlayer(int num_splayers) {
+
+	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
+		1.0f,
+		1.0f,
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+	softplayer->setControls(controls[num_splayers][0], controls[num_splayers][1], controls[num_splayers][2], controls[num_splayers][3], controls[num_splayers][4], controls[num_splayers][5]);
+	softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
+	softplayers.push_back(softplayer);
+	paint_perc.push_back(0.0f);
+
 }
 
 void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, float colourZ) {
 	int playerIndex = 0;
-	for (int i = 0; i < allPlayers.size() ; i++) {
-		if ((*allPlayers[i]->Render()->GetChildIteratorStart())->GetColour().z == colourZ) {
+	for (int i = 0; i < softplayers.size(); i++) {
+		if ((*softplayers[i]->getBottom()->Render()->GetChildIteratorStart())->GetColour().z == colourZ) {
 			playerIndex = i;
 		}
 	}
 
 	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
 	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
-	
+
 	posX = (posX - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 	posZ = 1 - (posZ - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 	radius = radius / WORLD_SIZE;
@@ -110,23 +105,22 @@ void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, f
 }
 
 void GameLogic::calculatePaintPercentage() {
-	GameObject* ground = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
-	nclgl::Maths::Vector3 gr_pos = ground->Physics()->GetPosition();
-
+	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
 	
-	for (int k = 0; k < allPlayers.size(); k++) 
+	for (int k = 0; k < softplayers.size(); k++) 
 	{
-		nclgl::Maths::Vector3 position = allPlayers[k]->Physics()->GetPosition();
-		if (position.y > gr_pos.y + 1.0f + 1.0f) //ground half dims and player rad
+		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
+		if (position.y > 10.0f)
 		{
 			continue;
 		}
-		else if (allPlayers[k]->getcanpaint() == false)
+		else 
+			if (softplayers[k]->getcanpaint() == false)
 		{
-			allPlayers[k]->settime((allPlayers[k]->gettime()) + 1.0f);
-			if (allPlayers[k]->gettime() > allPlayers[k]->getDebuffTime())
+			softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
+			if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
 			{
-				allPlayers[k]->setcanpaint(true);
+				softplayers[k]->setcanpaint(true);
 			}
 			continue;
 		}
@@ -137,15 +131,14 @@ void GameLogic::calculatePaintPercentage() {
 		}*/
 		else
 		{
-			add_rad = allPlayers[k]->getadd_rad();
-			float x = allPlayers[k]->Physics()->GetColRadius();
-			rad = (rand() % 100)*allPlayers[k]->Physics()->GetColRadius()/ (WORLD_SIZE*100.0f) + add_rad;
+			add_rad = softplayers[k]->getadd_rad();
+			rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 			
-			allPlayers[k]->setRadius(rad);
+			softplayers[k]->setRadius(rad);
 			posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
 			posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-			allPlayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
 			for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
 				for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
@@ -163,7 +156,7 @@ void GameLogic::calculatePaintPercentage() {
 					}
 				}
 			}
-			allPlayers[k]->setadd_rad(0.0f);
+			softplayers[k]->setadd_rad(0.0f);
 		}
 	}
 }
@@ -174,11 +167,11 @@ void GameLogic::setControls(int x, int y, KeyboardKeys key) {
 
 void GameLogic::updateControls() {
 	if (numOfPlayersMp & 0b0001) 
-		players[0]->setControls(controls[0][0], controls[0][1], controls[0][2], controls[0][3], controls[0][4], controls[0][5]);
+		softplayers[0]->setControls(controls[0][0], controls[0][1], controls[0][2], controls[0][3], controls[0][4], controls[0][5]);
 	if (numOfPlayersMp & 0b0010) 
-		players[1]->setControls(controls[1][0], controls[1][1], controls[1][2], controls[1][3], controls[1][4], controls[1][5]);
+		softplayers[1]->setControls(controls[1][0], controls[1][1], controls[1][2], controls[1][3], controls[1][4], controls[1][5]);
 	if (numOfPlayersMp & 0b0100)
-		players[2]->setControls(controls[2][0], controls[2][1], controls[2][2], controls[2][3], controls[2][4], controls[2][5]);
+		softplayers[2]->setControls(controls[2][0], controls[2][1], controls[2][2], controls[2][3], controls[2][4], controls[2][5]);
 	if (numOfPlayersMp & 0b1000) 
-		players[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
+		softplayers[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
 }

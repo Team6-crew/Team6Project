@@ -66,10 +66,16 @@ Washingzone::~Washingzone()
 {
 }
 
-void Washingzone::effect(Player* player) 
+void Washingzone::Effect(Player* player) 
 {
 	player->setDebuffTime(70);
 	player->setcanpaint(false);
 	player->settime(0.0f);
 }
 
+void Washingzone::SoftEffect(PlayerSoftBody* player)
+{
+	player->setDebuffTime(70);
+	player->setcanpaint(false);
+	player->settime(0.0f);
+}
