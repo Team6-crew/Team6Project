@@ -105,6 +105,65 @@ Vector4 CommonUtils::GenHSVColor(const Vector3& hsv, float alpha)
 	return c;
 }
 
+GameObject* CommonUtils::BuildSoftSphereObject(
+	const std::string& name,
+	const Vector3& pos,
+	float radius,
+	bool physics_enabled,
+	float inverse_mass,
+	bool collidable,
+	bool dragable,
+	const Vector4& color)
+{
+	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
+	// and a parent node that will contain the world transform/physics transform
+	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
+
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticSphere(), color);
+	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
+	rnode->AddChild(dummy);
+
+	rnode->SetTransform(Matrix4::Translation(pos));
+	rnode->SetBoundingRadius(radius);
+
+	PhysicsNode* pnode = NULL;
+	if (physics_enabled)
+	{
+		pnode = new PhysicsNode();
+		pnode->SetPosition(pos);
+		pnode->SetInverseMass(inverse_mass);
+		pnode->SetColRadius(radius);
+
+		if (!collidable)
+		{
+			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
+			pnode->SetInverseInertia(SphereCollisionShape(radius).BuildInverseInertia(inverse_mass));
+		}
+		else
+		{
+			CollisionShape* pColshape = new SphereCollisionShape(radius);
+			pnode->SetCollisionShape(pColshape);
+			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
+		}
+	}
+
+	GameObject* obj = new GameObject(name, rnode, pnode);
+	if (pnode)
+	{
+		pnode->SetParent(obj);
+	}
+
+	if (dragable)
+	{
+		ScreenPicker::Instance()->RegisterNodeForMouseCallback(
+			dummy, //Dummy is the rendernode that actually contains the drawable mesh, and the one we can to 'drag'
+			std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
+		);
+	}
+
+	return obj;
+}
+
 GameObject* CommonUtils::BuildSphereObject(
 	const std::string& name,
 	const Vector3& pos,
