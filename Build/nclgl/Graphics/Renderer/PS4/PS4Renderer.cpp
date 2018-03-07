@@ -118,33 +118,27 @@ void	PS4Renderer::SetDefaultSettings()
 	// Setup depth testing
 	depthControlSetup.init();
 	depthControlSetup.setDepthEnable(true);
-	//depthControlSetup.setDepthControl(true, kDepthFuncLessEqual);
+	depthControlSetup.setDepthControl(kDepthControlZWriteEnable, sce::Gnm::kCompareFuncLessEqual);
+	////Screen Access State
 	if (currentGFXContext)
 	{
-		//SampleUtil::Graphics::setDepthFunc(SampleUtil::Graphics::kDepthFuncLessEqual);
-	}
+		
+		currentGFXContext->setDepthStencilControl(depthControlSetup);
+		//currentGFXContext->setBlendControl(blendControlSetup);
 
+	}
 	// Set up alpha blending
 	blendControlSetup.init();
 	blendControlSetup.setBlendEnable(true);
 	blendControlSetup.setAlphaEquation(kBlendMultiplierSrcAlpha, kBlendFuncAdd, kBlendMultiplierOneMinusSrcAlpha);
+	if (currentGFXContext)
+	{
+		//currentGFXContext->setBlendControl(blendControlSetup);
+	}
 
 
-	// Not implemented 
-	//glEnable(GL_FRAMEBUFFER_SRGB);
-	//glEnable(GL_FRAMEBUFFER_SRGB);
+	
 
-//	____________________________________
-		// Put this temporarily here for now
-		//Primitive Setup State
-
-
-	////Screen Access State
-	Gnm::DepthStencilControl dsc;
-	dsc.init();
-	dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
-	dsc.setDepthEnable(true);
-	currentGFXContext->setDepthStencilControl(dsc);
 
 }
 

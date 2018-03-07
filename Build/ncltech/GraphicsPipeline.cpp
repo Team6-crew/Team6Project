@@ -159,6 +159,7 @@ void GraphicsPipeline::UpdateScene(float dt)
 void GraphicsPipeline::RenderScene()
 {
 	renderer->PrepareToRender();
+
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
@@ -167,15 +168,17 @@ void GraphicsPipeline::RenderScene()
 	
 	//Build Transparent/Opaque Renderlists
 	BuildAndSortRenderLists();
-
-	//NCLDebug - Build render lists
-//	NCLDebug::_BuildRenderLists();
-
+	
 	//Render scene to screen fbo
 		screenFBO->Activate();
+		renderer->PostRender();
+		renderer->SwapBuffers();
+		return;
+
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		renderer->SetClearColour(backgroundColor);
 		renderer->Clear(Renderer::COLOUR_DEPTH);
+	
 
 		shaderForwardLighting->Activate();
 		shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
@@ -184,11 +187,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
 		shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
-		//shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-		//shaderForwardLighting->SetUniform("uShadowTex", 2);
-		//shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
 
-		//shadowTex->Bind(2);
 
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
@@ -198,25 +197,14 @@ void GraphicsPipeline::RenderScene()
 			}
 		);
 
-		// Render Screen Picking ID's
-		// - This needs to be somewhere before we lose our depth buffer
-		//   BUT at the moment that means our screen picking is super sampled and rendered at 
-		//   a much higher resolution. Which is silly.
-		//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), screenTexDepth->TempGetID(), screenTexWidth, screenTexHeight);
 
-		screenFBO->Activate();
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
-		//NCLDEBUG - World Debug Data (anti-aliased)		
-		//NCLDebug::_RenderDebugDepthTested();
-		//NCLDebug::_RenderDebugNonDepthTested();
 	
-
-
 	//Downsample and present to screen
 		renderer->BindScreenFramebuffer();
 		renderer->SetViewPort(renderer->GetWidth(), renderer->GetHeight());
 		renderer->Clear(Renderer::COLOUR_DEPTH);
-
+	
 		float superSamples = (float)(numSuperSamples);
 		shaderPresentToWindow->Activate();
 		shaderPresentToWindow->SetUniform("uColorTex", 0);
@@ -226,9 +214,7 @@ void GraphicsPipeline::RenderScene()
 		fullscreenQuad->SetTexture(screenTexColor);
 		fullscreenQuad->Draw();
 
-		//NCLDEBUG - Text Elements (aliased)
-//		NCLDebug::_RenderDebugClipSpace();
-		//NCLDebug::_ClearDebugLists();
+
 		renderer->PostRender();
 		renderer->SwapBuffers();
 }
