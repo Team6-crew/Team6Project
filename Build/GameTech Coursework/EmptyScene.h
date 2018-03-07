@@ -26,8 +26,12 @@
 
 class EmptyScene : public Scene
 {
-public:
 
+private:
+	int scene_iterator;
+	bool backgroundSoundPlaying;
+public:
+	
 	float rotation = 0.0f;
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
@@ -64,7 +68,7 @@ public:
 
 	virtual void OnInitializeScene() override
 	{
-
+		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
@@ -212,19 +216,13 @@ public:
 	}
 
 
-	virtual void OnUpdateScene(float dt) override
-	{
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
 		Scene::OnUpdateScene(dt);
-		GameObject *pickup = FindGameObject("pickup");
-		rotation = 0.1f;
-		if (pickup)
-			(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation,
-				nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
+
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {

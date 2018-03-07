@@ -57,7 +57,7 @@ void Initialize()
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 
 	// Move this once main menu is hooked up
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
+	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
 
 // Print Debug Info
@@ -83,7 +83,10 @@ void PrintStatusEntries()
 
 	}
 	NCLDebug::AddStatusEntry(status_colour, "");
-	NCLDebug::AddStatusEntry(status_colour, "    Memory Footprint: %5.2f  (Press G for %s info)", HeapFactory::Instance()->PrintDebugInfo());
+	NCLDebug::AddStatusEntry(status_colour, "Bytes: " + std::to_string(HeapFactory::Instance()->PrintDebugInfo()));
+	NCLDebug::AddStatusEntry(status_colour, "Peak Bytes: " + std::to_string(HeapFactory::Instance()->PrintPeakInfo()));
+	//NCLDebug::AddStatusEntry(status_colour, "Net Allocation: " + std::to_string(HeapFactory::Instance()->PrintNetAllocInfo()));
+
 }
 
 // Process Input
@@ -134,7 +137,8 @@ int main()
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
 
 	Window::GetWindow().GetTimer()->GetTimedMS();
-
+	GameLogic::Instance()->setLevelIsLoaded(false);
+	GameLogic::Instance()->setGameHasStarted(false);
 	//Create main game-loop
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
@@ -145,7 +149,7 @@ int main()
 		timer_physics.UpdateRealElapsedTime(dt);
 		timer_update.UpdateRealElapsedTime(dt);
 		timer_render.UpdateRealElapsedTime(dt);
-		std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
+		//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
 		//Print Status Entries
 		//PrintStatusEntries();
 
@@ -182,7 +186,12 @@ int main()
 		}
 		else
 		{
-			GraphicsPipeline::Instance()->RenderScene(dt);
+			if (GameLogic::Instance()->levelIsLoaded())
+			{
+				GameLogic::Instance()->increaseTotalTime(dt);
+				GraphicsPipeline::Instance()->RenderScene(dt);
+
+			}
 			//Print Status Entries
 			if (show_status_menu)
 			{
@@ -192,6 +201,8 @@ int main()
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
 				show_status_menu = !show_status_menu;
 			}
+		
+			
 		}
 
 

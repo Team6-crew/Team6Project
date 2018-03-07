@@ -144,8 +144,6 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 		
 			scene->AddGameObject(geometry);
 			++paintable_counter;
-			frame += step;
-			GraphicsPipeline::Instance()->LoadingScreen(frame);
 
 			break;
 
@@ -188,9 +186,10 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
 
-
+	
 	//scene->OnInitializeScene();
 	mapObjects.clear();
+	
 }
 
 
