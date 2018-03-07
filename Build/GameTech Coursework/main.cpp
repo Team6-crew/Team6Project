@@ -83,7 +83,10 @@ void PrintStatusEntries()
 
 	}
 	NCLDebug::AddStatusEntry(status_colour, "");
-	NCLDebug::AddStatusEntry(status_colour, "    Memory Footprint: %5.2f  (Press G for %s info)", HeapFactory::Instance()->PrintDebugInfo());
+	NCLDebug::AddStatusEntry(status_colour, "Bytes: " + std::to_string(HeapFactory::Instance()->PrintDebugInfo()));
+	NCLDebug::AddStatusEntry(status_colour, "Peak Bytes: " + std::to_string(HeapFactory::Instance()->PrintPeakInfo()));
+	//NCLDebug::AddStatusEntry(status_colour, "Net Allocation: " + std::to_string(HeapFactory::Instance()->PrintNetAllocInfo()));
+
 }
 
 // Process Input
@@ -183,6 +186,12 @@ int main()
 		}
 		else
 		{
+			if (GameLogic::Instance()->levelIsLoaded())
+			{
+				GameLogic::Instance()->increaseTotalTime(dt);
+				GraphicsPipeline::Instance()->RenderScene(dt);
+
+			}
 			//Print Status Entries
 			if (show_status_menu)
 			{
@@ -192,12 +201,7 @@ int main()
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
 				show_status_menu = !show_status_menu;
 			}
-			if (GameLogic::Instance()->levelIsLoaded())
-			{
-				GameLogic::Instance()->increaseTotalTime(dt);
-				GraphicsPipeline::Instance()->RenderScene(dt);
-				
-			}
+		
 			
 		}
 
