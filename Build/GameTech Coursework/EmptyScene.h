@@ -28,8 +28,12 @@
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
-public:
 
+private:
+	int scene_iterator;
+	bool backgroundSoundPlaying;
+public:
+	
 	float rotation = 0.0f;
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
@@ -55,7 +59,7 @@ public:
 
 	virtual void OnInitializeScene() override
 	{
-
+		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
@@ -70,13 +74,6 @@ public:
 		}
 
 
-		//GameLogic::Instance()->addSoftPlayers(1);
-		////Add player to scene
-		//for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
-		//	this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
-		//	//this->AddGameObject(GameLogic::Instance()->getPlayer(i));
-		//	this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
-		//}
 
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
@@ -93,201 +90,26 @@ public:
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 		
+		backgroundSoundPlaying = false;
 
-		
-		//GameObject* testItem = CommonUtils::BuildPaintableCube(
-		//	"Test Item 1",
-		//	nclgl::Maths::Vector3(-5.0f, 5.5f, -5.0f),
-		//	nclgl::Maths::Vector3(2.0f, 2.0f, 2.0f),
-		//	true,
-		//	0.0f,
-		//	true,
-		//	false,
-		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//(*testItem->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
-		//(*testItem->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_A", Texture::COLOUR, 1024, 1024), 1);
-		//this->AddGameObject(testItem);
-		//testItem->SetTag(Tags::TPaintable);
-		//(*testItem->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
-		//frame += step;
-		//GraphicsPipeline::Instance()->LoadingScreen(frame);
-
-		//GameObject* testItem2 = CommonUtils::BuildPaintableCube(
-		//	"Test Item 2",
-		//	nclgl::Maths::Vector3(10.0f, 5.5f, -5.0f),
-		//	nclgl::Maths::Vector3(2.0f, 10.0f, 2.0f),
-		//	true,
-		//	0.0f,
-		//	true,
-		//	false,
-		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
-		//(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_D", Texture::COLOUR, 1024, 1024), 1);
-		//this->AddGameObject(testItem2);
-		//testItem2->SetTag(Tags::TPaintable);
-		//(*testItem2->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
-
-
-		
-		SpeedPickup* pickup = new SpeedPickup("pickup",
-			nclgl::Maths::Vector3(-88.0f, 10.0f, -88.0f),
-			0.5f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup->SetPhysics(pickup->Physics());
-		this->AddGameObject(pickup);
-
-
-		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
-			nclgl::Maths::Vector3(10.0f, 5.0f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		weapon->SetPhysics(weapon->Physics());
-		this->AddGameObject(weapon);
-
-
-
-		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
-			nclgl::Maths::Vector3(-10.0f, 5.0f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
-		weapon2->SetPhysics(weapon2->Physics());
-		this->AddGameObject(weapon2);
-
-
-
-		Paintbomb* paintbomb = new Paintbomb("paintbomb",
-			nclgl::Maths::Vector3(0.0f, 2.0f, -88.0f),
-			0.5f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
-		paintbomb->SetPhysics(paintbomb->Physics());
-		this->AddGameObject(paintbomb);
-
-		
-
-		Launchpad* launchpad = new Launchpad(
-			"launchpad",
-			nclgl::Maths::Vector3(0.0f, 1.0f, -88.0f),
-			nclgl::Maths::Vector3(2.0f, 0.25f, 2.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.7f, 0.5f, 0.7f, 1.0f));
-		launchpad->SetPhysics(launchpad->Physics());
-		this->AddGameObject(launchpad);
-
-
-		//portal a1
-		Portal* portal_a1 = new Portal(
-			"portal_a1",
-			nclgl::Maths::Vector3(0.0f, 36.0f, 0.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-		portal_a1->setDynamic(false);
-		portal_a1->SetPhysics(portal_a1->Physics());
-		portal_a1->SetTag(Tags::TPortal_A1);
-		portal_a1->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(portal_a1);
-
-
-		//portal a2
-		Portal* portal_a2 = new Portal(
-			"portal_a2",
-			nclgl::Maths::Vector3(0.0f, 21.5f, 115.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-		portal_a2->setDynamic(false);
-		portal_a2->SetPhysics(portal_a2->Physics());
-		portal_a2->SetTag(Tags::TPortal_A2);
-		portal_a2->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a2,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(portal_a2);
-
-
-		//portal b1
-		Portal* portal_b1 = new Portal(
-			"portal_b1",
-			nclgl::Maths::Vector3(-50.0f, 1.0f, 0.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		portal_b1->setDynamic(false);
-		portal_b1->SetPhysics(portal_b1->Physics());
-		portal_b1->SetTag(Tags::TPortal_B1);
-		portal_b1->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(portal_b1);
-
-
-
-		//portal b2
-		Portal* portal_b2 = new Portal(
-			"portal_b2",
-			nclgl::Maths::Vector3(50.0f, 1.0f, 0.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		portal_b2->setDynamic(false);
-		portal_b2->SetPhysics(portal_b2->Physics());
-		portal_b2->SetTag(Tags::TPortal_B2);
-		portal_b2->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b2,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(portal_b2);
-
-
-
-		Washingzone* washingzone = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 3.0f, 50.0f),
-			nclgl::Maths::Vector3(2.0f, 3.0f, 0.01f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.6f, 0.5f, 1.0f, 1.0f));
-		washingzone->SetTag(Tags::TWash);
-		washingzone->SetPhysics(washingzone->Physics());
-		this->AddGameObject(washingzone);
-
-		//add world part
-		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);		
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		if (GameLogic::Instance()->getTotalTime() >= 3.0f) {
+			GameLogic::Instance()->setGameHasStarted(true);
+			if (!backgroundSoundPlaying) {
+				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+				backgroundSoundPlaying = true;
+			}
+
+		}
+		if (scene_iterator > 0) {
+			GameLogic::Instance()->setLevelIsLoaded(true);
+		}
+		else scene_iterator = 1;
+
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
@@ -295,11 +117,7 @@ public:
 
 		Scene::OnUpdateScene(dt);
 		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
-		GameObject *pickup = FindGameObject("pickup");
-		rotation = 0.1f;
-		if(pickup)
-		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
-			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
+		
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
@@ -353,7 +171,6 @@ public:
 		{
 			exit(0);
 		}
-
 		//camera->SetPosition(cam->GetWorldTransform().GetPositionVector());
 	}
 

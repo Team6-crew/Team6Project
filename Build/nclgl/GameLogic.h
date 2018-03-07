@@ -24,6 +24,12 @@ public:
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
 	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	float getTotalTime() { return totalTime; }
+	bool levelIsLoaded() { return levelLoaded; }
+	bool gameHasStarted() { return gameStarted; }
+	void increaseTotalTime(float dt) { totalTime += dt; }
+	void setLevelIsLoaded(bool l) { levelLoaded = l; }
+	void setGameHasStarted(bool l) { gameStarted = l; }
 
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
@@ -64,4 +70,7 @@ private:
 	{ KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9 }
 	};
 	float increment;
+	bool levelLoaded;
+	float totalTime;
+	bool gameStarted;
 };
