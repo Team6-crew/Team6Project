@@ -82,8 +82,7 @@ protected: // States
 	sce::Gnm::DepthStencilControl depthControlSetup;
 
 	sce::Gnmx::GnmxGfxContext*	  currentGFXContext;
-	sce::Gnm::RenderTarget*		  colourTarget;
-	sce::Gnm::DepthRenderTarget*  depthTarget;
+
 
 protected: // Swap buffer
 	void SwapScreenBuffer();
