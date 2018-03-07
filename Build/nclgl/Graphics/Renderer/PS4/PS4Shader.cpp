@@ -127,39 +127,6 @@ void PS4Shader::GenerateVertexShader(const std::string& vertex)
 }
 
 bool PS4Shader::LoadShaderBinary(const string &name, char*& into, int& dataSize) {
-	//std::ifstream binfile6("/app0/ps4todo.txt");
-	//if (!binfile6.is_open())            //is it ok?
-	//{
-	//	std::cout << "input file did not open please check it\n";
-	//}
-	//std::ifstream binFile5("../../Data/Shaders/SceneRenderer/TechVertexBasic.glsl");
-	//if (!binFile5.is_open())            //is it ok?
-	//{
-	//	std::cout << "Input file did not open please check it\n";
-	//}
-	//std::ifstream binFile4;
-	//binFile4.open(name.c_str());
-	//if (binFile4.fail())            //is it ok?
-	//{
-	//	std::cout << "Input file did not open please check it\n";
-	//}
-	//std::ifstream binFile3;
-	//binFile3.open("D:\\NewteamProject\\Data\\Shaders\\SceneRenderer\\TechVertexBasic.glsl");
-	//if (binFile3.fail())            //is it ok?
-	//{
-	//	std::cout << "Input file did not open please check it\n";
-	//}
-	//if (!binFile3)
-	//{
-	//	return false;
-	//}
-	//std::ifstream binFile2("D:/NewteamProject/Data/Shaders/SceneRenderer/TechVertexBasic.sb", std::ios::binary);
-	//if (!binFile2)
-	//{
-	//	return false;
-	//}
-
-
 	std::ifstream binFile(name, std::ios::binary);
 	if (!binFile) {
 		return false;
@@ -261,6 +228,10 @@ void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4&
 		if (uniformLocation.second >= 0)
 		{
 			currentGFXContext->setConstantBuffers(uniformLocation.first, uniformLocation.second, 1, &constantBuffer);
+		}
+		else
+		{
+			std::cout << "Uniform not set " << name << std::endl;
 		}
 	}
 	else

@@ -219,6 +219,6 @@ void	OGLRenderer::PostRender() {}
 void	OGLRenderer::RegisterShader(ShaderBase* s) {}
 void	OGLRenderer::RegisterTexture(TextureBase* s) {}
 void	OGLRenderer::RegisterNode(RenderNodeBase* s) {}
-
+void	OGLRenderer::RegisterBuffer(FrameBufferBase* s) {}
 
 #endif

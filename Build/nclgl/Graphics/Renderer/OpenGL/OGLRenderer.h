@@ -43,6 +43,7 @@ public:
 	void	RegisterShader(ShaderBase* s) override;
 	void	RegisterTexture(TextureBase* s) override;
 	void	RegisterNode(RenderNodeBase* s) override;
+	void	RegisterBuffer(FrameBufferBase* s) override;
 
 protected:
 	// Windows specific handles

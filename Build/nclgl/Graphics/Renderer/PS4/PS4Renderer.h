@@ -63,6 +63,7 @@ public:
 	void					RegisterShader(ShaderBase* s)  override;
 	void					RegisterTexture(TextureBase* s)override;
 	void					RegisterNode(RenderNodeBase* s)override;
+	void					RegisterBuffer(FrameBufferBase* s) override;
 
 protected:// Setup functions 
 	void			 InitialiseMemoryAllocators();
@@ -120,6 +121,7 @@ protected: // Swap buffer
 	std::vector<PS4Texture*> textures;
 	std::vector<PS4RenderNode*> nodes;
 	std::vector<PS4Shader*> shaders;
+	std::vector<PS4FrameBuffer*> buffers;
 };
 
 #endif

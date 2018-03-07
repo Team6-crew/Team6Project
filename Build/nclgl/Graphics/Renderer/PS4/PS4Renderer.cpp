@@ -402,6 +402,13 @@ void	PS4Renderer::PrepareToRender()
 		node->SetGraphicsContext(currentGFXContext);
 	}
 
+	for (auto& buffer : buffers)
+	{
+		buffer->SetGraphicsContext(currentGFXContext);
+	}
+		
+	
+
 	// Put this temporarily here for now
 	//Primitive Setup State
 	Gnm::PrimitiveSetup primitiveSetup;
@@ -471,5 +478,11 @@ void	PS4Renderer::RegisterNode(RenderNodeBase* s)
 {
 	PS4RenderNode* node = static_cast<PS4RenderNode*>(s);
 	nodes.push_back(node);
+}
+
+void		PS4Renderer::RegisterBuffer(FrameBufferBase* s)
+{
+	PS4FrameBuffer* buffer = static_cast<PS4FrameBuffer*>(s);
+	buffers.push_back(buffer);
 }
 #endif
