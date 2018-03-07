@@ -28,7 +28,7 @@ class MainMenu : public Scene
 public:
 	int numOfPlayers;
 	int numOfAi;
-	int myPlayerNum;
+	
 	int volumelevel = 5;
 
 	int humanOrAi[4] = { 0 };
@@ -170,9 +170,9 @@ public:
 		//JoinServerMenu->addToMenu(ServerListMenu, 0);
 		ServerListMenu->addToMenu(JoinServerMenu, 1);
 		ServerListMenu->set_id(11);
-
-
-		if (listen.Initialize(0))
+		listen = new NetworkBase();
+		GameLogic::Instance()->setListen(listen);
+		if (listen->Initialize(0))
 		{
 			NCLDebug::Log("Network: Initialized!");
 
@@ -430,7 +430,7 @@ public:
 			case (1000):
 			{
 				if (!entering_IP) {
-					string_IP = "10.58.207.248:1234";
+					string_IP = "10.70.33.2:1234";
 					entering_IP = true;
 					activeMenu->replaceMenuItem(0, "IP: " + string_IP);
 				}
@@ -444,7 +444,7 @@ public:
 			case (1100):
 			{
 				MySocket Ready("REDY");
-				Ready.BroadcastPacket(listen.m_pNetwork);
+				Ready.BroadcastPacket(listen->m_pNetwork);
 				break;
 			}
 			}
@@ -468,7 +468,7 @@ public:
 				&MainMenu::ProcessNetworkEvent,	// Function to call
 				this,								// Associated class instance
 				std::placeholders::_1);				// Where to place the first parameter
-			listen.ServiceNetwork(dt, callback);
+			listen->ServiceNetwork(dt, callback);
 		}
 		
 	}
@@ -480,7 +480,7 @@ private:
 	bool entering_IP;
 	
 	ENetPeer * serverConnection;
-	NetworkBase listen;
+	NetworkBase * listen;
 	TextureBase*	tex;
 	OGLMesh* backgroundMesh;
 	std::string con[6] = { "Forward", "Backward", "Turn Left", "Turn Right", "Jump", "Shoot" };
@@ -517,7 +517,7 @@ private:
 		ipPrefix[3] = stoi(string_IP.substr(dotPos3 + 1, dotPos4 - dotPos3 - 1));
 		int dotPos5 = string_IP.length();
 		ipPrefix[4] = stoi(string_IP.substr(dotPos4 + 1, dotPos5 - dotPos4 - 1));
-		serverConnection = listen.ConnectPeer(ipPrefix[0], ipPrefix[1], ipPrefix[2], ipPrefix[3], ipPrefix[4]);
+		serverConnection = listen->ConnectPeer(ipPrefix[0], ipPrefix[1], ipPrefix[2], ipPrefix[3], ipPrefix[4]);
 	}
 	void replaceControl(int con, int line_num) {
 		std::string line;
@@ -695,7 +695,7 @@ private:
 			MySocket Received (evnt.packet);
 			string SocketId = Received.GetPacketId();
 			if (SocketId == "LBCN") {
-				myPlayerNum = stoi(Received.TruncPacket(0));
+				GameLogic::Instance()->setMyNetNum(stoi(Received.TruncPacket(0)));
 				activeMenu = ServerListMenu;
 				MySocket ConfirmConnect("CNCN");
 				ConfirmConnect.SendPacket(evnt.peer);
@@ -707,7 +707,8 @@ private:
 			}
 			else if (SocketId == "STRT") {
 				getControls();
-				GameLogic::Instance()->setnumOfPlayersMp(pow (2, myPlayerNum));
+				int myPlayerNum = GameLogic::Instance()->getMyNetNum();
+				GameLogic::Instance()->setnumOfPlayersMp(pow (2, GameLogic::Instance()->getMyNetNum()));
 				int numEnemies = 0b0000;
 				for (int i = 0; i < players_connected; i++) {
 					if (i != myPlayerNum) numEnemies += pow(2, i);

@@ -5,7 +5,7 @@
 #include <ncltech\Scene.h>
 #include <vector>
 #include <ncltech\PlayerSoftBody.h>
-
+#include <ncltech/NetworkBase.h>
 class GameLogic : public TSingleton<GameLogic> {
 
 public:
@@ -43,7 +43,13 @@ public:
 	int getnumAI(void) { return numAI; };
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
+	NetworkBase * getListen() { return network; }
+	void setListen(NetworkBase * listen) { network = listen; }
+
+	void setMyNetNum(int k) { myNetPlayerNum = k; }
+	int getMyNetNum() { return myNetPlayerNum; }
 private:
+	int myNetPlayerNum = 0;
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
 	float posX, posZ;
@@ -54,7 +60,7 @@ private:
 	std::vector <Player*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
 	nclgl::Maths::Vector4 colours[4];
-
+	NetworkBase * network;
 	// split screen ui integration
 	int numOfPlayersMp;
 	int numOfNetPlayers;

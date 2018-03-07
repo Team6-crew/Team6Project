@@ -159,12 +159,13 @@ int main(int arcg, char** argv)
 						bucket = 0;
 						MySocket NextPacket("NEXT");
 						for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().x));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().y));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().z));
 							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
 							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
 							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().x));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().y));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().z));
+							
 						}
 						NextPacket.BroadcastPacket(server.m_pNetwork);
 					}

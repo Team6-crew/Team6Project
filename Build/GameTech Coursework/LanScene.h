@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nclgl/MySocket.h>
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
 #include <ncltech\Player.h>
@@ -34,7 +35,7 @@ public:
 	LanScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
-
+		listen = GameLogic::Instance()->getListen();
 		// Pause Menu
 		pauseMenu = new Menu();
 		pauseMenu->visible = false;
@@ -44,6 +45,7 @@ public:
 		pauseMenu->AddMenuItem("Back to Main Menu");
 		pauseMenu->AddMenuItem("Exit Game");
 		pauseMenu->setSelection(-1);
+		myPlayerNum = GameLogic::Instance()->getMyNetNum();
 	}
 
 	virtual ~LanScene()
@@ -295,18 +297,22 @@ public:
 
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
-
+		sendVelocityUpdate();
 
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		auto callback = std::bind(
+			&LanScene::ProcessNetworkEvent,	// Function to call
+			this,								// Associated class instance
+			std::placeholders::_1);				// Where to place the first parameter
+		listen->ServiceNetwork(dt, callback);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
-
 		Scene::OnUpdateScene(dt);
 		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
@@ -435,12 +441,54 @@ public:
 	};
 
 private:
+	void sendVelocityUpdate() {
+		MySocket velocity("INFO");
+		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().x));
+		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().y));
+		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().z));
+		velocity.BroadcastPacket(listen->m_pNetwork);
+	}
 	RenderNode * cam;
-
+	NetworkBase * listen;
 	GameObject *body;
 	GameObject *ball;
-
+	int myPlayerNum;
 	Menu * pauseMenu;
 
 	float Score = 0.0f;
+	void ProcessNetworkEvent(const ENetEvent& evnt) {
+
+		if (evnt.type == ENET_EVENT_TYPE_CONNECT)
+		{
+			printf("Connected to Server\n");
+		}
+		else if (evnt.type == ENET_EVENT_TYPE_RECEIVE) {
+			MySocket Received(evnt.packet);
+			if (Received.GetPacketId() == "NEXT") {
+				vector <float> updates;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					for (int j = 0; j < 6; j++) {
+						updates.push_back(stof(Received.TruncPacket(i*6+j)));
+					}
+				}
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					if (i == myPlayerNum) {
+						GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+					}
+					else {
+						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6+3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						cntNet++;
+					}
+					
+				}
+				sendVelocityUpdate();
+			}
+			enet_packet_destroy(evnt.packet);
+		}
+		else if (ENET_EVENT_TYPE_DISCONNECT) {
+			printf("Disconnected from server");
+		}
+	};
 };
