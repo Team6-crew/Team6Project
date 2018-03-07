@@ -5,6 +5,7 @@
 
 WeaponPickup::WeaponPickup()
 {	
+	SetTag(Tags::TWeapon);
 }
 
 

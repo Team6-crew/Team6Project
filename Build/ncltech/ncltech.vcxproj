@@ -159,7 +159,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScreenPicker.cpp" />
-    <ClCompile Include="SpeedPickup.cpp" />
+    <ClCompile Include="RandomPickup.cpp" />
     <ClCompile Include="SphereCollisionShape.cpp" />
     <ClCompile Include="Washingzone.cpp" />
     <ClCompile Include="StunProjectile.cpp" />
@@ -191,7 +191,7 @@
     <ClInclude Include="PlayerSoftBody.h" />
     <ClInclude Include="Softbody.h" />
     <ClInclude Include="Projectile.h" />
-    <ClInclude Include="SpeedPickup.h" />
+    <ClInclude Include="RandomPickup.h" />
     <ClInclude Include="StunProjectile.h" />
     <ClInclude Include="StunWeaponPickup.h" />
     <ClInclude Include="Spring_Constraint.h" />

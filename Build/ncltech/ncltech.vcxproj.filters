@@ -81,9 +81,6 @@
     <ClInclude Include="ScreenPicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpeedPickup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SphereCollisionShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -138,6 +135,10 @@
     <ClInclude Include="Washingzone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Paintbomb.h" />
+    <ClInclude Include="RandomPickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -188,9 +189,6 @@
     <ClCompile Include="ScreenPicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpeedPickup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SphereCollisionShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -234,6 +232,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Washingzone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Paintbomp.cpp" />
+    <ClCompile Include="RandomPickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
