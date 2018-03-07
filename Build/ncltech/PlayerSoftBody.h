@@ -77,6 +77,11 @@ public:
 
 	void handleInput(float dt);
 	void move(float dt);
+
+	void speedLimit();
+	void wallLimit();
+	void jumpSlow();
+
 private:
 
 	Softbody * ball;
