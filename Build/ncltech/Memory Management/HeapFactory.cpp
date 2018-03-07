@@ -81,6 +81,36 @@ int HeapFactory::PrintDebugInfo()
 	}
 
 }
+
+int HeapFactory::PrintPeakInfo()
+{
+
+	for (int i = 0; i < MAX_HEAPS; ++i)
+	{
+		if (!strcmp(heapList[i].GetName(), ""))
+		{
+			break;
+		}
+		else
+		{
+			return heapList[i].GetPeakBytes();
+		}
+	}
+}
+int HeapFactory::PrintNetAllocInfo()
+{
+	for (int i = 0; i < MAX_HEAPS; ++i)
+	{
+		if (!strcmp(heapList[i].GetName(), ""))
+		{
+			break;
+		}
+		else
+		{
+			return heapList[i].GetNetAllocations();
+		}
+	}
+}
 //Heap* HeapFactory::GetDefaultHeap()
 //{
 //	return GetHeap("Default");

@@ -37,7 +37,7 @@ public:
 		for (int i = 0; i < 10; ++i) {
 			for (int j = 0; j < 20; ++j) {
 				if (j != 0 && j != 10) {
-					GameObject* sphere = CommonUtils::BuildSphereObject(
+					GameObject* sphere = CommonUtils::BuildSoftSphereObject(
 						"",
 						nclgl::Maths::Vector3(position.x + radius * sin(j * 18 * PI / 180) * cos(i * PI / 180 * 18), position.y + radius * sin(j * PI / 180 * 18) * sin(i * PI / 180 * 18) + 1, position.z + radius * cos(j * PI / 180 * 18)),
 						0.05,
@@ -55,7 +55,7 @@ public:
 			}
 		}
 
-		GameObject* endsphere1 = CommonUtils::BuildSphereObject(
+		GameObject* endsphere1 = CommonUtils::BuildSoftSphereObject(
 			"",
 			nclgl::Maths::Vector3(position.x + radius - 1, position.y + radius, position.z - radius * 1),
 			0.05,
@@ -69,7 +69,7 @@ public:
 		endsphere1->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(100, 0, 0, 100, 0, 0, 100, 0, 0));
 		softball[181] = endsphere1;
 
-		GameObject* endsphere2 = CommonUtils::BuildSphereObject(
+		GameObject* endsphere2 = CommonUtils::BuildSoftSphereObject(
 			"",
 			nclgl::Maths::Vector3(position.x + radius - 1, position.y + radius, position.z + radius * 1),
 			0.05,

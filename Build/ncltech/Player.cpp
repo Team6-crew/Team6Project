@@ -11,6 +11,7 @@
 #include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 #include <nclgl\Launchpad.h>
+#include <nclgl\GameLogic.h>
 
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <nclgl\Audio\AudioFactory.h>
@@ -141,7 +142,9 @@ void Player::move(float dt) {
 		bodyRenderNode->SetTransform(worldTr);
 
 		physicsNode->SetForce(Vector3(0, 0, 0));
-		handleInput(dt);
+		if (GameLogic::Instance()->gameHasStarted()) {
+			handleInput(dt);
+		}
 
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
