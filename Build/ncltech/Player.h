@@ -24,6 +24,7 @@ public:
 
 	GameObject* getBody() { return body; }
 	void move(float dt);
+	void moveServer(float dt);
 	void shoot();
 	
 	float getSpeed() { return speed; }

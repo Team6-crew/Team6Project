@@ -443,6 +443,8 @@ public:
 
 private:
 	void sendVelocityUpdate() {
+		printf("%f\n", GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().x);
+		printf("%f\n", GameLogic::Instance()->getNetPlayer(0)->Physics()->GetLinearVelocity().x);
 		MySocket velocity("INFO");
 		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().x));
 		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().y));
@@ -475,11 +477,11 @@ private:
 				int cntNet = 0;
 				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 					if (i == myPlayerNum) {
-						GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
 					}
 					else {
 						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
-						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6+3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
 						cntNet++;
 					}
 					

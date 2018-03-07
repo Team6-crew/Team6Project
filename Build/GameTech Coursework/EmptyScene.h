@@ -307,11 +307,8 @@ public:
 		(*pickup->Render()->GetChildIteratorStart())->SetTransform(nclgl::Maths::Matrix4::Rotation(rotation, 
 			nclgl::Maths::Vector3(0, 1, 0))*(*pickup->Render()->GetChildIteratorStart())->GetTransform());
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
-			GameLogic::Instance()->getPlayer(i)->move(dt);
-		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->move();
-		}
+			GameLogic::Instance()->getPlayer(i)->moveServer(dt);
+
 		// Pause Menu
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
 		{

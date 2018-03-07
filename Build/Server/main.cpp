@@ -94,16 +94,14 @@ int main(int arcg, char** argv)
 	PhysicsEngine::Instance();
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Lan Project"));
 	timer.GetTimedMS();
-	while (true)
+	while (Window::GetWindow().UpdateWindow())
 	{
-		mainLoop();
-		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
+		
+		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?													
 																			//Update Performance Timers (Show results every second)
 		accum_time += dt;
 		rotation += 0.5f * PI * dt;
-		if (gameStarted) {
-
-		}
+		mainLoop();
 		//Handle All Incoming Packets and Send any enqued packets
 		server.ServiceNetwork(dt, [&](const ENetEvent& evnt)
 		{
@@ -165,7 +163,6 @@ int main(int arcg, char** argv)
 							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().x));
 							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().y));
 							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().z));
-							
 						}
 						NextPacket.BroadcastPacket(server.m_pNetwork);
 					}
