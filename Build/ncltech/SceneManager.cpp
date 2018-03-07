@@ -78,7 +78,7 @@ void SceneManager::JumpToScene(int idx)
 	GraphicsPipeline::Instance()->InitializeDefaults();
 
 
-	if (idx == 1) // ball
+	if (idx == 1) 
 	{
 		LevelLoader loader;
 		loader.BuildLevel("SimpleLevel.txt", scene);
@@ -93,20 +93,6 @@ void SceneManager::JumpToScene(int idx)
 		}
 
 	}
-
-	//if (idx == 1) // soft body
-	//{
-	//	LevelLoader loader;
-	//	loader.BuildLevel("SimpleLevel.txt", scene);
-	//	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i)
-	//	{
-	//		scene->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
-	//		scene->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
-
-	//	}
-
-	//}
-
 
 	scene->OnInitializeScene();
 	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());

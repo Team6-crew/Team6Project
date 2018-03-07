@@ -294,7 +294,7 @@ GameObject* CommonUtils::BuildCuboidObject(
 		pnode->SetInverseMass(inverse_mass);
 		float rad = sqrt(halfdims.x*halfdims.x + halfdims.y*halfdims.y + halfdims.z*halfdims.z);
 		pnode->SetColRadius(rad*1.5f);
-		pnode->SetFriction(-1000.0);
+		//pnode->SetFriction(-1000.0);
 
 		if (!collidable)
 		{
@@ -323,67 +323,6 @@ GameObject* CommonUtils::BuildCuboidObject(
 		);
 	}
 	
-	return obj;
-}
-
-GameObject* CommonUtils::BuildGroundCuboidObject(
-	const std::string& name,
-	const Vector3& pos,
-	const Vector3& halfdims,
-	bool physics_enabled,
-	float inverse_mass,
-	bool collidable,
-	bool dragable,
-	const Vector4& color)
-{
-	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
-	// and a parent node that will contain the world transform/physics transform
-	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
-
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
-	dummy->SetTransform(Matrix4::Scale(halfdims));
-	dummy->SetHalfDims(halfdims);
-	rnode->AddChild(dummy);
-
-	rnode->SetTransform(Matrix4::Translation(pos));
-	rnode->SetBoundingRadius(halfdims.Length());
-
-	PhysicsNode* pnode = NULL;
-	if (physics_enabled)
-	{
-		pnode = new PhysicsNode();
-		pnode->SetPosition(pos);
-		pnode->SetInverseMass(inverse_mass);
-		float rad = sqrt(halfdims.x*halfdims.x + halfdims.y*halfdims.y + halfdims.z*halfdims.z);
-		pnode->SetColRadius(rad*1.5f);
-
-		if (!collidable)
-		{
-			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
-			pnode->SetInverseInertia(CuboidCollisionShape(halfdims).BuildInverseInertia(inverse_mass));
-		}
-		else
-		{
-			CollisionShape* pColshape = new CuboidCollisionShape(halfdims);
-			pnode->SetCollisionShape(pColshape);
-			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
-		}
-	}
-
-	GameObject* obj = new GameObject(name, rnode, pnode);
-	if (pnode)
-	{
-		pnode->SetParent(obj);
-	}
-
-	if (dragable)
-	{
-		ScreenPicker::Instance()->RegisterNodeForMouseCallback(
-			dummy, //Dummy is the rendernode that actually contains the drawable mesh
-			std::bind(&DragableObjectCallback, obj, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)
-		);
-	}
-
 	return obj;
 }
 

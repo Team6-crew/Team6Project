@@ -72,6 +72,12 @@ public:
 		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
 		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
+
+	/*	if (num_p & 0b0001) GameLogic::Instance()->addPlayer(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addPlayer(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addPlayer(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addPlayer(3);*/
+
 		//Add player to scene
 	 for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
@@ -84,8 +90,8 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
 
-		frame += step * 2.0f;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
+		/*frame += step * 2.0f;
+		GraphicsPipeline::Instance()->LoadingScreen(frame);*/
 
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
@@ -101,46 +107,9 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup_new.png"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-
-		/*frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);*/
-		
-		//GameObject* testItem = CommonUtils::BuildPaintableCube(
-		//	"Test Item 1",
-		//	nclgl::Maths::Vector3(-5.0f, 5.5f, -5.0f),
-		//	nclgl::Maths::Vector3(2.0f, 2.0f, 2.0f),
-		//	true,
-		//	0.0f,
-		//	true,
-		//	false,
-		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//(*testItem->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
-		//(*testItem->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_A", Texture::COLOUR, 1024, 1024), 1);
-		//this->AddGameObject(testItem);
-		//testItem->SetTag(Tags::TPaintable);
-		//(*testItem->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
-		//frame += step;
-		//GraphicsPipeline::Instance()->LoadingScreen(frame);
-
-		//GameObject* testItem2 = CommonUtils::BuildPaintableCube(
-		//	"Test Item 2",
-		//	nclgl::Maths::Vector3(10.0f, 5.5f, -5.0f),
-		//	nclgl::Maths::Vector3(2.0f, 10.0f, 2.0f),
-		//	true,
-		//	0.0f,
-		//	true,
-		//	false,
-		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
-		//(*testItem2->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_D", Texture::COLOUR, 1024, 1024), 1);
-		//this->AddGameObject(testItem2);
-		//testItem2->SetTag(Tags::TPaintable);
-		//(*testItem2->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
-
-
-		
+				
 		SpeedPickup* pickup = new SpeedPickup("pickup",
-			nclgl::Maths::Vector3(-88.0f, 10.0f, -88.0f),
+			nclgl::Maths::Vector3(0.0f, 5.0f, -60.0f),
 			0.5f,
 			true,
 			0.0f,
@@ -148,32 +117,7 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup->SetPhysics(pickup->Physics());
 		this->AddGameObject(pickup);
-
-
-		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
-			nclgl::Maths::Vector3(10.0f, 5.0f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		weapon->SetPhysics(weapon->Physics());
-		this->AddGameObject(weapon);
-
-
-
-		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
-			nclgl::Maths::Vector3(-10.0f, 5.0f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
-		weapon2->SetPhysics(weapon2->Physics());
-		this->AddGameObject(weapon2);
-
-
-
+				
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(0.0f, 2.0f, -88.0f),
 			0.5f,
@@ -183,21 +127,7 @@ public:
 			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
 		paintbomb->SetPhysics(paintbomb->Physics());
 		this->AddGameObject(paintbomb);
-
 		
-
-		Launchpad* launchpad = new Launchpad(
-			"launchpad",
-			nclgl::Maths::Vector3(0.0f, 1.0f, -88.0f),
-			nclgl::Maths::Vector3(2.0f, 0.25f, 2.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.7f, 0.5f, 0.7f, 1.0f));
-		launchpad->SetPhysics(launchpad->Physics());
-		this->AddGameObject(launchpad);
-
-
 		//portal a1
 		Portal* portal_a1 = new Portal(
 			"portal_a1",
@@ -216,8 +146,7 @@ public:
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
 		this->AddGameObject(portal_a1);
-
-
+		
 		//portal a2
 		Portal* portal_a2 = new Portal(
 			"portal_a2",
@@ -277,20 +206,7 @@ public:
 				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
 		this->AddGameObject(portal_b2);
-
-
-
-		Washingzone* washingzone = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 3.0f, 50.0f),
-			nclgl::Maths::Vector3(2.0f, 3.0f, 0.01f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.6f, 0.5f, 1.0f, 1.0f));
-		washingzone->SetTag(Tags::TWash);
-		washingzone->SetPhysics(washingzone->Physics());
-		this->AddGameObject(washingzone);
-
+		
 		//add world part
 		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);		
 	}

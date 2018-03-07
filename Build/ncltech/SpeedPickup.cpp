@@ -19,9 +19,6 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	bool collidable,
 	const Vector4& color)
 {
-
-	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
-	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
@@ -40,8 +37,7 @@ SpeedPickup::SpeedPickup(const std::string& name,
 		pnode->SetColRadius(radius);
 
 		if (!collidable)
-		{
-			//Even without a collision shape, the inertia matrix for rotation has to be derived from the objects shape
+		{			
 			pnode->SetInverseInertia(SphereCollisionShape(radius).BuildInverseInertia(inverse_mass));
 		}
 		else
@@ -56,8 +52,7 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	renderNode = rnode;
 	physicsNode = pnode;
 
-	setDynamic(false);
-	
+	setDynamic(false);	
 
 	RegisterPhysicsToRenderTransformCallback();
 }
@@ -67,14 +62,51 @@ SpeedPickup::~SpeedPickup()
 {
 }
 
-void SpeedPickup::Effect(Player* player) {
-	player->setSpeed(50.0f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+void SpeedPickup::Effect(Player* player)
+{
 }
 
 void SpeedPickup::SoftEffect(PlayerSoftBody* player) {
-	for (int i = 0; i < 182; ++i) {
+	for (int i = 0; i < 182; ++i)
+	{
 		player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
 	}
+}	
+
+void SpeedPickup::eff_speed(Player* player)
+{
+	player->setSpeed(50.0f);
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }
+void SpeedPickup::eff_paint(Player* player)
+{
+	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+}
+
+void SpeedPickup::eff_stun(Player* player)
+{
+	player->setStunDuration(3.0f);
+	player->stun(0.2f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
+}
+
+void SpeedPickup::soft_eff_speed(PlayerSoftBody* player)
+{
+	player->setSpeed(50.0f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+}
+void SpeedPickup::soft_eff_paint(PlayerSoftBody* player)
+{
+	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+}
+
+void SpeedPickup::soft_eff_stun(PlayerSoftBody* player)
+{
+	player->setStunDuration(3.0f);
+	player->stun(0.2f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
+}
+
+	
