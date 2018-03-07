@@ -15,6 +15,7 @@ public:
 		const nclgl::Maths::Vector4& color);
 	~StunWeaponPickup();
 
-	virtual void effect(Player* player);
+	virtual void Effect(Player* player);
+	virtual void SoftEffect(PlayerSoftBody* player);
 };
 

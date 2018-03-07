@@ -151,20 +151,33 @@ void Player::move(float dt) {
 }
 
 void Player::handleInput(float dt) {
-	Vector3 jump(0, 20, 0);
+	Vector3 jump(0, 15, 0);
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 right = Vector3::Cross(forward, up);
 
+	if (justJumped) justJumped = !justJumped;
+
 	if (Window::GetKeyboard()->KeyDown(move_up))
-	{
-		physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
+	{    
+		if (canjump) {
+			physicsNode->SetForce(Vector3(-forward.x, -1.5f, -forward.z) * speed);
+		}
+		else {
+			physicsNode->SetForce(Vector3(-forward.x, 0.0f, -forward.z) * speed);
+		}
+		
 	}
 
 	if (Window::GetKeyboard()->KeyDown(move_down))
 	{
-		physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
+		if (canjump) {
+			physicsNode->SetForce(Vector3(forward.x, -1.5f, forward.z) * speed);
+		}
+		else {
+			physicsNode->SetForce(Vector3(forward.x, 0.0f, forward.z) * speed);
+		}
 	}
 	if (Window::GetKeyboard()->KeyDown(move_left))
 	{
@@ -187,6 +200,7 @@ void Player::handleInput(float dt) {
 		if (canjump == true) {
 			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 			physicsNode->SetLinearVelocity(jump + physicsNode->GetLinearVelocity());
+			justJumped = true;
 			canjump = false;
 		}
 	}
@@ -262,7 +276,7 @@ void Player::resetCamera(float dt) {
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		pickup->effect(this);
+		pickup->Effect(this);
 		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
 		return false;
 	}
@@ -286,12 +300,13 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	}
 	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
 		Washingzone* wash = (Washingzone*)otherNode->GetParent();
-		wash->effect(this);
+		wash->Effect(this);
 		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TGround))
-	{ 
-		canjump = true;
+	else if ((otherNode->GetParent()->physicsNode->GetPosition().y + (*otherNode->GetParent()->Render()->GetChildIteratorStart())->GetHalfDims().y*0.97f)
+		<=(physicsNode->GetPosition().y)-physicsNode->GetColRadius())
+	{   
+		if(!justJumped) canjump = true;
 	}
 	return true;
 };

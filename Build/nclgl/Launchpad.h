@@ -4,8 +4,10 @@
 #include <string>
 #include <vector>
 #include <nclgl\Vector4.h>
+#include <ncltech\PlayerSoftBody.h>
 
 class Player;
+class PlayerSoftBody;
 class Launchpad : public GameObject
 {
 public:
@@ -21,6 +23,7 @@ public:
 	~Launchpad();
 
 	void Launch(Player* player);
+	void SoftLaunch(PlayerSoftBody* player);
 	
 
 private:

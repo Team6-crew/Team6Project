@@ -15,7 +15,8 @@ public:
 		const nclgl::Maths::Vector4& color);
 	~Paintbomb();
 
-	virtual void effect(Player* player);
+	virtual void Effect(Player* player);
+	virtual void SoftEffect(PlayerSoftBody* player);
 
 
 };

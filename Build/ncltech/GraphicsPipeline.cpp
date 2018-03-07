@@ -41,7 +41,7 @@ GraphicsPipeline::GraphicsPipeline()
 
 	LoadShaders();
 	NCLDebug::_LoadShaders();
-	
+
 	trailQuad = OGLMesh::GenerateQuad();
 	minimap = OGLMesh::GenerateQuad();
 	piemap = OGLMesh::GenerateQuad();
@@ -55,7 +55,7 @@ GraphicsPipeline::GraphicsPipeline()
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
 	InitializeDefaults();
-	
+
 
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
@@ -77,12 +77,12 @@ GraphicsPipeline::GraphicsPipeline()
 }
 
 GraphicsPipeline::~GraphicsPipeline()
-{  
+{
 	//SAFE_DELETE(camera);
 	for (int i = 0; i < cameras.size(); i++) {
 		SAFE_DELETE(cameras[i]);
 	}
-	
+
 	SAFE_DELETE(fullscreenQuad);
 
 	SAFE_DELETE(shaderPresentToWindow);
@@ -125,7 +125,7 @@ void GraphicsPipeline::LoadShaders()
 	shaderTrail = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/testfrag.glsl");
-	
+
 	shaderCircle = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/circlefrag.glsl");
@@ -174,15 +174,15 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		ScreenPicker::Instance()->UpdateAssets(screenTexWidth, screenTexHeight);
 
 		//Color Texture
-		ResourceManager::Instance()->MakeTexture("screenTexColor",Texture::COLOUR, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexColor", Texture::COLOUR, screenTexWidth, screenTexHeight);
 		//Depth Texture
-		ResourceManager::Instance()->MakeTexture("screenTexDepth",Texture::DEPTH, screenTexWidth, screenTexHeight);
+		ResourceManager::Instance()->MakeTexture("screenTexDepth", Texture::DEPTH, screenTexWidth, screenTexHeight);
 		//Generate our Framebuffer
 		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("screenTexColor"), ResourceManager::Instance()->getTexture("screenTexDepth"));
 	}
-	
+
 	//Construct our Shadow Maps and Shadow UBO
-	ResourceManager::Instance()->MakeTexture("shadowTex",Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
+	ResourceManager::Instance()->MakeTexture("shadowTex", Texture::DEPTH_ARRAY, SHADOWMAP_SIZE, SHADOWMAP_NUM);
 	shadowFBO = FrameBufferFactory::Instance()->MakeFramebuffer(ResourceManager::Instance()->getTexture("shadowTex"), false);
 
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
@@ -214,7 +214,7 @@ void GraphicsPipeline::RenderMenu() {
 	//for (RenderNodeBase* node : allNodes)
 	//	node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
-							//Build Transparent/Opaque Renderlists
+	//Build Transparent/Opaque Renderlists
 
 
 	BuildAndSortRenderLists();
@@ -222,55 +222,6 @@ void GraphicsPipeline::RenderMenu() {
 	//NCLDebug - Build render lists
 	NCLDebug::_BuildRenderLists();
 
-
-	//Build shadowmaps
-	//BuildShadowTransforms();
-	shadowFBO->Activate();
-	renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
-	renderer->Clear(Renderer::DEPTH);
-
-	shaderShadow->Activate();
-	shaderShadow->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-
-	RenderAllObjects(true,
-		[&](RenderNodeBase* node)
-	{
-		shaderShadow->SetUniform("uModelMtx", node->GetWorldTransform());
-	}
-	);
-
-	//Render scene to screen fbo
-	screenFBO->Activate();
-	renderer->SetViewPort(screenTexWidth, screenTexHeight);
-	renderer->SetClearColour(backgroundColor);
-	renderer->Clear(Renderer::COLOUR_DEPTH);
-
-	shaderForwardLighting->Activate();
-	shaderForwardLighting->SetUniform("uProjViewMtx", projViewMatrix);
-	//shaderForwardLighting->SetUniform("uDiffuseTex", 0);
-	shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
-	shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
-	shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
-	shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
-	//shaderForwardLighting->SetUniform("uShadowTransform[0]", SHADOWMAP_NUM, shadowProjView);
-	//shaderForwardLighting->SetUniform("uShadowTex", 2);
-	//shaderForwardLighting->SetUniform("uShadowSinglePixel", Vector2(1.f / SHADOWMAP_SIZE, 1.f / SHADOWMAP_SIZE));
-
-	//ResourceManager::Instance()->getTexture("shadowTex")->Bind(2);
-
-	RenderAllObjects(false,
-		[&](RenderNodeBase* node)
-	{
-		shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
-		shaderForwardLighting->SetUniform("uColor", node->GetColour());
-	}
-	);
-
-	// Render Screen Picking ID's
-	// - This needs to be somewhere before we lose our depth buffer
-	//   BUT at the moment that means our screen picking is super sampled and rendered at 
-	//   a much higher resolution. Which is silly.
-	//ScreenPicker::Instance()->RenderPickingScene(projViewMatrix, Matrix4::Inverse(projViewMatrix), ResourceManager::Instance()->getTexture("screenTexDepth")->TempGetID(), screenTexWidth, screenTexHeight);
 
 	screenFBO->Activate();
 	renderer->SetViewPort(screenTexWidth, screenTexHeight);
@@ -298,9 +249,11 @@ void GraphicsPipeline::RenderMenu() {
 	//NCLDEBUG - Text Elements (aliased)
 	NCLDebug::_RenderDebugClipSpace();
 	NCLDebug::_ClearDebugLists();
-	
+
+	renderer->BindScreenFramebuffer();
 	renderer->SwapBuffers();
-	
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+
 }
 void GraphicsPipeline::LoadingScreen(float frame) {
 
@@ -309,7 +262,6 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	shaderLoading->Activate();
 	PaintBuffer->ChangeColourAttachment(loading_tex);
 	paintQuad->ReplaceTexture(loading_tex, 0);
-	shaderForwardLighting->SetUniform("uDiffuseTex", 0);
 	shaderLoading->SetUniform("radius_perc", frame);
 	paintQuad->Draw();
 
@@ -326,6 +278,25 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	fullscreenQuad->Draw();
 	renderer->SwapBuffers();
 }
+
+void GraphicsPipeline::SplatProjectile(float pos_x, float pos_z, float rad, Vector4 colour) {
+	TrailBuffer->Activate();
+	GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+	nclgl::Maths::Vector3 gr_pos = grnd->Physics()->GetPosition();
+	renderer->SetViewPort(2048, 2048);
+	shaderSplat->Activate();
+	splat_tex->Bind(3);
+	float posX = (pos_x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+	float posZ = 1 - (pos_z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+	shaderSplat->SetUniform("uDiffuseTex", 3);
+	shaderSplat->SetUniform("pos_x", posX);
+	shaderSplat->SetUniform("pos_z", posZ);
+	shaderSplat->SetUniform("rad", rad/WORLD_SIZE*2.0f);
+	Vector3 trailColor = Vector3(colour.x, colour.y, colour.z);
+	shaderSplat->SetUniform("trailColor", trailColor);
+	trailQuad->Draw();
+}
+
 void GraphicsPipeline::RenderScene(float dt)
 {
 	
@@ -360,35 +331,54 @@ void GraphicsPipeline::RenderScene(float dt)
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers());
 	int splatPlayer = -1;
-	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
-		std::string arr = "players[" + std::to_string(i) + "].";
-		float pos_x = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getAllPlayer(i)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getAllPlayer(i)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
-		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+	for (int i = 0; i < GameLogic::Instance()->getTotalPlayers(); i++) {
+		if (i < GameLogic::Instance()->getNumPlayers()) {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getPlayer(i)->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			else {
+				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+				splatPlayer = i;
+			}
+			trailQuad->Draw();
 
-		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
-		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-		if(rad<=0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-		else {
-			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-			splatPlayer = i;
 		}
-		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+		else {
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			else {
+				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+				splatPlayer = i;
+			}
+			trailQuad->Draw();
+		}
 	}
-	trailQuad->Draw();
 
 	if (splatPlayer != -1) {
 		shaderSplat->Activate();
 		splat_tex->Bind(3);
 		shaderSplat->SetUniform("uDiffuseTex", 3);
-		float pos_x = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getAllPlayer(splatPlayer)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getAllPlayer(splatPlayer)->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(splatPlayer)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 		shaderSplat->SetUniform("pos_x", pos_x);
 		shaderSplat->SetUniform("pos_z", pos_z);
@@ -401,15 +391,15 @@ void GraphicsPipeline::RenderScene(float dt)
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumAllPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumSoftPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
 	int max_score = 0;
 	float max_perc = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
 			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
 			max_score = i;
@@ -417,7 +407,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		std::string arr = "players[" + std::to_string(i) + "].";
 		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
-		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAllPlayer(i)->Render()->GetChildIteratorStart())->GetColour());
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 	}
 	
 	if (flickerPie > 0.5f) {
@@ -444,10 +434,10 @@ void GraphicsPipeline::RenderScene(float dt)
 			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
 
 
-		//NCLDebug - Build render lists
-		NCLDebug::_BuildRenderLists();
+								//NCLDebug - Build render lists
+								//NCLDebug::_BuildRenderLists();
 
-		//Build shadowmaps
+								//Build shadowmaps
 		BuildShadowTransforms();
 		shadowFBO->Activate();
 		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -551,8 +541,8 @@ void GraphicsPipeline::RenderScene(float dt)
 				minimap->Draw();
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
-			}		
-			else{
+			}
+			else {
 				tempProj = renderer->GetProjMatrix();
 				tempView = renderer->GetViewMatrix();
 				renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
@@ -562,7 +552,7 @@ void GraphicsPipeline::RenderScene(float dt)
 				renderer->SetProjMatrix(tempProj);
 				renderer->SetViewMatrix(tempView);
 			}
-			
+
 		}
 	}
 
@@ -576,6 +566,7 @@ void GraphicsPipeline::RenderScene(float dt)
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->BindScreenFramebuffer();
 	renderer->SwapBuffers();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
 }
 
 void GraphicsPipeline::AdjustViewport(int i, int j) {
@@ -599,7 +590,7 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 		}
 		else if (num_p == 3) {
 			if (i == 0) {
-				renderer->SetViewPort(width/4, height / 2, width / 2, height / 2);
+				renderer->SetViewPort(width / 4, height / 2, width / 2, height / 2);
 				renderer->Scissor(width / 4, height / 2, width / 2, height / 2);
 			}
 			else if (i == 1) {
@@ -635,23 +626,23 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 			renderer->Scissor(4 * width / 5, height - width / 5, width / 5, width / 5);
 			renderer->SetViewPort(4 * width / 5, height - width / 5, width / 5, width / 5);
 		}
-		else if (num_p == 2 ) {
-			renderer->Scissor(4 * width / 5, height/2 - width/10, width / 5, width / 5);
+		else if (num_p == 2) {
+			renderer->Scissor(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
 			renderer->SetViewPort(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
 		}
 		else if (num_p == 3) {
 			float size = width / 4.0f;
-			renderer->SetViewPort(0, height / 2 + size/8, size, size);
+			renderer->SetViewPort(0, height / 2 + size / 8, size, size);
 			renderer->Scissor(0, height / 2 + size / 8, size, size);
 		}
 		else if (num_p == 4) {
-			renderer->Scissor(9*width/10, height / 2 - width / 20, width / 10, width / 10);
+			renderer->Scissor(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
 			renderer->SetViewPort(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
 		}
 	}
 	else {
 		if (num_p == 1) {
-			renderer->Scissor(0, height - width/5, width / 5, width / 5);
+			renderer->Scissor(0, height - width / 5, width / 5, width / 5);
 			renderer->SetViewPort(0, height - width / 5, width / 5, width / 5);
 		}
 		else if (num_p == 2) {
@@ -660,7 +651,7 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 		}
 		else if (num_p == 3) {
 			float size = width / 4.0f;
-			renderer->SetViewPort(3*width / 4, height / 2 + size/8, size, size);
+			renderer->SetViewPort(3 * width / 4, height / 2 + size / 8, size, size);
 			renderer->Scissor(3 * width / 4, height / 2 + size / 8, size, size);
 		}
 		else if (num_p == 4) {
@@ -678,7 +669,7 @@ void GraphicsPipeline::Resize(int x, int y)
 		x = 1;
 		y = 1;
 	}
-	
+
 	//Generate/Resize any screen textures (if needed)
 	UpdateAssets(x, y);
 
@@ -700,15 +691,15 @@ void GraphicsPipeline::BuildAndSortRenderLists()
 
 	for (RenderNodeBase* node : allNodes)
 		RecursiveAddToRenderLists(node);
-	
+
 	//Sort transparent objects back to front
 	std::sort(
 		renderlistTransparent.begin(),
 		renderlistTransparent.end(),
 		[](const TransparentPair& a, const TransparentPair& b)
-		{
-			return a.second > b.second;
-		}
+	{
+		return a.second > b.second;
+	}
 	);
 }
 
@@ -794,7 +785,7 @@ void GraphicsPipeline::BuildShadowTransforms()
 		//True non-linear depth ranging from -1.0f (near) to 1.0f (far)
 		float norm_near = compute_depth(lin_near);
 		float norm_far = compute_depth(lin_far);
-		
+
 		//Build Bounding Box around frustum section (Axis Aligned)
 		BoundingBox bb;
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_near));
@@ -863,7 +854,7 @@ void GraphicsPipeline::ChangeScene() {
 	cameras.clear();
 	fullscreenQuad->Draw();
 	NCLDebug::_ClearDebugLists();
-	NCLDebug::_ReleaseShaders();
+	//NCLDebug::_ReleaseShaders();
 	renderer->BindScreenFramebuffer();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();

@@ -8,13 +8,13 @@ class HeapFactory : public TSingleton<HeapFactory>
 {
 	friend class TSingleton<HeapFactory>;
 	static const int MAX_HEAPS = 10;
-	
+
 public:
 	//Heap* GetDefaultHeap();
-	Heap* GetHeap(const char* name);
-	void PrintDebugInfo();
+	Heap * GetHeap(const char* name);
+	int PrintDebugInfo();
 private:
-	Heap* FindHeap(const char* name);
+	Heap * FindHeap(const char* name);
 	HeapFactory();
 	~HeapFactory();
 	Heap heapList[MAX_HEAPS];

@@ -64,6 +64,10 @@ PaintWeaponPickup::~PaintWeaponPickup()
 {
 }
 
-void PaintWeaponPickup::effect(Player* player) {
+void PaintWeaponPickup::Effect(Player* player) {
+	player->equipPaintWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+}
+
+void PaintWeaponPickup::SoftEffect(PlayerSoftBody* player) {
 	player->equipPaintWeapon((*renderNode->GetChildIteratorStart())->GetColour());
 }

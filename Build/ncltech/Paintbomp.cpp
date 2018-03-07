@@ -68,7 +68,12 @@ Paintbomb::~Paintbomb()
 {
 }
 
-void Paintbomb::effect(Player* player) {
+void Paintbomb::Effect(Player* player) {
+	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+}
+
+void Paintbomb::SoftEffect(PlayerSoftBody* player) {
 	player->setadd_rad(0.05f);
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
 }

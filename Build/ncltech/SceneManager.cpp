@@ -10,7 +10,7 @@
 SceneManager::SceneManager() 
 	: m_SceneIdx(NULL)
 {
-
+	CommonMeshes::InitializeMeshes();
 }
 
 SceneManager::~SceneManager()
