@@ -76,14 +76,7 @@ void HandleKeyboardInputs()
 	uint sceneIdx = SceneManager::Instance()->GetCurrentSceneIndex();
 	uint sceneMax = SceneManager::Instance()->SceneCount();
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Y))
-		SceneManager::Instance()->JumpToScene((sceneIdx + 1) % sceneMax);
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_T))
-		SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);
-
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_R))
-		SceneManager::Instance()->JumpToScene(sceneIdx);
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_G))
 		show_perf_metrics = !show_perf_metrics;

@@ -44,11 +44,14 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 #include <ncltech/PhysicsEngine.h>
 #include <ncltech/GraphicsPipeline.h>
 #include <ncltech/SceneManager.h>
-#include "../GameTech Coursework/LanScene.h"
+#include "../GameTech Coursework/EmptyScene.h"
 //Needed to get computer adapter IPv4 addresses via windows
 #include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
+int bucket = 0;
 class Menu;
+PerfTimer timer_total, timer_physics, timer_update, timer_render;
+int bin_players = 0;
 bool gameStarted = false;
 #define SERVER_PORT 1234
 #define UPDATE_TIMESTEP (1.0f / 30.0f) //send 30 position updates per second
@@ -60,7 +63,7 @@ float rotation = 0.0f;
 vector <ENetPeer *> PlayerMap;
 std::map <ENetPeer *, bool> ReadyMap;
 void Win32_PrintAllAdapterIPAddresses();
-
+void mainLoop();
 int onExit(int exitcode)
 {
 	server.Release();
@@ -89,10 +92,11 @@ int main(int arcg, char** argv)
 	Win32_PrintAllAdapterIPAddresses();
 	GraphicsPipeline::Instance();
 	PhysicsEngine::Instance();
-	SceneManager::Instance()->EnqueueScene(new LanScene("Lan Project"));
+	SceneManager::Instance()->EnqueueScene(new EmptyScene("Lan Project"));
 	timer.GetTimedMS();
 	while (true)
 	{
+		mainLoop();
 		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
 																			//Update Performance Timers (Show results every second)
 		accum_time += dt;
@@ -108,6 +112,7 @@ int main(int arcg, char** argv)
 				printf("- New Client Connected\n");
 				MySocket LobbyConnection("LBCN");
 				PlayerMap.push_back(evnt.peer);
+				bin_players += pow(2, PlayerMap.size() - 1);
 				ReadyMap[evnt.peer] = FALSE;
 				LobbyConnection.AddVar(to_string(PlayerMap.size()-1));
 				LobbyConnection.SendPacket(evnt.peer);
@@ -130,6 +135,38 @@ int main(int arcg, char** argv)
 						MySocket StartGame("STRT");
 						gameStarted = true;
 						StartGame.BroadcastPacket(server.m_pNetwork);
+						int num_p = bin_players;
+						if (num_p & 0b0001) GameLogic::Instance()->addPlayer(0);
+						if (num_p & 0b0010) GameLogic::Instance()->addPlayer(1);
+						if (num_p & 0b0100) GameLogic::Instance()->addPlayer(2);
+						if (num_p & 0b1000) GameLogic::Instance()->addPlayer(3);
+						//Add player to scene
+						for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+							SceneManager::Instance()->GetCurrentScene()->AddGameObject(GameLogic::Instance()->getPlayer(i));
+							SceneManager::Instance()->GetCurrentScene()->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+						}
+					}
+				}
+				if (SocketId == "INFO") {
+					bucket++;
+					for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+						if (PlayerMap[i] == evnt.peer) {
+							GameLogic::Instance()->getPlayer(i)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(stof(Received.TruncPacket(0)), stof(Received.TruncPacket(1)), stof(Received.TruncPacket(2))));
+						}
+					}
+					// Here it applies all the variables to the appropriate balls
+					if (bucket == PlayerMap.size()) {
+						bucket = 0;
+						MySocket NextPacket("NEXT");
+						for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().x));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().y));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().z));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
+							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
+						}
+						NextPacket.BroadcastPacket(server.m_pNetwork);
 					}
 				}
 				enet_packet_destroy(evnt.packet);
@@ -221,4 +258,60 @@ void Win32_PrintAllAdapterIPAddresses()
 		free(pAdapters);
 	}
 	
+}
+
+void mainLoop() {
+	float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
+																		//Update Performance Timers (Show results every second)
+	timer_total.UpdateRealElapsedTime(dt);
+	timer_physics.UpdateRealElapsedTime(dt);
+	timer_update.UpdateRealElapsedTime(dt);
+	timer_render.UpdateRealElapsedTime(dt);
+	//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
+	//Print Status Entries
+	//PrintStatusEntries();
+
+
+	timer_total.BeginTimingSection();
+
+	//Update Scene
+	timer_update.BeginTimingSection();
+	SceneManager::Instance()->GetCurrentScene()->OnUpdateScene(dt);
+	timer_update.EndTimingSection();
+
+	//Update Physics	
+	timer_physics.BeginTimingSection();
+	PhysicsEngine::Instance()->Update(dt);
+	timer_physics.EndTimingSection();
+	PhysicsEngine::Instance()->DebugRender();
+
+	//Render Scene
+	timer_render.BeginTimingSection();
+	GraphicsPipeline::Instance()->UpdateScene(dt);
+
+	// Update Audio
+	AudioFactory::Instance()->GetAudioEngine()->Update(dt);
+
+
+	// Remove this once main menu is hooked up
+
+
+	GraphicsPipeline::Instance()->RenderScene(dt);
+	
+
+
+
+
+	{
+		//Forces synchronisation if vsync is disabled
+		// - This is solely to allow accurate estimation of render time
+		// - We should NEVER normally lock our render or game loop!		
+		//	glClientWaitSync(glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, NULL), GL_SYNC_FLUSH_COMMANDS_BIT, 1000000);
+	}
+	timer_render.EndTimingSection();
+
+
+
+	//Finish Timing
+	timer_total.EndTimingSection();
 }
