@@ -1,5 +1,10 @@
 List of known errors:
 
+No render target
+1st batch is draw should be dispatch?
+draw index does 0x0 should be 0x4?
+
+
 AFTER/LOW PROBABILITY
 Set sampler in register texture not general
 inverse in shader
