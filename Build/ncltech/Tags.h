@@ -17,5 +17,12 @@ enum Tags {
 	TPortal_A2 ,
 	TPortal_B2 ,
 	TWash,
-	TRamp
+	TRamp,
+	BPaint,
+	BStun,
+	BSpeed,
+	BNothing
+	TRamp,
+	TWeapon,
+	TRandomPickup
 };

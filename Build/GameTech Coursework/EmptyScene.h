@@ -9,7 +9,7 @@
 #include <nclgl\Portal.h>
 
 #include <ncltech\Tags.h>
-#include <ncltech\SpeedPickup.h>
+#include <ncltech\RandomPickup.h>
 #include <ncltech\WeaponPickup.h>
 #include <ncltech\StunWeaponPickup.h>
 #include <ncltech\PaintWeaponPickup.h>
@@ -85,7 +85,7 @@ public:
 		}
 
 		//Add player to scene
-		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
@@ -107,6 +107,40 @@ public:
 		
 		backgroundSoundPlaying = false;
 
+		RandomPickup* pickup1 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup1->SetPhysics(pickup1->Physics());
+		this->AddGameObject(pickup1);
+		pickup1->y = pickup1->physicsNode->GetPosition().y;
+
+		RandomPickup* pickup2 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup2->SetPhysics(pickup2->Physics());
+		this->AddGameObject(pickup2);
+		pickup2->y = pickup2->physicsNode->GetPosition().y;
+
+		RandomPickup* pickup3 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup3->SetPhysics(pickup3->Physics());
+		this->AddGameObject(pickup3);
+		pickup3->y = pickup3->physicsNode->GetPosition().y;
+		//frame += step;
+		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
 
 
@@ -130,6 +164,8 @@ public:
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
+		//GameObject * pickup = FindGameObject("pickup");
+		//updown((RandomPickup*)(pickup));
 		Scene::OnUpdateScene(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
@@ -225,15 +261,10 @@ public:
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
 		}
-
 		
-
-
-
-
-
-
 	}
+
+
 
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)

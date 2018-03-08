@@ -1,4 +1,4 @@
-#include "SpeedPickup.h"
+#include "RandomPickup.h"
 #include "CommonUtils.h"
 #include "SphereCollisionShape.h"
 #include "CommonMeshes.h"
@@ -11,7 +11,7 @@
 
 using namespace nclgl::Maths;
 
-SpeedPickup::SpeedPickup(const std::string& name,
+RandomPickup::RandomPickup(const std::string& name,
 	const Vector3& pos,
 	float radius,
 	bool physics_enabled,
@@ -24,7 +24,7 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticSphere(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 
@@ -57,24 +57,71 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	physicsNode = pnode;
 
 	setDynamic(false);
-	
+	SetTag(Tags::TRandomPickup);
 
 	RegisterPhysicsToRenderTransformCallback();
 }
 
 
-SpeedPickup::~SpeedPickup()
+RandomPickup::~RandomPickup()
 {
 }
 
-void SpeedPickup::Effect(Player* player) {
+void RandomPickup::Eff_Speed(Player* player) {
 	player->setSpeed(50.0f);
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }
 
-void SpeedPickup::SoftEffect(PlayerSoftBody* player) {
+void RandomPickup::SoftEff_Speed(PlayerSoftBody* player) {
 	for (int i = 0; i < 182; ++i) {
 		player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
 	}
+	player->setBuffTime(10.0f);
+	player->setCurrentBuff(Tags::BSpeed);
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }
+
+void RandomPickup::Eff_Paint(Player* player) {
+	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+}
+
+void RandomPickup::SoftEff_Paint(PlayerSoftBody* player) {
+	player->setadd_rad(0.05f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+}
+
+void RandomPickup::Eff_Stun(Player* player) {
+	player->setStunDuration(3.0f);
+	player->stun(0.2f);
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
+}
+
+void RandomPickup::SoftEff_Stun(PlayerSoftBody* player) {
+
+	player->setStunDuration(3.0f);
+	player->stun(0.2f);
+
+	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
+}
+//void RandomPickup::Updown()
+//{
+//	if (updown)
+//	{
+//		physicsNode->SetPosition((physicsNode->GetPosition()) + (nclgl::Maths::Vector3(0, 0.05, 0)));
+//		if (physicsNode->GetPosition().y > (y + 3))
+//		{
+//			physicsNode->SetPosition((physicsNode->GetPosition()) - (nclgl::Maths::Vector3(0, 0.05, 0)));
+//			setupdowm(false);
+//		}
+//	}
+//	else
+//	{
+//		physicsNode->SetPosition((physicsNode->GetPosition()) - (nclgl::Maths::Vector3(0, 0.05, 0)));
+//		if (physicsNode->GetPosition().y < y)
+//		{
+//			physicsNode->SetPosition((physicsNode->GetPosition()) + (nclgl::Maths::Vector3(0, 0.05, 0)));
+//			setupdowm(true);
+//		}
+//	}
+//}
