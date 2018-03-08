@@ -140,19 +140,19 @@ void PS4FrameBuffer::Activate()
 
 void PS4FrameBuffer::ClearBuffer()
 {
-	//clear color
-	//if (hasColor) {
-	//	if (this->colourTarget.at(0).getWidth() < 100) {
-	//		bool a = true;
-	//	}
-	//	Vector4 defaultClearColour(0.1f, 0.1f, 0.1f, 1.0f);
-	//	SurfaceUtil::clearRenderTarget(*currentGFXContext, &this->colourTarget.at(0), defaultClearColour);
-	//}
-	////clear depth 
-	//if (hasDepth) {
-	//	float defaultDepth = 1.0f;
-	//	SurfaceUtil::clearDepthTarget(*currentGFXContext, &this->depthTarget, defaultDepth);
-	//}
+//	//clear color
+//	if (hasColor) {
+//		if (this->colourTarget.at(0).getWidth() < 100) {
+//			bool a = true;
+//		}
+//		Vector4 defaultClearColour(0.1f, 0.1f, 0.1f, 1.0f);
+//		SurfaceUtil::clearRenderTarget(*currentGFXContext, &this->colourTarget.at(0), defaultClearColour);
+//	}
+//	//clear depth 
+//	if (hasDepth) {
+//		float defaultDepth = 1.0f;
+//		SurfaceUtil::clearDepthTarget(*currentGFXContext, &this->depthTarget, defaultDepth);
+//	}
 
 }
 
