@@ -197,12 +197,22 @@ int main()
 			{
 				NCLDebug::_ClearDebugLists();
 				PrintStatusEntries();
+
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
 				show_status_menu = !show_status_menu;
 			}
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5))
+			{
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Press 1 to go to the next level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Press 2 to exit");
+				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
+				{
+					SceneManager::Instance()->JumpToScene("Main Menu");
+				}
+			}
 		
-			
 		}
 
 

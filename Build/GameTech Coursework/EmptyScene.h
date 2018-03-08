@@ -261,12 +261,7 @@ public:
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
 		}
-
 		
-
-
-
-
 	}
 
 
