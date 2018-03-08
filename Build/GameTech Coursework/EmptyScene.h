@@ -81,6 +81,7 @@ public:
 		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
 		//Add player to scene
+
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
@@ -91,11 +92,11 @@ public:
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
+		GameLogic::Instance()->setnumAI(1);
+		BallAI::addBallAIPlayers();
 
-		int aiPlayers = 4 - players;
-		BallAI::addBallAIPlayers(1);
-		for (int i = 0; i < GameLogic::Instance()->getNumAIPlayers();i++) {
-			this->AddGameObject(GameLogic::Instance()->getAIPlayer(i));
+		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
 		}
 		
 		//Who doesn't love finding some common ground?
@@ -183,6 +184,8 @@ public:
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
+		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
+			GameLogic::Instance()->getAIPlayer(j)->move();
 
 		// Pause Menu
 

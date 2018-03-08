@@ -90,7 +90,7 @@ BallAI::~BallAI()
 {
 }
 
-void BallAI::addBallAIPlayers(int numBallAI)
+void BallAI::addBallAIPlayers()
 {
 	nclgl::Maths::Vector4 colours[4];
 	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
@@ -101,12 +101,12 @@ void BallAI::addBallAIPlayers(int numBallAI)
 	nclgl::Maths::Vector4 colour = nclgl::Maths::Vector4(255.0f, 255.0f, 255.0f, 1.0f);
 	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
 
-	
+	int num = GameLogic::Instance()->getnumAI();
 
-	for (int i = 0; i < numBallAI; i++)
+	for (int i = 0; i < num; i++)
 	{
 		BallAI * AIBall = new BallAI("AIPlayer"+(i),
-			nclgl::Maths::Vector3(5.0f*(i + 2), 1.f, 5.0f*(i + 1)),
+			nclgl::Maths::Vector3(50.0f*(i + 2), 70.f, 60.0f*(i + 1)),
 			1.0f,
 			true,
 			1.0f,
@@ -126,12 +126,12 @@ void BallAI::addBallAIPlayers(int numBallAI)
 		cout << "AI Player " << i << " created \n";
 
 		{
-			int numOfPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers();
+			int numOfPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumSoftPlayers();
 			int AIChosenPath = rand() % numOfPlayers;
 			std::string path = to_string(AIChosenPath);
 
 			std::ifstream myReadFile;
-			myReadFile.open((path)+"pos.txt");
+			myReadFile.open("0pos.txt");
 			//cout <<sOwner->getOwner->getName()<<" using " <<path << "pos.txt\n";
 			string line;
 
@@ -190,7 +190,7 @@ bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		//pickup->effect(this);
-		PhysicsEngine::Instance()->DeleteNextFrame(pickup);
+		//PhysicsEngine::Instance()->DeleteNextFrame(pickup);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TGround))

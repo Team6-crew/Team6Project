@@ -1,5 +1,4 @@
 #include "CollectandUsePickupState.h"
-#include <ncltech\SpeedPickup.h>
 #include <nclgl\AI\ChasingState.h>
 #include <nclgl\AI\StateMachine.h>
 
@@ -16,8 +15,8 @@ void CollectandUsePickupState::enter(StateMachine * sOwner)
 
 void CollectandUsePickupState::update(StateMachine * sOwner)
 {
-	nclgl::Maths::Vector3 ballPos = sOwner->getOwner()->Physics()->GetPosition();
-	Vector3 pickupPos = SpeedPickup::getPickup(1)->getLocation();
+	/*nclgl::Maths::Vector3 ballPos = sOwner->getOwner()->Physics()->GetPosition();
+	Vector3 pickupPos = Paintbomb::getPickup(1)->getLocation();
 	nclgl::Maths::Vector3 steering = ((pickupPos - ballPos).Normalise()) * maxVel;
 
 	steering = steering / sOwner->getOwner()->Physics()->GetInverseMass();
@@ -31,7 +30,7 @@ void CollectandUsePickupState::update(StateMachine * sOwner)
 	}
 
 	
-	sOwner->getOwner()->Physics()->SetForce(nclgl::Maths::Vector3(steering));
+	sOwner->getOwner()->Physics()->SetForce(nclgl::Maths::Vector3(steering));*/
 }
 
 void CollectandUsePickupState::exit(StateMachine * sOwner)

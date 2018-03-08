@@ -23,6 +23,7 @@ public:
 	int getNumPlayers() { return players.size(); }
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
+	int getNumAIPlayers() { return aiPlayers.size(); }
 	int getTotalPlayers() { return players.size() + softplayers.size(); }
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
@@ -30,18 +31,20 @@ public:
 	void increaseTotalTime(float dt) { totalTime += dt; }
 	void setLevelIsLoaded(bool l) { levelLoaded = l; }
 	void setGameHasStarted(bool l) { gameStarted = l; }
+	
 
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
 	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
+	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
 
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
+	
 	void clearPlayers() { players.clear();	softplayers.clear(); }
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
-	int getNumAIPlayers() { return aiPlayers.size(); }
-	Player* getPlayer(int num_player)  {return players[num_player]; }
-	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
+	
+	
 	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
 	};
 

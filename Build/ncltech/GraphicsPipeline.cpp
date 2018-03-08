@@ -457,6 +457,7 @@ void GraphicsPipeline::RenderScene(float dt)
 	if (toggleFlicker) {
 		max_score = -1;
 	}
+		int PlayersPlusAIPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers();
 		for (int i = GameLogic::Instance()->getNumPlayers(); i < PlayersPlusAIPlayers; i++) {
 			int j = i - GameLogic::Instance()->getNumPlayers();
 	

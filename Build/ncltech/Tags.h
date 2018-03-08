@@ -19,5 +19,6 @@ enum Tags {
 	TWash,
 	TRamp,
 	TWeapon,
-	TRandomPickup
+	TRandomPickup,
+	TAIPlayer
 };

@@ -38,8 +38,7 @@ nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner)
 	
 	for (int i = 0; i < numOfPlayers; i++)
 	{
-		nclgl::Maths::Vector3 playerBallPos = GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition();
-
+		nclgl::Maths::Vector3 playerBallPos = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition();
 		float distanceToPlayer = (playerBallPos - AIBallPos).Length();
 
 		if (distanceToPlayer < closestPlayer)
@@ -49,14 +48,14 @@ nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner)
 	}
 		// Switch to length square
 		nclgl::Maths::Vector3 goal = owner->getNode(owner->getCurrentNode());
-		if (closestPlayer <= 5)
+		if (closestPlayer <= 0.1)
 		{
 			sOwner->setCurrentState(sOwner, ChasingState::GetInstance());
 		}
-		if (closestPlayer >= 5.1)
+		if (closestPlayer >= 0.2)
 		{
 			float distanceToGoal = (AIBallPos - goal).Length();
-			if (distanceToGoal <= 5)
+			if (distanceToGoal <= 4)
 			{
 				std::cout << "Changing to Node" << owner->getCurrentNode()<< "\n";
 				owner->increaseCurrentNode();

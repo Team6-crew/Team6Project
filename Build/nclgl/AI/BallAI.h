@@ -17,7 +17,7 @@ public:
 		bool collidable,
 		const nclgl::Maths::Vector4& color);
 	~BallAI();
-	static void addBallAIPlayers(int numBallAI);
+	static void addBallAIPlayers();
 	std::vector<nclgl::Maths::Vector3> getNodeList() { return nodesList; }
 	nclgl::Maths::Vector3 getNode(int a) { return nodesList[a]; }
 	void addNodesToList(nclgl::Maths::Vector3 Node) { nodesList.push_back(Node); }
@@ -35,7 +35,7 @@ public:
 	void setMapNavigation(MapNavigation* a) { MapNav = a; }
 	MapNavigation* getMapNavigation() { return MapNav; }
 	int getCurrentNode() { return currentNode; }
-	void increaseCurrentNode() { currentNode = (currentNode + 1) % nodesList.size();; }
+	void increaseCurrentNode() { currentNode = (currentNode + 1) % nodesList.size(); }
 	void resetCurrentNode() { currentNode = 0; }
 
 
