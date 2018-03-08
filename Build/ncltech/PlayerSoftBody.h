@@ -38,6 +38,9 @@ public:
 	float getSpeed() { return speed; }
 	void setSpeed(float sp) { speed = sp; }
 
+	nclgl::Maths::Vector4 getColour() { return colour; }
+	
+
 	float getadd_rad() { return add_rad; }
 	void setadd_rad(float add) { add_rad = add; }
 
@@ -75,9 +78,26 @@ public:
 	int getDebuffTime() { return debuffTime; }
 	void setDebuffTime(int t) { debuffTime = t; }
 
-	void handleInput(float dt);
+	float getBuffTime() { return buffTime; }
+	void setBuffTime(float t) { 
+		buffTime = t;
+		currentBuffTime = 0.0f;
+	}
+
+	float getCurrentBuffTime() { return currentBuffTime; }
+	void setCurrentBuffTime(float t) { currentBuffTime = t; }
+
+	void setCurrentBuff(Tags tag);
+	Tags getCurrentBuff() { return currentBuff; }
+
+
 	void move(float dt);
 private:
+	void handleInput(float dt);
+	void unequipPaintWeapon();
+	void unequipStunWeapon();
+
+	void updateBuffTime(float dt);
 
 	Softbody * ball;
 	GameObject* body;
@@ -97,6 +117,7 @@ private:
 	
 	float speed;
 
+
 	float add_rad;
 	float rad;
 
@@ -114,6 +135,10 @@ private:
 	bool stunEffect;
 	float tempYaw, tempPitch;
 	int debuffTime;
+	float buffTime;
+	float currentBuffTime;
+
+	Tags currentBuff;
 
 	nclgl::Maths::Vector4 colour;
 };

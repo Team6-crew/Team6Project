@@ -24,7 +24,7 @@ SpeedPickup::SpeedPickup(const std::string& name,
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticSphere(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 
@@ -76,5 +76,7 @@ void SpeedPickup::SoftEffect(PlayerSoftBody* player) {
 	for (int i = 0; i < 182; ++i) {
 		player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
 	}
+	player->setBuffTime(10.0f);
+	player->setCurrentBuff(Tags::BSpeed);
 	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }

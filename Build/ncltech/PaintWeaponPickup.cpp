@@ -70,4 +70,6 @@ void PaintWeaponPickup::Effect(Player* player) {
 
 void PaintWeaponPickup::SoftEffect(PlayerSoftBody* player) {
 	player->equipPaintWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+	player->setBuffTime(10.0f);
+	player->setCurrentBuff(Tags::BPaint);
 }

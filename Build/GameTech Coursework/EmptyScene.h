@@ -104,6 +104,39 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
+
+		SpeedPickup* pickup = new SpeedPickup("pickup",
+			nclgl::Maths::Vector3(12.0f, 5.0f, 0.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup->SetPhysics(pickup->Physics());
+		this->AddGameObject(pickup);
+
+
+		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
+			nclgl::Maths::Vector3(10.0f, 5.0f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		weapon->SetPhysics(weapon->Physics());
+		this->AddGameObject(weapon);
+
+
+
+		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
+			nclgl::Maths::Vector3(-10.0f, 5.0f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
+		weapon2->SetPhysics(weapon2->Physics());
+		this->AddGameObject(weapon2);
 		
 		backgroundSoundPlaying = false;
 

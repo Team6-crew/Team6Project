@@ -304,6 +304,33 @@ void GraphicsPipeline::StartCounter() {
 
 }
 
+void GraphicsPipeline::BuffHUD(int i) {
+	if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BPaint) {
+		paintQuad->ReplaceTexture(buff_paint_tex, 0);
+	}
+	else if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BStun) {
+		paintQuad->ReplaceTexture(buff_stun_tex, 0);
+	}
+	else if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BSpeed) {
+		paintQuad->ReplaceTexture(buff_speed_tex, 0);
+	}
+	else {
+		return;
+	}
+	renderer->SetViewPort(3*screenTexWidth/7 , screenTexHeight - screenTexWidth / 7, screenTexWidth/7, screenTexWidth / 7);
+	shaderBuff->Activate();
+	shaderBuff->SetUniform("DiffuseTex", 0);
+	shaderBuff->SetUniform("playerColor", GameLogic::Instance()->getSoftPlayer(i)->getColour());
+	shaderBuff->SetUniform("perc", GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuffTime() / GameLogic::Instance()->getSoftPlayer(i)->getBuffTime());
+	tempProj = renderer->GetProjMatrix();
+	tempView = renderer->GetViewMatrix();
+	renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
+	renderer->GetViewMatrix().ToIdentity();
+	paintQuad->Draw();
+	renderer->SetProjMatrix(tempProj);
+	renderer->SetViewMatrix(tempView);
+}
+
 void GraphicsPipeline::LoadingScreen(float frame) {
 
 	renderer->SetViewPort(1024, 1024);
@@ -545,19 +572,8 @@ void GraphicsPipeline::RenderScene(float dt)
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-
-		renderer->SetViewPort(0, 0, renderer->GetWidth(), renderer->GetHeight() / 2);
-		paintQuad->ReplaceTexture(buff_paint_tex, 0);
-		shaderBuff->Activate();
-		shaderBuff->SetUniform("DiffuseTex", 0);
-		shaderBuff->SetUniform("DiffuseTex", 0);
-		tempProj = renderer->GetProjMatrix();
-		tempView = renderer->GetViewMatrix();
-		renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
-		renderer->GetViewMatrix().ToIdentity();
-		paintQuad->Draw();
-		renderer->SetProjMatrix(tempProj);
-		renderer->SetViewMatrix(tempView);
+		BuffHUD(i);
+	
 
 
 		//Downsample and present to screen

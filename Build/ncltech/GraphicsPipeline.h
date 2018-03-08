@@ -42,6 +42,7 @@ public:
 	void LoadingScreen(float frame);
 	void FillPaint(float dt);
 	void StartCounter();
+	void BuffHUD(int playerIndex);
 	void SplatProjectile(float pos_x, float pos_z, float rad, nclgl::Maths::Vector4 trailColor);
 	//Utils
 	inline Camera* GetCamera() { return camera; }

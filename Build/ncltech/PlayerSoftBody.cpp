@@ -31,6 +31,11 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 
 	ball->buildsoftbody();
 
+	colour = color;
+	currentBuff = Tags::BNothing;
+	buffTime = 0.0f;
+	currentBuffTime = 0.0f;
+
 	for (int i = 0; i < 182; ++i) {
 		ball->softball[i]->physicsNode->SetOnCollisionCallback(
 			std::bind(
@@ -194,6 +199,26 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 	return true;
 }
 
+void PlayerSoftBody::unequipPaintWeapon() {
+	std::cout << " BHKEP1 " << currentBuffTime << " " << buffTime << std::endl;
+	if (equippedPaintWeapon) {
+		std::cout << " BHKEP2 " << currentBuffTime << " " << buffTime << std::endl;
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
+		delete equippedPaintWeapon;
+		equippedPaintWeapon = NULL;
+	}
+}
+
+void PlayerSoftBody::unequipStunWeapon() {
+	std::cout << " BHKES1 " << currentBuffTime << " " << buffTime << std::endl;
+	if (equippedStunWeapon) {
+		std::cout << " BHKES2 " << currentBuffTime << " " << buffTime << std::endl;
+		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
+		delete equippedStunWeapon;
+		equippedStunWeapon = NULL;
+	}
+}
+
 void PlayerSoftBody::shoot() {
 	if (equippedStunWeapon) {
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
@@ -216,14 +241,13 @@ void PlayerSoftBody::shoot() {
 }
 
 void PlayerSoftBody::equipStunWeapon(nclgl::Maths::Vector4 colour) {
-	if (equippedPaintWeapon) {
-		delete equippedPaintWeapon;
-		equippedPaintWeapon = NULL;
-	}
-	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedStunWeapon->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(0.3f, 0.3f, 1.5f))*nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(5.0f, -8.0f, 0.0f)));
+	if (!equippedStunWeapon) {
+		unequipPaintWeapon();
+		equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
+		equippedStunWeapon->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(0.3f, 0.3f, 1.5f))*nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(5.0f, -8.0f, 0.0f)));
 
-	(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
+		(*body->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
+	}
 }
 
 bool PlayerSoftBody::stun(float dt) {
@@ -252,14 +276,13 @@ bool PlayerSoftBody::stun(float dt) {
 }
 
 void PlayerSoftBody::equipPaintWeapon(nclgl::Maths::Vector4 colour) {
-	if (equippedStunWeapon) {
-		delete equippedStunWeapon;
-		equippedStunWeapon = NULL;
-	}
-	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), colour);
-	equippedPaintWeapon->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(0.3f, 0.3f, 1.5f))*nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(5.0f, -8.0f, 0.0f)));
+	if (!equippedPaintWeapon) {
+		unequipStunWeapon();
+		equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
+		equippedPaintWeapon->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(0.3f, 0.3f, 1.5f))*nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(5.0f, -8.0f, 0.0f)));
 
-	(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
+		(*body->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
+	}
 }
 
 void PlayerSoftBody::handleInput(float dt) {
@@ -348,7 +371,39 @@ void PlayerSoftBody::handleInput(float dt) {
 	}
 }
 
+void PlayerSoftBody::updateBuffTime(float dt) {
+	if (currentBuff != BNothing) {
+		currentBuffTime += dt; {
+			if (currentBuffTime > buffTime) {
+				std::cout << " BHKE " << currentBuffTime << " " << buffTime << std::endl;
+				currentBuff = Tags::BNothing;
+				currentBuffTime = 0.0f;
+				unequipStunWeapon();
+				unequipPaintWeapon();
+				speed = 20.0f;
+			}
+		}
+	}
+}
+
+void PlayerSoftBody::setCurrentBuff(Tags tag) {
+	if (tag == BPaint) {
+		unequipStunWeapon();
+		speed = 20.0f;
+	}
+	else if (tag == BStun) {
+		unequipPaintWeapon();
+		speed = 20.0f;
+	}
+	else if (tag == BSpeed) {
+		unequipStunWeapon();
+		unequipPaintWeapon();
+	}
+	currentBuff = tag; 
+}
+
 void PlayerSoftBody::move(float dt) {
+	updateBuffTime(dt);
 	if (!stun(dt)) {
 		nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
 			(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
