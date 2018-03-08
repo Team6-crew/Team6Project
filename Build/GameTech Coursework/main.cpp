@@ -5,6 +5,8 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include "iostream"
+#include "fstream"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
@@ -121,10 +123,22 @@ void HandleKeyboardInputs()
 		show_perf_metrics = !show_perf_metrics;
 
 
+	Vector3 pos;
+	std::vector<Vector3> posList;
 
-	
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+	{
+		pos = GameLogic::Instance()->getPlayer(0)->Physics()->GetPosition();
+		std::ofstream myfile;
+		myfile.open("pos.txt", std::ios_base::app);
+		cout << pos << "\n";
 
-
+		if (myfile.is_open())
+		{
+			myfile << pos << "\n";
+			myfile.close();
+		}
+	}
 }
 
 

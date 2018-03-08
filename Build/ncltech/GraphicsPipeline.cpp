@@ -457,6 +457,24 @@ void GraphicsPipeline::RenderScene(float dt)
 	if (toggleFlicker) {
 		max_score = -1;
 	}
+		for (int i = GameLogic::Instance()->getNumPlayers(); i < PlayersPlusAIPlayers; i++) {
+			int j = i - GameLogic::Instance()->getNumPlayers();
+	
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getAIPlayer(j)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getAIPlayer(j)->getBall()->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+				trailColor = Vector3(0.0f, 1.0f, 0.0f);
+			}
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+
+		}
 
 	flickerPie += dt;
 	shaderCircle->SetUniform("winning", max_score);
@@ -505,8 +523,6 @@ void GraphicsPipeline::RenderScene(float dt)
 
 		shaderForwardLighting->SetUniform("uDiffuseTex0", 0);
 		shaderForwardLighting->SetUniform("uDiffuseTex1", 1);
-
-
 		shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);

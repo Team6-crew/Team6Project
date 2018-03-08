@@ -39,6 +39,11 @@ public:
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
 	void clearPlayers() { players.clear();	softplayers.clear(); }
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
+	int getNumAIPlayers() { return aiPlayers.size(); }
+	Player* getPlayer(int num_player)  {return players[num_player]; }
+	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
+	};
 
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
@@ -58,6 +63,7 @@ private:
 	std::vector <Player*> allPlayers;
 	std::vector <Player*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
+	std::vector <BallAI*> aiPlayers;
 	nclgl::Maths::Vector4 colours[4];
 
 	// split screen ui integration

@@ -5,6 +5,7 @@
 #include <ncltech\Player.h>
 #include <ncltech\PlayerSoftBody.h>
 #include <ncltech\OcTree.h>
+#include <nclgl\AI\BallAI.h>
 #include <nclgl\Launchpad.h>
 #include <nclgl\Portal.h>
 
@@ -20,6 +21,7 @@
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
 #include <nclgl/GameLogic.h>
+#include <nclgl/MapNavigation.h>
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include "MainMenu.h"
@@ -90,6 +92,13 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
 
+		int aiPlayers = 4 - players;
+		BallAI::addBallAIPlayers(1);
+		for (int i = 0; i < GameLogic::Instance()->getNumAIPlayers();i++) {
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(i));
+		}
+		
+		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f),
