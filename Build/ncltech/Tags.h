@@ -18,6 +18,11 @@ enum Tags {
 	TPortal_B2 ,
 	TWash,
 	TRamp,
+	BPaint,
+	BStun,
+	BSpeed,
+	BNothing
+	TRamp,
 	TWeapon,
 	TRandomPickup,
 	TAIPlayer

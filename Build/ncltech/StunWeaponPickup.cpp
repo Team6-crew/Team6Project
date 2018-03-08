@@ -72,4 +72,6 @@ void StunWeaponPickup::Effect(Player* player) {
 
 void StunWeaponPickup::SoftEffect(PlayerSoftBody* player) {
 	player->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+	player->setBuffTime(10.0f);
+	player->setCurrentBuff(Tags::BStun);
 }
