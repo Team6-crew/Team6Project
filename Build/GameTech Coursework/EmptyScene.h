@@ -50,7 +50,6 @@ public:
 		for (int i = 0; i < GameLogic::Instance()->getNumAIPlayers();i++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(i));
 		}
-		//MapNavigation::MapNavigation();
 		
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(

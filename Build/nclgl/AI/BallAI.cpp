@@ -115,12 +115,13 @@ void BallAI::addBallAIPlayers(int numBallAI)
 		AIBall->SetPhysics(AIBall->Physics());
 
 		GameLogic::Instance()->addAIPlayer(AIBall);
-		MapNavigation *mp = new MapNavigation();
+	
 		AIBall->AIStateMachine = new StateMachine(AIBall);
 		AIBall->AIStateMachine->setCurrentState(AIBall->AIStateMachine, RoamingState::GetInstance());
 		AIBall->setStateMachine(AIBall->AIStateMachine);
-		
-		AIBall->setMapNavigation(mp);
+
+		//	MapNavigation *mp = new MapNavigation();
+		//AIBall->setMapNavigation(mp);
 
 		cout << "AI Player " << i << " created \n";
 
@@ -180,8 +181,8 @@ void BallAI::addBallAIPlayers(int numBallAI)
 
 void BallAI::move()
 {	
-	BallAI::getMapNavigation()->usePath();
-	//BallAI::getStateMachine()->getCurrentState()->update(BallAI::getStateMachine());
+	//BallAI::getMapNavigation()->usePath();
+	BallAI::getStateMachine()->getCurrentState()->update(BallAI::getStateMachine());
 	
 }
 

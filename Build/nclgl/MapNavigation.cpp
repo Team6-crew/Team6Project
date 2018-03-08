@@ -12,15 +12,18 @@ class MapNavigation;
 
 MapNavigation::MapNavigation()
 {
+	int ID = 0;
 	for (long i = 0; i < gridSq; i++)
 	{
 		for (long j = 0; j < gridSq; j++)
 		{
-			grid[i][j] = new MapNode;
-			grid[i][j]->type = 0;
-			grid[i][j]->setPosition(i, j);
-			grid[i][j]->movementCost = 0;
-			grid[i][j]->estimateCost = 0;
+			grid[i][j] = MapNode();
+			grid[i][j].type = 0;
+			grid[i][j].setPosition(i, j);
+			grid[i][j].movementCost = 1;
+			grid[i][j].estimateCost = 1;
+			grid[i][j].ID = ID;
+			++ID;
 		}
 	}
 	
@@ -29,7 +32,7 @@ MapNavigation::MapNavigation()
 	writeToFile(a);*/
 }
 
-void MapNavigation::writeToFile(MapNode* a)
+void MapNavigation::writeToFile(MapNode a)
 {
 		std::ofstream myfile;
 		myfile.open("map.txt");
@@ -39,7 +42,7 @@ void MapNavigation::writeToFile(MapNode* a)
 			{	
 				for (int j = 0; j < gridSq; j++)
 				{
-					myfile <<grid[i][j]->type << " ";
+					myfile <<grid[i][j].type << " ";
 				}
 				myfile << "\n";
 			}
@@ -82,7 +85,7 @@ void MapNavigation::readFromFile()
 					for (int j = 0; j < gridSq; j++)
 					{
 						{
-							getGrid(i, j)->type = *it;
+							getGrid(i, j).type = (*it);
 							//cout << getGrid(i, j)->type << " ";
 							it++;
 						}
@@ -105,115 +108,104 @@ void MapNavigation::checkConnectedNeighbourNodes()
 		{
 			if (i > 0 && j > 0 && i < gridSq - 1 && j < gridSq - 1) //not border
 			{
-				if (getGrid(i - 1, j)->type != 1) // horible checks to see if next to a border
+				if (j + 1 != gridSq) //has 4 neighbours
 				{
-					if (getGrid(i - 1, j - 1)->type != 1)
+					if (getGrid(i - 1, j).type == 0) // left
 					{
-						if (i + 1 != gridSq)
-						{
-							if (j + 1 != gridSq) //has 4 neighbours
-							{
-								if (getGrid(i - 1, j)->type == 0) // left
-								{
-									getGrid(i, j)->addConnectedNodes(getGrid(i - 1, j));
-									cout << i << " " << j << " neighbours " << i - 1 << " " << j << "\n";
-								}
-								if (getGrid(i, j - 1)->type == 0) //down
-								{
-									getGrid(i, j)->addConnectedNodes(getGrid(i, j - 1));
-									cout << i << " " << j << " neighbours " << i << " " << j - 1 << "\n";
-								}
-								if (getGrid(i + 1, j)->type == 0) //right
-								{
-									getGrid(i, j)->addConnectedNodes(getGrid(i + 1, j));
-									cout << i << " " << j << " neighbours " << i + 1 << " " << j << "\n";
-								}
-								if (getGrid(i, j + 1)->type == 0) //up
-								{
-									getGrid(i, j)->addConnectedNodes(getGrid(i, j + 1));
-									cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n";
-								}
-
-							}
-
-						}
+						getGrid(i, j).addConnectedNodes(getGrid(i - 1, j));
+						cout << i << " " << j << " neighbours " << i - 1 << " " << j << "\n";
 					}
+					if (getGrid(i, j - 1).type == 0) //down
+					{
+						getGrid(i, j).addConnectedNodes(getGrid(i, j - 1));
+						cout << i << " " << j << " neighbours " << i << " " << j - 1 << "\n";
+					}
+					if (getGrid(i + 1, j).type == 0) //right
+					{
+						getGrid(i, j).addConnectedNodes(getGrid(i + 1, j));
+						cout << i << " " << j << " neighbours " << i + 1 << " " << j << "\n";
+					}
+					if (getGrid(i, j + 1).type == 0) //up
+					{
+						getGrid(i, j).addConnectedNodes(getGrid(i, j + 1));
+						cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n";
+					}
+
 				}
 			}
-			
 			// 3neighbours
 			 if ((i || j != 0) && (i || j < gridSq - 1))
 			{
 				if (i == 0 && j > 0) //wall left
 				{
-					if (getGrid(i, j - 1)->type == 0) //down
+					if (getGrid(i, j - 1).type == 0) //down
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j - 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j - 1));
 						cout << i << " " << j << " neighbours " << i << " " << j - 1 << "\n";
 					}
-					if (getGrid(i + 1, j)->type == 0) //right
+					if (getGrid(i + 1, j).type == 0) //right
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i + 1, j));
+						getGrid(i, j).addConnectedNodes(getGrid(i + 1, j));
 						cout << i << " " << j << " neighbours " << i + 1 << " " << j << "\n";
 					}
-					if (getGrid(i, j + 1)->type == 0) //up
+					if (getGrid(i, j + 1).type == 0) //up
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j + 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j + 1));
 						cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n";
 					}
 				}
 				if (i ==0 && j > 0) // wall up
 				{
-					if (getGrid(i, j - 1)->type == 0) //down
+					if (getGrid(i, j - 1).type == 0) //down
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j - 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j - 1));
 						cout << i << " " << j << " neighbours " << i << " " << j - 1 << "\n";
 					}
-					if (getGrid(i + 1, j)->type == 0) //right
+					if (getGrid(i + 1, j).type == 0) //right
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i + 1, j));
+						getGrid(i, j).addConnectedNodes(getGrid(i + 1, j));
 						cout << i << " " << j << " neighbours " << i + 1 << " " << j << "\n";
 					}
-					if (getGrid(i, j + 1)->type == 0) //up
+					if (getGrid(i, j + 1).type == 0) //up
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j + 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j + 1));
 						cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n";
 					}
 
 				}
 				if (i < gridSq-1 && j == gridSq-1) // wall right
 				{
-					if (getGrid(i, j - 1)->type == 0) //down
+					if (getGrid(i, j - 1).type == 0) //down
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j + 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j + 1));
 						cout << i << " " << j << " neighbours " << i << " " << j - 1 << "\n";
 					}
-					if (getGrid(i - 1, j)->type == 0) // left
+					if (getGrid(i - 1, j).type == 0) // left
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i - 1, j));
+						getGrid(i, j).addConnectedNodes(getGrid(i - 1, j));
 						cout << i << " " << j << " neighbours " << i - 1 << " " << j << "\n";
 					}
-					if (getGrid(i, j - 1)->type == 0) //up
+					if (getGrid(i, j - 1).type == 0) //up
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j - 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j - 1));
 						cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n";
 					}
 				}
 				if ( i == gridSq-1 && j > 0 && j <gridSq-1) // wall down
 				{
-					if (getGrid(i, j+1)->type == 0) //right
+					if (getGrid(i, j+1).type == 0) //right
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i + 1, j));
+						getGrid(i, j).addConnectedNodes(getGrid(i + 1, j));
 						cout << i << " " << j << " neighbours " << i << " " << j+1 << "\n";
 					}
-					if (getGrid(i, j-1)->type == 0) // left
+					if (getGrid(i, j-1).type == 0) // left
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j-1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j-1));
 						cout << i << " " << j << " neighbours " << i << " " << j-1 << "\n";
 					}
-					if (getGrid(i-1,j)->type == 0) //up
+					if (getGrid(i-1,j).type == 0) //up
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i-1,j));
+						getGrid(i, j).addConnectedNodes(getGrid(i-1,j));
 						cout << i << " " << j << " neighbours " << i-1 << " " << j << "\n";
 					}
 				}
@@ -223,56 +215,56 @@ void MapNavigation::checkConnectedNeighbourNodes()
 			{
 				if(i==0 && j==0) //top left corner
 				{
-					if (getGrid(i + 1, j)->type == 0) //right
+					if (getGrid(i + 1, j).type == 0) //right
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i + 1, j));
+						getGrid(i, j).addConnectedNodes(getGrid(i + 1, j));
 						cout << i << " " << j << " neighbours " << i + 1 << " " << j << "\n";
 					}
 
-					if (getGrid(i, j+1)->type == 0) //down
+					if (getGrid(i, j+1).type == 0) //down
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j+1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j+1));
 						cout << i << " " << j << " neighbours " << i << " " << j+1 << "\n";
 					}
 				}
 				if (i == 19 && j == gridSq - 1) //top right corner
 				{
-					if (getGrid(i-1, j)->type == 0)
+					if (getGrid(i-1, j).type == 0)
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i - 1, j));
+						getGrid(i, j).addConnectedNodes(getGrid(i - 1, j));
 						cout << i << " " << j << " neighbours " << i-1 << " " << j << "\n"; //left
 					}
-					if (getGrid(i, j+1)->type == 0)
+					if (getGrid(i, j+1).type == 0)
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j+1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j+1));
 						cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n"; //down
 					}
 					
 				}
 				if (i == gridSq -1 && j == 0) //bottom left corner
 				{
-					if (getGrid(i, j-1)->type == 0) //up
+					if (getGrid(i, j-1).type == 0) //up
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j-1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j-1));
 						cout << i << " " << j << " neighbours " << i << " " << j-1 << "\n";
 					}
 
-					if (getGrid(i, j + 1)->type == 0) //right
+					if (getGrid(i, j + 1).type == 0) //right
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j + 1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j + 1));
 						cout << i << " " << j << " neighbours " << i << " " << j + 1 << "\n";
 					}
 				}
 				if (i == gridSq -1 && j == gridSq - 1) //bottom right corner
 				{
-					if (getGrid(i, j-1)->type == 0) //up
+					if (getGrid(i, j-1).type == 0) //up
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i, j-1));
+						getGrid(i, j).addConnectedNodes(getGrid(i, j-1));
 						cout << i << " " << j << " neighbours " << i << " " << j - 1 << "\n"; 
 					}
-					if (getGrid(i-1,j )->type == 0) //left
+					if (getGrid(i-1,j ).type == 0) //left
 					{
-						getGrid(i, j)->addConnectedNodes(getGrid(i-1,j));
+						getGrid(i, j).addConnectedNodes(getGrid(i-1,j));
 						cout << i << " " << j << " neighbours " << i-1 << " " << j << "\n"; //down
 					}
 
@@ -294,10 +286,10 @@ void MapNavigation::convertPositionToGridSpace(GameObject* a, int& row, int& col
 nclgl::Maths::Vector3 MapNavigation::convertGridToVectorSpace(int a, int b)
 {
 
-	float posX =  WORLD_SIZE/gridSq * a - (WORLD_SIZE /2);
+	float posX = (WORLD_SIZE / gridSq) * a - (WORLD_SIZE /2);
 	float posZ = (WORLD_SIZE / gridSq) * b - (WORLD_SIZE /2);
 
-	return Vector3(posX, 1.5, posZ);
+	return Vector3(posX, 0.5, posZ)*2;
 	
 }
 
@@ -305,55 +297,57 @@ void MapNavigation::generateAStar()
 {
 	int startX, startZ;
 	convertPositionToGridSpace(GameLogic::Instance()->getAIPlayer(0), startX, startZ); //need to find start location
-	getGrid(startX, startZ)->movementCost = 0;
-	getGrid(startX, startZ)->estimateCost = 0;
-	MapNode* goal = new MapNode();
-	goal = getGrid(goal->getObjectiveX(),goal->getObjectiveZ());
+	getGrid(startX, startZ).movementCost = 0;
+	getGrid(startX, startZ).estimateCost = 0;
+	MapNode goal = MapNode();
+	goal = getGrid(goal.getObjectiveX(),goal.getObjectiveZ());
+	goal.ID = gridSq * gridSq + 1;
 	int cost = 10000;
 	addToOpenList(getGrid(startX, startZ));										// add start to the openlist
-	Vector3 goalPos = convertGridToVectorSpace(goal->getObjectiveX(),goal->getObjectiveZ());
+	Vector3 goalPos = convertGridToVectorSpace(goal.getObjectiveX(),goal.getObjectiveZ());
 
-	MapNode* bestConnectedNode = openList.front()->connectedNodes.front();	//best node is the best neighbour of the parent
-	MapNode* parent = bestConnectedNode;									//to start we need the parent to be best node
-	
+	MapNode bestConnectedNode = getGrid(startX, startZ);
+	MapNode tempBestNode = bestConnectedNode;
+
 	while (!openList.empty())
-	{
-		
-		if (parent == goal)													//we have the goal break and generate path
+	{	
+		if (&bestConnectedNode == &goal)													//we have the goal break and generate path
 		{
 			generatePath();
+			break;
 		}
 		else
-				parent = bestConnectedNode;
-				for (std::list<MapNode*>::iterator it = parent->connectedNodes.begin(); it != parent->connectedNodes.end(); ) // check connected nodes
+			for (std::set<MapNode>::iterator it = bestConnectedNode.connectedNodes.begin(); it != bestConnectedNode.connectedNodes.end();) // check connected nodes
 				{
-					addToOpenList(*it);
-						if ((*it)->CalcCostForMapNode() < cost)				// if it's cheaper
-						{
-							cost = (*it)->CalcCostForMapNode();				//cost is now that node
-							bestConnectedNode = (*it);
-							bestConnectedNode->setParent(*it);
-						}
-						else ++it;
-						if ((bestConnectedNode) == openList.front())
-						{
-							continue;
-						}
-						else addToOpenList(bestConnectedNode);
-				}
+				addToOpenList(*it);
 
+						if (const_cast<MapNode*>(&(*it))->CalcCostForMapNode() < cost)				// if it's cheaper
+						{
+							cost = const_cast<MapNode*>(&(*it))->CalcCostForMapNode(); //cost is now that node
+							tempBestNode = (*it);
+							tempBestNode.setParent(const_cast<MapNode*>(&(*it)));
+						}
+						else it++;
+
+						//auto search2 = openList.find(bestConnectedNode); //find if it's already on list
+						//if (search2 != openList.end())
+						//{
+						//	continue;
+						//}
+						//	else addToOpenList(bestConnectedNode);
 					
+				}
+					bestConnectedNode = tempBestNode;
 					addToClosedList(bestConnectedNode); //add it to the closedlist
-					openList.remove(openList.front());
-					openList.unique();
+					openList.erase(bestConnectedNode);
 	}	
 }
 
 void MapNavigation::generatePath()
 {
-	for (std::list<MapNode*>::iterator it = closedList.begin(); it != closedList.end();it++)
+	for (std::set<MapNode>::iterator it = closedList.begin(); it != closedList.end();it++)
 	{
-		nclgl::Maths::Vector3 pos = convertGridToVectorSpace((*it)->posX,(*it)->posZ);
+		nclgl::Maths::Vector3 pos = convertGridToVectorSpace((*it).posX,(*it).posZ);
 		 
 		addToWayPoints(pos);
 	}
@@ -361,9 +355,9 @@ void MapNavigation::generatePath()
 
 nclgl::Maths::Vector3 seek(nclgl::Maths::Vector3 goal)
 {
-	nclgl::Maths::Vector3 DesVelo = ((goal - GameLogic::Instance()->getAIPlayer(0)->Physics()->GetPosition()).Normalise());
+	nclgl::Maths::Vector3 DesVelo = ((goal - GameLogic::Instance()->getAIPlayer(0)->Physics()->GetPosition()).Normalise()) * 10;
 
-	return(DesVelo)* 4;
+	return(DesVelo);
 }
 void MapNavigation::usePath()
 {
@@ -376,7 +370,7 @@ void MapNavigation::usePath()
 	nclgl::Maths::Vector3 AIBallPos = GameLogic::Instance()->getAIPlayer(0)->Physics()->GetPosition();
 
 		float distanceToGoal = (AIBallPos - goal).Length();
-		if (distanceToGoal < 4)
+		if (distanceToGoal < 1)
 		{
 			if (index != wayPoints.size())
 			{
@@ -385,16 +379,16 @@ void MapNavigation::usePath()
 			}
 			
 		}
-	
-		GameLogic::Instance()->getAIPlayer(0)->Physics()->SetForce(seek(goal));
+		nclgl::Maths::Vector3 force = seek(goal);
+		GameLogic::Instance()->getAIPlayer(0)->Physics()->SetLinearVelocity(force);
 }
 
 
 
-int MapNode::CalcCostForMapNode()
+int MapNode::CalcCostForMapNode() 
 {
 	int estX = abs(this->posX - getObjectiveX());
 	int estZ = abs(this->posZ- getObjectiveZ());
-	int totalCost = this->movementCost + this->estimateCost + estX + estZ;
+	totalCost = this->movementCost + this->estimateCost + estX + estZ;
 	return totalCost;
 }
