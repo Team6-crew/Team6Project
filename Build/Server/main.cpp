@@ -58,6 +58,7 @@ bool gameStarted = false;
 void eraseElement(ENetPeer* Item);
 NetworkBase server;
 GameTimer timer;
+int fixTimer;
 float accum_time = 0.0f;
 float rotation = 0.0f;
 vector <ENetPeer *> PlayerMap;
@@ -93,16 +94,34 @@ int main(int arcg, char** argv)
 	GraphicsPipeline::Instance();
 	PhysicsEngine::Instance();
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Lan Project"));
-	timer.GetTimedMS();
+	Window::GetWindow().GetTimer()->GetTimedMS();
 	while (Window::GetWindow().UpdateWindow())
 	{
+		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;
+		timer_total.UpdateRealElapsedTime(dt);
+		timer_physics.UpdateRealElapsedTime(dt);
+		timer_update.UpdateRealElapsedTime(dt);
+		timer_render.UpdateRealElapsedTime(dt);
+		timer_total.BeginTimingSection();
+		timer_update.BeginTimingSection();
+		SceneManager::Instance()->GetCurrentScene()->OnUpdateScene(dt);
+		timer_update.EndTimingSection();
+		timer_physics.BeginTimingSection();
+		PhysicsEngine::Instance()->Update(dt);
+		timer_physics.EndTimingSection();
+		PhysicsEngine::Instance()->DebugRender();
+		timer_render.BeginTimingSection();
+		GraphicsPipeline::Instance()->UpdateScene(dt);
+		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
+		GraphicsPipeline::Instance()->RenderScene(dt);
+		timer_render.EndTimingSection();
+
+
+
+		//Finish Timing
+		timer_total.EndTimingSection();
 		
-		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?													
-																			//Update Performance Timers (Show results every second)
-		accum_time += dt;
-		rotation += 0.5f * PI * dt;
-		mainLoop();
-		//Handle All Incoming Packets and Send any enqued packets
+
 		server.ServiceNetwork(dt, [&](const ENetEvent& evnt)
 		{
 			if (evnt.type == ENET_EVENT_TYPE_CONNECT)
@@ -154,17 +173,35 @@ int main(int arcg, char** argv)
 					}
 					// Here it applies all the variables to the appropriate balls
 					if (bucket == PlayerMap.size()) {
+						fixTimer++;
 						bucket = 0;
-						MySocket NextPacket("NEXT");
-						for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().x));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().y));
-							NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->getRelativePosition().z));
+						if (fixTimer < 100) {
+							MySocket NextPacket("NEXT");
+							for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+								printf("%f\n", GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().x);
+								printf("%f\n", GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().y);
+								printf("%f\n", GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().z);
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
+							}
+							NextPacket.BroadcastPacket(server.m_pNetwork);
 						}
-						NextPacket.BroadcastPacket(server.m_pNetwork);
+						else {
+							fixTimer = 0;
+							
+							MySocket NextPacket("FIXX");
+							for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+								
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().x));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().y));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().z));
+							}
+							NextPacket.BroadcastPacket(server.m_pNetwork);
+						}
 					}
 				}
 				enet_packet_destroy(evnt.packet);
@@ -258,58 +295,3 @@ void Win32_PrintAllAdapterIPAddresses()
 	
 }
 
-void mainLoop() {
-	float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
-																		//Update Performance Timers (Show results every second)
-	timer_total.UpdateRealElapsedTime(dt);
-	timer_physics.UpdateRealElapsedTime(dt);
-	timer_update.UpdateRealElapsedTime(dt);
-	timer_render.UpdateRealElapsedTime(dt);
-	//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
-	//Print Status Entries
-	//PrintStatusEntries();
-
-
-	timer_total.BeginTimingSection();
-
-	//Update Scene
-	timer_update.BeginTimingSection();
-	SceneManager::Instance()->GetCurrentScene()->OnUpdateScene(dt);
-	timer_update.EndTimingSection();
-
-	//Update Physics	
-	timer_physics.BeginTimingSection();
-	PhysicsEngine::Instance()->Update(dt);
-	timer_physics.EndTimingSection();
-	PhysicsEngine::Instance()->DebugRender();
-
-	//Render Scene
-	timer_render.BeginTimingSection();
-	GraphicsPipeline::Instance()->UpdateScene(dt);
-
-	// Update Audio
-	AudioFactory::Instance()->GetAudioEngine()->Update(dt);
-
-
-	// Remove this once main menu is hooked up
-
-
-	GraphicsPipeline::Instance()->RenderScene(dt);
-	
-
-
-
-
-	{
-		//Forces synchronisation if vsync is disabled
-		// - This is solely to allow accurate estimation of render time
-		// - We should NEVER normally lock our render or game loop!		
-		//	glClientWaitSync(glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, NULL), GL_SYNC_FLUSH_COMMANDS_BIT, 1000000);
-	}
-	timer_render.EndTimingSection();
-
-
-
-	//Finish Timing
-	timer_total.EndTimingSection();
-}

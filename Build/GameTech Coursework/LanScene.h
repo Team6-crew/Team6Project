@@ -443,8 +443,7 @@ public:
 
 private:
 	void sendVelocityUpdate() {
-		printf("%f\n", GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().x);
-		printf("%f\n", GameLogic::Instance()->getNetPlayer(0)->Physics()->GetLinearVelocity().x);
+
 		MySocket velocity("INFO");
 		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().x));
 		velocity.AddVar(to_string(GameLogic::Instance()->getPlayer(0)->Physics()->GetLinearVelocity().y));
@@ -467,24 +466,49 @@ private:
 		}
 		else if (evnt.type == ENET_EVENT_TYPE_RECEIVE) {
 			MySocket Received(evnt.packet);
-			if (Received.GetPacketId() == "NEXT") {
+			if (Received.GetPacketId() == "FIXX") {
+				
 				vector <float> updates;
 				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 					for (int j = 0; j < 6; j++) {
 						updates.push_back(stof(Received.TruncPacket(i*6+j)));
 					}
 				}
+				
 				int cntNet = 0;
 				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
 					if (i == myPlayerNum) {
+						GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
 						//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
 					}
 					else {
 						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
-						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
 						cntNet++;
 					}
 					
+				}
+				sendVelocityUpdate();
+			}
+			if (Received.GetPacketId() == "NEXT") {
+				vector <float> updates;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					for (int j = 0; j < 3; j++) {
+						updates.push_back(stof(Received.TruncPacket(i * 3 + j)));
+					}
+				}
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					if (i == myPlayerNum) {
+						//GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+					}
+					else {
+						GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 3], updates[i * 3 + 1], updates[i * 3 + 2]));
+						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						cntNet++;
+					}
+
 				}
 				sendVelocityUpdate();
 			}

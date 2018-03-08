@@ -286,8 +286,7 @@ public:
 		this->AddGameObject(washingzone);
 
 		//add world part
-		PhysicsEngine::Instance()->GetWorldPartition()->insert(m_vpObjects);
-
+		
 		
 	}
 
