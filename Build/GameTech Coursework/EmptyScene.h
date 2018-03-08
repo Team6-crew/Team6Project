@@ -104,7 +104,7 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-
+		
 		backgroundSoundPlaying = false;
 
 		RandomPickup* pickup1 = new RandomPickup("pickup",
