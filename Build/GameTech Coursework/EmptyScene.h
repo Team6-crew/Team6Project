@@ -91,8 +91,8 @@ public:
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
-		GameLogic::Instance()->setnumAI(1);
-		BallAI::addBallAIPlayers();
+		//GameLogic::Instance()->setnumAI(1);
+		//BallAI::addBallAIPlayers();
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));

@@ -153,6 +153,7 @@ int main()
 {
 	bool show_status_menu = false;
 	bool showEndScreen = false;
+
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
@@ -224,10 +225,18 @@ int main()
 
 			}
 			else if (showEndScreen) {
+				int winningPlayer = 0;
+				float maxScore = -1.0f;
+				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+					if ((*GameLogic::Instance()->getPaintPerc())[i] > maxScore) {
+						maxScore = (*GameLogic::Instance()->getPaintPerc())[i];
+						winningPlayer = i;
+					}
+				}
 				NCLDebug::_ClearDebugLists();
-				NCLDebug::AddHUD2(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Player 1 WINS!");
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f), "Press 1 to Go to the Next Level");
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f), "Press 2 to Exit");
+				NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player " + to_string(winningPlayer+1) + " WINS!");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 				{
@@ -247,9 +256,6 @@ int main()
 			}
 		
 		}
-
-
-
 
 		{
 			//Forces synchronisation if vsync is disabled
