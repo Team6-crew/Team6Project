@@ -163,30 +163,11 @@ void PlayerSoftBody::resetCamera(float dt) {
 }
 
 bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
-	if (otherNode->GetParent()->HasTag(Tags::TWeapon)) {
-		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		pickup->SoftEffect(this);
-		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
-		return false;
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
+
+	if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
 	{
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		float prob = (rand() % 100);
-		//float score = getscore();
-		//int temp = (int)(score) / 5;
-		if (prob < (33))
-		{
-			pickup->SoftEff_Speed(this);
-		}
-		else if (prob >(66))
-		{
-			pickup->SoftEff_Stun(this);
-		}
-		else
-		{
-			pickup->SoftEff_Paint(this);
-		}
+		pickup->Effect(this);
 		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
 		return false;
 	}
@@ -221,9 +202,7 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 }
 
 void PlayerSoftBody::unequipPaintWeapon() {
-	std::cout << " BHKEP1 " << currentBuffTime << " " << buffTime << std::endl;
 	if (equippedPaintWeapon) {
-		std::cout << " BHKEP2 " << currentBuffTime << " " << buffTime << std::endl;
 		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
 		delete equippedPaintWeapon;
 		equippedPaintWeapon = NULL;
@@ -231,9 +210,7 @@ void PlayerSoftBody::unequipPaintWeapon() {
 }
 
 void PlayerSoftBody::unequipStunWeapon() {
-	std::cout << " BHKES1 " << currentBuffTime << " " << buffTime << std::endl;
 	if (equippedStunWeapon) {
-		std::cout << " BHKES2 " << currentBuffTime << " " << buffTime << std::endl;
 		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
 		delete equippedStunWeapon;
 		equippedStunWeapon = NULL;
@@ -396,7 +373,6 @@ void PlayerSoftBody::updateBuffTime(float dt) {
 	if (currentBuff != BNothing) {
 		currentBuffTime += dt; {
 			if (currentBuffTime > buffTime) {
-				std::cout << " BHKE " << currentBuffTime << " " << buffTime << std::endl;
 				currentBuff = Tags::BNothing;
 				currentBuffTime = 0.0f;
 				unequipStunWeapon();
