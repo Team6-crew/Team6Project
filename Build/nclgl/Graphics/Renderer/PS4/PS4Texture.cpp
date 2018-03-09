@@ -32,8 +32,8 @@ PS4Texture::PS4Texture(Type type, int a, int b)
 	switch (type)
 	{
 	case COLOUR:
-		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(Gnm::RenderTargetFormat::kRenderTargetFormat8_8_8_8, Gnm::RenderTargetChannelType::kRenderTargetChannelTypeSrgb,  Gnm::RenderTargetChannelOrder::kRenderTargetChannelOrderStandard), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
-	//	apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::SurfaceFormat::kSurfaceFormat8_8_8_8, sce::Gnm::kTextureChannelTypeSrgb, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelY, sce::Gnm::kTextureChannelZ, sce::Gnm::kTextureChannelW), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
+	//	apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(Gnm::RenderTargetFormat::kRenderTargetFormat8_8_8_8, Gnm::RenderTargetChannelType::kRenderTargetChannelTypeSrgb,  Gnm::RenderTargetChannelOrder::kRenderTargetChannelOrderStandard), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
+		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::SurfaceFormat::kSurfaceFormat8_8_8_8, sce::Gnm::kTextureChannelTypeSrgb, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelY, sce::Gnm::kTextureChannelZ, sce::Gnm::kTextureChannelW), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
 	//	apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::BufferFormat::kBufferFormat8_8_8_8, sce::Gnm::BufferChannelType::kBufferChannelTypeFloat), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
 		apiTexture.setTextureType(sce::Gnm::kTextureType2d);
 		

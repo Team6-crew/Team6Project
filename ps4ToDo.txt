@@ -1,5 +1,10 @@
 List of known errors:
 
+MAde texture has no base address, create memory size of texture using garlic and set base adres to this, see loading from file. width*height*4
+
+
+
+
 No render target
 1st batch is draw should be dispatch?
 draw index does 0x0 should be 0x4?
