@@ -109,7 +109,6 @@ void BallAI::addBallAIPlayers(int i)
 			true,
 			colours[i]);
 		AIBall->SetPhysics(AIBall->Physics());
-		//AIBall->setRadius(1.0f);
 
 		GameLogic::Instance()->addAIPlayer(AIBall);
 	

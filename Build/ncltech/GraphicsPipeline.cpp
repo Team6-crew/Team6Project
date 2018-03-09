@@ -406,7 +406,8 @@ void GraphicsPipeline::RenderScene(float dt)
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
 	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers() + GameLogic::Instance()->getNumAIPlayers());
-	int splatPlayer = -1;
+	int splatSoftPlayer = -1;
+	int splatAIPlayer = -1;
 	for (int i = 0; i < GameLogic::Instance()->getTotalPlayers(); i++) {
 		if (i < GameLogic::Instance()->getNumPlayers()) {
 			std::string arr = "players[" + std::to_string(i) + "].";
@@ -421,7 +422,7 @@ void GraphicsPipeline::RenderScene(float dt)
 			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 			else {
 				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-				splatPlayer = i;
+				splatSoftPlayer = i;
 			}
 
 		
@@ -440,7 +441,7 @@ void GraphicsPipeline::RenderScene(float dt)
 			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 			else {
 				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-				splatPlayer = i;
+				splatSoftPlayer = i;
 			}
 			
 		}
@@ -462,18 +463,29 @@ void GraphicsPipeline::RenderScene(float dt)
 		if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 		else {
 			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-			splatPlayer = i;
+			splatAIPlayer = i;
 		}
 	}
 	trailQuad->Draw();
-	if (splatPlayer != -1) {
+	if (splatAIPlayer != -1 || splatSoftPlayer != -1) {
 		shaderSplat->Activate();
 		splat_tex->Bind(3);
 		shaderSplat->SetUniform("uDiffuseTex", 3);
-		float pos_x = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(splatPlayer)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x, pos_z, rad;
+		Vector4 temp_col;
+		if (splatSoftPlayer!=-1) {
+			pos_x = GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getRelativePosition().x;
+			pos_z = GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getRelativePosition().z;
+			rad = GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getRadius();
+			temp_col = (*GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+		}
+		else if (splatAIPlayer != -1) {
+			pos_x = GameLogic::Instance()->getAIPlayer(splatAIPlayer)->getRelativePosition().x;
+			pos_z = GameLogic::Instance()->getAIPlayer(splatAIPlayer)->getRelativePosition().z;
+			rad = GameLogic::Instance()->getAIPlayer(splatAIPlayer)->getRadius();
+			temp_col = (*GameLogic::Instance()->getAIPlayer(splatAIPlayer)->Render()->GetChildIteratorStart())->GetColour();
+
+		}
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 		shaderSplat->SetUniform("pos_x", pos_x);
 		shaderSplat->SetUniform("pos_z", pos_z);
