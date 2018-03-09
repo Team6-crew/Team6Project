@@ -32,6 +32,10 @@ public:
 	void setLevelIsLoaded(bool l) { levelLoaded = l; }
 	void setGameHasStarted(bool l) { gameStarted = l; }
 	
+	float getActualGameTime() { return actualGameTime; }
+	void increaseActualGameTime(float dt) { actualGameTime +=dt; }
+	
+	
 
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
@@ -82,4 +86,5 @@ private:
 	bool levelLoaded;
 	float totalTime;
 	bool gameStarted;
+	float actualGameTime;
 };

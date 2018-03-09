@@ -163,30 +163,11 @@ void PlayerSoftBody::resetCamera(float dt) {
 }
 
 bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
-	if (otherNode->GetParent()->HasTag(Tags::TWeapon)) {
-		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		pickup->SoftEffect(this);
-		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
-		return false;
-	}
-	else if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
+
+	if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
 	{
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		float prob = (rand() % 100);
-		//float score = getscore();
-		//int temp = (int)(score) / 5;
-		if (prob < (33))
-		{
-			pickup->SoftEff_Speed(this);
-		}
-		else if (prob >(66))
-		{
-			pickup->SoftEff_Stun(this);
-		}
-		else
-		{
-			pickup->SoftEff_Paint(this);
-		}
+		pickup->Effect(this);
 		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
 		return false;
 	}
@@ -206,6 +187,7 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
 			otherRenderNode->SetBeingPainted(true);
 			otherRenderNode->SetPaintPercentage(0.0f);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
 		}
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TWash)) {
@@ -221,9 +203,7 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 }
 
 void PlayerSoftBody::unequipPaintWeapon() {
-	std::cout << " BHKEP1 " << currentBuffTime << " " << buffTime << std::endl;
 	if (equippedPaintWeapon) {
-		std::cout << " BHKEP2 " << currentBuffTime << " " << buffTime << std::endl;
 		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
 		delete equippedPaintWeapon;
 		equippedPaintWeapon = NULL;
@@ -231,9 +211,7 @@ void PlayerSoftBody::unequipPaintWeapon() {
 }
 
 void PlayerSoftBody::unequipStunWeapon() {
-	std::cout << " BHKES1 " << currentBuffTime << " " << buffTime << std::endl;
 	if (equippedStunWeapon) {
-		std::cout << " BHKES2 " << currentBuffTime << " " << buffTime << std::endl;
 		(*body->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
 		delete equippedStunWeapon;
 		equippedStunWeapon = NULL;
@@ -242,6 +220,7 @@ void PlayerSoftBody::unequipStunWeapon() {
 
 void PlayerSoftBody::shoot() {
 	if (equippedStunWeapon) {
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
@@ -251,6 +230,7 @@ void PlayerSoftBody::shoot() {
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
 	else if (equippedPaintWeapon) {
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
@@ -378,6 +358,7 @@ void PlayerSoftBody::handleInput(float dt) {
 		if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
 		{
 			if (canjump == true) {
+				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 				for (int i = 0; i < 182; ++i) {
 					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
 				}
@@ -396,7 +377,6 @@ void PlayerSoftBody::updateBuffTime(float dt) {
 	if (currentBuff != BNothing) {
 		currentBuffTime += dt; {
 			if (currentBuffTime > buffTime) {
-				std::cout << " BHKE " << currentBuffTime << " " << buffTime << std::endl;
 				currentBuff = Tags::BNothing;
 				currentBuffTime = 0.0f;
 				unequipStunWeapon();

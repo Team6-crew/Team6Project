@@ -286,21 +286,7 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	else if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
 	{
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
-		float prob = (rand() % 100);
-		//float score = getscore();
-		//int temp = (int)(score) / 5;
-		if (prob < (33))
-		{
-			pickup->Eff_Speed(this);
-		}
-		else if (prob > (66))
-		{
-			pickup->Eff_Stun(this);
-		}
-		else
-		{
-			pickup->Eff_Paint(this);
-		}
+		pickup->Effect(this);
 		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
 		return false;
 	}
