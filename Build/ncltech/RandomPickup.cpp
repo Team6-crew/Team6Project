@@ -72,7 +72,7 @@ void RandomPickup::Effect(PlayerSoftBody* player) {
 	if (prob < (25))
 	{
 		for (int i = 0; i < 182; ++i) {
-			player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
+			player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(200, 0, 0, 200, 0, 0, 200, 0, 0));
 		}
 		player->setBuffTime(10.0f);
 		player->setCurrentBuff(Tags::BSpeed);
