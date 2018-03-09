@@ -123,18 +123,19 @@ bool PS4Input::IsAction(InputToken action)
 	{
 	case ESCAPE:
 		return GetButtonDown(CROSS);
+		
 		break;
 	case FORWARD:
-		return (GetAxis(LEFT_STICK).y > 0.5);
+		return (GetAxis(LEFT_STICK).y  < -0.5);
 		break;
 	case BACKWARD:
-		return (GetAxis(LEFT_STICK).y < -0.5);
+		return (GetAxis(LEFT_STICK).y > 0.5);
 		break;
 	case LEFT:
-		return (GetAxis(LEFT_STICK).x < -0.5);
+		return (GetAxis(LEFT_STICK).x  > 0.5);
 		break;
 	case RIGHT:
-		return (GetAxis(LEFT_STICK).x > 0.5);
+		return (GetAxis(LEFT_STICK).x <  -0.5);
 		break;
 	case ACTION_A:
 		return GetButtonDown(TRIANGLE);

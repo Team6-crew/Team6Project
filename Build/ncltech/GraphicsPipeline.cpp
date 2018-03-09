@@ -169,12 +169,14 @@ void GraphicsPipeline::RenderScene()
 	BuildAndSortRenderLists();
 
 
+
 	//Render scene to screen fbo
 		screenFBO->Activate();
 
 		renderer->PostRender();
 		renderer->SwapBuffers();
 		return;
+
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		renderer->SetClearColour(backgroundColor);
 		renderer->Clear(Renderer::COLOUR_DEPTH);

@@ -3,9 +3,9 @@
 
 enum Button {
 	TRIANGLE = 0,
-	CIRCLE,
-	SQUARE,
-	CROSS
+ CIRCLE,
+ CROSS,
+	SQUARE
 };
 
 enum Stick
