@@ -5,6 +5,8 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 
+#include <nclgl\LevelLoader.h>
+
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	
@@ -56,7 +58,7 @@ void GameLogic::addNetPlayer(int num_player) {
 void GameLogic::addSoftPlayer(int num_splayers) {
 
 	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
-		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
+		nclgl::Maths::Vector3(3.0f * num_splayers, 21.f, 3.0f * num_splayers),
 		1.0f,
 		1.0f,
 		colours[num_splayers],
@@ -173,4 +175,25 @@ void GameLogic::updateControls() {
 		softplayers[2]->setControls(controls[2][0], controls[2][1], controls[2][2], controls[2][3], controls[2][4], controls[2][5]);
 	if (numOfPlayersMp & 0b1000) 
 		softplayers[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
+}
+
+void GameLogic::clearGameLogic()
+{
+	players.clear();
+	allPlayers.clear();
+	netPlayers.clear();
+	softplayers.clear();
+	paint_perc.clear();
+}
+
+void GameLogic::SwitchLevels(int idx)
+{
+	LevelLoader loader;
+	if (idx == 1) {		
+		loader.BuildLevel("SimpleLevel.txt", scene);		
+		
+	}
+	else if (idx == 2) {
+		loader.BuildLevel("Level2.txt", scene);
+	}
 }

@@ -81,16 +81,15 @@ void SceneManager::JumpToScene(int idx)
 	{
 		LevelLoader loader;
 		loader.BuildLevel("SimpleLevel.txt", scene);
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
-		{
-			scene->AddGameObject(GameLogic::Instance()->getPlayer(i));
-			scene->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
-
-		}
-
+		
 	}
 
-
+	else if (idx == 2)
+	{
+		LevelLoader loader;
+		loader.BuildLevel("Level2.txt", scene);
+		
+	}
 
 	scene->OnInitializeScene();
 	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
@@ -111,8 +110,9 @@ void SceneManager::JumpToScene(const std::string& friendly_name)
 	}
 
 	if (found)
-	{
+	{		
 		JumpToScene(idx);
+		std::cout << "Index number: " << idx << std:: endl;
 	}
 	else
 	{

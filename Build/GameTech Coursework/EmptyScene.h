@@ -38,7 +38,7 @@ public:
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
-	EmptyScene(const std::string& friendly_name)
+	EmptyScene(const std::string& friendly_name, int sceneIndex)
 		: Scene(friendly_name)
 	{
 
@@ -63,7 +63,6 @@ public:
 
 	virtual ~EmptyScene()
 	{
-
 	}
 
 	//WorldPartition *wsp;
@@ -104,9 +103,124 @@ public:
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-		
-		backgroundSoundPlaying = false;
 
+		SpeedPickup* pickup = new SpeedPickup("pickup",
+			nclgl::Maths::Vector3(-88.0f, 10.0f, -88.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup->SetPhysics(pickup->Physics());
+		this->AddGameObject(pickup);
+
+		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
+			nclgl::Maths::Vector3(10.0f, 5.0f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		weapon->SetPhysics(weapon->Physics());
+		this->AddGameObject(weapon);
+
+		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
+			nclgl::Maths::Vector3(-10.0f, 5.0f, 0.0f),
+			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
+		weapon2->SetPhysics(weapon2->Physics());
+		this->AddGameObject(weapon2);
+
+		Paintbomb* paintbomb = new Paintbomb("paintbomb",
+			nclgl::Maths::Vector3(0.0f, 2.0f, -88.0f),
+			0.5f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.4f, 0.5f, 1.0f, 1.0f));
+		paintbomb->SetPhysics(paintbomb->Physics());
+		this->AddGameObject(paintbomb);
+		
+		//portal a1
+		Portal* portal_a1 = new Portal(
+			"portal_a1",
+			nclgl::Maths::Vector3(-30.0f, 36.0f, 30.0f),
+			true,
+			100.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		portal_a1->setDynamic(false);
+		portal_a1->SetPhysics(portal_a1->Physics());
+		portal_a1->SetTag(Tags::TPortal_A1);
+		portal_a1->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a1,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(portal_a1);
+		
+		//portal a2
+		Portal* portal_a2 = new Portal(
+			"portal_a2",
+			nclgl::Maths::Vector3(0.0f, 21.5f, 115.0f),
+			true,
+			100.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		portal_a2->setDynamic(false);
+		portal_a2->SetPhysics(portal_a2->Physics());
+		portal_a2->SetTag(Tags::TPortal_A2);
+		portal_a2->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a2,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(portal_a2);
+
+		//portal b1
+		Portal* portal_b1 = new Portal(
+			"portal_b1",
+			nclgl::Maths::Vector3(-50.0f, 1.0f, 0.0f),
+			true,
+			100.0f,
+			true,
+			nclgl::Maths::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		portal_b1->setDynamic(false);
+		portal_b1->SetPhysics(portal_b1->Physics());
+		portal_b1->SetTag(Tags::TPortal_B1);
+		portal_b1->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_b1,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(portal_b1);
+
+		//portal b2
+		Portal* portal_b2 = new Portal(
+			"portal_b2",
+			nclgl::Maths::Vector3(50.0f, 1.0f, 0.0f),
+			true,
+			100.0f,
+			true,
+			nclgl::Maths::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+		portal_b2->setDynamic(false);
+		portal_b2->SetPhysics(portal_b2->Physics());
+		portal_b2->SetTag(Tags::TPortal_B2);
+		portal_b2->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_b2,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(portal_b2);
+	
+		backgroundSoundPlaying = false;
 	}
 
 
@@ -225,14 +339,6 @@ public:
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
 		}
-
-		
-
-
-
-
-
-
 	}
 
 

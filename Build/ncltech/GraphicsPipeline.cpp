@@ -902,5 +902,18 @@ void GraphicsPipeline::ChangeScene() {
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
-	
 }
+
+void GraphicsPipeline::clearGraphicsPipeline() {
+	allNodes.clear();
+	paintableObjects.clear();
+	renderlistOpaque.clear();
+	renderlistTransparent.clear();
+	cameras.clear();
+	//viewMatrices.clear();
+	//projViewMatrices.clear();
+	//ResourceManager::Instance()->ReplaceTexture("gr_tex", Texture::COLOUR, 2048, 2048);
+	TrailBuffer->Activate();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+}
+

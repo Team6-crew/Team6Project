@@ -194,10 +194,15 @@ protected:
 	{
 		m_UpdateCallbacks.clear();
 
-		for (auto obj : m_vpObjects)
-			if (obj->physicsNode != NULL) {
-				SAFE_DELETE(obj);
-			}
+		for (auto obj : m_vpObjects) {
+			if (obj->physicsNode != NULL){
+				/*if (obj->renderNode != NULL); {*/
+					SAFE_DELETE(obj);
+				/*	std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+				}*/
+			}			
+		}
+				 
 		m_vpObjects.clear();
 
 	

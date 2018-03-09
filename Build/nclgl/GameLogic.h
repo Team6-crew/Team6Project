@@ -40,6 +40,11 @@ public:
 	void clearPlayers() { players.clear();	softplayers.clear(); }
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
 
+	void clearGameLogic();
+	
+	void SwitchLevels(int idx);
+	Scene* scene; 
+
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
 	void setnumAI(int nAI) { numAI = nAI; };
