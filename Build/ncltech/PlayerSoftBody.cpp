@@ -158,9 +158,30 @@ void PlayerSoftBody::resetCamera(float dt) {
 }
 
 bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
-	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+	if (otherNode->GetParent()->HasTag(Tags::TWeapon)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->SoftEffect(this);
+		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
+		return false;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
+	{
+		Pickup* pickup = (Pickup*)otherNode->GetParent();
+		float prob = (rand() % 100);
+		//float score = getscore();
+		//int temp = (int)(score) / 5;
+		if (prob < (33))
+		{
+			pickup->SoftEff_Speed(this);
+		}
+		else if (prob >(66))
+		{
+			pickup->SoftEff_Stun(this);
+		}
+		else
+		{
+			pickup->SoftEff_Paint(this);
+		}
 		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
 		return false;
 	}
