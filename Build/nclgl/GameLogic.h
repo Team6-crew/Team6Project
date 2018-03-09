@@ -23,6 +23,7 @@ public:
 	int getNumPlayers() { return players.size(); }
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
+	int getNumAIPlayers() { return aiPlayers.size(); }
 	int getTotalPlayers() { return players.size() + softplayers.size(); }
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
@@ -30,15 +31,26 @@ public:
 	void increaseTotalTime(float dt) { totalTime += dt; }
 	void setLevelIsLoaded(bool l) { levelLoaded = l; }
 	void setGameHasStarted(bool l) { gameStarted = l; }
+	
+	float getActualGameTime() { return actualGameTime; }
+	void increaseActualGameTime(float dt) { actualGameTime +=dt; }
+	
+	
 
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
 	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
+	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
 
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
+	
 	void clearPlayers() { players.clear();	softplayers.clear(); }
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
+	
+	
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
+	};
 
 	void clearGameLogic();
 	
@@ -63,6 +75,7 @@ private:
 	std::vector <Player*> allPlayers;
 	std::vector <Player*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
+	std::vector <BallAI*> aiPlayers;
 	nclgl::Maths::Vector4 colours[4];
 
 	// split screen ui integration
@@ -78,4 +91,5 @@ private:
 	bool levelLoaded;
 	float totalTime;
 	bool gameStarted;
+	float actualGameTime;
 };

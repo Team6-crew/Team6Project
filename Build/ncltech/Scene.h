@@ -36,6 +36,7 @@ Description:
 #include <algorithm>
 #include <unordered_map>
 #include "Player.h"
+#include <nclgl\AI\BallAI.h>
 #include "Softbody.h"
 //Callback function called whenever the scene is updated
 // - Should be used to register Update(dt) functions for AI/Game Logic
@@ -56,6 +57,7 @@ class Scene
 {
 public:
 	Player * getPlayer() { return player1; }
+	BallAI * getAIPlayer() { return AIBall; }
 
 	float Score = 0.0f;
 	Scene(const std::string& friendly_name)	//Called once at program start - all scene initialization should be done in 'OnInitializeScene'
@@ -216,4 +218,6 @@ protected:
 	std::vector<GameObject*>	m_vpObjects;
 	SceneUpdateMap				m_UpdateCallbacks;
 	Player * player1;
+	BallAI * AIBall;
+	
 };

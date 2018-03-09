@@ -19,12 +19,12 @@ RandomPickup::RandomPickup(const std::string& name,
 	bool collidable,
 	const Vector4& color)
 {
-
+	enabled = true;
 	//Due to the way SceneNode/RenderNode's were setup, we have to make a dummy node which has the mesh and scaling transform
 	// and a parent node that will contain the world transform/physics transform
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
-	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticSphere(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 
@@ -67,59 +67,38 @@ RandomPickup::~RandomPickup()
 {
 }
 
-void RandomPickup::Eff_Speed(Player* player) {
-	player->setSpeed(50.0f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
-}
-
-void RandomPickup::SoftEff_Speed(PlayerSoftBody* player) {
-	for (int i = 0; i < 182; ++i) {
-		player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
+void RandomPickup::Effect(PlayerSoftBody* player) {
+	float prob = (rand() % 100);
+	if (enabled) {
+		if (prob < (25))
+		{
+			for (int i = 0; i < 182; ++i) {
+				player->getBall()->softball[i]->Physics()->SetInverseInertia(nclgl::Maths::Matrix3(150, 0, 0, 150, 0, 0, 150, 0, 0));
+			}
+			player->setBuffTime(10.0f);
+			player->setCurrentBuff(Tags::BSpeed);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+		}
+		else if (prob <(50))
+		{
+			player->setadd_rad(0.05f);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+		}
+		else if (prob <(75))
+		{   
+			player->equipStunWeapon(Vector4(1,0,0,1));
+			player->setBuffTime(10.0f);
+			player->setCurrentBuff(Tags::BStun);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
+		}
+		else
+		{
+			player->equipPaintWeapon(player->getColour());
+			player->setBuffTime(10.0f);
+			player->setCurrentBuff(Tags::BPaint);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
+		}
+		enabled = false;
 	}
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
 }
 
-void RandomPickup::Eff_Paint(Player* player) {
-	player->setadd_rad(0.05f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
-}
-
-void RandomPickup::SoftEff_Paint(PlayerSoftBody* player) {
-	player->setadd_rad(0.05f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
-}
-
-void RandomPickup::Eff_Stun(Player* player) {
-	player->setStunDuration(3.0f);
-	player->stun(0.2f);
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
-}
-
-void RandomPickup::SoftEff_Stun(PlayerSoftBody* player) {
-
-	player->setStunDuration(3.0f);
-	player->stun(0.2f);
-
-	AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
-}
-//void RandomPickup::Updown()
-//{
-//	if (updown)
-//	{
-//		physicsNode->SetPosition((physicsNode->GetPosition()) + (nclgl::Maths::Vector3(0, 0.05, 0)));
-//		if (physicsNode->GetPosition().y > (y + 3))
-//		{
-//			physicsNode->SetPosition((physicsNode->GetPosition()) - (nclgl::Maths::Vector3(0, 0.05, 0)));
-//			setupdowm(false);
-//		}
-//	}
-//	else
-//	{
-//		physicsNode->SetPosition((physicsNode->GetPosition()) - (nclgl::Maths::Vector3(0, 0.05, 0)));
-//		if (physicsNode->GetPosition().y < y)
-//		{
-//			physicsNode->SetPosition((physicsNode->GetPosition()) + (nclgl::Maths::Vector3(0, 0.05, 0)));
-//			setupdowm(true);
-//		}
-//	}
-//}

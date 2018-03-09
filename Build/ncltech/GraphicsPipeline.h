@@ -42,6 +42,7 @@ public:
 	void LoadingScreen(float frame);
 	void FillPaint(float dt);
 	void StartCounter();
+	void BuffHUD(int playerIndex);
 	void SplatProjectile(float pos_x, float pos_z, float rad, nclgl::Maths::Vector4 trailColor);
 	//Utils
 	inline Camera* GetCamera() { return camera; }
@@ -90,6 +91,7 @@ protected:
 	ShaderBase* shaderPaintable;
 	ShaderBase* shaderMap;
 	ShaderBase* shaderCounter;
+	ShaderBase* shaderBuff;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -131,7 +133,6 @@ protected:
 	FrameBufferBase* CircleBuffer;
 	FrameBufferBase* LoadingBuffer;
 	FrameBufferBase* PaintBuffer;
-	FrameBufferBase* CounterBuffer;
 	FrameBufferBase* BuffBuffer;
 	TextureBase* temp_tex;
 	TextureBase* loading_tex;
@@ -154,8 +155,6 @@ protected:
 	RenderNodeBase * ground;
 
 	bool sound321played;
-
-
 
 	
 };

@@ -76,16 +76,11 @@ GraphicsPipeline::GraphicsPipeline()
 	tex_1 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"1.png");
 	tex_2 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"2.png");
 	tex_3 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"3.png");
-	CounterBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
-
 	buff_paint_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"paint.png");
 	buff_speed_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"speed.png");
 	buff_stun_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"stun.png");
 
-
 	BuffBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
-
-
 }
 
 GraphicsPipeline::~GraphicsPipeline()
@@ -178,6 +173,10 @@ void GraphicsPipeline::LoadShaders()
 	shaderCounter = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"SceneRenderer/testvertex.glsl",
 		SHADERDIR"SceneRenderer/CounterFrag.glsl");
+
+	shaderBuff = ShaderFactory::Instance()->MakeShader(
+		SHADERDIR"SceneRenderer/testvertex.glsl",
+		SHADERDIR"SceneRenderer/BuffFrag.glsl");
 }
 
 void GraphicsPipeline::UpdateAssets(int width, int height)
@@ -305,6 +304,33 @@ void GraphicsPipeline::StartCounter() {
 
 }
 
+void GraphicsPipeline::BuffHUD(int i) {
+	if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BPaint) {
+		paintQuad->ReplaceTexture(buff_paint_tex, 0);
+	}
+	else if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BStun) {
+		paintQuad->ReplaceTexture(buff_stun_tex, 0);
+	}
+	else if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BSpeed) {
+		paintQuad->ReplaceTexture(buff_speed_tex, 0);
+	}
+	else {
+		return;
+	}
+	renderer->SetViewPort(3*screenTexWidth/7 , screenTexHeight - screenTexWidth / 7, screenTexWidth/7, screenTexWidth / 7);
+	shaderBuff->Activate();
+	shaderBuff->SetUniform("DiffuseTex", 0);
+	shaderBuff->SetUniform("playerColor", GameLogic::Instance()->getSoftPlayer(i)->getColour());
+	shaderBuff->SetUniform("perc", GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuffTime() / GameLogic::Instance()->getSoftPlayer(i)->getBuffTime());
+	tempProj = renderer->GetProjMatrix();
+	tempView = renderer->GetViewMatrix();
+	renderer->SetProjMatrix(Matrix4::Orthographic(-1, 1, 1, -1, -1, 1));
+	renderer->GetViewMatrix().ToIdentity();
+	paintQuad->Draw();
+	renderer->SetProjMatrix(tempProj);
+	renderer->SetViewMatrix(tempView);
+}
+
 void GraphicsPipeline::LoadingScreen(float frame) {
 
 	renderer->SetViewPort(1024, 1024);
@@ -352,7 +378,6 @@ void GraphicsPipeline::RenderScene(float dt)
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
 	if (paintableObjects.size() > 0) {
-
 		renderer->SetViewPort(2048, 2048);
 		PaintBuffer->ChangeColourAttachment(ResourceManager::Instance()->getTexture("paintable_tex"));
 		shaderPaintable->Activate();
@@ -466,6 +491,25 @@ void GraphicsPipeline::RenderScene(float dt)
 	if (toggleFlicker) {
 		max_score = -1;
 	}
+		int PlayersPlusAIPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers();
+		for (int i = GameLogic::Instance()->getNumPlayers(); i < PlayersPlusAIPlayers; i++) {
+			int j = i - GameLogic::Instance()->getNumPlayers();
+	
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getAIPlayer(j)->getRadius();
+			Vector4 temp_col = (*GameLogic::Instance()->getAIPlayer(j)->getBall()->Render()->GetChildIteratorStart())->GetColour();
+			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
+				trailColor = Vector3(0.0f, 1.0f, 0.0f);
+			}
+			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+
+		}
 
 	flickerPie += dt;
 	shaderCircle->SetUniform("winning", max_score);
@@ -480,7 +524,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		// - Most scene objects will probably end up being static, so we really should only be updating
 		//   modelMatrices for objects (and their children) who have actually moved since last frame
 		for (RenderNodeBase* node : allNodes)
-			node->Update(0.0f); //Not sure what the msec is here is for, apologies if this breaks anything in your framework!
+			node->Update(0.0f); 
 
 
 								//NCLDebug - Build render lists
@@ -514,8 +558,6 @@ void GraphicsPipeline::RenderScene(float dt)
 
 		shaderForwardLighting->SetUniform("uDiffuseTex0", 0);
 		shaderForwardLighting->SetUniform("uDiffuseTex1", 1);
-
-
 		shaderForwardLighting->SetUniform("uCameraPos", camera->GetPosition());
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
@@ -547,7 +589,8 @@ void GraphicsPipeline::RenderScene(float dt)
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-
+		BuffHUD(i);
+	
 
 
 		//Downsample and present to screen
