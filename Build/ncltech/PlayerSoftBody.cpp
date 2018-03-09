@@ -456,7 +456,7 @@ void PlayerSoftBody::speedLimit() {
 }
 
 void PlayerSoftBody::wallLimit() {
-	if (WORLD_SIZE - front->Physics()->GetPosition().x < 3) {
+	if (WORLD_SIZE - front->Physics()->GetPosition().x < 4) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
@@ -468,7 +468,7 @@ void PlayerSoftBody::wallLimit() {
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
 		}
 	}
-	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 3) {
+	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 5.5) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
