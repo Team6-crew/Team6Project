@@ -24,7 +24,7 @@ public:
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
 	int getNumAIPlayers() { return aiPlayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	int getTotalPlayers() { return players.size() + softplayers.size();}
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
 	bool gameHasStarted() { return gameStarted; }

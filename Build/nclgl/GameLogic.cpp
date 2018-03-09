@@ -7,7 +7,7 @@
 
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
-	
+
 	rad = 0.01f;
 	add_rad = 0.01f;
 	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
@@ -23,7 +23,7 @@ GameLogic::GameLogic() {
 }
 
 void GameLogic::addPlayer(int num_player) {
-	Player * player = new Player("Player_"+ num_player,
+	Player * player = new Player("Player_" + num_player,
 		nclgl::Maths::Vector3(3.0f*num_player, 10.0f, 3.0f*num_player),
 		1.0f,
 		true,
@@ -105,57 +105,93 @@ void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, f
 
 void GameLogic::calculatePaintPercentage() {
 	nclgl::Maths::Vector3 gr_pos = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground")->Physics()->GetPosition();
-	
-	for (int k = 0; k < softplayers.size(); k++) 
+
+	for (int k = 0; k < softplayers.size(); k++)
 	{
 		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
 		if (position.y > 10.0f)
 		{
 			continue;
 		}
-		else 
+		else
 			if (softplayers[k]->getcanpaint() == false)
-		{
-			softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
-			if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
 			{
-				softplayers[k]->setcanpaint(true);
+				softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
+				if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
+				{
+					softplayers[k]->setcanpaint(true);
+				}
+				continue;
 			}
-			continue;
-		}
 		/*else if (position.y < -3.0f)
 		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
-			continue;
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
+		continue;
 		}*/
-		else
-		{
-			add_rad = softplayers[k]->getadd_rad();
-			rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
-			
-			softplayers[k]->setRadius(rad);
-			posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
-			posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+			else
+			{
+				add_rad = softplayers[k]->getadd_rad();
+				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
+
+				softplayers[k]->setRadius(rad);
+				posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
 				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
-			for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-				for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
-					float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
-					if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
-						if (world_paint[i][j] == 0) {
-							paint_perc[k] += increment;
+						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+							if (world_paint[i][j] == 0) {
+								paint_perc[k] += increment;
+							}
+							else if (world_paint[i][j] != k + 1) {
+								paint_perc[k] += increment;
+								paint_perc[world_paint[i][j] - 1] -= increment;
+							}
+							world_paint[i][j] = k + 1;
 						}
-						else if (world_paint[i][j] != k + 1) {
-							paint_perc[k] += increment;
-							paint_perc[world_paint[i][j] - 1] -= increment;
+					}
+				}
+				softplayers[k]->setadd_rad(0.0f);
+			}
+		for (int l = 0; l < aiPlayers.size(); l++)
+		{
+			nclgl::Maths::Vector3 position = aiPlayers[l]->Physics()->GetPosition();
+			if (position.y > 10.0f)
+			{
+				continue;
+			}
+			else
+			{
+				//add_rad = aiPlayers[l]->getRadius();
+				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
+
+				aiPlayers[l]->setRadius(rad);
+				posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+
+				aiPlayers[l]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+
+				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+
+						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+							if (world_paint[i][j] == 0) {
+								paint_perc[l + softplayers.size()] += increment;
+							}
+							else if (world_paint[i][j] != l + 1) {
+								paint_perc[l + softplayers.size()] += increment;
+								paint_perc[world_paint[i][j] - 1] -= increment;
+							}
+							world_paint[i][j] = l + softplayers.size() + 1;
 						}
-						world_paint[i][j] = k + 1;
 					}
 				}
 			}
-			softplayers[k]->setadd_rad(0.0f);
 		}
 	}
 }
@@ -165,12 +201,12 @@ void GameLogic::setControls(int x, int y, KeyboardKeys key) {
 }
 
 void GameLogic::updateControls() {
-	if (numOfPlayersMp & 0b0001) 
+	if (numOfPlayersMp & 0b0001)
 		softplayers[0]->setControls(controls[0][0], controls[0][1], controls[0][2], controls[0][3], controls[0][4], controls[0][5]);
-	if (numOfPlayersMp & 0b0010) 
+	if (numOfPlayersMp & 0b0010)
 		softplayers[1]->setControls(controls[1][0], controls[1][1], controls[1][2], controls[1][3], controls[1][4], controls[1][5]);
 	if (numOfPlayersMp & 0b0100)
 		softplayers[2]->setControls(controls[2][0], controls[2][1], controls[2][2], controls[2][3], controls[2][4], controls[2][5]);
-	if (numOfPlayersMp & 0b1000) 
+	if (numOfPlayersMp & 0b1000)
 		softplayers[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
 }
