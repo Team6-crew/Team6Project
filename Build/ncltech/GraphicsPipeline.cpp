@@ -59,7 +59,7 @@ GraphicsPipeline::GraphicsPipeline()
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 	paint_perc = 0.0f;
 
-	ResourceManager::Instance()->MakeTexture("gr_tex",Texture::COLOUR, 2048,2048);
+	ResourceManager::Instance()->MakeTexture("gr_tex", Texture::COLOUR, 2048, 2048);
 	ResourceManager::Instance()->MakeTexture("paintable_tex", Texture::COLOUR, 2048, 2048);
 	ResourceManager::Instance()->MakeTexture("circle_tex", Texture::COLOUR, 2048, 2048);
 	loading_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"loading.png");
@@ -208,7 +208,7 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 void GraphicsPipeline::UpdateScene(float dt)
 {
 
-	
+
 
 	for (int i = 0; i < cameras.size(); i++) {
 		cameras[i]->HandleKeyboard(dt);
@@ -257,8 +257,8 @@ void GraphicsPipeline::RenderMenu() {
 	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-	 
-	fullscreenQuad->ReplaceTexture(temp_tex,0);
+
+	fullscreenQuad->ReplaceTexture(temp_tex, 0);
 	fullscreenQuad->Draw();
 
 	//NCLDEBUG - Text Elements (aliased)
@@ -317,7 +317,7 @@ void GraphicsPipeline::BuffHUD(int i) {
 	else {
 		return;
 	}
-	renderer->SetViewPort(3*screenTexWidth/7 , screenTexHeight - screenTexWidth / 7, screenTexWidth/7, screenTexWidth / 7);
+	renderer->SetViewPort(3 * screenTexWidth / 7, screenTexHeight - screenTexWidth / 7, screenTexWidth / 7, screenTexWidth / 7);
 	shaderBuff->Activate();
 	shaderBuff->SetUniform("DiffuseTex", 0);
 	shaderBuff->SetUniform("playerColor", GameLogic::Instance()->getSoftPlayer(i)->getColour());
@@ -350,7 +350,7 @@ void GraphicsPipeline::LoadingScreen(float frame) {
 	shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 	shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
 	shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
-	fullscreenQuad->ReplaceTexture(loading_tex,0);
+	fullscreenQuad->ReplaceTexture(loading_tex, 0);
 	fullscreenQuad->Draw();
 	renderer->SwapBuffers();
 }
@@ -367,14 +367,14 @@ void GraphicsPipeline::SplatProjectile(float pos_x, float pos_z, float rad, Vect
 	shaderSplat->SetUniform("uDiffuseTex", 3);
 	shaderSplat->SetUniform("pos_x", posX);
 	shaderSplat->SetUniform("pos_z", posZ);
-	shaderSplat->SetUniform("rad", rad/WORLD_SIZE*2.0f);
+	shaderSplat->SetUniform("rad", rad / WORLD_SIZE * 2.0f);
 	Vector3 trailColor = Vector3(colour.x, colour.y, colour.z);
 	shaderSplat->SetUniform("trailColor", trailColor);
 	trailQuad->Draw();
 }
 
 void GraphicsPipeline::RenderScene(float dt)
-{   
+{
 	GameLogic::Instance()->calculatePaintPercentage();
 	FillPaint(dt);
 	if (paintableObjects.size() > 0) {
@@ -395,7 +395,7 @@ void GraphicsPipeline::RenderScene(float dt)
 			nclgl::Maths::Vector4 objectColor = (*(*it)->Render()->GetChildIteratorStart())->GetColourFromPlayer();
 			shaderPaintable->SetUniform((arr + "pos_x").c_str(), posX);
 			shaderPaintable->SetUniform((arr + "pos_z").c_str(), posZ);
-			shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x/ WORLD_SIZE, halfDims.z/ WORLD_SIZE));
+			shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x / WORLD_SIZE, halfDims.z / WORLD_SIZE));
 			shaderPaintable->SetUniform((arr + "objColor").c_str(), objectColor);
 			i++;
 		}
@@ -405,8 +405,9 @@ void GraphicsPipeline::RenderScene(float dt)
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers());
-	int splatPlayer = -1;
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers() + GameLogic::Instance()->getNumAIPlayers());
+	int splatSoftPlayer = -1;
+	int splatAIPlayer = -1;
 	for (int i = 0; i < GameLogic::Instance()->getTotalPlayers(); i++) {
 		if (i < GameLogic::Instance()->getNumPlayers()) {
 			std::string arr = "players[" + std::to_string(i) + "].";
@@ -421,14 +422,15 @@ void GraphicsPipeline::RenderScene(float dt)
 			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 			else {
 				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-				splatPlayer = i;
+				splatSoftPlayer = i;
 			}
-			trailQuad->Draw();
 
+		
 		}
-		else {
+		else
+			{
 			std::string arr = "players[" + std::to_string(i) + "].";
-			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
+ 			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
 			float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
 			float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
 			Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
@@ -439,20 +441,51 @@ void GraphicsPipeline::RenderScene(float dt)
 			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 			else {
 				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-				splatPlayer = i;
+				splatSoftPlayer = i;
 			}
-			trailQuad->Draw();
+			
+		}
+		
+		
+	}
+	for (int i = GameLogic::Instance()->getTotalPlayers(); i < GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getTotalPlayers(); i++)
+	{
+		int j = i - GameLogic::Instance()->getTotalPlayers();
+		std::string arr = "players[" + std::to_string(i) + "].";
+		float pos_x = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getAIPlayer(j)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getAIPlayer(j)->Render()->GetChildIteratorStart())->GetColour();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+		if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		else {
+			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+			splatAIPlayer = j;
 		}
 	}
-
-	if (splatPlayer != -1) {
+	trailQuad->Draw();
+	if (splatAIPlayer != -1 || splatSoftPlayer != -1) {
 		shaderSplat->Activate();
 		splat_tex->Bind(3);
 		shaderSplat->SetUniform("uDiffuseTex", 3);
-		float pos_x = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().x;
-		float pos_z = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRelativePosition().z;
-		float rad = GameLogic::Instance()->getSoftPlayer(splatPlayer)->getRadius();
-		Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(splatPlayer)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+		float pos_x, pos_z, rad;
+		Vector4 temp_col;
+		if (splatSoftPlayer!=-1) {
+			pos_x = GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getRelativePosition().x;
+			pos_z = GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getRelativePosition().z;
+			rad = GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getRadius();
+			temp_col = (*GameLogic::Instance()->getSoftPlayer(splatSoftPlayer)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+		}
+		else if (splatAIPlayer != -1) {
+			pos_x = GameLogic::Instance()->getAIPlayer(splatAIPlayer)->getRelativePosition().x;
+			pos_z = GameLogic::Instance()->getAIPlayer(splatAIPlayer)->getRelativePosition().z;
+			rad = GameLogic::Instance()->getAIPlayer(splatAIPlayer)->getRadius();
+			temp_col = (*GameLogic::Instance()->getAIPlayer(splatAIPlayer)->Render()->GetChildIteratorStart())->GetColour();
+
+		}
 		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 		shaderSplat->SetUniform("pos_x", pos_x);
 		shaderSplat->SetUniform("pos_z", pos_z);
@@ -465,10 +498,10 @@ void GraphicsPipeline::RenderScene(float dt)
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumSoftPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers()+ GameLogic::Instance()->getNumAIPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
 	int max_score = 0;
@@ -483,7 +516,17 @@ void GraphicsPipeline::RenderScene(float dt)
 		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
 		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 	}
-	
+	for (int i = GameLogic::Instance()->getNumSoftPlayers(); i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers(); i++) {
+		int j = i - GameLogic::Instance()->getNumSoftPlayers();
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
+		std::string arr = "players[" + std::to_string(i) + "].";
+		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
+		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getAIPlayer(j)->Render()->GetChildIteratorStart())->GetColour());
+	}
 	if (flickerPie > 0.5f) {
 		flickerPie = 0.0f;
 		toggleFlicker = !toggleFlicker;
@@ -491,25 +534,6 @@ void GraphicsPipeline::RenderScene(float dt)
 	if (toggleFlicker) {
 		max_score = -1;
 	}
-		int PlayersPlusAIPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers();
-		for (int i = GameLogic::Instance()->getNumPlayers(); i < PlayersPlusAIPlayers; i++) {
-			int j = i - GameLogic::Instance()->getNumPlayers();
-	
-			std::string arr = "players[" + std::to_string(i) + "].";
-			float pos_x = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().x;
-			float pos_z = GameLogic::Instance()->getAIPlayer(j)->getRelativePosition().z;
-			float rad = GameLogic::Instance()->getAIPlayer(j)->getRadius();
-			Vector4 temp_col = (*GameLogic::Instance()->getAIPlayer(j)->getBall()->Render()->GetChildIteratorStart())->GetColour();
-			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
-			if (Window::GetKeyboard()->KeyDown(KEYBOARD_C)) {
-				trailColor = Vector3(0.0f, 1.0f, 0.0f);
-			}
-			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
-			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-			shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
-
-		}
 
 	flickerPie += dt;
 	shaderCircle->SetUniform("winning", max_score);
@@ -524,13 +548,13 @@ void GraphicsPipeline::RenderScene(float dt)
 		// - Most scene objects will probably end up being static, so we really should only be updating
 		//   modelMatrices for objects (and their children) who have actually moved since last frame
 		for (RenderNodeBase* node : allNodes)
-			node->Update(0.0f); 
+			node->Update(0.0f);
 
 
-								//NCLDebug - Build render lists
-								//NCLDebug::_BuildRenderLists();
+		//NCLDebug - Build render lists
+		//NCLDebug::_BuildRenderLists();
 
-								//Build shadowmaps
+		//Build shadowmaps
 		BuildShadowTransforms();
 		shadowFBO->Activate();
 		renderer->SetViewPort(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -590,7 +614,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
 		BuffHUD(i);
-	
+
 
 
 		//Downsample and present to screen
@@ -649,7 +673,7 @@ void GraphicsPipeline::RenderScene(float dt)
 	if (GameLogic::Instance()->getTotalTime() <= 3.0f) {
 		StartCounter();
 	}
-	
+
 	NCLDebug::_BuildRenderLists();
 	renderer->SetViewPort(screenTexWidth / 4, screenTexHeight / 4);
 	//NCLDEBUG - Text Elements (aliased)
@@ -659,7 +683,7 @@ void GraphicsPipeline::RenderScene(float dt)
 
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->BindScreenFramebuffer();
-	
+
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 }
@@ -884,14 +908,14 @@ void GraphicsPipeline::BuildShadowTransforms()
 		//Build Bounding Box around frustum section (Axis Aligned)
 		BoundingBox bb;
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3(-1.0f,  1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f, -1.0f, norm_near));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f,  1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, 1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, -1.0f, norm_near));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, 1.0f, norm_near));
 		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, -1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3(-1.0f,  1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f, -1.0f, norm_far));
-		bb.ExpandToFit(invCamProjView * Vector3( 1.0f,  1.0f, norm_far));
-		
+		bb.ExpandToFit(invCamProjView * Vector3(-1.0f, 1.0f, norm_far));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, -1.0f, norm_far));
+		bb.ExpandToFit(invCamProjView * Vector3(1.0f, 1.0f, norm_far));
+
 		//Rotate bounding box so it's orientated in the lights direction
 		// - Rotates bounding box and creates a new AABB that encompasses it
 		bb = bb.Transform(shadowViewMtx);
@@ -924,7 +948,7 @@ void GraphicsPipeline::FillPaint(float dt) {
 			ground = (*node->GetChildIteratorStart());
 		}
 		else if ((*node->GetChildIteratorStart())->HasTag(Tags::TPaintable)) {
-			(*node->GetChildIteratorStart())->SetPaintPercentage((*node->GetChildIteratorStart())->GetPaintPercentage()+0.1f);
+			(*node->GetChildIteratorStart())->SetPaintPercentage((*node->GetChildIteratorStart())->GetPaintPercentage() + 0.1f);
 			if ((*node->GetChildIteratorStart())->GetPaintPercentage() >= 100) {
 				(*node->GetChildIteratorStart())->SetPaintPercentage(100);
 				(*node->GetChildIteratorStart())->SetBeingPainted(false);
@@ -934,7 +958,7 @@ void GraphicsPipeline::FillPaint(float dt) {
 					shaderPaint->Activate();
 					renderer->SetViewPort(1024, 1024);
 					PaintBuffer->ChangeColourAttachment((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1));
-					paintQuad->ReplaceTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1),0);
+					paintQuad->ReplaceTexture((*node->GetChildIteratorStart())->GetMesh()->GetTexture(1), 0);
 					shaderPaint->SetUniform("radius_perc", (*node->GetChildIteratorStart())->GetPaintPercentage());
 					shaderPaint->SetUniform("playerColor", (*node->GetChildIteratorStart())->GetColourFromPlayer());
 					paintQuad->Draw();
@@ -954,5 +978,5 @@ void GraphicsPipeline::ChangeScene() {
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
-	
+
 }

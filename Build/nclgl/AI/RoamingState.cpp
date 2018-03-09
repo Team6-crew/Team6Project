@@ -27,6 +27,7 @@ void RoamingState::update(StateMachine * sOwner)
 nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner)
 {
 	BallAI * owner = dynamic_cast<BallAI*>(sOwner->getOwner());
+
 	if (owner->getNodeList().empty())
 	{
 		owner->getNodeList();
