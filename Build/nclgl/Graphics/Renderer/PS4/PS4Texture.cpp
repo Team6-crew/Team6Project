@@ -33,16 +33,16 @@ PS4Texture::PS4Texture(Type type, int a, int b)
 	{
 	case COLOUR:
 		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(Gnm::RenderTargetFormat::kRenderTargetFormat8_8_8_8, Gnm::RenderTargetChannelType::kRenderTargetChannelTypeSrgb,  Gnm::RenderTargetChannelOrder::kRenderTargetChannelOrderStandard), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
-		//apiTexture.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);
+	//	apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::SurfaceFormat::kSurfaceFormat8_8_8_8, sce::Gnm::kTextureChannelTypeSrgb, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelY, sce::Gnm::kTextureChannelZ, sce::Gnm::kTextureChannelW), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
+	//	apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::BufferFormat::kBufferFormat8_8_8_8, sce::Gnm::BufferChannelType::kBufferChannelTypeFloat), sce::Gnm::TileMode::kTileModeDisplay_2dThin, sce::Gnm::NumFragments::kNumFragments1);
 		apiTexture.setTextureType(sce::Gnm::kTextureType2d);
-	//	apiTexture.setChannelType(sce::Gnm::kTextureChannelTypeFloat);
-	//	apiTexture.setChannelOrder(sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX);
+		
 		break;
 
 	case DEPTH:
-		sce::Gnm::DataFormat dformat;
+		//sce::Gnm::DataFormat dformat;
 		//dformat.build(sce::Gnm::ZFormat::kZFormat32Float);
-		dformat.build(sce::Gnm::SurfaceFormat::kSurfaceFormat32, sce::Gnm::kTextureChannelTypeFloat, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX);
+		//dformat.build(sce::Gnm::SurfaceFormat::kSurfaceFormat32, sce::Gnm::kTextureChannelTypeFloat, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX);
 		apiTexture.initAs2d(a, b, 1, sce::Gnm::DataFormat::build(sce::Gnm::SurfaceFormat::kSurfaceFormat32, sce::Gnm::kTextureChannelTypeFloat, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX, sce::Gnm::kTextureChannelX), sce::Gnm::TileMode::kTileModeDepth_2dThin_64, sce::Gnm::NumFragments::kNumFragments1);
 		apiTexture.setTextureType(sce::Gnm::kTextureType2d);
 		//apiTexture.setResourceMemoryType(sce::Gnm::kResourceMemoryTypeRO);

@@ -38,7 +38,6 @@ GraphicsPipeline::GraphicsPipeline()
 
 	fullscreenQuad = MeshFactory::Instance()->GenerateQuad();
 
-	renderer->SetDefaultSettings();
 
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
@@ -159,7 +158,7 @@ void GraphicsPipeline::UpdateScene(float dt)
 void GraphicsPipeline::RenderScene()
 {
 	renderer->PrepareToRender();
-
+	renderer->SetDefaultSettings();
 	//Build World Transforms
 	// - Most scene objects will probably end up being static, so we really should only be updating
 	//   modelMatrices for objects (and their children) who have actually moved since last frame
@@ -173,7 +172,9 @@ void GraphicsPipeline::RenderScene()
 	//Render scene to screen fbo
 		screenFBO->Activate();
 
-
+		renderer->PostRender();
+		renderer->SwapBuffers();
+		return;
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 		renderer->SetClearColour(backgroundColor);
 		renderer->Clear(Renderer::COLOUR_DEPTH);

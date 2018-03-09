@@ -400,6 +400,8 @@ void	PS4Renderer::PrepareToRender()
 
 	currentGFXContext->waitUntilSafeForRendering(videoHandle, currentGPUBuffer);
 
+	currentPS4FrameBuffer->SetGraphicsContext(currentGFXContext);
+
 	SetRenderFrameBuffer(currentPS4FrameBuffer, true, true, true);
 
 	for (auto& shader : shaders)
@@ -435,12 +437,8 @@ void PS4Renderer::SwapScreenBuffer()
 void PS4Renderer::SwapCommandBuffer()
 {
 	if (currentGFXContext) {
-		if (currentFrame->GetCommandBuffer().submit() != sce::Gnm::kSubmissionSuccess) {
-			std::cerr << "currentFrame queue submission failed?" << std::endl;
-		}
-		
 		if (currentGFXContext->submit() != sce::Gnm::kSubmissionSuccess) {
-			std::cerr << "currentGFXContext queue submission failed?" << std::endl;
+			std::cerr << "Graphics queue submission failed?" << std::endl;
 		}
 
 		Gnm::submitDone();
