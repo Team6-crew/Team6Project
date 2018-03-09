@@ -83,7 +83,7 @@ void SceneManager::JumpToScene(int idx)
 		loader.BuildLevel("SimpleLevel.txt", scene);
 		
 	}
-
+	
 	else if (idx == 2)
 	{
 		LevelLoader loader;

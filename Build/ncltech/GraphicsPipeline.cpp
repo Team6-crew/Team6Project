@@ -77,6 +77,15 @@ GraphicsPipeline::GraphicsPipeline()
 	tex_2 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"2.png");
 	tex_3 = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"3.png");
 	CounterBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
+
+	buff_paint_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"paint.png");
+	buff_speed_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"speed.png");
+	buff_stun_tex = TextureFactory::Instance()->MakeTexture(TEXTUREDIR"stun.png");
+
+
+	BuffBuffer = FrameBufferFactory::Instance()->MakeFramebuffer(tex_3, depth);
+
+
 }
 
 GraphicsPipeline::~GraphicsPipeline()

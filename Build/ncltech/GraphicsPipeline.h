@@ -132,12 +132,16 @@ protected:
 	FrameBufferBase* LoadingBuffer;
 	FrameBufferBase* PaintBuffer;
 	FrameBufferBase* CounterBuffer;
+	FrameBufferBase* BuffBuffer;
 	TextureBase* temp_tex;
 	TextureBase* loading_tex;
 	TextureBase* splat_tex;
 	TextureBase * tex_1;
 	TextureBase * tex_2;
 	TextureBase * tex_3;
+	TextureBase* buff_paint_tex;
+	TextureBase* buff_stun_tex;
+	TextureBase* buff_speed_tex;
 
 	float paint_perc;
 
@@ -150,6 +154,8 @@ protected:
 	RenderNodeBase * ground;
 
 	bool sound321played;
+
+
 
 	
 };
