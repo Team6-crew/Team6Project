@@ -59,7 +59,8 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project", idx = 1));
-
+	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project", idx = 2));
+	
 	// Move this once main menu is hooked up
 	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
