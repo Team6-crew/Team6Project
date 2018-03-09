@@ -46,6 +46,7 @@ protected:
 	void AddPlayers(const std::string& line);
 	bool Load(const std::string& filename);
 
+	inline void DeleteMapObjects() { mapObjects.clear(); }
 	std::vector<MapObject> mapObjects;
 
 protected:

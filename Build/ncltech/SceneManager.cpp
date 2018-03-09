@@ -66,6 +66,7 @@ void SceneManager::JumpToScene(int idx)
 		scene->OnCleanupScene();
 		PhysicsEngine::Instance()->RemoveAllPhysicsObjects();	
 		GameLogic::Instance()->clearPlayers();
+		levelLoader.DeleteMapObects();
 	}
 
 	m_SceneIdx = idx;
