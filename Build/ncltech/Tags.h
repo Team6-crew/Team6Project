@@ -21,8 +21,8 @@ enum Tags {
 	BPaint,
 	BStun,
 	BSpeed,
-	BNothing
-	TRamp,
+	BNothing,
 	TWeapon,
-	TRandomPickup
+	TRandomPickup,
+	TAIPlayer
 };

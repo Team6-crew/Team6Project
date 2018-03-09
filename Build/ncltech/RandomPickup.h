@@ -14,17 +14,6 @@ public:
 		const nclgl::Maths::Vector4& color);
 	~RandomPickup();
 	
-	virtual void Eff_Speed(Player* player) ;
-	virtual void Eff_Paint(Player* player) ;
-	virtual void Eff_Stun(Player* player) ;
-	virtual void SoftEff_Speed(PlayerSoftBody* player) ;
-	virtual void SoftEff_Paint(PlayerSoftBody* player) ;
-	virtual void SoftEff_Stun(PlayerSoftBody* player) ;
-
-	bool updown = true;
-	float y;
-	virtual void setupdowm(bool ud) { updown = ud; }
-	virtual bool getupdown() { return updown; }
-	void Updown();
+	virtual void Effect(PlayerSoftBody* player);
 };
 
