@@ -5,6 +5,8 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "EmptyScene.h"
+#include "iostream"
+#include "fstream"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
@@ -86,7 +88,7 @@ void PrintStatusEntries()
 	NCLDebug::AddStatusEntry(status_colour, "Bytes: " + std::to_string(HeapFactory::Instance()->PrintDebugInfo()));
 	NCLDebug::AddStatusEntry(status_colour, "Peak Bytes: " + std::to_string(HeapFactory::Instance()->PrintPeakInfo()));
 	//NCLDebug::AddStatusEntry(status_colour, "Net Allocation: " + std::to_string(HeapFactory::Instance()->PrintNetAllocInfo()));
-
+	
 }
 
 // Process Input
@@ -121,10 +123,23 @@ void HandleKeyboardInputs()
 		show_perf_metrics = !show_perf_metrics;
 
 
+	Vector3 pos;
+	std::vector<Vector3> posList;
 
-	
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_M))
+	{
+		
+		pos = GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetPosition();
+		std::ofstream myfile;
+		myfile.open("pos.txt", std::ios_base::app);
+		cout << pos << "\n";
 
-
+		if (myfile.is_open())
+		{
+			myfile << pos << "\n";
+			myfile.close();
+		}
+	}
 }
 
 
@@ -132,6 +147,7 @@ void HandleKeyboardInputs()
 int main()
 {
 	bool show_status_menu = false;
+	bool showEndScreen = false;
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
@@ -197,12 +213,31 @@ int main()
 			{
 				NCLDebug::_ClearDebugLists();
 				PrintStatusEntries();
+
+			}
+			else if (showEndScreen) {
+				NCLDebug::_ClearDebugLists();
+				NCLDebug::AddHUD2(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Player 1 WINS!");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f), "Press 2 to Exit");
+				//PrintStatusEntries();
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+				{
+					SceneManager::Instance()->JumpToScene("Team Project");
+				}
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
+				{
+					SceneManager::Instance()->JumpToScene("Main Menu");
+				}
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
 				show_status_menu = !show_status_menu;
 			}
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
+				showEndScreen = !showEndScreen;
+				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+			}
 		
-			
 		}
 
 

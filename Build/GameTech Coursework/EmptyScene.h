@@ -5,11 +5,12 @@
 #include <ncltech\Player.h>
 #include <ncltech\PlayerSoftBody.h>
 #include <ncltech\OcTree.h>
+#include <nclgl\AI\BallAI.h>
 #include <nclgl\Launchpad.h>
 #include <nclgl\Portal.h>
 
 #include <ncltech\Tags.h>
-#include <ncltech\SpeedPickup.h>
+#include <ncltech\RandomPickup.h>
 #include <ncltech\WeaponPickup.h>
 #include <ncltech\StunWeaponPickup.h>
 #include <ncltech\PaintWeaponPickup.h>
@@ -20,6 +21,7 @@
 #include <ncltech\WorldPartition.h>
 #include <algorithm>
 #include <nclgl/GameLogic.h>
+#include <nclgl/MapNavigation.h>
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include "MainMenu.h"
@@ -79,17 +81,25 @@ public:
 		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
 		//Add player to scene
+
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i));
 			this->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 		}
 
 		//Add player to scene
-		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers();i++) {
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
+		GameLogic::Instance()->setnumAI(1);
+		BallAI::addBallAIPlayers();
 
+		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
+		}
+		
+		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f),
@@ -107,6 +117,40 @@ public:
 		
 		backgroundSoundPlaying = false;
 
+		RandomPickup* pickup1 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup1->SetPhysics(pickup1->Physics());
+		this->AddGameObject(pickup1);
+		pickup1->y = pickup1->physicsNode->GetPosition().y;
+
+		RandomPickup* pickup2 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup2->SetPhysics(pickup2->Physics());
+		this->AddGameObject(pickup2);
+		pickup2->y = pickup2->physicsNode->GetPosition().y;
+
+		RandomPickup* pickup3 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup3->SetPhysics(pickup3->Physics());
+		this->AddGameObject(pickup3);
+		pickup3->y = pickup3->physicsNode->GetPosition().y;
+		//frame += step;
+		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
 
 
@@ -130,6 +174,8 @@ public:
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
+		//GameObject * pickup = FindGameObject("pickup");
+		//updown((RandomPickup*)(pickup));
 		Scene::OnUpdateScene(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
@@ -138,6 +184,8 @@ public:
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
+		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
+			GameLogic::Instance()->getAIPlayer(j)->move();
 
 		// Pause Menu
 
@@ -225,15 +273,10 @@ public:
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
 		}
-
 		
-
-
-
-
-
-
 	}
+
+
 
 
 	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)

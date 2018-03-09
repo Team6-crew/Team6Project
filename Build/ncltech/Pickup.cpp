@@ -4,7 +4,7 @@
 
 Pickup::Pickup()
 {
-	tag = Tags::TPickup;
+	//tag = Tags::TPickup;
 	
 }
 

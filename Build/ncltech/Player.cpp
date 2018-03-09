@@ -277,12 +277,34 @@ void Player::resetCamera(float dt) {
 
 
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
-	if (otherNode->GetParent()->HasTag(Tags::TPickup)) {
+	if (otherNode->GetParent()->HasTag(Tags::TWeapon)) {
 		Pickup* pickup = (Pickup*)otherNode->GetParent();
 		pickup->Effect(this);
 		PhysicsEngine::Instance()->DeleteAfter(pickup,0.0f);
 		return false;
 	}
+	else if (otherNode->GetParent()->HasTag(Tags::TRandomPickup))
+	{
+		Pickup* pickup = (Pickup*)otherNode->GetParent();
+		float prob = (rand() % 100);
+		//float score = getscore();
+		//int temp = (int)(score) / 5;
+		if (prob < (33))
+		{
+			pickup->Eff_Speed(this);
+		}
+		else if (prob > (66))
+		{
+			pickup->Eff_Stun(this);
+		}
+		else
+		{
+			pickup->Eff_Paint(this);
+		}
+		PhysicsEngine::Instance()->DeleteAfter(pickup, 0.0f);
+		return false;
+	}
+	
 	else if (otherNode->GetParent()->HasTag(Tags::TLaunch))
 	{
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"duang.wav", false);
@@ -310,6 +332,10 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 		<=(physicsNode->GetPosition().y)-physicsNode->GetColRadius())
 	{   
 		if(!justJumped) canjump = true;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+	{
+		canjump = true;
 	}
 	return true;
 };
