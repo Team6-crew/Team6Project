@@ -15,5 +15,7 @@ public:
 	~RandomPickup();
 	
 	virtual void Effect(PlayerSoftBody* player);
+private:
+	bool enabled;
 };
 

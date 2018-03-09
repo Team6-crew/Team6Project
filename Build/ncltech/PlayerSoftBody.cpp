@@ -187,6 +187,7 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
 			otherRenderNode->SetBeingPainted(true);
 			otherRenderNode->SetPaintPercentage(0.0f);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
 		}
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TWash)) {
@@ -219,6 +220,7 @@ void PlayerSoftBody::unequipStunWeapon() {
 
 void PlayerSoftBody::shoot() {
 	if (equippedStunWeapon) {
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
@@ -228,6 +230,7 @@ void PlayerSoftBody::shoot() {
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
 	else if (equippedPaintWeapon) {
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
@@ -355,6 +358,7 @@ void PlayerSoftBody::handleInput(float dt) {
 		if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
 		{
 			if (canjump == true) {
+				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 				for (int i = 0; i < 182; ++i) {
 					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
 				}
