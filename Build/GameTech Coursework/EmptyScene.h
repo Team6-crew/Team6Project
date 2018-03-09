@@ -149,6 +149,17 @@ public:
 		pickup3->SetPhysics(pickup3->Physics());
 		this->AddGameObject(pickup3);
 		
+		//testcube- test the texture
+		Washingzone* wz = new Washingzone("washingzone",
+			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		wz->SetPhysics(wz->Physics());
+		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
+		this->AddGameObject(wz);
 		//frame += step;
 		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
@@ -196,9 +207,10 @@ public:
 			{
 				if (pickupnum < 10)
 				{
-					float pos = rand() % 200 - 100;
+					float pos_x = rand() % 200 - 100;
+					float pos_z = rand() % 200 - 100;
 					RandomPickup* pickup = new RandomPickup("pickup",
-						nclgl::Maths::Vector3(pos, 20.f, pos),
+						nclgl::Maths::Vector3(pos_x, 20.f, pos_z),
 						1.0f,
 						true,
 						1.0f,

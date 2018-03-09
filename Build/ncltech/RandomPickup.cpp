@@ -89,12 +89,14 @@ void RandomPickup::Effect(PlayerSoftBody* player) {
 			player->equipStunWeapon(Vector4(1,0,0,1));
 			player->setBuffTime(10.0f);
 			player->setCurrentBuff(Tags::BStun);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
 		}
 		else
 		{
 			player->equipPaintWeapon(player->getColour());
 			player->setBuffTime(10.0f);
 			player->setCurrentBuff(Tags::BPaint);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
 		}
 		enabled = false;
 	}
