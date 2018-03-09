@@ -114,7 +114,7 @@ void GameLogic::calculatePaintPercentage() {
 	for (int k = 0; k < softplayers.size(); k++)
 	{
 		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
-		if (position.y > 10.0f)
+		if (position.y > 2.5f)
 		{
 			continue;
 		}
@@ -135,6 +135,7 @@ void GameLogic::calculatePaintPercentage() {
 		}*/
 			else
 			{
+
 				add_rad = softplayers[k]->getadd_rad();
 				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
@@ -162,15 +163,17 @@ void GameLogic::calculatePaintPercentage() {
 				}
 				softplayers[k]->setadd_rad(0.0f);
 			}
+	}
+
 		for (int l = 0; l < aiPlayers.size(); l++)
 		{
 			nclgl::Maths::Vector3 position = aiPlayers[l]->Physics()->GetPosition();
-			if (position.y > 10.0f)
+
+			if (position.y > 2.5f)
 			{
 				continue;
 			}
-			else
-			{
+			else {
 				//add_rad = aiPlayers[l]->getRadius();
 				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
@@ -196,8 +199,8 @@ void GameLogic::calculatePaintPercentage() {
 						}
 					}
 				}
+
 			}
-		}
 	}
 }
 

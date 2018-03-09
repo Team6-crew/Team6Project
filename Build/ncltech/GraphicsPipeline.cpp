@@ -463,7 +463,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 		else {
 			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-			splatAIPlayer = i;
+			splatAIPlayer = j;
 		}
 	}
 	trailQuad->Draw();
