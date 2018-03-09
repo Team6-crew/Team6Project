@@ -183,6 +183,20 @@ public:
 		}
 		else scene_iterator = 1;
 
+		if (GameLogic::Instance()->spawnPickup()) {
+			RandomPickup* pickup = new RandomPickup("pickup",
+				GameLogic::Instance()->getLastPickupPosition(),
+				1.0f,
+				true,
+				0.5f,
+				true,
+				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			pickup->SetPhysics(pickup->Physics());
+			pickup->Physics()->SetElasticity(0.0f);
+			this->AddGameObject(pickup);
+
+		}
+
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
@@ -200,39 +214,7 @@ public:
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
 			GameLogic::Instance()->getAIPlayer(j)->move();
 
-		//spawn pickup
-		if (GameLogic::Instance()->gameHasStarted())
-		{
-			int spawntime = 5;
-			int temp = GameLogic::Instance()->getTotalTime();
-
-			if ((temp % spawntime == 0) && (canspawn))
-			{
-				if (pickupnum < 10)
-				{
-					float pos_x = rand() % 200 - 100;
-					float pos_z = rand() % 200 - 100;
-					RandomPickup* pickup = new RandomPickup("pickup",
-						nclgl::Maths::Vector3(pos_x, 20.f, pos_z),
-						1.0f,
-						true,
-						1.0f,
-						true,
-						nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-					pickup->SetPhysics(pickup->Physics());
-					pickup->physicsNode->SetElasticity(0);
-
-					this->AddGameObject(pickup);
-					pickupnum = pickupnum + 1;
-					canspawn = false;
-				}
-			}
-
-			if ((temp % spawntime != 0) && (temp % spawntime< spawntime))
-			{
-				canspawn = true;
-			}
-		}
+		
 		// Pause Menu
 
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
@@ -610,6 +592,5 @@ private:
 	Menu * soundMenu;
 
 	float Score = 0.0f;
-	bool canspawn = true;
-	int pickupnum = 0;
+
 };
