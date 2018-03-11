@@ -1,4 +1,5 @@
 #pragma once
+#include <ncltech\Network.h>
 #include <nclgl/MySocket.h>
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
@@ -20,7 +21,7 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl/GameLogic.h>
-#include <ncltech\NetworkBase.h>
+
 void Win32_PrintAllAdapterIPAddresses();
 //#include <iomanip> // for extra field in seconds output std::setfill ('x') << std::setw (10) delete later
 class MainMenu : public Scene
@@ -171,7 +172,7 @@ public:
 		ServerListMenu->addToMenu(JoinServerMenu, 1);
 		ServerListMenu->set_id(11);
 		listen = new NetworkBase();
-		GameLogic::Instance()->setListen(listen);
+		Network::Instance()->setListen(listen);
 		if (listen->Initialize(0))
 		{
 			NCLDebug::Log("Network: Initialized!");
@@ -430,7 +431,7 @@ public:
 			case (1000):
 			{
 				if (!entering_IP) {
-					string_IP = "10.70.33.2:1234";
+					string_IP = "10.88.10.6:1234";
 					entering_IP = true;
 					activeMenu->replaceMenuItem(0, "IP: " + string_IP);
 				}
