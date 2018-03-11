@@ -1,5 +1,5 @@
 #pragma once
-
+#include <ncltech/Network.h>
 #include <nclgl/MySocket.h>
 #include <ncltech\Scene.h>
 #include <ncltech\CommonUtils.h>
@@ -35,7 +35,7 @@ public:
 	LanScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
-		listen = GameLogic::Instance()->getListen();
+		listen = Network::Instance()->getListen();
 		// Pause Menu
 		pauseMenu = new Menu();
 		pauseMenu->visible = false;

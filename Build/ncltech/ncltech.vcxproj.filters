@@ -142,6 +142,8 @@
     <ClInclude Include="Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Paintbomb.h" />
+    <ClInclude Include="Network.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionDetectionSAT.cpp">
@@ -244,5 +246,6 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Paintbomp.cpp" />
   </ItemGroup>
 </Project>

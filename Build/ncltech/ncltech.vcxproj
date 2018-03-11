@@ -182,6 +182,7 @@
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="Paintbomb.h" />
     <ClInclude Include="Memory Management\HeapMemory.h" />
     <ClInclude Include="Memory Management\HeapFactory.h" />

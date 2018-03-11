@@ -9,7 +9,7 @@
 #include <ncltech\GameObject.h>
 #include <ncltech\CommonMeshes.h>
 #include <ncltech\CommonUtils.h>
-
+#include <ncltech/Network.h>
 #include <nclgl\Graphics\TextureBase.h>
 #include <nclgl\Graphics\Renderer\RenderNodeBase.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
@@ -20,7 +20,7 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl/GameLogic.h>
-#include <ncltech\NetworkBase.h>
+
 void Win32_PrintAllAdapterIPAddresses();
 //#include <iomanip> // for extra field in seconds output std::setfill ('x') << std::setw (10) delete later
 class MainMenu : public Scene
@@ -171,7 +171,7 @@ public:
 		ServerListMenu->addToMenu(JoinServerMenu, 1);
 		ServerListMenu->set_id(11);
 		listen = new NetworkBase();
-		GameLogic::Instance()->setListen(listen);
+		Network::Instance()->setListen(listen);
 		if (listen->Initialize(0))
 		{
 			NCLDebug::Log("Network: Initialized!");
