@@ -12,6 +12,7 @@
 class PS4FrameBuffer;
 class PS4Frame;
 class PS4RenderNode;
+class PS4Mesh;
 
 
 
@@ -64,6 +65,7 @@ public:
 	void					RegisterTexture(TextureBase* s)override;
 	void					RegisterNode(RenderNodeBase* s)override;
 	void					RegisterBuffer(FrameBufferBase* s) override;
+	void					RegisterMesh(MeshBase* s) override;
 
 	void*					AllocateMemory(MemoryLocation location, uint sizeBytes);
 protected:// Setup functions 
@@ -123,6 +125,7 @@ protected: // Swap buffer
 	std::vector<PS4RenderNode*> nodes;
 	std::vector<PS4Shader*> shaders;
 	std::vector<PS4FrameBuffer*> buffers;
+	std::vector<PS4Mesh*> meshes;
 };
 
 #endif

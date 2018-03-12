@@ -66,39 +66,11 @@ ConstantBuffer uSpecularFactor
 struct VS_OUTPUT
 {
 	float4 WorldPosition  : S_POSITION;
-	float2 UV			  : TEXCOORD0; 
-	float3 Normal 		  : TEXCOORD1;
 };
 
 float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 {
-	float3 normal 		= normalize(In.Normal);
-	float4 texColour 	= uDiffuseTex.Sample(samp0, In.UV.xy);
-	float4 fragColour 	= colour * texColour;	
-	
-	//Lighting Calculations
-	float3 viewDir 		= normalize(cameraPos - In.WorldPosition);
-	float3 halfDir 		= normalize(viewDir - lightDirection);
-	float rFactor       = max(0.0, dot(halfDir , normal ));
-	
-	float dFactor       = max(0.0, dot(-lightDirection , normal)) ;
-    float sFactor       = pow(rFactor , specularFactor );
-	   
-	   
-	//Color Computations
-	const float specIntensity = 0.4f;
-	
-	//Quick hack to approximate specular colour of an object, assuming the light colour is white
-	float3 specColour = min(colour.rgb + float3(0.5f), float3(1)); 
-	
-	//Output Final Colour
-	float3 diffuse  = colour.rgb * dFactor;
-	float3 specular = specColour * sFactor * specIntensity;
-	
-	//Combine lighting
-	float4 OutFrag;
-	OutFrag.xyz 	= diffuse + specular + colour.rgb* ambientColour;
-	OutFrag.a 	= colour.a;
-	
+
+	float4 OutFrag = float4(1.0, 1.0, 1.0, 1.0);
 	return OutFrag;
 }

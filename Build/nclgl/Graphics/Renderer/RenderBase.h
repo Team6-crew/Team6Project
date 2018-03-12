@@ -16,6 +16,7 @@ class ShaderBase;
 class RenderNodeBase;
 class TextureBase;
 class FrameBufferBase;
+class MeshBase;
 
 namespace Renderer
 {
@@ -45,6 +46,7 @@ public:
 	virtual void	RegisterTexture(TextureBase* s) = 0;
 	virtual void	RegisterNode(RenderNodeBase* s) = 0;
 	virtual void	RegisterBuffer(FrameBufferBase* s) = 0;
+	virtual void	RegisterMesh(MeshBase* s) {};
 
 	inline int GetWidth()  { return width; }
 	inline int GetHeight() { return height; }

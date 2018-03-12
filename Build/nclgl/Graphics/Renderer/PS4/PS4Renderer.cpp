@@ -394,6 +394,10 @@ void	PS4Renderer::SetClearColour(nclgl::Maths::Vector3& colour)
 
 }
 
+void	PS4Renderer::RegisterMesh(MeshBase* s) {
+	meshes.push_back((PS4Mesh*)(s));
+};
+
 void	PS4Renderer::PrepareToRender()
 {
 	currentFrame->StartFrame();
@@ -422,6 +426,10 @@ void	PS4Renderer::PrepareToRender()
 		buffer->SetGraphicsContext(currentGFXContext);
 	}
 		
+	for (auto& mesh : meshes)
+	{
+		mesh->SetGraphicsContext(currentGFXContext);
+	}
 
 }
 

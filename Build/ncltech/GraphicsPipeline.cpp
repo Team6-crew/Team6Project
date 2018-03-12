@@ -37,6 +37,7 @@ GraphicsPipeline::GraphicsPipeline()
 //	NCLDebug::_LoadShaders();
 
 	fullscreenQuad = MeshFactory::Instance()->GenerateQuad();
+	renderer->RegisterMesh(fullscreenQuad);
 
 
 
@@ -197,9 +198,6 @@ void GraphicsPipeline::RenderScene()
 			}
 		);
 
-		renderer->PostRender();
-		renderer->SwapBuffers();
-		return;
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 	
 	//Downsample and present to screen
@@ -212,6 +210,7 @@ void GraphicsPipeline::RenderScene()
 		shaderPresentToWindow->SetUniform("uColorTex", 0);
 		shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 		shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
+		shaderPresentToWindow->SetUniform("ShaderConstants", nclgl::Maths::Matrix4());
 		shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 		fullscreenQuad->SetTexture(screenTexColor);
 		fullscreenQuad->Draw();
