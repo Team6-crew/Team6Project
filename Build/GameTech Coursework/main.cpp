@@ -161,6 +161,7 @@ int main()
 	GameLogic::Instance()->setLevelIsLoaded(false);
 	GameLogic::Instance()->setGameHasStarted(false);
 	//Create main game-loop
+
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
 
