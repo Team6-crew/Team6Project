@@ -5,6 +5,8 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 
+using namespace nclgl::Maths;
+
 #include <nclgl\LevelLoader.h>
 
 GameLogic::GameLogic() {
@@ -20,6 +22,9 @@ GameLogic::GameLogic() {
 	setnumAI(0);
 	setnumOfPlayersMp(0);
 	gameStarted = false;
+	server = true;
+	canspawn = true;
+	pickupnum = 0;
 
 	increment = 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 }
@@ -175,6 +180,35 @@ void GameLogic::updateControls() {
 		softplayers[2]->setControls(controls[2][0], controls[2][1], controls[2][2], controls[2][3], controls[2][4], controls[2][5]);
 	if (numOfPlayersMp & 0b1000) 
 		softplayers[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
+}
+
+bool GameLogic::spawnPickup() {
+	//spawn pickup
+	if (GameLogic::Instance()->gameHasStarted())
+	{
+		int spawntime = 8;
+
+		if (((int)totalTime % spawntime == 0) && (canspawn))
+		{
+			if (pickupnum < 10)
+			{
+				float pos_x = rand() % 200 - 100;
+				float pos_z = rand() % 200 - 100;
+				
+				pickupnum = pickupnum + 1;
+				lastPickupPosition = Vector3(pos_x, 20.f, pos_z);
+				canspawn = false;
+				return true;
+			}
+		}
+
+		if (((int)totalTime % spawntime != 0) && ((int)totalTime % spawntime< spawntime))
+		{
+			canspawn = true;
+		}
+	}
+	return false;
+}
 }
 
 void GameLogic::clearGameLogic()
