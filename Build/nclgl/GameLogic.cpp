@@ -183,7 +183,7 @@ void GameLogic::clearGameLogic()
 	allPlayers.clear();
 	netPlayers.clear();
 	softplayers.clear();
-	paint_perc.clear();
+	paint_perc.clear();	
 }
 
 void GameLogic::SwitchLevels(int idx)
@@ -191,7 +191,6 @@ void GameLogic::SwitchLevels(int idx)
 	LevelLoader loader;
 	if (idx == 1) {		
 		loader.BuildLevel("SimpleLevel.txt", scene);		
-		
 	}
 	else if (idx == 2) {
 		loader.BuildLevel("Level2.txt", scene);

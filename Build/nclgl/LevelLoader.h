@@ -9,6 +9,7 @@ class Scene;
 
 enum Type {
 	GEOMETRY_CUBOID,
+	GEOMETRY_ROTATABLE_CUBOID,
 	GEOMETRY_GROUND_CUBOID,
 	PAINTABLE_CUBE,
 	GEOMETRY_SPHERE,
@@ -40,13 +41,13 @@ public:
 	~LevelLoader();
 
 	void BuildLevel(const std::string& filename, Scene* scene);
-
+	inline void DeleteMapObjects() { mapObjects.clear(); }
 protected:
 	void AddMapObject(const std::string& line);
 	void AddPlayers(const std::string& line);
 	bool Load(const std::string& filename);
 
-	inline void DeleteMapObjects() { mapObjects.clear(); }
+	
 	std::vector<MapObject> mapObjects;
 
 protected:

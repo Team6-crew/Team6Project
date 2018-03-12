@@ -22,8 +22,7 @@ LevelLoader::~LevelLoader()
 bool LevelLoader::Load(const std::string& filename)
 {
 	string info;
-	if (filename == "SimpleLevel.txt") {
-		ifstream levelfile("SimpleLevel.txt");
+		ifstream levelfile("Level1.txt");
 		if (levelfile.is_open()) {
 			cout << "File opened" << endl;
 
@@ -36,24 +35,8 @@ bool LevelLoader::Load(const std::string& filename)
 		else {
 			cout << "File failed to be read" << endl;
 			return false;
-		}
-	}
-	else if (filename == "Level2.txt") {
-		ifstream levelfile("Level2.txt");
-		if (levelfile.is_open()) {
-			cout << "File opened" << endl;
-
-			while (getline(levelfile, info)) {
-				HandleInput(info);				
-			}
-			levelfile.close();
-			return true;
-		}
-		else {
-			cout << "File failed to be read" << endl;
-			return false;
-		}
-	}
+		}	
+	
 }
 
 void LevelLoader::AddMapObject(const std::string& line)
@@ -95,11 +78,15 @@ Type LevelLoader::StringToType(const std::string& line)
 	{
 		return GEOMETRY_CUBOID;
 	}
-	if (line == "GEOMETRY_GROUND_CUBOID")
+	else if (line == "GEOMETRY_ROTATABLE_CUBOID")
+	{
+		return GEOMETRY_ROTATABLE_CUBOID;
+	}
+	else if (line == "GEOMETRY_GROUND_CUBOID")
 	{
 		return GEOMETRY_GROUND_CUBOID;
 	}
-	if (line == "PAINTABLE_CUBE")
+	else if (line == "PAINTABLE_CUBE")
 	{
 		return PAINTABLE_CUBE;
 	}
@@ -168,6 +155,21 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 			scene->AddGameObject(geometry);
 			break;
 
+		case GEOMETRY_ROTATABLE_CUBOID:
+			geometry = CommonUtils::BuildRotatableCuboidObject(
+				object.name,
+				object.position,
+				object.scale,
+				true,
+				object.inverseMass,
+				true,
+				false,
+				object.colour,
+				object.rotAxis,
+				object.rotationDegrees);
+			scene->AddGameObject(geometry);
+			break;
+
 		case PAINTABLE_CUBE:
 			geometry = CommonUtils::BuildPaintableCube(
 				object.name,
@@ -198,9 +200,6 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.colour);
 			scene->AddGameObject(geometry);
 			break;
-						
-				//object.rotAxis,
-				//object.rotationDegrees);
 
 		case LAUNCH_PAD:
 			launchpad = new Launchpad(

@@ -27,6 +27,8 @@
 #include "MainMenu.h"
 #include <nclgl\ResourceManager.h>
 
+#include <nclgl\LevelLoader.h>
+
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
@@ -248,7 +250,7 @@ public:
 		
 		//testcube- test the texture
 		Washingzone* wz = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+			nclgl::Maths::Vector3(0.0f, 13.f, -40.0f),
 			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
 			true,
 			0.0f,
@@ -404,6 +406,10 @@ public:
 				activeMenu = NULL;
 
 				//Delete objects from the scene
+				LevelLoader levelLoader;
+				levelLoader.DeleteMapObjects();
+				std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
+
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
