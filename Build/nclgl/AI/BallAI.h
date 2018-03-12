@@ -82,9 +82,9 @@ private:
 	StateMachine * AIStateMachine;
 	MapNavigation * MapNav;
 
-	RenderNodeBase* bodyRenderNode = nullptr;
-	RenderNodeBase* equippedStunWeapon = nullptr;
-	RenderNodeBase* equippedPaintWeapon = nullptr;
+	RenderNodeBase* bodyRenderNode;
+	RenderNodeBase* equippedStunWeapon;
+	RenderNodeBase* equippedPaintWeapon;
 
 	void unequipPaintWeapon();
 	void unequipStunWeapon();

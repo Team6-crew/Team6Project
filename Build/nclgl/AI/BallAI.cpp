@@ -271,28 +271,41 @@ bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	return true;
 };
 
-void BallAI::equipStunWeapon(Vector4 colour) {
+void BallAI::unequipPaintWeapon() {
 	if (equippedPaintWeapon) {
-		(*getBody()->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
+		(*AIbody->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
 		delete equippedPaintWeapon;
 		equippedPaintWeapon = NULL;
 	}
-	equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
-	equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
-
-	(*AIbody->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 }
 
-void BallAI::equipPaintWeapon(Vector4 colour) {
+void BallAI::unequipStunWeapon() {
 	if (equippedStunWeapon) {
 		(*AIbody->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
 		delete equippedStunWeapon;
 		equippedStunWeapon = NULL;
 	}
-	equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
-	equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+}
 
-	(*AIbody->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
+void BallAI::equipStunWeapon(Vector4 colour) {
+	if (!equippedPaintWeapon) {
+		unequipPaintWeapon();
+		equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
+		equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+
+		(*AIbody->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
+	}
+}
+
+void BallAI::equipPaintWeapon(Vector4 colour) {
+	if (!equippedStunWeapon) {
+		unequipStunWeapon();
+		equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
+		equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+
+		(*AIbody->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
+	}
+	
 }
 
 void BallAI::updateBuffTime(float dt) 
@@ -346,29 +359,15 @@ void BallAI::setCurrentBuff(Tags tag) {
 	currentBuff = tag;
 }
 
-void BallAI::unequipPaintWeapon() {
-	if (equippedPaintWeapon) {
-		(*AIbody->Render()->GetChildIteratorStart())->RemoveChild(equippedPaintWeapon);
-		delete equippedPaintWeapon;
-		equippedPaintWeapon = NULL;
-	}
-}
-
-void BallAI::unequipStunWeapon() {
-	if (equippedStunWeapon) {
-		(*AIbody->Render()->GetChildIteratorStart())->RemoveChild(equippedStunWeapon);
-		delete equippedStunWeapon;
-		equippedStunWeapon = NULL;
-	}
-}
-
 void BallAI::shoot() {
+
+	BallAI * owner = dynamic_cast<BallAI*>(AIStateMachine->getOwner()); // cannot get nodes list any other way
+	nclgl::Maths::Vector3 goal = owner->getNode(owner->getCurrentNode());
+	forward = goal - getBall()->Physics()->GetPosition();
+
 	if (equippedStunWeapon) {
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
-		BallAI * owner = dynamic_cast<BallAI*>(AIStateMachine->getOwner()); // cannot get nodes list any other way
-		nclgl::Maths::Vector3 goal = owner->getNode(owner->getCurrentNode());
-		forward = goal - getBall()->Physics()->GetPosition();
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
 		StunProjectile* projectile = new StunProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
