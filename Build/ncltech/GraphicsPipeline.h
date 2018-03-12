@@ -46,8 +46,10 @@ public:
 	void SplatProjectile(float pos_x, float pos_z, float rad, nclgl::Maths::Vector4 trailColor);
 	//Utils
 	inline Camera* GetCamera() { return camera; }
+	Camera* GetCameras(int cam) { return cameras[cam]; }
 	void pushPaintableObject(GameObject * Paintable) { paintableObjects.push_back(Paintable); };
 	Camera* CreateNewCamera();
+	Camera* RepairCamera(int cmr);
 	void ChangeScene();
 protected:
 	GraphicsPipeline();

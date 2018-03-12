@@ -55,6 +55,7 @@ public:
 	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
 	};
 
+	void repairSoftPlayer(int num_splayers);
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
 	void setnumAI(int nAI) { numAI = nAI; };
@@ -63,6 +64,7 @@ public:
 	int getnumAI(void) { return numAI; };
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
+	nclgl::Maths::Vector4 getColours(int col) { return colours[col]; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;

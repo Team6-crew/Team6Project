@@ -73,9 +73,7 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 
-	camera = new Camera();
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.0f);
+	
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
@@ -83,8 +81,8 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
 
-	tempPitch = camera->GetPitch();
-	tempYaw = camera->GetYaw();
+	tempPitch = -20.f;
+	tempYaw = 0.0f;
 	colour = color;
 }
 
@@ -140,6 +138,11 @@ GameObject* PlayerSoftBody::getFront() {
 		back = ball->softball[k + 9];
 
 	return front;
+}
+
+GameObject* PlayerSoftBody::getBack() {
+	getFront();
+	return back;
 }
 
 void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
