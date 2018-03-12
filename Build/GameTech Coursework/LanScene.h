@@ -10,11 +10,7 @@
 #include <nclgl\Portal.h>
 
 #include <ncltech\Tags.h>
-#include <ncltech\SpeedPickup.h>
-#include <ncltech\WeaponPickup.h>
-#include <ncltech\StunWeaponPickup.h>
-#include <ncltech\PaintWeaponPickup.h>
-#include <ncltech\Paintbomb.h>
+
 #include <ncltech\Paintbomb.h>
 #include <ncltech\Washingzone.h>
 
@@ -145,27 +141,7 @@ public:
 		frame += step;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 
-		SpeedPickup* pickup = new SpeedPickup("pickup",
-			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
-			0.5f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup->SetPhysics(pickup->Physics());
-		this->AddGameObject(pickup);
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
-		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
-			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		weapon->SetPhysics(weapon->Physics());
-		this->AddGameObject(weapon);
-		frame += step;
+		
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
 			nclgl::Maths::Vector3(15.0f, 1.f, 0.0f),
@@ -325,7 +301,7 @@ public:
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->move();
+			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
 		// Pause Menu
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))

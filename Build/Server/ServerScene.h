@@ -9,10 +9,6 @@
 #include <nclgl\Portal.h>
 
 #include <ncltech\Tags.h>
-#include <ncltech\SpeedPickup.h>
-#include <ncltech\WeaponPickup.h>
-#include <ncltech\StunWeaponPickup.h>
-#include <ncltech\PaintWeaponPickup.h>
 #include <ncltech\Paintbomb.h>
 #include <ncltech\Paintbomb.h>
 #include <ncltech\Washingzone.h>
@@ -135,38 +131,7 @@ public:
 		frame += step;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		
-		SpeedPickup* pickup = new SpeedPickup("pickup",
-			nclgl::Maths::Vector3(10.0f, 1.f, 0.0f),
-			0.5f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup->SetPhysics(pickup->Physics());
-		this->AddGameObject(pickup);
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
-		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
-			nclgl::Maths::Vector3(13.0f, 1.f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		weapon->SetPhysics(weapon->Physics());
-		this->AddGameObject(weapon);
-		frame += step;
-		GraphicsPipeline::Instance()->LoadingScreen(frame);
-		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
-			nclgl::Maths::Vector3(15.0f, 1.f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
-		weapon2->SetPhysics(weapon2->Physics());
-		this->AddGameObject(weapon2);
-		frame += step;
+		
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 		Paintbomb* paintbomb = new Paintbomb("paintbomb",
 			nclgl::Maths::Vector3(-10.0f, 1.f, 0.0f),
@@ -297,7 +262,6 @@ public:
 			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
-
 		Scene::OnUpdateScene(dt);
 		NCLDebug::AddHUD(nclgl::Maths::Vector4(0.0f, 0.0f, 0.0f, 1.0f), "Score: " + std::to_string(Score));
 		GameObject *pickup = FindGameObject("pickup");
@@ -308,55 +272,6 @@ public:
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->moveServer(dt);
 
-		// Pause Menu
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
-		{
-
-			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-			if (pauseMenu->visible == false) {
-				pauseMenu->setSelection(0);
-				pauseMenu->visible = true;
-			}
-			else {
-				pauseMenu->setSelection(-1);
-				pauseMenu->visible = false;
-			}
-		}
-		//Navigate choices
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
-		{
-			if (pauseMenu->visible == true) { pauseMenu->MoveUp(); }
-			else { pauseMenu->MoveUp(); }
-		}
-
-		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN))
-		{
-			if (pauseMenu->visible == true) { pauseMenu->MoveDown(); }
-			else { pauseMenu->MoveDown(); }
-		}
-		if (pauseMenu->visible == true) {
-			pauseMenu->ShowMenu();
-		}
-
-
-		//Change Menus
-		if (pauseMenu->getSelection() == 0 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
-		{
-			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-			pauseMenu->visible = false;
-		}
-		else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
-		{
-			pauseMenu->visible = false;
-			SceneManager::Instance()->JumpToScene("Main Menu");
-			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-		}
-		else if (pauseMenu->getSelection() == 4 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
-		{
-			exit(0);
-		}
-
-		//camera->SetPosition(cam->GetWorldTransform().GetPositionVector());
 	}
 
 

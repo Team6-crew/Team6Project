@@ -153,10 +153,10 @@ int main(int arcg, char** argv)
 						gameStarted = true;
 						StartGame.BroadcastPacket(server.m_pNetwork);
 						int num_p = bin_players;
-						if (num_p & 0b0001) GameLogic::Instance()->addPlayer(0);
-						if (num_p & 0b0010) GameLogic::Instance()->addPlayer(1);
-						if (num_p & 0b0100) GameLogic::Instance()->addPlayer(2);
-						if (num_p & 0b1000) GameLogic::Instance()->addPlayer(3);
+						if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
+						if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
+						if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
+						if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
 						//Add player to scene
 						for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 							SceneManager::Instance()->GetCurrentScene()->AddGameObject(GameLogic::Instance()->getPlayer(i));

@@ -440,6 +440,7 @@ void GraphicsPipeline::RenderScene(float dt)
 			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
 			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
 			else {
+
 				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
 				splatSoftPlayer = i;
 			}
@@ -613,7 +614,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-		BuffHUD(i);
+		//BuffHUD(i);
 
 
 

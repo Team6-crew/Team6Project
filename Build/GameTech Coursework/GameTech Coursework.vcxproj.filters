@@ -26,5 +26,8 @@
     <ClInclude Include="LanScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EmptyScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
