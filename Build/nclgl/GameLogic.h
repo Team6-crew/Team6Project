@@ -24,7 +24,7 @@ public:
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
 	int getNumAIPlayers() { return aiPlayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	int getTotalPlayers() { return players.size() + softplayers.size();}
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
 	bool gameHasStarted() { return gameStarted; }
@@ -32,7 +32,14 @@ public:
 	void setLevelIsLoaded(bool l) { levelLoaded = l; }
 	void setGameHasStarted(bool l) { gameStarted = l; }
 	
+	float getActualGameTime() { return actualGameTime; }
+	void increaseActualGameTime(float dt) { actualGameTime +=dt; }
+	
+	bool isServer() { return server; }
+	void setIsServer(bool s) { server = s; }
 
+	bool spawnPickup();
+	nclgl::Maths::Vector3 getLastPickupPosition() { return lastPickupPosition; }
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
 	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
@@ -82,4 +89,11 @@ private:
 	bool levelLoaded;
 	float totalTime;
 	bool gameStarted;
+	float actualGameTime;
+
+	bool server;
+
+	nclgl::Maths::Vector3 lastPickupPosition;
+	bool canspawn;
+	int pickupnum;
 };

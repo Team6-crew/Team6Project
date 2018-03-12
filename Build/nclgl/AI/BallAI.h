@@ -17,7 +17,7 @@ public:
 		bool collidable,
 		const nclgl::Maths::Vector4& color);
 	~BallAI();
-	static void addBallAIPlayers();
+	static void addBallAIPlayers(int i);
 	std::vector<nclgl::Maths::Vector3> getNodeList() { return nodesList; }
 	nclgl::Maths::Vector3 getNode(int a) { return nodesList[a]; }
 	void addNodesToList(nclgl::Maths::Vector3 Node) { nodesList.push_back(Node); }
