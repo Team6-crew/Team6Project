@@ -197,7 +197,9 @@ void GraphicsPipeline::RenderScene()
 			}
 		);
 
-
+		renderer->PostRender();
+		renderer->SwapBuffers();
+		return;
 		renderer->SetViewPort(screenTexWidth, screenTexHeight);
 	
 	//Downsample and present to screen
