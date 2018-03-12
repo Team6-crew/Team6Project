@@ -956,3 +956,19 @@ void GraphicsPipeline::ChangeScene() {
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	
 }
+
+void GraphicsPipeline::clearGraphicsPipeline()
+{
+	allNodes.clear();
+	paintableObjects.clear();
+	renderlistOpaque.clear();
+	renderlistTransparent.clear();
+	cameras.clear();
+	//viewMatrices.clear();
+	//projViewMatrices.clear();
+	
+	TrailBuffer->Activate();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	//GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
+	//grnd->getCollidable();
+}

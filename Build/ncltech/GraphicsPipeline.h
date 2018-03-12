@@ -49,6 +49,8 @@ public:
 	void pushPaintableObject(GameObject * Paintable) { paintableObjects.push_back(Paintable); };
 	Camera* CreateNewCamera();
 	void ChangeScene();
+
+	void clearGraphicsPipeline();
 protected:
 	GraphicsPipeline();
 	virtual ~GraphicsPipeline();

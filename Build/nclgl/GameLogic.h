@@ -56,6 +56,8 @@ public:
 	int getnumAI(void) { return numAI; };
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
+
+	void clearGameLogic();
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;

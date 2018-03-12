@@ -231,7 +231,12 @@ int main()
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 				{
+					showEndScreen = !showEndScreen;
+					GameLogic::Instance()->clearGameLogic();
+					GraphicsPipeline::Instance()->clearGraphicsPipeline();
+					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Team Project");
+					
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
@@ -245,7 +250,6 @@ int main()
 				showEndScreen = !showEndScreen;
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			}
-		
 		}
 
 		{

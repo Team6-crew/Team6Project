@@ -174,3 +174,13 @@ void GameLogic::updateControls() {
 	if (numOfPlayersMp & 0b1000) 
 		softplayers[3]->setControls(controls[3][0], controls[3][1], controls[3][2], controls[3][3], controls[3][4], controls[3][5]);
 }
+
+void GameLogic::clearGameLogic()
+{
+	players.clear();
+	allPlayers.clear();
+	netPlayers.clear();
+	softplayers.clear();
+	paint_perc.clear();
+	aiPlayers.clear();
+}
