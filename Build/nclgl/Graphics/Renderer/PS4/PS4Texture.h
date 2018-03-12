@@ -13,7 +13,7 @@ class PS4Texture : public PS4MemoryAware, public TextureBase
 public:
 	PS4Texture();
 	PS4Texture(const std::string& filepath);
-	PS4Texture(TextureTypeNamespace::Type type, int a, int b);
+	PS4Texture(TextureTypeNamespace::Type type, int a, int b, void* memory);
 	~PS4Texture();
 
 	void SetCurrentGFXContext(sce::Gnmx::GnmxGfxContext* GFXContext);

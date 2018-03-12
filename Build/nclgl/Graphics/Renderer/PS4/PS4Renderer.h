@@ -65,12 +65,14 @@ public:
 	void					RegisterNode(RenderNodeBase* s)override;
 	void					RegisterBuffer(FrameBufferBase* s) override;
 
+	void*					AllocateMemory(MemoryLocation location, uint sizeBytes);
 protected:// Setup functions 
 	void			 InitialiseMemoryAllocators();
 	void			 InitialiseVideoSystem();
 	void			 InitialiseGCMRendering();
 	PS4ScreenBuffer* GenerateScreenBuffer(uint width, uint height, bool colour = true, bool depth = true, bool stencil = false);
 	PS4FrameBuffer*	 GenerateScreenFrameBuffer(uint width, uint height, bool colour = true, bool depth = true, bool stencil = false);
+
 
 protected: // Clean up functions
 	void			DestroyMemoryAllocators();

@@ -24,13 +24,20 @@ RenderBase* RenderFactory::MakeRenderer()
 	#ifdef WIN_OGL
 		//Initialise the OGLWindow
 	WindowFactory::Instance()->MakeWindow(windowTitle, screenWidth, screenHeight, fullScreen);
-	return new OGLRenderer(static_cast<OGLWindow*>(WindowFactory::Instance()->GetWindow()));
+	renderer = new OGLRenderer(static_cast<OGLWindow*>(WindowFactory::Instance()->GetWindow()));
+	return renderer;
 	#elif PSTATION4
 	WindowFactory::Instance()->MakeWindow(windowTitle, screenWidth, screenHeight, fullScreen);
-	return new PS4Renderer();
+	renderer = new PS4Renderer();
+	return renderer;
 	#endif
 
 	// "Unrecognised Render Build"
 	assert(false);
 	return nullptr;
+}
+
+RenderBase* RenderFactory::GetRenderer()
+{
+	return renderer;
 }

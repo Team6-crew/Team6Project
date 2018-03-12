@@ -484,5 +484,22 @@ void		PS4Renderer::RegisterBuffer(FrameBufferBase* s)
 {
 	PS4FrameBuffer* buffer = static_cast<PS4FrameBuffer*>(s);
 	buffers.push_back(buffer);
+
+}
+
+void*		PS4Renderer::AllocateMemory(MemoryLocation location, uint sizeBytes)
+{
+	switch (location)
+	{
+	case GARLIC:
+		return stackAllocators[GARLIC].allocate(sce::Gnm::SizeAlign(sizeBytes, sce::Gnm::kAlignmentOfShaderInBytes));
+		break;
+	case ONION:
+		return stackAllocators[ONION].allocate(sce::Gnm::SizeAlign(sizeBytes, sce::Gnm::kAlignmentOfShaderInBytes
+		));
+		break;
+	default:
+		std::cout << "Invalid location" << std::endl;
+	}
 }
 #endif
