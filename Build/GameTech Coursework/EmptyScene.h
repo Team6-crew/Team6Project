@@ -264,8 +264,8 @@ public:
 				activeMenu = NULL;
 
 				//Delete objects from the scene
-				GameLogic::Instance()->clearGameLogic();
-				GraphicsPipeline::Instance()->clearGraphicsPipeline();
+				//GameLogic::Instance()->clearGameLogic();
+				//GraphicsPipeline::Instance()->clearGraphicsPipeline();
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))

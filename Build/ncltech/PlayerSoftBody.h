@@ -96,6 +96,8 @@ public:
 	void speedLimit();
 	void wallLimit();
 	void jumpSlow();
+	int getIndex() { return index; }
+	void setIndex(int idx) { index = idx; }
 
 private:
 	void handleInput(float dt);
@@ -146,4 +148,5 @@ private:
 	Tags currentBuff;
 
 	nclgl::Maths::Vector4 colour;
+	int index;
 };

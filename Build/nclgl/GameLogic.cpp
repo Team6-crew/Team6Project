@@ -67,7 +67,8 @@ void GameLogic::addSoftPlayer(int num_splayers) {
 	softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
 	softplayers.push_back(softplayer);
 	paint_perc.push_back(0.0f);
-
+	// setting the players name
+	softplayer->setIndex(num_splayers);
 }
 
 void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, float colourZ) {
