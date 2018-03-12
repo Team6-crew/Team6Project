@@ -436,6 +436,7 @@ void PS4Renderer::SwapScreenBuffer()
 
 void PS4Renderer::SwapCommandBuffer()
 {
+	std::cout << "SwapCommandBuffer on context " << currentGFXContext << std::endl;
 	if (currentGFXContext) {
 		if (currentGFXContext->submit() != sce::Gnm::kSubmissionSuccess) {
 			std::cerr << "Graphics queue submission failed?" << std::endl;

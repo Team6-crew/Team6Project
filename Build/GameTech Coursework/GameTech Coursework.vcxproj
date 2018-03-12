@@ -47,6 +47,9 @@
       <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_ps_orbis</Profile>
       <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_ps_orbis</Profile>
       <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_ps_orbis</Profile>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">Od</Optimization>
+      <WarnPerformance Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</WarnPerformance>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">-W4 %(AdditionalOptions)</AdditionalOptions>
     </OrbisWavePsslc>
     <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragSuperSample.pssl">
       <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_ps_orbis</Profile>
@@ -71,6 +74,9 @@
       <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_vs_vs_orbis</Profile>
       <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_vs_vs_orbis</Profile>
       <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_vs_vs_orbis</Profile>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">Od</Optimization>
+      <WarnPerformance Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</WarnPerformance>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">-W4 %(AdditionalOptions)</AdditionalOptions>
     </OrbisWavePsslc>
   </ItemGroup>
   <PropertyGroup Label="Globals">

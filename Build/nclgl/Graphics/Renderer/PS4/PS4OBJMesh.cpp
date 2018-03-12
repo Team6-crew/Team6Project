@@ -243,7 +243,13 @@ bool	PS4OBJMesh::LoadOBJMesh(std::string filename) {
 #ifdef OBJ_USE_TANGENTS_BUMPMAPS
 			m->GenerateTangents();
 #endif
-
+			if (!m->indices) {
+				m->indices = new int[m->numVertices];
+				m->numIndices = m->numVertices;
+				for (int i = 0; i < m->numVertices; ++i) {
+					m->indices[i] = i;
+				}
+			}
 			m->BufferData();
 
 			if (i != 0) {

@@ -15,14 +15,14 @@ void CommonMeshes::InitializeMeshes()
 	if (m_pCube == NULL)
 	{
 
-		m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(std::string("checkerboard"));
+		m_pCheckerboardTex = TextureFactory::Instance()->MakeTexture(std::string("doge"));
 		m_pCheckerboardTex->SetTextureFiltering(true);
 		m_pCheckerboardTex->SetTextureWrapping(true);
 
 		m_pCube = MeshFactory::Instance()->MakeOBJMesh("cube.obj");
 		m_pCube->SetTexture(m_pCheckerboardTex);
 
-		m_pSphere = MeshFactory::Instance()->MakeOBJMesh("sphere.obj");
+		m_pSphere = MeshFactory::Instance()->MakeOBJMesh("cube.obj");
 		m_pSphere->SetTexture(m_pCheckerboardTex);
 	}
 }

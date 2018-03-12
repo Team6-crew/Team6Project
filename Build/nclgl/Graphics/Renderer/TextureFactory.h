@@ -8,7 +8,7 @@
 #ifdef WIN_OGL
 #define TEXTUREDIR  "../../Data/Textures/"
 #elif PSTATION4
-#define TEXTUREDIR  "/app0/Data/Shaders/"
+#define TEXTUREDIR  "/app0/Data/Textures/"
 #endif // DEBUG
 
 

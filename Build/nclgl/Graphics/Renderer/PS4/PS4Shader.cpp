@@ -174,6 +174,7 @@ void PS4Shader::Activate()
 {
 	if (currentGFXContext)
 	{
+		std::cout << "Activating shader on context " << currentGFXContext << std::endl;
 		currentGFXContext->setActiveShaderStages(sce::Gnm::kActiveShaderStagesVsPs);
 
 		currentGFXContext->setVsShader(vertexShader, 0, fetchShader, &vertexCache);
@@ -212,6 +213,7 @@ pair<ShaderStage, int> PS4Shader::GetConstantBuffer(const std::string &name)
 
 void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4& mat)
 {
+//	return;
 	if (currentGFXContext)
 	{
 		// Allocate memory for buffer matrix
@@ -243,6 +245,7 @@ void PS4Shader::SetUniform(const std::string& name, const nclgl::Maths::Matrix4&
 
 void PS4Shader::SetUniform(const std::string & name, int i)
 {
+	return;
 	if (currentGFXContext)
 	{
 		int* inti = (int*)currentGFXContext->allocateFromCommandBuffer(sizeof(int), sce::Gnm::kEmbeddedDataAlignment4);
