@@ -1,8 +1,6 @@
 List of known errors:
 
-MAde texture has no base address, create memory size of texture using garlic and set base adres to this, see loading from file. width*height*4
-
-
+Uniforms names wrong, shaders need chagning to old versions, make shaders compile to location where there used.
 
 
 No render target
