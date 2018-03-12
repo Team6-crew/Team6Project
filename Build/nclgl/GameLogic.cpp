@@ -174,7 +174,7 @@ void GameLogic::calculatePaintPercentage() {
 				continue;
 			}
 			else {
-				//add_rad = aiPlayers[l]->getRadius();
+				add_rad = aiPlayers[l]->getadd_rad();
 				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
 				aiPlayers[l]->setRadius(rad);
@@ -199,7 +199,7 @@ void GameLogic::calculatePaintPercentage() {
 						}
 					}
 				}
-
+				aiPlayers[l]->setadd_rad(0.0f);
 			}
 	}
 }
@@ -229,9 +229,12 @@ bool GameLogic::spawnPickup() {
 		{
 			if (pickupnum < 10)
 			{
-				float pos_x = rand() % 200 - 100;
+				float pos_x = 3;
+				float pos_z = -48;
+
+				/*float pos_x = rand() % 200 - 100;
 				float pos_z = rand() % 200 - 100;
-				
+				*/
 				pickupnum = pickupnum + 1;
 				lastPickupPosition = Vector3(pos_x, 20.f, pos_z);
 				canspawn = false;

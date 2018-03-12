@@ -102,3 +102,35 @@ void RandomPickup::Effect(PlayerSoftBody* player) {
 	}
 }
 
+void RandomPickup::Effect(BallAI* AIBall) {
+	float prob = (rand() % 100);
+	if (enabled) {
+		if (prob < (25))
+		{
+			AIBall->setBuffTime(10.0f);
+			AIBall->setCurrentBuff(Tags::BSpeed);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);
+		}
+		else if (prob <(50))
+		{
+			AIBall->setadd_rad(0.05f);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
+		}
+		else if (prob <(75))
+		{
+			AIBall->equipStunWeapon(Vector4(1, 0, 0, 1));
+			AIBall->setBuffTime(10.0f);
+			AIBall->setCurrentBuff(Tags::BStun);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
+		}
+		else
+		{
+			AIBall->equipPaintWeapon(AIBall->getColour());
+			AIBall->setBuffTime(10.0f);
+			AIBall->setCurrentBuff(Tags::BPaint);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"pickweapon.wav", false);
+		}
+		enabled = false;
+	}
+}
+

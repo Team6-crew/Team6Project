@@ -212,7 +212,7 @@ public:
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move();
+			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
 		
 		// Pause Menu
