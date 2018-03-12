@@ -50,7 +50,7 @@ BallAI::BallAI(const std::string& name,
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
-	dummy->SetTransform(Matrix4::Scale(Vector3(radius, radius, radius)));
+	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(Vector3(radius, radius, radius)));
 	rnode->AddChild(dummy);
 
 	if (physics_enabled)
@@ -91,8 +91,8 @@ BallAI::BallAI(const std::string& name,
 	physicsNode = pnode;
 
 	AIbody = CommonUtils::BuildCuboidObject("AIbody",
-		Vector3(0.0f, 2.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
-		Vector3(20.5,20.5, 20.5),				//Half dimensions
+		nclgl::Maths::Vector3(0.0f, 2.0f, 0.0f),	//Position leading to 0.25 meter overlap on faces, and more on diagonals
+		nclgl::Maths::Vector3(20.5,20.5, 20.5),				//Half dimensions
 		false,									//Has Physics Object
 		0.0f,									//Mass
 		false,									//Has Collision Shape
@@ -131,7 +131,7 @@ void BallAI::addBallAIPlayers(int i)
 	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
 
 		BallAI * AIBall = new BallAI(" AIPlayer "+(i),
-			nclgl::Maths::Vector3(10.0f*(i + 2), 7.f, -42.0f*(i + 1)),
+			nclgl::Maths::Vector3(5.0f*(i + 2), 7.f, -4.0f*(i + 1)),
 			1.0f,
 			true,
 			1.0f,
@@ -215,17 +215,17 @@ void BallAI::move(float dt)
 	if (!stun(dt))
 
 	{
-		Vector3 ball_pos = physicsNode->GetPosition();
-		Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
-		worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
+		nclgl::Maths::Vector3 ball_pos = physicsNode->GetPosition();
+		nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+		worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
 		bodyRenderNode->SetTransform(worldTr);
-		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
+		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform());
 		if (GameLogic::Instance()->gameHasStarted()) {
 			getStateMachine()->getCurrentState()->update(getStateMachine());
 			//BallAI::getMapNavigation()->usePath();
 		}
 
-		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
+		
 	}
 }
 
@@ -291,7 +291,7 @@ void BallAI::equipStunWeapon(Vector4 colour) {
 	if (!equippedPaintWeapon) {
 		unequipPaintWeapon();
 		equippedStunWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
-		equippedStunWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+		equippedStunWeapon->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(0.3f, 0.3f, 1.5f))*nclgl::Maths::Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 		(*AIbody->Render()->GetChildIteratorStart())->AddChild(equippedStunWeapon);
 	}
@@ -301,22 +301,18 @@ void BallAI::equipPaintWeapon(Vector4 colour) {
 	if (!equippedStunWeapon) {
 		unequipStunWeapon();
 		equippedPaintWeapon = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::StaticCube(), colour);
-		equippedPaintWeapon->SetTransform(Matrix4::Scale(Vector3(0.3f, 0.3f, 1.5f))*Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
+		equippedPaintWeapon->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(0.3f, 0.3f, 1.5f))*nclgl::Maths::Matrix4::Translation(Vector3(5.0f, -8.0f, 0.0f)));
 
 		(*AIbody->Render()->GetChildIteratorStart())->AddChild(equippedPaintWeapon);
 	}
-	
 }
 
 void BallAI::updateBuffTime(float dt) 
 {
 	float time = GameLogic::Instance()->getTotalTime();
-	if (currentBuff != BNothing) 
-	{
-		if (currentBuff == BPaint || BStun)
-		{
+	if (currentBuff != BNothing) {
+		if (currentBuff == BPaint || BStun){
 			int shootTime = 2;
-
 			if ((((int)time % shootTime == 0)) && (canShoot))
 			{
 				shoot();

@@ -227,14 +227,14 @@ bool GameLogic::spawnPickup() {
 
 		if (((int)totalTime % spawntime == 0) && (canspawn))
 		{
-			if (pickupnum < 10)
+			if (pickupnum < 40)
 			{
-				float pos_x = 3;
-				float pos_z = -48;
+				/*float pos_x = 3;
+				float pos_z = -48;*/
 
-				/*float pos_x = rand() % 200 - 100;
+				float pos_x = rand() % 200 - 100;
 				float pos_z = rand() % 200 - 100;
-				*/
+				
 				pickupnum = pickupnum + 1;
 				lastPickupPosition = Vector3(pos_x, 20.f, pos_z);
 				canspawn = false;

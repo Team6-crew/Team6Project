@@ -100,6 +100,7 @@ public:
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
 		
 		//Who doesn't love finding some common ground?

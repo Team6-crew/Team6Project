@@ -66,7 +66,8 @@ public:
 		stunDuration = st;
 	}
 	bool stun(float dt);
-	
+
+	nclgl::Maths::Vector3 getForward() { return forward; }
 
 private:
 	GameObject * AIbody;
