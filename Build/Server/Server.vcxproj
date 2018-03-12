@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ServerScene.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FCA314B3-FAC4-4460-BFE2-9B70D32B660E}</ProjectGuid>
     <RootNamespace>GameTechCoursework</RootNamespace>

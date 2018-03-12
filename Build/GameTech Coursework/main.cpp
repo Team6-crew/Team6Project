@@ -7,7 +7,6 @@
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
 #include "LanScene.h"
-#include "EmptyScene.h"
 #include "MainMenu.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
@@ -58,7 +57,6 @@ void Initialize()
 
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
-	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 	SceneManager::Instance()->EnqueueScene(new LanScene("Lan Project"));
 	// Move this once main menu is hooked up
 	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);

@@ -44,7 +44,7 @@ FOR MORE NETWORKING INFORMATION SEE "Tuts_Network_Client -> Net1_Client.h"
 #include <ncltech/PhysicsEngine.h>
 #include <ncltech/GraphicsPipeline.h>
 #include <ncltech/SceneManager.h>
-#include "../GameTech Coursework/EmptyScene.h"
+#include "ServerScene.h"
 //Needed to get computer adapter IPv4 addresses via windows
 #include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
@@ -93,7 +93,7 @@ int main(int arcg, char** argv)
 	Win32_PrintAllAdapterIPAddresses();
 	GraphicsPipeline::Instance();
 	PhysicsEngine::Instance();
-	SceneManager::Instance()->EnqueueScene(new EmptyScene("Lan Project"));
+	SceneManager::Instance()->EnqueueScene(new ServerScene("Lan Project"));
 	Window::GetWindow().GetTimer()->GetTimedMS();
 	while (Window::GetWindow().UpdateWindow())
 	{

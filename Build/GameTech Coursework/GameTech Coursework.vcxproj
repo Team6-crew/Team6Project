@@ -22,7 +22,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EmptyScene.h" />
     <ClInclude Include="LanScene.h" />
     <ClInclude Include="MainMenu.h" />
   </ItemGroup>
