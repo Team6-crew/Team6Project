@@ -2,20 +2,20 @@
 #include "Pickup.h"
 
 
-class SpeedPickup : public Pickup
+class RandomPickup : public Pickup
 {
 public:
-	SpeedPickup(const std::string& name,
+	RandomPickup(const std::string& name,
 		const nclgl::Maths::Vector3& pos,
 		float radius,
 		bool physics_enabled,
 		float inverse_mass,
 		bool collidable,
 		const nclgl::Maths::Vector4& color);
-	~SpeedPickup();
+	~RandomPickup();
 	
-	virtual void effect(Player* player);
-	
-
+	virtual void Effect(PlayerSoftBody* player);
+private:
+	bool enabled;
 };
 

@@ -41,7 +41,9 @@ public:
 	void RenderScene(float dt);
 	void LoadingScreen(float frame);
 	void FillPaint(float dt);
-
+	void StartCounter();
+	void BuffHUD(int playerIndex);
+	void SplatProjectile(float pos_x, float pos_z, float rad, nclgl::Maths::Vector4 trailColor);
 	//Utils
 	inline Camera* GetCamera() { return camera; }
 	void pushPaintableObject(GameObject * Paintable) { paintableObjects.push_back(Paintable); };
@@ -62,11 +64,12 @@ protected:
 	void BuildShadowTransforms(); //Builds the shadow projView matrices
 	void AdjustViewport(int i, int j);
 
+
 protected:
 
 	RenderBase* renderer = nullptr;
 
-
+	float totalTime;
 	nclgl::Maths::Matrix4 projViewMatrix;
 
 	FrameBufferBase*	renderFBO;
@@ -84,6 +87,8 @@ protected:
 	ShaderBase* shaderSplat;
 	ShaderBase* shaderPaintable;
 	ShaderBase* shaderMap;
+	ShaderBase* shaderCounter;
+	ShaderBase* shaderBuff;
 	//Render Params
 	nclgl::Maths::Vector3	ambientColor;
 	float					gammaCorrection;	//Monitor Default: 1.0 / 2.2 (Where 2.2 here is the gamma of the monitor which we need to invert before doing lighting calculations)		
@@ -124,10 +129,18 @@ protected:
 	FrameBufferBase* TrailBuffer;
 	FrameBufferBase* CircleBuffer;
 	FrameBufferBase* LoadingBuffer;
+	FrameBufferBase* PaintBuffer;
+	FrameBufferBase* BuffBuffer;
 	TextureBase* temp_tex;
 	TextureBase* loading_tex;
 	TextureBase* splat_tex;
-	FrameBufferBase* PaintBuffer;
+	TextureBase * tex_1;
+	TextureBase * tex_2;
+	TextureBase * tex_3;
+	TextureBase* buff_paint_tex;
+	TextureBase* buff_stun_tex;
+	TextureBase* buff_speed_tex;
+
 	float paint_perc;
 
 	//Minimap
@@ -137,4 +150,8 @@ protected:
 	nclgl::Maths::Matrix4 tempView;
 
 	RenderNodeBase * ground;
+
+	bool sound321played;
+
+	
 };

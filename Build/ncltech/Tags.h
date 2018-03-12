@@ -2,6 +2,10 @@
 enum Tags {
 	Default = 0,
 	TPlayer ,
+	TSoftPlayer1 ,
+	TSoftPlayer2,
+	TSoftPlayer3,
+	TSoftPlayer4,
 	TPickup ,
 	TPaintable,
 	TProjectile,
@@ -12,5 +16,13 @@ enum Tags {
 	TPortal_B1 ,
 	TPortal_A2 ,
 	TPortal_B2 ,
-	TWash
+	TWash,
+	TRamp,
+	BPaint,
+	BStun,
+	BSpeed,
+	BNothing,
+	TWeapon,
+	TRandomPickup,
+	TAIPlayer
 };

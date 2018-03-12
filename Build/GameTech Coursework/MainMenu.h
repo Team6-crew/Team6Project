@@ -348,34 +348,34 @@ public:
 				activeMenu->setSelection(0);
 			}
 			switch (id) {
-			case (901): {
-				getControls();
-				// add num of AI as well
-				GameLogic::Instance()->setnumOfPlayersMp(1);
-				GraphicsPipeline::Instance()->ChangeScene();
-				SceneManager::Instance()->JumpToScene("Team Project");
-				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
-				break;
-			}
-			case (103): {
-				exit(0);
-				break;
-			}
-			case (304): { // change to reflect how many players are given
-				for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
-					if (humanOrAi[i] == 1) {
-						numOfPlayers += pow(2, i);
-
-					}
-					else if (humanOrAi[i] == 2) {
-						numOfAi++;
-					}
-				}
-				if (numOfPlayers != 0) {
+				case (901): {
 					getControls();
-					GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+					// add num of AI as well
+					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
+					break;
+				}
+				case (103): {
+					exit(0);
+					break;
+				}
+				case (304): { // change to reflect how many players are given
+					for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
+						if (humanOrAi[i] == 1) {
+							numOfPlayers += pow (2,i);
+
+						}
+						else if (humanOrAi[i] == 2) {
+							numOfAi += pow(2, i);
+						}
+					}
+					if (numOfPlayers != 0) {
+						getControls();
+						GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+						GameLogic::Instance()->setnumAI(numOfAi);
+						GraphicsPipeline::Instance()->ChangeScene();
+						SceneManager::Instance()->JumpToScene("Team Project");
 
 					break;
 				}

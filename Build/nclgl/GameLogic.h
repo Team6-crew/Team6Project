@@ -15,7 +15,7 @@ public:
 	void calculatePaintPercentage();
 	void addPlayer(int num_players);
 	void addNetPlayer(int num_players);
-	void addSoftPlayers(int num_players);
+	void addSoftPlayer(int num_players);
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }
 	std::vector<float> * getPaintPerc() { return &paint_perc; }
@@ -23,15 +23,37 @@ public:
 	int getNumPlayers() { return players.size(); }
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	int getNumAIPlayers() { return aiPlayers.size(); }
+	int getTotalPlayers() { return players.size() + softplayers.size();}
+	float getTotalTime() { return totalTime; }
+	bool levelIsLoaded() { return levelLoaded; }
+	bool gameHasStarted() { return gameStarted; }
+	void increaseTotalTime(float dt) { totalTime += dt; }
+	void setLevelIsLoaded(bool l) { levelLoaded = l; }
+	void setGameHasStarted(bool l) { gameStarted = l; }
+	
+	float getActualGameTime() { return actualGameTime; }
+	void increaseActualGameTime(float dt) { actualGameTime +=dt; }
+	
+	bool isServer() { return server; }
+	void setIsServer(bool s) { server = s; }
 
+	bool spawnPickup();
+	nclgl::Maths::Vector3 getLastPickupPosition() { return lastPickupPosition; }
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
 	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
+	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
 
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
+	
 	void clearPlayers() { players.clear();	softplayers.clear(); }
+	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
+	
+	
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
+	};
 
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
@@ -57,6 +79,7 @@ private:
 	std::vector <Player*> allPlayers;
 	std::vector <Player*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
+	std::vector <BallAI*> aiPlayers;
 	nclgl::Maths::Vector4 colours[4];
 	// split screen ui integration
 	int numOfPlayersMp;
@@ -69,4 +92,14 @@ private:
 	{ KEYBOARD_NUMPAD8, KEYBOARD_NUMPAD5, KEYBOARD_NUMPAD4, KEYBOARD_NUMPAD6, KEYBOARD_NUMPAD0, KEYBOARD_NUMPAD9 }
 	};
 	float increment;
+	bool levelLoaded;
+	float totalTime;
+	bool gameStarted;
+	float actualGameTime;
+
+	bool server;
+
+	nclgl::Maths::Vector3 lastPickupPosition;
+	bool canspawn;
+	int pickupnum;
 };

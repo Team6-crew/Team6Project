@@ -17,7 +17,7 @@ public:
 	void AddMenuItem(std::string item);
 	void MoveUp();
 	void MoveDown();
-	
+
 	void setSelection(int sel);
 	bool visible = false;
 	int getSelection();
@@ -27,13 +27,16 @@ public:
 	void set_id(int i) { id = i; }
 	int get_id() { return id; }
 	int lastElement();
+
+
+	void ShowPauseMenu();
 protected:
 	int selection;
 	std::vector<std::string> Items;
 	std::vector<Menu*> subMenu;
 	int id;
 
-	
+
 };
 
 

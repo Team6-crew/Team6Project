@@ -7,6 +7,8 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <nclgl\Audio\AudioFactory.h>
+#include <nclgl\Audio\AudioEngineBase.h>
 
 using namespace nclgl::Maths;
 
@@ -66,10 +68,20 @@ Washingzone::~Washingzone()
 {
 }
 
-void Washingzone::effect(Player* player) 
+void Washingzone::Effect(Player* player) 
 {
 	player->setDebuffTime(70);
 	player->setcanpaint(false);
 	player->settime(0.0f);
 }
 
+void Washingzone::SoftEffect(PlayerSoftBody* player)
+{
+	if (player->getcanpaint())
+	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"washingzone.wav", false);
+	}
+	player->setDebuffTime(70);
+	player->setcanpaint(false);
+	player->settime(0.0f);
+}
