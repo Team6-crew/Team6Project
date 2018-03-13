@@ -73,6 +73,7 @@ public:
 	inline		 Scene* GetScene()			{ return scene; }
 	inline bool	 HasTag(Tags t)				{ return t == tag; }
 	void SetTag(Tags t)						{ tag = t; }
+	int  GetTag()							{ return tag; }
 
 	
 	//<---------- PHYSICS ------------>

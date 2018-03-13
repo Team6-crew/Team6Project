@@ -51,6 +51,8 @@ public:
 	Camera* CreateNewCamera();
 	Camera* RepairCamera(int cmr);
 	void ChangeScene();
+
+	void clearGraphicsPipeline();
 protected:
 	GraphicsPipeline();
 	virtual ~GraphicsPipeline();

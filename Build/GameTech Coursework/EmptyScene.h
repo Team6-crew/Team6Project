@@ -65,7 +65,7 @@ public:
 
 	virtual ~EmptyScene()
 	{
-
+		
 	}
 
 	//WorldPartition *wsp;
@@ -213,6 +213,7 @@ public:
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		
 		if (GameLogic::Instance()->getTotalTime() >= 3.0f) {
 			GameLogic::Instance()->setGameHasStarted(true);
 			if (!backgroundSoundPlaying) {
@@ -221,6 +222,7 @@ public:
 			}
 
 		}
+		
 		if (scene_iterator > 0) {
 			GameLogic::Instance()->setLevelIsLoaded(true);
 		}
@@ -367,10 +369,14 @@ public:
 			{
 				pauseMenu->visible = false;
 				SceneManager::Instance()->JumpToScene("Main Menu");
-				//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 				activeMenu = NULL;
 
 				//Delete objects from the scene
+				GameLogic::Instance()->clearGameLogic();
+				GraphicsPipeline::Instance()->clearGraphicsPipeline();
+				DeleteAllGameObjects();
+				m_UpdateCallbacks.clear();
+				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
@@ -378,8 +384,8 @@ public:
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
-		}
-		
+			
+		}		
 	}
 
 
