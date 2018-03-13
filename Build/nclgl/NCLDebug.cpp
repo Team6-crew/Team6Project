@@ -354,7 +354,7 @@ void NCLDebug::AddHUD(const Vector4& color, const std::string text, ...)
 
 		std::string formatted_text = std::string(buf, (size_t)length);
 
-		DrawTextCs(Vector4(cs_size_x , 1.5f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
+		DrawTextCs(Vector4(cs_size_x , -0.25f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
 		g_NumStatusEntries++;
 		g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
 	}
@@ -383,6 +383,28 @@ void NCLDebug::AddHUD2(const Vector4& color, const std::string text, ...)
 		g_NumStatusEntries++;
 		g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
 	}
+}
+
+void NCLDebug::AddTimer(const Vector4& color, const std::string text, ...)
+{
+	const Vector2 ss = Window::GetWindow().GetScreenSize();
+	float cs_size_x = 30 / ss.x * 2.0f;
+	float cs_size_y = 30 / ss.y * 2.0f;
+
+	va_list args;
+	va_start(args, text);
+
+	char buf[1024];
+	int needed = vsnprintf_s(buf, 1023, _TRUNCATE, text.c_str(), args);
+	va_end(args);
+
+	int length = (needed < 0) ? 1024 : needed;
+
+	std::string formatted_text = std::string(buf, (size_t)length);
+
+	DrawTextCs(Vector4(cs_size_x, 1.0f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
+	g_NumStatusEntries++;
+	g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
 }
 
 

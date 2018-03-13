@@ -9,7 +9,7 @@ using namespace nclgl::Maths;
 
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
-
+	cSeconds = 2;
 	rad = 0.01f;
 	add_rad = 0.01f;
 	colours[0] = nclgl::Maths::Vector4(1.0f, 0.0f, 0.69f, 1.0f);
@@ -278,7 +278,6 @@ bool GameLogic::spawnPickup() {
 		}
 	}
 	return false;
-}
 }
 
 void GameLogic::clearGameLogic()

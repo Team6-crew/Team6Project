@@ -77,6 +77,9 @@ public:
 	int getSeconds() { return seconds; }
 	void setSeconds(int sec) { seconds = sec; }
 	nclgl::Maths::Vector4 getColours(int col) { return colours[col]; }
+
+	void setCurrentTime(int cSec) { cSeconds = cSec; };
+	int getCurrentTime() { return cSeconds; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
@@ -112,4 +115,5 @@ private:
 	int pickupnum;
 	map <GameObject * , int> PlayerCapturedObject;
 	int seconds;
+	int cSeconds;
 };
