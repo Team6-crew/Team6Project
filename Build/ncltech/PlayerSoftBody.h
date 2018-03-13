@@ -100,6 +100,8 @@ public:
 	void speedLimit();
 	void wallLimit();
 	void jumpSlow();
+
+	void cameraInWall(AABB* wall);
 	
 private:
 	void handleInput(float dt);
@@ -151,5 +153,6 @@ private:
 
 	nclgl::Maths::Vector4 colour;
 
+	float maxCameraY, maxCameraZ, minCameraY, minCameraZ, curCameraY, curCameraZ;
 	bool isbroken = false;
 };

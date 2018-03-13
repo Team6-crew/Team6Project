@@ -26,6 +26,7 @@
 #include <nclgl\Audio\AudioEngineBase.h>
 #include "MainMenu.h"
 #include <nclgl\ResourceManager.h>
+#include <ncltech\AABB.h>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -40,6 +41,7 @@ public:
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
+	AABB* box;
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
@@ -71,7 +73,8 @@ public:
 	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
-	{
+	{   
+		box = new AABB(nclgl::Maths::Vector3(0, 5, 0), 4);
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
@@ -207,7 +210,6 @@ public:
 		}*/
 
 		Scene::OnUpdateScene(dt);
-
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {

@@ -10,6 +10,7 @@
 #include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 #include <nclgl\GameLogic.h>
+#include <ncltech\AABB.h>
 
 
 PlayerSoftBody::PlayerSoftBody(const std::string& name,
@@ -73,10 +74,15 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 
-	
+	maxCameraY = 10.0f;
+	maxCameraZ = 25.0f;
+	minCameraY = 2.0f;
+	minCameraZ = 5.0f;
+	curCameraY = maxCameraY;
+	curCameraZ = maxCameraZ;
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
-	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
+	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, maxCameraY, maxCameraZ)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
@@ -427,10 +433,18 @@ void PlayerSoftBody::move(float dt) {
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
-
-		
 	}
 }
+
+void PlayerSoftBody::cameraInWall(AABB* wall) {
+	if (wall->containsObject(camera->GetPosition(), 2.0f)) {
+		curCameraY -= 1.0f;
+		curCameraZ -= 2.5f;
+		camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, curCameraY, curCameraZ)));
+	}
+}
+
+
 
 void PlayerSoftBody::speedLimit() {
 	
