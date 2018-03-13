@@ -100,6 +100,7 @@ public:
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
 		
 		//Who doesn't love finding some common ground?
@@ -221,7 +222,7 @@ public:
 			softplayer->move(dt);
 		}*/
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move();
+			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i) {
 			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {

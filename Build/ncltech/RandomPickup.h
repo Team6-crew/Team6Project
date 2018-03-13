@@ -15,6 +15,7 @@ public:
 	~RandomPickup();
 	
 	virtual void Effect(PlayerSoftBody* player);
+	virtual void Effect(BallAI* AIBall);
 private:
 	bool enabled;
 };
