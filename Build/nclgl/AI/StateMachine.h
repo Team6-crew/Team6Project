@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "State.h"
+#include <ncltech\Memory Management\MemoryManager.h>
 
 class GameObject;
 
@@ -10,6 +11,7 @@ using namespace std;
 
 class StateMachine
 {
+DECLARE_HEAP;
 public:
 
 	StateMachine(GameObject* owner) { stateOwner = owner; };

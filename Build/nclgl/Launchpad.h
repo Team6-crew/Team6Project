@@ -5,9 +5,11 @@
 #include <vector>
 #include <nclgl\Vector4.h>
 #include <ncltech\PlayerSoftBody.h>
+#include <nclgl/AI/BallAI.h>
 
 class Player;
 class PlayerSoftBody;
+class BallAI;
 class Launchpad : public GameObject
 {
 public:
@@ -24,6 +26,7 @@ public:
 
 	void Launch(Player* player);
 	void SoftLaunch(PlayerSoftBody* player);
+	void AILaunch(BallAI* AIBall);
 	
 
 private:

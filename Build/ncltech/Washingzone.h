@@ -6,6 +6,8 @@
 
 class Player;
 class PlayerSoftBody;
+class BallAI;
+
 class Washingzone : public GameObject
 {
 public:
@@ -21,7 +23,8 @@ public:
 
 	void Effect(Player* player);
 	void SoftEffect(PlayerSoftBody* player);
-	
+	void AIEffect(BallAI* AIBall);
+
 private:
 
 };

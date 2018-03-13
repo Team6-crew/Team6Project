@@ -75,3 +75,8 @@ void StunWeaponPickup::SoftEffect(PlayerSoftBody* player) {
 	player->setBuffTime(10.0f);
 	player->setCurrentBuff(Tags::BStun);
 }
+void StunWeaponPickup::AIeffect(BallAI* AIBall) {
+	AIBall->equipStunWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+	AIBall->setBuffTime(10.0f);
+	AIBall->setCurrentBuff(Tags::BStun);
+}
