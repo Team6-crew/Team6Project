@@ -633,13 +633,13 @@ void NCLDebug::_BuildTextBackgrounds()
 	centre = invProjView * C;
 	last = invProjView * D;
 
-	//	NextTri(invProjView * Vector3(B.x - rounded_offset_x, B.y, 0.0f), col);
-	//	for (int i = 0; i < 5; ++i)
-	//	{
-	//		Vector3 round_offset = Vector3(
-	//			sinf((float)DegToRad(i * 22.5f)) * rounded_offset_x,
-	//			cosf((float)DegToRad(i * 22.5f)) * rounded_offset_y,
-	//			0.0f);
+		NextTri(invProjView * Vector3(B.x - rounded_offset_x, B.y, 0.0f), col);
+		for (int i = 0; i < 5; ++i)
+		{
+			Vector3 round_offset = Vector3(
+				sinf((float)DegToRad(i * 22.5f)) * rounded_offset_x,
+				cosf((float)DegToRad(i * 22.5f)) * rounded_offset_y,
+				0.0f);
 
 	NextTri(invProjView * Vector3(B.x + round_offset.x - rounded_offset_x, B.y - round_offset.y + rounded_offset_y, 0.0f), col);
 	}

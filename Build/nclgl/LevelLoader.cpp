@@ -206,7 +206,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
 
-	
+
 	//scene->OnInitializeScene();
 	mapObjects.clear();
 	

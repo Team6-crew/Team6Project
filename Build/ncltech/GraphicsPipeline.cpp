@@ -964,11 +964,7 @@ void GraphicsPipeline::clearGraphicsPipeline()
 	renderlistOpaque.clear();
 	renderlistTransparent.clear();
 	cameras.clear();
-	//viewMatrices.clear();
-	//projViewMatrices.clear();
-	
 	TrailBuffer->Activate();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
-	//GameObject* grnd = SceneManager::Instance()->GetCurrentScene()->FindGameObject("Ground");
-	//grnd->getCollidable();
+	
 }
