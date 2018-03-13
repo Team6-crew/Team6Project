@@ -77,7 +77,7 @@ void SceneManager::JumpToScene(int idx)
 	GraphicsPipeline::Instance()->InitializeDefaults();
 
 
-	if (idx == 1 || GameLogic::Instance()->isServer())
+	if (idx == 1)
 	{
 		LevelLoader loader;
 		loader.BuildLevel("SimpleLevel.txt", scene);

@@ -76,7 +76,7 @@ public:
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
-		GameLogic::Instance()->addSoftPlayer(0);
+		if (num_p & 0b0001)GameLogic::Instance()->addSoftPlayer(0);
 		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
 		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);

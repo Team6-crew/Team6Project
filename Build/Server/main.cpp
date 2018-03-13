@@ -2,7 +2,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\SceneManager.h>
-
+#include <ncltech\NetworkBase.h>
+#include <nclgl/MySocket.h>
 #include <nclgl\NCLDebug.h>
 #include <nclgl\PerfTimer.h>
 #include <ncltech\OcTree.h>
@@ -16,15 +17,29 @@
 #include <nclgl/LevelLoader.h>
 
 #include <ncltech\Memory Management\HeapFactory.h>
+#include <iphlpapi.h>
+#pragma comment(lib, "IPHLPAPI.lib")
 using namespace nclgl::Maths;
-
+bool gameStarted = false;
+int bucket = 0;
+int bin_players = 0;
+#define SERVER_PORT 1234
+#define UPDATE_TIMESTEP (1.0f / 30.0f) //send 30 position updates per second
+void eraseElement(ENetPeer* Item);
+NetworkBase server;
+GameTimer timer;
+int fixTimer;
+float accum_time = 0.0f;
+float rotation = 0.0f;
+vector <ENetPeer *> PlayerMap;
+std::map <ENetPeer *, bool> ReadyMap;
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
 
 bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
-
+void Win32_PrintAllAdapterIPAddresses();
 
 // Program Deconstructor
 //  - Releases all global components and memory
@@ -49,7 +64,7 @@ void Quit(bool error = false, const std::string &reason = "") {
 // Program Initialise
 //  - Generates all program wide components and enqueues all scenes
 //    for the SceneManager to display
-void Initialize()
+int Initialize()
 {
 	//Initialize Renderer
 	GraphicsPipeline::Instance();
@@ -59,7 +74,19 @@ void Initialize()
 
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new ServerScene("Team Project"));
+	Win32_PrintAllAdapterIPAddresses();
+	if (enet_initialize() != 0)
+	{
+		fprintf(stderr, "An error occurred while initializing ENet.\n");
+		return EXIT_FAILURE;
+	}
 
+	//Initialize Server on Port 1234, with a possible 32 clients connected at any time
+	if (!server.Initialize(SERVER_PORT, 32))
+	{
+		fprintf(stderr, "An error occurred while trying to create an ENet server host.\n");
+		//onExit(EXIT_FAILURE);
+	}
 	// Move this once main menu is hooked up
 	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
@@ -257,10 +284,171 @@ int main()
 
 		//Finish Timing
 		timer_total.EndTimingSection();
+		server.ServiceNetwork(dt, [&](const ENetEvent& evnt)
+		{
+			if (evnt.type == ENET_EVENT_TYPE_CONNECT)
+			{
+				printf("- New Client Connected\n");
+				MySocket LobbyConnection("LBCN");
+				PlayerMap.push_back(evnt.peer);
+				bin_players += pow(2, PlayerMap.size() - 1);
+				ReadyMap[evnt.peer] = FALSE;
+				LobbyConnection.AddVar(to_string(PlayerMap.size() - 1));
+				LobbyConnection.SendPacket(evnt.peer);
+			}
+			else if (evnt.type == ENET_EVENT_TYPE_RECEIVE) {
+				MySocket Received(evnt.packet);
+				string SocketId = Received.GetPacketId();
+				if (SocketId == "CNCN" || SocketId == "REDY") {
+					if (SocketId == "REDY") ReadyMap[evnt.peer] = !ReadyMap[evnt.peer];
+					int readys = 0;
+					map <ENetPeer*, bool> ::iterator itr;
+					for (itr = ReadyMap.begin(); itr != ReadyMap.end(); ++itr) {
+						readys += itr->second;
+					}
+					MySocket PlayersConnected("PLCN");
+					PlayersConnected.AddVar(to_string(readys));
+					PlayersConnected.AddVar(to_string(PlayerMap.size()));
+					PlayersConnected.BroadcastPacket(server.m_pNetwork);
+					if (SocketId == "REDY" && PlayerMap.size()>1 && PlayerMap.size() == readys) {
+						MySocket StartGame("STRT");
+						gameStarted = true;
+						StartGame.BroadcastPacket(server.m_pNetwork);
+						int num_p = bin_players;
+						if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
+						if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
+						if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
+						if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
+						//Add player to scene
+						for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+							SceneManager::Instance()->GetCurrentScene()->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+							
+							SceneManager::Instance()->GetCurrentScene()->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+						}
+					}
+				}
+				else if (SocketId == "INFO") {
+					bucket++;
+					for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+						if (PlayerMap[i] == evnt.peer) {
+							GameLogic::Instance()->getPlayer(i)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(stof(Received.TruncPacket(0)), stof(Received.TruncPacket(1)), stof(Received.TruncPacket(2))));
+						}
+					}
+					// Here it applies all the variables to the appropriate balls
+					if (bucket == PlayerMap.size()) {
+						fixTimer++;
+						bucket = 0;
+						if (fixTimer < 100) {
+							MySocket NextPacket("NEXT");
+							for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+								printf("%f\n", GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().x);
+								printf("%f\n", GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().y);
+								printf("%f\n", GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().z);
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
+							}
+							NextPacket.BroadcastPacket(server.m_pNetwork);
+						}
+						else {
+							fixTimer = 0;
+
+							MySocket NextPacket("FIXX");
+							for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
+
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().x));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().y));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetLinearVelocity().z));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().x));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().y));
+								NextPacket.AddVar(to_string(GameLogic::Instance()->getPlayer(i)->Physics()->GetPosition().z));
+							}
+							NextPacket.BroadcastPacket(server.m_pNetwork);
+						}
+					}
+				}
+				enet_packet_destroy(evnt.packet);
+			}
+			else if (ENET_EVENT_TYPE_DISCONNECT) {
+
+				eraseElement(evnt.peer);
+				MySocket PlayersConnected("PLCN");
+				PlayersConnected.AddVar(to_string(PlayerMap.size()));
+				PlayersConnected.BroadcastPacket(server.m_pNetwork);
+				printf("- Client %d has disconnected.\n", evnt.peer->incomingPeerID);
+			}
+		});
+
+		//Broadcast update packet to all connected clients at a rate of UPDATE_TIMESTEP updates per second
+		if (accum_time >= UPDATE_TIMESTEP)
+		{
+		}
 	}
 	//HeapFactory::Instance()->PrintDebugInfo();
 	//Cleanup
 	Quit();
 	//system("pause");
 	return 0;
+}
+void eraseElement(ENetPeer* Item) {
+	//bool isFound = false;
+	//vector <ENetPeer*>::iterator it;
+	//for (it = PlayerMap.begin(); it != PlayerMap.end(); ++it) {
+	//	if (*it == Item) {
+	//		it = PlayerMap.erase(it); // After erasing, it3 is now pointing the next location.
+	//		--it; // Go to the prev location because of ++it3 in the end of for loop.
+	//		isFound = true;
+	//	}
+	//}
+}
+void Win32_PrintAllAdapterIPAddresses()
+{
+	//Initially allocate 5KB of memory to store all adapter info
+	ULONG outBufLen = 5000;
+
+
+	IP_ADAPTER_INFO* pAdapters = NULL;
+	DWORD status = ERROR_BUFFER_OVERFLOW;
+
+	//Keep attempting to fit all adapter info inside our buffer, allocating more memory if needed
+	// Note: Will exit after 5 failed attempts, or not enough memory. Lets pray it never comes to this!
+	for (int i = 0; i < 5 && (status == ERROR_BUFFER_OVERFLOW); i++)
+	{
+		pAdapters = (IP_ADAPTER_INFO *)malloc(outBufLen);
+		if (pAdapters != NULL) {
+
+			//Get Network Adapter Info
+			status = GetAdaptersInfo(pAdapters, &outBufLen);
+
+			// Increase memory pool if needed
+			if (status == ERROR_BUFFER_OVERFLOW) {
+				free(pAdapters);
+				pAdapters = NULL;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+
+	if (pAdapters != NULL)
+	{
+		//Iterate through all Network Adapters, and print all IPv4 addresses associated with them to the console
+		// - Adapters here are stored as a linked list termenated with a NULL next-pointer
+		IP_ADAPTER_INFO* cAdapter = &pAdapters[0];
+		while (cAdapter != NULL)
+		{
+			IP_ADDR_STRING* cIpAddress = &cAdapter->IpAddressList;
+			while (cIpAddress != NULL)
+			{
+				printf("\t - Listening for connections on %s:%u\n", cIpAddress->IpAddress.String, SERVER_PORT);
+				cIpAddress = cIpAddress->Next;
+			}
+			cAdapter = cAdapter->Next;
+		}
+
+		free(pAdapters);
+	}
+
 }

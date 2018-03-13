@@ -73,9 +73,9 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 
-	camera = new Camera();
+	/*camera = new Camera();
 	camera->SetYaw(0.f);
-	camera->SetPitch(-20.0f);
+	camera->SetPitch(-20.0f);*/
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
@@ -83,8 +83,8 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
 
-	tempPitch = camera->GetPitch();
-	tempYaw = camera->GetYaw();
+	tempPitch = -20.0f;
+	tempYaw = 0.f;
 	colour = color;
 }
 
