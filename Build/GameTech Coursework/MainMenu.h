@@ -213,6 +213,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(1);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 		{
@@ -220,6 +221,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
 		{
@@ -227,6 +229,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
 		{
@@ -234,6 +237,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		//Navigate choices
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
@@ -307,6 +311,7 @@ public:
 					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
+					GameLogic::Instance()->setSeconds(seconds);
 					break;
 				}
 				case (103): {
@@ -329,6 +334,7 @@ public:
 						GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 						GraphicsPipeline::Instance()->ChangeScene();
 						SceneManager::Instance()->JumpToScene("Team Project");
+						GameLogic::Instance()->setSeconds(seconds);
 						break;
 					}
 					else {

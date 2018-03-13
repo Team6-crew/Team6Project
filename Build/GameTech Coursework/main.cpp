@@ -21,6 +21,7 @@ const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
 bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
+GameTimer* clock_timer;
 
 // Program Deconstructor
 //  - Releases all global components and memory
@@ -147,7 +148,7 @@ int main()
 {
 	bool show_status_menu = false;
 	bool showEndScreen = false;
-
+	clock_timer = new GameTimer();
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
@@ -213,6 +214,7 @@ int main()
 			{
 				NCLDebug::_ClearDebugLists();
 				PrintStatusEntries();
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.f, 1.f, 1.f, 1.f), std::to_string(GameLogic::Instance()->getSeconds() / 60) + ":" + std::to_string(GameLogic::Instance()->getSeconds() % 60));
 
 			}
 			else if (showEndScreen) {

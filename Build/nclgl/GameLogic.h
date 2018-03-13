@@ -65,6 +65,9 @@ public:
 
 	void setPaintPerc(int p, float sc) { paint_perc[p] += sc; }
 	float getPaintPerc(int p) { return paint_perc[p]; }
+
+	int getSeconds() { return seconds; }
+	void setSeconds(int sec) { seconds = sec; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
@@ -92,4 +95,5 @@ private:
 	float totalTime;
 	bool gameStarted;
 	map <GameObject * , int> PlayerCapturedObject;
+	int seconds;
 };

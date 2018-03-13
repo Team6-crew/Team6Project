@@ -354,7 +354,7 @@ void NCLDebug::AddHUD(const Vector4& color, const std::string text, ...)
 
 		std::string formatted_text = std::string(buf, (size_t)length);
 
-		DrawTextCs(Vector4(cs_size_x , -0.25f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
+		DrawTextCs(Vector4(cs_size_x , 1.5f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
 		g_NumStatusEntries++;
 		g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
 	}
