@@ -17,5 +17,6 @@ public:
 
 	virtual void Effect(Player* player);
 	virtual void SoftEffect(PlayerSoftBody* player);
+	virtual void AIeffect(BallAI* AIBall);
 };
 

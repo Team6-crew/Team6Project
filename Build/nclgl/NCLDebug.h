@@ -168,6 +168,7 @@ public:
 	static void AddStatusEntry(const nclgl::Maths::Vector4& color, const std::string text, ...); ///See "printf" for usuage manual
 	static void AddHUD(const nclgl::Maths::Vector4& color, const std::string text, ...);
 	static void AddHUD2(const nclgl::Maths::Vector4& color, const std::string text, ...);
+	static void AddTimer(const nclgl::Maths::Vector4& color, const std::string text, ...);
 	//Add a log entry at the bottom left - persistent until scene reset
 	static void Log(const nclgl::Maths::Vector3& color, const std::string text, ...); ///See "printf" for usuage manual
 	static void Log(const std::string text, ...); //Default Text Color

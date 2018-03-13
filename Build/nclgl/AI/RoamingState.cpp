@@ -56,7 +56,7 @@ nclgl::Maths::Vector3 RoamingState::followPath(StateMachine* sOwner)
 		if (closestPlayer >= 0.2)
 		{
 			float distanceToGoal = (AIBallPos - goal).Length();
-			if (distanceToGoal <= 4)
+			if (distanceToGoal <= 1.5)
 			{
 				std::cout << "Changing to Node" << owner->getCurrentNode()<< "\n";
 				owner->increaseCurrentNode();
@@ -69,5 +69,5 @@ nclgl::Maths::Vector3 RoamingState::seek(StateMachine* sOwner, nclgl::Maths::Vec
 {
 	nclgl::Maths::Vector3 DesVelo = ((TargetPos - sOwner->getOwner()->Physics()->GetPosition()).Normalise() * maxVel);
 
-	return(DesVelo - sOwner->getOwner()->Physics()->GetLinearVelocity());
+	return(DesVelo - sOwner->getOwner()->Physics()->GetLinearVelocity()) /2.5;
 }

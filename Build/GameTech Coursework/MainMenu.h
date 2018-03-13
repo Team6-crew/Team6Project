@@ -213,6 +213,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(1);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 		{
@@ -220,6 +221,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
 		{
@@ -227,6 +229,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
 		{
@@ -234,6 +237,7 @@ public:
 			GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 			GraphicsPipeline::Instance()->ChangeScene();
 			SceneManager::Instance()->JumpToScene("Team Project");
+			GameLogic::Instance()->setSeconds(seconds);
 		}
 		//Navigate choices
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP))
@@ -307,6 +311,7 @@ public:
 					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
+					GameLogic::Instance()->setSeconds(seconds);
 					break;
 				}
 				case (103): {
@@ -314,6 +319,7 @@ public:
 					break;
 				}
 				case (304): { // change to reflect how many players are given
+					numOfPlayers = 0;
 					for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
 						if (humanOrAi[i] == 1) {
 							numOfPlayers += pow (2,i);
@@ -329,7 +335,7 @@ public:
 						GameLogic::Instance()->setnumAI(numOfAi);
 						GraphicsPipeline::Instance()->ChangeScene();
 						SceneManager::Instance()->JumpToScene("Team Project");
-
+						GameLogic::Instance()->setSeconds(seconds);
 						break;
 					}
 					else {

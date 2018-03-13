@@ -6,6 +6,7 @@ using namespace nclgl::Maths;
 
 RenderNodeBase::RenderNodeBase()
 {
+	cost = 0;
 }
 
 

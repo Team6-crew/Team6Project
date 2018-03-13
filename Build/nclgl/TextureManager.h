@@ -15,6 +15,7 @@ public:
 	TextureBase* get(std::string &name);
 	TextureBase* makeTexture(std::string& name, Texture::Type &type, int& a, int& b);
 	TextureBase* makeTexture(std::string name);
+	TextureBase* ReplaceTexture(std::string & name, Texture::Type & type, int & a, int & b);
 private:
 	std::unordered_map<std::string, TextureBase*> textureMap;
 };
