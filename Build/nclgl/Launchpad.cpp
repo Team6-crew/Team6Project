@@ -1,6 +1,8 @@
 #include"Launchpad.h"
 #include <ncltech\CommonMeshes.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <nclgl\ResourceManager.h>
+
 Launchpad::Launchpad(const std::string& name,
 	const nclgl::Maths::Vector3& pos,
 	const nclgl::Maths::Vector3& scale,
@@ -13,6 +15,7 @@ Launchpad::Launchpad(const std::string& name,
 	
 	RenderNodeBase * dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
 	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(scale));
+	dummy->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"launchpad.jpg"), 0);
 	rnode->AddChild(dummy);
 	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));
 	rnode->SetBoundingRadius(0.5f);
