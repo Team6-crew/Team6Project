@@ -42,7 +42,7 @@ public:
 	nclgl::Maths::Vector3 getLastPickupPosition() { return lastPickupPosition; }
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
-	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
+	PlayerSoftBody* getNetPlayer(int num_player) { return netPlayers[num_player]; }
 	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
 
 	Player* getPlayer(int num_player) { return players[num_player]; }
@@ -77,7 +77,7 @@ private:
 	float add_rad;
 	std::vector <Player*> players;
 	std::vector <Player*> allPlayers;
-	std::vector <Player*> netPlayers;
+	std::vector <PlayerSoftBody*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
 	std::vector <BallAI*> aiPlayers;
 	nclgl::Maths::Vector4 colours[4];

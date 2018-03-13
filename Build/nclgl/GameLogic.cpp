@@ -43,17 +43,16 @@ void GameLogic::addPlayer(int num_player) {
 	paint_perc.push_back(0.0f);
 }
 
-void GameLogic::addNetPlayer(int num_player) {
-	Player * player = new Player("Player_" + num_player,
-		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+void GameLogic::addNetPlayer(int num_splayers) {
+	PlayerSoftBody* softplayer = new PlayerSoftBody("NetPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
 		1.0f,
-		true,
 		1.0f,
-		true,
-		colours[num_player]);
-	player->SetPhysics(player->Physics());
-	netPlayers.push_back(player);
-	allPlayers.push_back(player);
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+	netPlayers.push_back(softplayer);
 	paint_perc.push_back(0.0f);
 }
 

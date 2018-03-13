@@ -86,15 +86,15 @@ public:
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
-		/*num_p = GameLogic::Instance()->getnumAI();
-		if (num_p & 0b0001) BallAI::addBallAIPlayers(0);
-		if (num_p & 0b0010) BallAI::addBallAIPlayers(1);
-		if (num_p & 0b0100) BallAI::addBallAIPlayers(2);
-		if (num_p & 0b1000) BallAI::addBallAIPlayers(3);
-
-		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
-			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
-		}*/
+		num_p = GameLogic::Instance()->getnumOfNetPlayers();
+		if (num_p & 0b0001) GameLogic::Instance()->addNetPlayer(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addNetPlayer(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addNetPlayer(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addNetPlayer(3);
+		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
+			this->AddSoftBody(GameLogic::Instance()->getNetPlayer(i)->getBall());
+			this->AddGameObject(GameLogic::Instance()->getNetPlayer(i)->getBody());
+		}
 
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
@@ -197,7 +197,10 @@ public:
 			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
-
+		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
+			if (GameLogic::Instance()->getNetPlayer(i)->getBall())
+				GameLogic::Instance()->getNetPlayer(i)->getBall()->RemoveRender();
+		}
 
 		Scene::OnUpdateScene(dt);
 
@@ -206,6 +209,9 @@ public:
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+		}
+		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
+			GameLogic::Instance()->getNetPlayer(i)->getBall()->RenderSoftbody();
 		}
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
 			GameLogic::Instance()->getAIPlayer(j)->move();
@@ -578,15 +584,88 @@ public:
 		return true;
 	};
 private:
+	void sendVelocityUpdate() {
+
+		MySocket velocity("INFO");
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetLinearVelocity().x));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetLinearVelocity().y));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetLinearVelocity().z));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetLinearVelocity().x));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetLinearVelocity().y));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetLinearVelocity().z));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getFront()->Physics()->GetLinearVelocity().x));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getFront()->Physics()->GetLinearVelocity().y));
+		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getFront()->Physics()->GetLinearVelocity().z));
+		
+		velocity.BroadcastPacket(listen->m_pNetwork);
+	}
 	RenderNode * cam;
+	NetworkBase * listen;
 	GameObject *body;
 	GameObject *ball;
-
+	int myPlayerNum;
 	Menu * pauseMenu;
 	Menu * activeMenu;
-	Menu * activeSubmenu;
 	Menu * soundMenu;
-
 	float Score = 0.0f;
+	void ProcessNetworkEvent(const ENetEvent& evnt) {
 
+		if (evnt.type == ENET_EVENT_TYPE_CONNECT)
+		{
+			printf("Connected to Server\n");
+		}
+		else if (evnt.type == ENET_EVENT_TYPE_RECEIVE) {
+			MySocket Received(evnt.packet);
+			if (Received.GetPacketId() == "FIXX") {
+
+				vector <float> updates;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					for (int j = 0; j < 6; j++) {
+						updates.push_back(stof(Received.TruncPacket(i * 6 + j)));
+					}
+				}
+
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					if (i == myPlayerNum) {
+						////GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+					}
+					else {
+						////GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						////GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						cntNet++;
+					}
+
+				}
+				sendVelocityUpdate();
+			}
+			if (Received.GetPacketId() == "NEXT") {
+				vector <float> updates;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					for (int j = 0; j < 3; j++) {
+						updates.push_back(stof(Received.TruncPacket(i * 3 + j)));
+					}
+				}
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
+					if (i == myPlayerNum) {
+						//GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+					}
+					else {
+						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 3], updates[i * 3 + 1], updates[i * 3 + 2]));
+						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						cntNet++;
+					}
+
+				}
+				sendVelocityUpdate();
+			}
+			enet_packet_destroy(evnt.packet);
+		}
+		else if (ENET_EVENT_TYPE_DISCONNECT) {
+			printf("Disconnected from server");
+		}
+	};
 };
