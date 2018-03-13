@@ -146,11 +146,8 @@ if (hasColor) {
 		bool a = true;
 	}
 
-	float r = rand() / (float)RAND_MAX;
 
-	r *= 0.05f;
-
-	Vector4 defaultClearColour(r, 0.1f, 0.1f, 1.0f);
+	Vector4 defaultClearColour(0.1, 0.1f, 0.1f, 1.0f);
 
 	SurfaceUtil::clearRenderTarget(*currentGFXContext, &this->colourTarget.at(0), defaultClearColour);
 }
