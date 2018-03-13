@@ -141,7 +141,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				true,
 				false,
 				object.colour);
-
+			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"wall.jpg"), 0);
 			scene->AddGameObject(geometry);
 			break;
 
@@ -157,7 +157,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.colour);
 
 			geometry->SetTag(Tags::TPaintable);
-			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
+			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"paintbox1.jpg"), 0);
 			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_" + std::to_string(paintable_counter), Texture::COLOUR, 1024, 1024), 1); // increment 'transparent number1' number by 1
 			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
 		
@@ -196,7 +196,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 
 			geometry->SetTag(Tags::TRamp);
 			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TRamp);
-
+			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ramp.jpg"), 0);
 			//geometry->Physics()->SetOrientation(Quaternion::AxisAngleToQuaterion(nclgl::Maths::Vector3(1.0f, 0.0f, 0.0f), 45.0));
 
 			scene->AddGameObject(geometry);
