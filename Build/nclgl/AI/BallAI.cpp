@@ -156,14 +156,25 @@ void BallAI::addBallAIPlayers(int i)
 			int numOfPlayers = GameLogic::Instance()->getNumPlayers() + GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumSoftPlayers();
 			std::ifstream myReadFile;
 			string file;
-			if (i == 0)
+			if (i == 0) 
+			{
 				file = "0pos.txt";
-			if (i == 1)
+			}
+			if (i == 1) 
+			{
 				file = "1pos.txt";
+			}
+				
 			if (i == 2)
+			{
 				file = "2pos.txt";
+			}
+				
 			if (i == 3)
+			{
 				file = "3pos.txt";
+			}
+				
 
 			myReadFile.open(file);
 
@@ -251,7 +262,7 @@ bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	{
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"duang.wav", false);
 		Launchpad* launchpad = (Launchpad*)otherNode->GetParent();
-		//launchpad->Launch(this);
+		launchpad->AILaunch(this);
 		return false;
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TPaintable)) {
