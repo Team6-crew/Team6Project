@@ -75,6 +75,23 @@ void GameLogic::addSoftPlayer(int num_splayers) {
 
 }
 
+void GameLogic::repairSoftPlayer(int num_splayers) {
+	Camera* temp = getSoftPlayer(num_splayers)->getCamera();
+	temp->SetYaw(0.0f);
+	temp->SetPitch(-20.f);
+	delete softplayers[num_splayers];
+	softplayers[num_splayers] = new PlayerSoftBody("SoftPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
+		1.0f,
+		1.0f,
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayers[num_splayers]->getBall()->softball[j]->SetPhysics(softplayers[num_splayers]->getBall()->softball[j]->Physics());
+	softplayers[num_splayers]->setControls(controls[num_splayers][0], controls[num_splayers][1], controls[num_splayers][2], controls[num_splayers][3], controls[num_splayers][4], controls[num_splayers][5]);
+	softplayers[num_splayers]->setCamera(temp);
+}
+
 void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, float colourZ) {
 	int playerIndex = 0;
 	for (int i = 0; i < softplayers.size(); i++) {
@@ -113,56 +130,58 @@ void GameLogic::calculatePaintPercentage() {
 
 	for (int k = 0; k < softplayers.size(); k++)
 	{
-		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
-		if (position.y > 2.5f)
-		{
-			continue;
-		}
-		else
-			if (softplayers[k]->getcanpaint() == false)
+		if (softplayers[k]->getIsBroken() == false) {
+			nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
+			if (position.y > 2.5f)
 			{
-				softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
-				if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
-				{
-					softplayers[k]->setcanpaint(true);
-				}
 				continue;
 			}
-		/*else if (position.y < -3.0f)
-		{
-		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
-		continue;
-		}*/
 			else
+				if (softplayers[k]->getcanpaint() == false)
+				{
+					softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
+					if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
+					{
+						softplayers[k]->setcanpaint(true);
+					}
+					continue;
+				}
+			/*else if (position.y < -3.0f)
 			{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
+			continue;
+			}*/
+				else
+				{
 
-				add_rad = softplayers[k]->getadd_rad();
-				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
+					add_rad = softplayers[k]->getadd_rad();
+					rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
-				softplayers[k]->setRadius(rad);
-				posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
-				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+					softplayers[k]->setRadius(rad);
+					posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+					posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+					softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
-				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+					for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+						for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
-						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
-						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
-							if (world_paint[i][j] == 0) {
-								paint_perc[k] += increment;
+							float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+							if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+								if (world_paint[i][j] == 0) {
+									paint_perc[k] += increment;
+								}
+								else if (world_paint[i][j] != k + 1) {
+									paint_perc[k] += increment;
+									paint_perc[world_paint[i][j] - 1] -= increment;
+								}
+								world_paint[i][j] = k + 1;
 							}
-							else if (world_paint[i][j] != k + 1) {
-								paint_perc[k] += increment;
-								paint_perc[world_paint[i][j] - 1] -= increment;
-							}
-							world_paint[i][j] = k + 1;
 						}
 					}
+					softplayers[k]->setadd_rad(0.0f);
 				}
-				softplayers[k]->setadd_rad(0.0f);
-			}
+		}
 	}
 
 		for (int l = 0; l < aiPlayers.size(); l++)
