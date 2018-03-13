@@ -1,83 +1,31 @@
-//#define SHADOWMAP_NUM  4
+//Shadow (not sure if will be optimised)
+//uniform sampler2DArrayShadow uShadowTex;
+//SamplerState samp1 : register(s1);
+//Texture2D_Array uShadowTex : register( t3 );
 //
-//SamplerState samp0 : register(s0);
-//Texture2D uDiffuseTex : register( t0 );
 //
 //
-//ConstantBuffer uColor
+//ConstantBuffer uShadowSinglePixel
 //{
-//	float4 colour;
+//	float2 shadowSinglePixel;
 //};
 //
-////Constant Per Frame
-//ConstantBuffer uAmbientColor
+//ConstantBuffer uShadowTransform[SHADOWMAP_NUM]
 //{
-//	float3 ambientColour;
+//column_major matrix shadowTransform;
 //};
 //
-//ConstantBuffer uCameraPos
-//{
-//	float3 cameraPos;
-//};
-//
-//ConstantBuffer uLightDirection
-//{
-//	float3 lightDirection;
-//};
-//
-//ConstantBuffer uSpecularFactor
-//{
-//	float specularFactor;
-//};
-
-
+//const float NORMAL_BIAS = 0.003f;
+//const float RAW_BIAS 	= 0.00025f;
+// .....................End of shadow stuff...........................
 struct VS_OUTPUT
 {
 	float4 WorldPosition  : S_POSITION;
-	float2 UV			  : TEXCOORD0; 
-	float3 Normal 		  : TEXCOORD1;
 };
-
 
 float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 {
-	//temp to test
-	return float4(1.0, 0.0, 0.0, 1.0);
-	}
 
-//float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
-//{
-	//temp to test
-	//return float4(1.0, 0.0, 0.0, 1.0);
-
-	//float3 normal 		= normalize(In.Normal);
-	//float4 texColour 	= uDiffuseTex.Sample(samp0, In.UV.xy);
-	//float4 fragColour 	= colour * texColour;	
-	//
-	////Lighting Calculations
-	//float3 viewDir 		= normalize(cameraPos - In.WorldPosition.xyz);
-	//float3 halfDir 		= normalize(viewDir - lightDirection);
-	//float rFactor       = max(0.0, dot(halfDir , normal ));
-	//
-	//float dFactor       = max(0.0, dot(-lightDirection , normal)) ;
-    //float sFactor       = pow(rFactor , specularFactor );
-	//   
-	//   
-	////Color Computations
-	//const float specIntensity = 0.4f;
-	//
-	////Quick hack to approximate specular colour of an object, assuming the light colour is white
-	//float3 specColour = min(fragColour.rgb + float3(0.5f), float3(1)); 
-	//
-	////Output Final Colour
-	//float3 diffuse  = fragColour.rgb * dFactor;
-	//float3 specular = specColour * sFactor * specIntensity;
-	//
-	////Combine lighting
-	//float4 OutFrag;
-	//OutFrag.xyz 	= diffuse + specular + fragColour.rgb* ambientColour;
-	//OutFrag.a 	= fragColour.a;
-	//
-	////temp to test
-	//return OutFrag;
-//}
+	float4 OutFrag = float4(0.0, 1.0, 0.0, 1.0);
+	return OutFrag;
+}
