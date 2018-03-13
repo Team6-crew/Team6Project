@@ -380,6 +380,7 @@ void PlayerSoftBody::handleInput(float dt) {
 		if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
 		{
 			if (canjump == true) {
+				GameLogic::Instance()->setJustJumped(true);
 				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 				for (int i = 0; i < 182; ++i) {
 					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
@@ -450,7 +451,31 @@ void PlayerSoftBody::move(float dt) {
 		
 	}
 }
+void PlayerSoftBody::serverMove(float dt) {
+	updateBuffTime(dt);
+	if (!stun(dt)) {
+		nclgl::Maths::Vector3 ball_pos = nclgl::Maths::Vector3((ball->softball[0]->Physics()->GetPosition().x + ball->softball[181]->Physics()->GetPosition().x) / 2,
+			(ball->softball[0]->Physics()->GetPosition().y + ball->softball[181]->Physics()->GetPosition().y) / 2,
+			(ball->softball[0]->Physics()->GetPosition().z + ball->softball[181]->Physics()->GetPosition().z) / 2);
 
+		forward = (camera->GetPosition() - ball_pos).Normalise();
+
+		nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+		worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
+		bodyRenderNode->SetTransform(worldTr);
+
+		handleInput(dt);
+
+		speedLimit();
+		wallLimit();
+		jumpSlow();
+		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
+
+		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
+
+
+	}
+}
 void PlayerSoftBody::speedLimit() {
 	
 

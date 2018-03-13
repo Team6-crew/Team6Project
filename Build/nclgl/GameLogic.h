@@ -82,7 +82,15 @@ public:
 
 	void setCurrentTime(int cSec) { cSeconds = cSec; };
 	int getCurrentTime() { return cSeconds; }
+
+	void setMyNetNum(int k) { myNetPlayerNum = k; }
+	int getMyNetNum() { return myNetPlayerNum; }
+
+	bool getJustJumped() { return justJumped; }
+	void setJustJumped(bool k) { justJumped = k; }
+
 private:
+	bool justJumped = false;
 	int myNetPlayerNum = 0;
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;

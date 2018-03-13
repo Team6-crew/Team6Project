@@ -96,6 +96,7 @@ public:
 
 
 	void move(float dt);
+	void serverMove(float dt);
 
 	void speedLimit();
 	void wallLimit();

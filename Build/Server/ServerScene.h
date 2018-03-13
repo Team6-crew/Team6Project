@@ -206,14 +206,10 @@ public:
 
 		Scene::OnUpdateScene(dt);
 
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
-			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			GameLogic::Instance()->getSoftPlayer(i)->serverMove(dt);
 		}
-		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move();
 
 
 		// Pause Menu
