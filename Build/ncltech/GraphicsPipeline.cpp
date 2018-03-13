@@ -429,20 +429,21 @@ void GraphicsPipeline::RenderScene(float dt)
 		}
 		else
 			{
-			std::string arr = "players[" + std::to_string(i) + "].";
- 			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
-			float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
-			float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
-			Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
-			Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
-			shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
-			shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
-			shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
-			if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-			else {
-
-				shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-				splatSoftPlayer = i;
+			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
+				std::string arr = "players[" + std::to_string(i) + "].";
+				float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
+				float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
+				float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
+				Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+				Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+				shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+				shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+				shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+				if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+				else {
+					shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+					splatSoftPlayer = i;
+				}
 			}
 			
 		}
@@ -508,14 +509,16 @@ void GraphicsPipeline::RenderScene(float dt)
 	int max_score = 0;
 	float max_perc = 0.0f;
 	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
-			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
-			max_score = i;
+		if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
+			if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+				max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+				max_score = i;
+			}
+			std::string arr = "players[" + std::to_string(i) + "].";
+			angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
+			shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+			shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 		}
-		std::string arr = "players[" + std::to_string(i) + "].";
-		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
-		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
-		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 	}
 	for (int i = GameLogic::Instance()->getNumSoftPlayers(); i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers(); i++) {
 		int j = i - GameLogic::Instance()->getNumSoftPlayers();
@@ -940,6 +943,15 @@ Camera* GraphicsPipeline::CreateNewCamera() {
 	return cam;
 }
 
+Camera* GraphicsPipeline::RepairCamera(int cmr) {
+	Camera* cam = new Camera();
+	viewMatrices.push_back(cam->BuildViewMatrix());
+	projViewMatrices.push_back(renderer->GetProjMatrix());
+	cam->SetPitch(-20.0f);
+	*cameras[cmr] = *cam;
+	return cam;
+}
+
 void GraphicsPipeline::FillPaint(float dt) {
 	TextureBase* depth = NULL;
 	PaintBuffer->Activate();
@@ -979,5 +991,17 @@ void GraphicsPipeline::ChangeScene() {
 	renderer->Clear(Renderer::COLOUR_DEPTH);
 	renderer->SwapBuffers();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
+	
+}
 
+void GraphicsPipeline::clearGraphicsPipeline()
+{
+	allNodes.clear();
+	paintableObjects.clear();
+	renderlistOpaque.clear();
+	renderlistTransparent.clear();
+	cameras.clear();
+	TrailBuffer->Activate();
+	renderer->Clear(Renderer::COLOUR_DEPTH);
+	
 }

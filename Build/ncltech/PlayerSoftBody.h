@@ -22,6 +22,7 @@ public:
 	GameObject* getTop();
 	GameObject* getBottom();
 	GameObject* getFront();
+	GameObject* getBack();
 
 	
 	void setRadius(float radius) { rad = radius; }
@@ -90,12 +91,17 @@ public:
 	void setCurrentBuff(Tags tag);
 	Tags getCurrentBuff() { return currentBuff; }
 
+	void setIsBroken(bool broken) { isbroken = broken; }
+	bool getIsBroken() { return isbroken; }
+
 
 	void move(float dt);
 
 	void speedLimit();
 	void wallLimit();
 	void jumpSlow();
+	int getIndex() { return index; }
+	void setIndex(int idx) { index = idx; }
 
 private:
 	void handleInput(float dt);
@@ -146,4 +152,7 @@ private:
 	Tags currentBuff;
 
 	nclgl::Maths::Vector4 colour;
+
+	bool isbroken = false;
+	int index;
 };

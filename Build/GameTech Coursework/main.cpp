@@ -25,8 +25,8 @@ const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
 bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
-
-
+GameTimer* clock_timer;
+bool gameEnded = false;
 // Program Deconstructor
 //  - Releases all global components and memory
 //  - Optionally prints out an error message and
@@ -153,6 +153,7 @@ int main()
 {
 	bool show_status_menu = false;
 	bool showEndScreen = false;
+	clock_timer = new GameTimer();
 	//Initialize our Window, Physics, Scenes etc
 	Initialize();
 	//GraphicsPipeline::Instance()->SetVsyncEnabled(false);
@@ -198,10 +199,9 @@ int main()
 
 		// Update Audio
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
-
-
+		
 		// Remove this once main menu is hooked up
-
+		//GameLogic::Instance()->setSeconds(GameLogic::Instance()->getCurrentTime());
 		if (SceneManager::Instance()->GetCurrentSceneIndex() == 0)
 		{
 			GraphicsPipeline::Instance()->RenderMenu();
@@ -217,22 +217,45 @@ int main()
 				GraphicsPipeline::Instance()->RenderScene(dt);
 
 			}
+			NCLDebug::_ClearDebugLists();
+			if (GameLogic::Instance()->getCurrentTime() > 0) {
+				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds() - GameLogic::Instance()->getActualGameTime());
+				NCLDebug::AddTimer(nclgl::Maths::Vector4(1.f, 1.f, 1.f, 1.f), std::to_string(GameLogic::Instance()->getCurrentTime() / 60) + ":" + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) / 10) + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) % 10));
+			}
+			else if (!gameEnded) {
+				showEndScreen = true;
+				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+			}
 			//Print Status Entries
 			if (show_status_menu)
 			{
-				NCLDebug::_ClearDebugLists();
+				//NCLDebug::_ClearDebugLists();
 				PrintStatusEntries();
-
 			}
-			else if (showEndScreen) {
+			if (showEndScreen) {
+				gameEnded = true;
+				
+				int winningPlayer = 0;
+				float maxScore = -1.0f;
+				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+					if ((*GameLogic::Instance()->getPaintPerc())[i] > maxScore) {
+						maxScore = (*GameLogic::Instance()->getPaintPerc())[i];
+						winningPlayer = i;
+					}
+				}
 				NCLDebug::_ClearDebugLists();
-				NCLDebug::AddHUD2(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Player 1 WINS!");
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f), "Press 1 to Go to the Next Level");
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f), "Press 2 to Exit");
+				NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player " + to_string(winningPlayer+1) + " WINS!");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 				{
+					showEndScreen = !showEndScreen;
+					GameLogic::Instance()->clearGameLogic();
+					GraphicsPipeline::Instance()->clearGraphicsPipeline();
+					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Team Project");
+					
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
@@ -242,15 +265,13 @@ int main()
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
 				show_status_menu = !show_status_menu;
 			}
-			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
+			
+
+			/*else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
 				showEndScreen = !showEndScreen;
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-			}
-		
+			}*/
 		}
-
-
-
 
 		{
 			//Forces synchronisation if vsync is disabled

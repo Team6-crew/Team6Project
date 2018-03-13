@@ -73,9 +73,7 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 
-	/*camera = new Camera();
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.0f);*/
+	
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
@@ -142,6 +140,11 @@ GameObject* PlayerSoftBody::getFront() {
 	return front;
 }
 
+GameObject* PlayerSoftBody::getBack() {
+	getFront();
+	return back;
+}
+
 void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
 	move_up = up;
 	move_down = down;
@@ -184,6 +187,25 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 		nclgl::Maths::Vector4 col1 = otherRenderNode->GetColourFromPlayer();
 		nclgl::Maths::Vector4 col2 = (*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour();
 		if (col1.x != col2.x || col1.y != col2.y || col1.z != col2.z) {
+			// adding score for painting the obj
+			int index = -1;
+			for (int k = 0; k < GameLogic::Instance()->getNumSoftPlayers(); k++)
+			{
+				if (col2.z == GameLogic::Instance()->getSoftPlayer(k)->getColour().z) {
+					index = k;
+				}
+			}
+			if (GameLogic::Instance()->GetPlayerCapturedObject(otherNode->GetParent()) == -1) {
+				GameLogic::Instance()->setPaintPerc(index, otherRenderNode->GetCost());
+				GameLogic::Instance()->SetPlayerCapturedObject(otherNode->GetParent(), index);
+				cout << otherRenderNode->GetCost();
+			}
+			else if (GameLogic::Instance()->GetPlayerCapturedObject(otherNode->GetParent()) != index) {
+				GameLogic::Instance()->setPaintPerc(index, otherRenderNode->GetCost());
+				GameLogic::Instance()->setPaintPerc(GameLogic::Instance()->GetPlayerCapturedObject(otherNode->GetParent()), -otherRenderNode->GetCost());
+				
+				GameLogic::Instance()->SetPlayerCapturedObject(otherNode->GetParent(), index);
+			}
 			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
 			otherRenderNode->SetBeingPainted(true);
 			otherRenderNode->SetPaintPercentage(0.0f);
@@ -460,7 +482,7 @@ void PlayerSoftBody::speedLimit() {
 }
 
 void PlayerSoftBody::wallLimit() {
-	if (WORLD_SIZE - front->Physics()->GetPosition().x < 3) {
+	if (WORLD_SIZE - front->Physics()->GetPosition().x < 4) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
@@ -472,7 +494,7 @@ void PlayerSoftBody::wallLimit() {
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
 		}
 	}
-	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 3) {
+	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 5.5) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);

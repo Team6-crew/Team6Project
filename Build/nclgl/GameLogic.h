@@ -5,6 +5,7 @@
 #include <ncltech\Scene.h>
 #include <vector>
 #include <ncltech\PlayerSoftBody.h>
+#include <map>
 
 class GameLogic : public TSingleton<GameLogic> {
 
@@ -55,6 +56,7 @@ public:
 	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
 	};
 
+	void repairSoftPlayer(int num_splayers);
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
 	void setnumOfNetPlayers(int nMp) { numOfNetPlayers = nMp; };
@@ -66,8 +68,20 @@ public:
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
 
-	void setMyNetNum(int k) { myNetPlayerNum = k; }
-	int getMyNetNum() { return myNetPlayerNum; }
+	void clearGameLogic();
+
+	void SetPlayerCapturedObject(GameObject * go, int p) { PlayerCapturedObject[go] = p; }
+	int  GetPlayerCapturedObject(GameObject * go) { return PlayerCapturedObject.at(go); }
+
+	void setPaintPerc(int p, float sc) { paint_perc[p] += sc; }
+	float getPaintPerc(int p) { return paint_perc[p]; }
+
+	int getSeconds() { return seconds; }
+	void setSeconds(int sec) { seconds = sec; }
+	nclgl::Maths::Vector4 getColours(int col) { return colours[col]; }
+
+	void setCurrentTime(int cSec) { cSeconds = cSec; };
+	int getCurrentTime() { return cSeconds; }
 private:
 	int myNetPlayerNum = 0;
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
@@ -102,4 +116,7 @@ private:
 	nclgl::Maths::Vector3 lastPickupPosition;
 	bool canspawn;
 	int pickupnum;
+	map <GameObject * , int> PlayerCapturedObject;
+	int seconds;
+	int cSeconds;
 };

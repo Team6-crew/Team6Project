@@ -354,6 +354,7 @@ public:
 					GameLogic::Instance()->setnumOfPlayersMp(1);
 					GraphicsPipeline::Instance()->ChangeScene();
 					SceneManager::Instance()->JumpToScene("Team Project");
+					GameLogic::Instance()->setSeconds(seconds);
 					break;
 				}
 				case (103): {
@@ -361,6 +362,7 @@ public:
 					break;
 				}
 				case (304): { // change to reflect how many players are given
+					numOfPlayers = 0;
 					for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
 						if (humanOrAi[i] == 1) {
 							numOfPlayers += pow (2,i);
