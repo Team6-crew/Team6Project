@@ -93,11 +93,15 @@ public:
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
-		//GameLogic::Instance()->setnumAI(1);
-		//BallAI::addBallAIPlayers();
+		num_p = GameLogic::Instance()->getnumAI();
+		if (num_p & 0b0001) BallAI::addBallAIPlayers(0);
+		if (num_p & 0b0010) BallAI::addBallAIPlayers(1);
+		if (num_p & 0b0100) BallAI::addBallAIPlayers(2);
+		if (num_p & 0b1000) BallAI::addBallAIPlayers(3);
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
 
 		GameObject* ground = CommonUtils::BuildCuboidObject(
@@ -184,20 +188,61 @@ public:
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(0.0f, 0.0f, 1.0f, 1.0f)); // blue
-		portal2B->setDynamic(false);
-		portal2B->SetPhysics(portal2B->Physics());
-		portal2B->SetTag(Tags::TPortal_B);
-		portal2B->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b2,		
-				this,					
+
+			//testcube- test the texture
+			Washingzone* wz = new Washingzone("washingzone",
+				nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+				nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+				true,
+				0.0f,
+				true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		wz->SetPhysics(wz->Physics());
+		this->AddGameObject(wz);
+
+		Launchpad* lp = new Launchpad("launchpad",
+			nclgl::Maths::Vector3(0.0f, 1.5f, -30.0f),
+			nclgl::Maths::Vector3(1.5f, 0.5f, 1.5f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		lp->SetPhysics(lp->Physics());
+		this->AddGameObject(lp);
+
+		Portal* a1  = new Portal("portal_a1",
+			nclgl::Maths::Vector3(10.0f, 2.f, -40.0f),
+			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		a1->SetPhysics(a1->Physics());
+		a1->physicsNode->SetOnCollisionCallback(
+			std::bind(
+				&EmptyScene::collisionCallback_a1,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
 				std::placeholders::_1,
-				std::placeholders::_2)			
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
 		);
-		this->AddGameObject(portal2B);
-		// -----------------------------------------------------------------------------------------		
+		this->AddGameObject(a1);
 		
-		backgroundSoundPlaying = false;
+		Portal* b1 = new Portal("portal_b1",
+			nclgl::Maths::Vector3(-10.0f, 2.f, -40.0f),
+			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		b1->SetPhysics(b1->Physics());
+		b1->physicsNode->SetOnCollisionCallback(
+			std::bind(
+				&EmptyScene::collisionCallback_b1,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(b1);
 	}
 
 	virtual void OnUpdateScene(float dt) override
@@ -222,30 +267,65 @@ public:
 				true,
 				0.5f,
 				true,
-				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+				nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 			pickup->SetPhysics(pickup->Physics());
 			pickup->Physics()->SetElasticity(0.0f);
+			(*pickup->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
 			this->AddGameObject(pickup);
 
 		}
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
+			if ((GameLogic::Instance()->getSoftPlayer(i)) && (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false))
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
-		
+		/*if (softplayer) {
+			softplayer->getBall()->RemoveRender();
+		}*/
+
 		Scene::OnUpdateScene(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
+				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
+				GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			}
 		}
+		/*if (softplayer) {
+			softplayer->getBall()->RenderSoftbody();
+			softplayer->move(dt);
+		}*/
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move();
+			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i) {
+			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
+				if ((GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetPosition().y - GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->GetPosition().y > 5)
+					|| GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetPosition().z - GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->GetPosition().z > 5) {
+					GameLogic::Instance()->getSoftPlayer(i)->setIsBroken(true);
+					GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
+					//delete GameLogic::Instance()->getSoftPlayer(i);
+					GameLogic::Instance()->repairSoftPlayer(i);
+					/*softplayer = new PlayerSoftBody("SoftPlayer_" + i,
+						nclgl::Maths::Vector3(3.0f * i, 10.f, 3.0f * i),
+						1.0f,
+						1.0f,
+						GameLogic::Instance()->getColours(i),
+						i);
+					for (int j = 0; j < 182; ++j)
+						softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+					softplayer->setControls(GameLogic::Instance()->getControls(i, 0), GameLogic::Instance()->getControls(i, 1), GameLogic::Instance()->getControls(i, 2), 
+						GameLogic::Instance()->getControls(i, 3), GameLogic::Instance()->getControls(i, 4), GameLogic::Instance()->getControls(i, 5));
+					softplayer->setCamera(GraphicsPipeline::Instance()->GetCameras(i));
+					*GameLogic::Instance()->getSoftPlayer(i) = *softplayer;*/
+					this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+					this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+				}
+			}
+		}
 		
 		// Pause Menu
 
@@ -636,6 +716,7 @@ private:
 	Menu * activeMenu;
 	Menu * activeSubmenu;
 	Menu * soundMenu;
+	PlayerSoftBody* softplayer;
 
 	float Score = 0.0f;
 

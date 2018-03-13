@@ -73,3 +73,8 @@ void PaintWeaponPickup::SoftEffect(PlayerSoftBody* player) {
 	player->setBuffTime(10.0f);
 	player->setCurrentBuff(Tags::BPaint);
 }
+void PaintWeaponPickup::AIEffect(BallAI* AIBall) {
+	AIBall->equipPaintWeapon((*renderNode->GetChildIteratorStart())->GetColour());
+	AIBall->setBuffTime(10.0f);
+	AIBall->setCurrentBuff(Tags::BPaint);
+}

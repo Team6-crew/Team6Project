@@ -185,7 +185,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				false,
 				object.colour);
 			geometry->SetTag(Tags::TPaintable);
-			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"pickup.png"), 0);
+			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"paintbox1.jpg"), 0);
 			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_" + std::to_string(paintable_counter), Texture::COLOUR, 1024, 1024), 1); // increment 'transparent number1' number by 1
 			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);		
 			scene->AddGameObject(geometry);

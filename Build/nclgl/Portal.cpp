@@ -1,6 +1,8 @@
 #include "Portal.h"
 #include <ncltech\CommonMeshes.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
+#include <nclgl\ResourceManager.h>
+
 Portal::Portal(const std::string& name,
 	const nclgl::Maths::Vector3& pos,
 	const nclgl::Maths::Vector3& halfdims,
@@ -13,10 +15,12 @@ Portal::Portal(const std::string& name,
 
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
 	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(halfdims)));
+
+	dummy->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"portal.jpg"), 0);
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));
-	rnode->SetBoundingRadius(0.5f);
+	rnode->SetBoundingRadius(1.0f);
 
 	PhysicsNode* pnode = NULL;
 	if (physics_enabled)
@@ -24,7 +28,7 @@ Portal::Portal(const std::string& name,
 		pnode = new PhysicsNode();
 		pnode->SetPosition(pos);
 		pnode->SetInverseMass(inverse_mass);
-		pnode->SetColRadius(0.5f);
+		pnode->SetColRadius(1.0f);
 
 		if (!collidable)
 		{

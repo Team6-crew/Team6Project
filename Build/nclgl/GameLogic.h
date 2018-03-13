@@ -24,7 +24,7 @@ public:
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
 	int getNumAIPlayers() { return aiPlayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	int getTotalPlayers() { return players.size() + softplayers.size();}
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
 	bool gameHasStarted() { return gameStarted; }
@@ -55,6 +55,7 @@ public:
 	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
 	};
 
+	void repairSoftPlayer(int num_splayers);
 	void clearGameLogic();
 	
 	void SwitchLevels(int idx);
@@ -69,6 +70,7 @@ public:
 	int getnumAI(void) { return numAI; };
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
+	nclgl::Maths::Vector4 getColours(int col) { return colours[col]; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
