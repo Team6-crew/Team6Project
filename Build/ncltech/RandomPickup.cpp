@@ -107,6 +107,7 @@ void RandomPickup::Effect(BallAI* AIBall) {
 	if (enabled) {
 		if (prob < (25))
 		{
+			AIBall->getBall()->Physics()->SetInverseMass(100.f);
 			AIBall->setBuffTime(10.0f);
 			AIBall->setCurrentBuff(Tags::BSpeed);
 			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"speedup.wav", false);

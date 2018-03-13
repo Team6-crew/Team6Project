@@ -70,7 +70,7 @@ Washingzone::~Washingzone()
 
 void Washingzone::Effect(Player* player) 
 {
-	player->setDebuffTime(70);
+	player->setDebuffTime(210);
 	player->setcanpaint(false);
 	player->settime(0.0f);
 }
@@ -81,7 +81,19 @@ void Washingzone::SoftEffect(PlayerSoftBody* player)
 	{
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"washingzone.wav", false);
 	}
-	player->setDebuffTime(70);
+	player->setDebuffTime(210);
 	player->setcanpaint(false);
 	player->settime(0.0f);
 }
+
+void Washingzone::AIEffect(BallAI* AIBall)
+{
+	if (AIBall->getcanpaint())
+	{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"washingzone.wav", false);
+	}
+	AIBall->setDebuffTime(210);
+	AIBall->setcanpaint(false);
+	AIBall->settime(0.0f);
+}
+

@@ -29,6 +29,8 @@ State* roamingState;
 
 using namespace nclgl::Maths;
 
+DEFINE_HEAP(BallAI, "AI");
+
 BallAI::BallAI(const std::string& name,
 	const Vector3& pos,
 	float radius,
@@ -131,7 +133,7 @@ void BallAI::addBallAIPlayers(int i)
 	nclgl::Maths::Vector3 location = nclgl::Maths::Vector3(20.0f, 2.0f, -20.0f);
 
 		BallAI * AIBall = new BallAI(" AIPlayer "+(i),
-			nclgl::Maths::Vector3(5.0f*(i + 2), 7.f, -4.0f*(i + 1)),
+			nclgl::Maths::Vector3(3.0f*(i + 2), 7.f, 0.0f),
 			1.0f,
 			true,
 			1.0f,
@@ -220,6 +222,7 @@ void BallAI::move(float dt)
 		worldTr.SetPositionVector(ball_pos + nclgl::Maths::Vector3(0, 2, 0));
 		bodyRenderNode->SetTransform(worldTr);
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform());
+
 		if (GameLogic::Instance()->gameHasStarted()) {
 			getStateMachine()->getCurrentState()->update(getStateMachine());
 			//BallAI::getMapNavigation()->usePath();
@@ -262,11 +265,11 @@ bool BallAI::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 			otherRenderNode->SetPaintPercentage(0.0f);
 		}
 	}
-	/*if (otherNode->GetParent()->HasTag(Tags::TWash)) {
+	if (otherNode->GetParent()->HasTag(Tags::TWash)) {
 		Washingzone* wash = (Washingzone*)otherNode->GetParent();
-		wash->Effect(this);
+		wash->AIEffect(this);
 		return false;
-	}*/
+	}
 
 	return true;
 };
@@ -334,6 +337,7 @@ void BallAI::updateBuffTime(float dt)
 				unequipStunWeapon();
 				unequipPaintWeapon();
 				speed = 20.0f;
+				getBall()->Physics()->SetInverseMass(1.0f);
 			}
 		}
 	}
@@ -365,9 +369,9 @@ void BallAI::shoot() {
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
-		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
+		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f;
 		StunProjectile* projectile = new StunProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
-		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 4.0f, 0.f, -forward.z * 20.0f));
+		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 4.0f, 0.f, -forward.z * 5.0f));
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
@@ -375,9 +379,9 @@ void BallAI::shoot() {
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
-		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
+		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f;
 		PaintProjectile* projectile = new PaintProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
-		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 4.0f, 0.f, -forward.z * 20.0f));
+		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 4.0f, 0.f, -forward.z * 5.0f));
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}

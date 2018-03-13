@@ -1,6 +1,8 @@
 #pragma once
 #include <nclgl\AI\StateMachine.h>
 
+DEFINE_HEAP(StateMachine, "AI");
+
 void StateMachine::setCurrentState(StateMachine* sOwner, State* newState)
 {
 		if (newState != nullptr)

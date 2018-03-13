@@ -174,6 +174,16 @@ void GameLogic::calculatePaintPercentage() {
 				continue;
 			}
 			else {
+				if (aiPlayers[l]->getcanpaint() == false)
+				{
+					aiPlayers[l]->settime((aiPlayers[l]->gettime()) + 1.0f);
+					if (aiPlayers[l]->gettime() > aiPlayers[l]->getDebuffTime())
+					{
+						aiPlayers[l]->setcanpaint(true);
+					}
+					continue;
+				}
+				else
 				add_rad = aiPlayers[l]->getadd_rad();
 				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 

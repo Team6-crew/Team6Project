@@ -4,11 +4,13 @@
 #include "Messenger.h"
 #include <ncltech\Pickup.h>
 #include <nclgl\MapNavigation.h>
+#include <ncltech\Memory Management\MemoryManager.h>
 
 class StateMachine;
 
 class BallAI : public GameObject
 {
+	DECLARE_HEAP;
 public:
 	BallAI(const std::string& name,
 		const nclgl::Maths::Vector3& pos,
@@ -69,6 +71,11 @@ public:
 
 	nclgl::Maths::Vector3 getForward() { return forward; }
 
+	bool setcanpaint(bool canp) { canPaint = canp; return canPaint; }
+	bool getcanpaint() { return canPaint; }
+
+	void settime(float t) { time = t; }
+	float gettime() { return time; }
 private:
 	GameObject * AIbody;
 	nclgl::Maths::Vector4 colour;
@@ -101,7 +108,7 @@ private:
 	float buffTime;
 	float currentBuffTime;
 	bool canShoot;
-
+	bool canPaint;
 	Tags currentBuff;
 	
 };
