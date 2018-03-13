@@ -209,7 +209,7 @@ bool GameLogic::spawnPickup() {
 	}
 	return false;
 }
-}
+
 
 void GameLogic::clearGameLogic()
 {
@@ -224,7 +224,7 @@ void GameLogic::SwitchLevels(int idx)
 {
 	LevelLoader loader;
 	if (idx == 1) {		
-		loader.BuildLevel("SimpleLevel.txt", scene);		
+		loader.BuildLevel("Level1.txt", scene);		
 	}
 	else if (idx == 2) {
 		loader.BuildLevel("Level2.txt", scene);

@@ -9,8 +9,6 @@
 
 using namespace nclgl::Maths;
 
-//Horrible!!!
-// TODO: Fix these variables!
 bool dragDataSet = false;
 Matrix3 dragDataInertia;
 float dragDataMass;

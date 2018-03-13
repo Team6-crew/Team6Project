@@ -14,7 +14,7 @@ enum Type {
 	PAINTABLE_CUBE,
 	GEOMETRY_SPHERE,
 	LAUNCH_PAD,
-	WASHING_ZONE,
+	WASHING_ZONE,	
 	PLAYER_SPAWN
 };
 
@@ -25,13 +25,13 @@ class LevelLoader
 	struct MapObject
 	{
 		std::string name;
-		Type		type;
-		nclgl::Maths::Vector3		position;
-		nclgl::Maths::Vector3		scale;
-		float		inverseMass;
+		Type type;
+		nclgl::Maths::Vector3 position;
+		nclgl::Maths::Vector3 scale;
+		float inverseMass;
 		nclgl::Maths::Vector3 rotAxis;
-		float		rotationDegrees;
-		nclgl::Maths::Vector4       colour;
+		float rotationDegrees;
+		nclgl::Maths::Vector4 colour;
 		nclgl::Maths::Vector3 ramprotaxis;
 		float ramprotdeg;
 	};

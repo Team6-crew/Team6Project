@@ -44,3 +44,15 @@ Vector3(-6.70398,4.04616,-97.2338)
 
 Vector3(-6.12854,3.42382,-97.5678)
 
+Vector3(-nan(ind),-nan(ind),-nan(ind))
+
+Vector3(-nan(ind),-nan(ind),-nan(ind))
+
+Vector3(-nan(ind),-nan(ind),-nan(ind))
+
+Vector3(0.308705,6.27572,1.04484)
+
+Vector3(0.17676,6.02138,1.30663)
+
+Vector3(50.1862,17.3568,33.5327)
+

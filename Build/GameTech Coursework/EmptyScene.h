@@ -99,8 +99,7 @@ public:
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
 		}
-		
-		//Who doesn't love finding some common ground?
+
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f),
@@ -110,157 +109,95 @@ public:
 			true,
 			false,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
-		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);		
-
-		StunWeaponPickup* weapon = new StunWeaponPickup("spickup",
-			nclgl::Maths::Vector3(10.0f, 5.0f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		weapon->SetPhysics(weapon->Physics());
-		this->AddGameObject(weapon);
-
-		PaintWeaponPickup* weapon2 = new PaintWeaponPickup("ppickup",
-			nclgl::Maths::Vector3(-10.0f, 5.0f, 0.0f),
-			nclgl::Maths::Vector3(0.3f, 0.3f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.5f, 1.0f, 1.0f));
-		weapon2->SetPhysics(weapon2->Physics());
-		this->AddGameObject(weapon2);
-		
-		//portal a1
-		Portal* portal_a1 = new Portal(
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);	
+			
+		// ---------------------------------------- portal1 ----------------------------------------
+		//portal1A
+		Portal* portal1A = new Portal(
 			"portal_a1",
-			nclgl::Maths::Vector3(-30.0f, 36.0f, 30.0f),
+			nclgl::Maths::Vector3(80.0f, 2.0f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-		portal_a1->setDynamic(false);
-		portal_a1->SetPhysics(portal_a1->Physics());
-		portal_a1->SetTag(Tags::TPortal_A1);
-		portal_a1->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // red
+		portal1A->setDynamic(false);
+		portal1A->SetPhysics(portal1A->Physics());
+		portal1A->SetTag(Tags::TPortal_A);
+		portal1A->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a1,		
+				this,					
 				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+				std::placeholders::_2)			
 		);
-		this->AddGameObject(portal_a1);
+		this->AddGameObject(portal1A);
 		
-		//portal a2
-		Portal* portal_a2 = new Portal(
-			"portal_a2",
-			nclgl::Maths::Vector3(0.0f, 21.5f, 95.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-		portal_a2->setDynamic(false);
-		portal_a2->SetPhysics(portal_a2->Physics());
-		portal_a2->SetTag(Tags::TPortal_A2);
-		portal_a2->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a2,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(portal_a2);
-
-		//portal b1
-		Portal* portal_b1 = new Portal(
+		//portal1B
+		Portal* portal1B = new Portal(
 			"portal_b1",
-			nclgl::Maths::Vector3(-50.0f, 1.0f, 0.0f),
+			nclgl::Maths::Vector3(-80.0f, 2.0f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		portal_b1->setDynamic(false);
-		portal_b1->SetPhysics(portal_b1->Physics());
-		portal_b1->SetTag(Tags::TPortal_B1);
-		portal_b1->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // red
+		portal1B->setDynamic(false);
+		portal1B->SetPhysics(portal1B->Physics());
+		portal1B->SetTag(Tags::TPortal_B);
+		portal1B->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_b1,
+				this,
 				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+				std::placeholders::_2)
 		);
-		this->AddGameObject(portal_b1);
-
-		//portal b2
-		Portal* portal_b2 = new Portal(
+		this->AddGameObject(portal1B);
+		
+		// ---------------------------------------- portal2 ----------------------------------------
+		//portal2A
+		Portal* portal2A = new Portal(
+			"portal_a2",
+			nclgl::Maths::Vector3(0.0f, 2.0f, 80.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
+			true,
+			100.0f,
+			true,
+			nclgl::Maths::Vector4(0.0f, 0.0f, 1.0f, 1.0f)); // blue
+		portal2A->setDynamic(false);
+		portal2A->SetPhysics(portal2A->Physics());
+		portal2A->SetTag(Tags::TPortal_A);
+		portal2A->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a2,		
+				this,					
+				std::placeholders::_1,
+				std::placeholders::_2)			
+		);
+		this->AddGameObject(portal2A);
+		
+		//portal2B
+		Portal* portal2B = new Portal(
 			"portal_b2",
-			nclgl::Maths::Vector3(50.0f, 1.0f, 0.0f),
+			nclgl::Maths::Vector3(0.0f, 2.0f, -80.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-		portal_b2->setDynamic(false);
-		portal_b2->SetPhysics(portal_b2->Physics());
-		portal_b2->SetTag(Tags::TPortal_B2);
-		portal_b2->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b2,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+			nclgl::Maths::Vector4(0.0f, 0.0f, 1.0f, 1.0f)); // blue
+		portal2B->setDynamic(false);
+		portal2B->SetPhysics(portal2B->Physics());
+		portal2B->SetTag(Tags::TPortal_B);
+		portal2B->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_b2,		
+				this,					
 				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+				std::placeholders::_2)			
 		);
-		this->AddGameObject(portal_b2);
-	
-		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
+		this->AddGameObject(portal2B);
+		// -----------------------------------------------------------------------------------------		
 		
 		backgroundSoundPlaying = false;
-
-		RandomPickup* pickup1 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup1->SetPhysics(pickup1->Physics());
-		this->AddGameObject(pickup1);
-		
-
-		RandomPickup* pickup2 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup2->SetPhysics(pickup2->Physics());
-		this->AddGameObject(pickup2);
-		
-
-		RandomPickup* pickup3 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup3->SetPhysics(pickup3->Physics());
-		this->AddGameObject(pickup3);
-		
-		//testcube- test the texture
-		Washingzone* wz = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 13.f, -40.0f),
-			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		wz->SetPhysics(wz->Physics());
-		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
-		this->AddGameObject(wz);
-		//frame += step;
-		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
 
 	virtual void OnUpdateScene(float dt) override

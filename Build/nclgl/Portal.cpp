@@ -3,6 +3,7 @@
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 Portal::Portal(const std::string& name,
 	const nclgl::Maths::Vector3& pos,
+	const nclgl::Maths::Vector3& halfdims,
 	bool physics_enabled,
 	float inverse_mass,
 	bool collidable,
@@ -11,7 +12,7 @@ Portal::Portal(const std::string& name,
 	RenderNodeBase* rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
-	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f)));
+	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(nclgl::Maths::Vector3(halfdims)));
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));

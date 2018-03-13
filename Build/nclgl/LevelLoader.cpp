@@ -121,7 +121,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 		GameObject * geometry;
 		Launchpad* launchpad;
 		Washingzone* washingzone;
-
+		
 		switch (object.type)
 		{
 		case GEOMETRY_GROUND_CUBOID:
@@ -225,8 +225,9 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.colour);
 			washingzone->SetTag(Tags::TWash);
 			washingzone->SetPhysics(washingzone->Physics());
+			(*washingzone->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
 			scene->AddGameObject(washingzone);
-			break;			
+			break;	
 		}
 
 		frame += step;

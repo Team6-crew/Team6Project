@@ -484,6 +484,12 @@ void PlayerSoftBody::wallLimit() {
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
 		}
 	}
+	else if (40.0f + front->Physics()->GetPosition().y < 3) {
+		for (int i = 0; i < 182; ++i) {
+			getBall()->softball[i]->Physics()->SetLinearVelocity(
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+		}
+	}
 }
 
 void PlayerSoftBody::jumpSlow() {

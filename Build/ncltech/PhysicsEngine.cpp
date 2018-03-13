@@ -127,7 +127,7 @@ void PhysicsEngine::Update(float deltaTime)
 
 		if (updateRealTimeAccum >= updateTimestep)
 		{
-			NCLDebug::Log("Physics too slow to run in real time!");
+			//NCLDebug::Log("Physics too slow to run in real time!");
 			//Drop Time in the hope that it can continue to run faster the next frame
 			updateRealTimeAccum = 0.0f;
 		}
@@ -137,11 +137,6 @@ void PhysicsEngine::Update(float deltaTime)
 
 void PhysicsEngine::UpdatePhysics()
 {   
-
-
-	
-
-
 	for (Manifold* m : manifolds)
 	{
 		delete m;

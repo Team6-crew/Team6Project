@@ -240,10 +240,16 @@ int main()
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
 				{
+					LevelLoader levelLoader;
+					levelLoader.DeleteMapObjects();
+					std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
 					SceneManager::Instance()->JumpToScene("Team Project");
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
+					LevelLoader levelLoader;
+					levelLoader.DeleteMapObjects();
+					std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
 					SceneManager::Instance()->JumpToScene("Main Menu");
 				}
 			}
