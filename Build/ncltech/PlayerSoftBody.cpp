@@ -71,12 +71,12 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	equippedPaintWeapon = NULL;
 	time = 0.0f;
 	stunDuration = 0.0f;
-
+	wallOfInterest = NULL;
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 
-	maxCameraY = 10.0f;
+	maxCameraY = 8.0f;
 	maxCameraZ = 25.0f;
-	minCameraY = 2.0f;
+	minCameraY = 1.0f;
 	minCameraZ = 5.0f;
 	curCameraY = maxCameraY;
 	curCameraZ = maxCameraZ;
@@ -437,11 +437,22 @@ void PlayerSoftBody::move(float dt) {
 }
 
 void PlayerSoftBody::cameraInWall(AABB* wall) {
-	if (wall->containsObject(camera->GetPosition(), 2.0f)) {
-		curCameraY -= 1.0f;
-		curCameraZ -= 2.5f;
+	if (wall->containsObject(camera_transform->GetWorldTransform().GetPositionVector(), 4.0f)) {
+		wallOfInterest = wall;
+		curCameraY = max(curCameraY - 0.3f, minCameraY);
+		curCameraZ = max(curCameraZ - 0.7f, minCameraZ);	
 		camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, curCameraY, curCameraZ)));
 	}
+	else {
+		if(wallOfInterest == wall){
+			if(!wall->containsObject(camera_transform->GetWorldTransform()*nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, min(curCameraY + 0.3f, maxCameraY), min(curCameraZ + 0.7f, maxCameraZ))).GetPositionVector(), 4.0f)){
+				camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, curCameraY, curCameraZ)));
+				curCameraY = min(curCameraY + 0.3f, maxCameraY);
+				curCameraZ = min(curCameraZ + 0.7f, maxCameraZ);
+			}
+		}
+	}
+
 }
 
 

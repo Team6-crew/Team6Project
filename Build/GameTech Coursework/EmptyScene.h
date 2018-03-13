@@ -41,7 +41,7 @@ public:
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
-	AABB* box;
+	AABB* walls[4];
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
@@ -74,7 +74,12 @@ public:
 
 	virtual void OnInitializeScene() override
 	{   
-		box = new AABB(nclgl::Maths::Vector3(0, 5, 0), 4);
+		
+		walls[0] = new AABB(nclgl::Maths::Vector3(200, 0, 0), 100);
+		walls[1] = new AABB(nclgl::Maths::Vector3(-200, 0, 0), 100);
+		walls[2] = new AABB(nclgl::Maths::Vector3(0, 0, 200), 100);
+		walls[3] = new AABB(nclgl::Maths::Vector3(0, 0, -200), 100);
+
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
@@ -217,6 +222,10 @@ public:
 			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 				GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+				for (int j = 0; j < 4; j++) {
+					GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
+				}
+				
 			}
 		}
 		/*if (softplayer) {
