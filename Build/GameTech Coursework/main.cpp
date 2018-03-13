@@ -226,7 +226,7 @@ int main()
 				//NCLDebug::_ClearDebugLists();
 				PrintStatusEntries();
 			}
-			else if (showEndScreen) {
+			if (showEndScreen) {
 				gameEnded = true;
 				
 				int winningPlayer = 0;
