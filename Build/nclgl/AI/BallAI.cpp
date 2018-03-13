@@ -215,7 +215,6 @@ void BallAI::move(float dt)
 {
 	updateBuffTime(dt);
 	if (!stun(dt))
-
 	{
 		nclgl::Maths::Vector3 ball_pos = physicsNode->GetPosition();
 		nclgl::Maths::Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
@@ -393,6 +392,7 @@ bool BallAI::stun(float dt) {
 		time += dt;
 		stunDuration -= dt;
 		getBall()->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+		if(stunDuration > 10.0f)
 		return true;
 	}
 	else {
