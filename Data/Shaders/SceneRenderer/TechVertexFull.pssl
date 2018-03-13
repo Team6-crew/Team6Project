@@ -1,3 +1,13 @@
+ConstantBuffer uProjViewMtx
+{
+	column_major matrix projViewMatrix;
+};
+
+ConstantBuffer uModelMtx
+{
+	column_major matrix modelMatrix;
+};
+
 struct VS_INPUT
 {
 	float3 Position		: POSITION0;
@@ -15,7 +25,21 @@ struct VS_OUTPUT
 // To implement
 float3x3 inverse(float3x3 m)
 {
-	return m;
+	float det = determinant(m);
+	float invDet = 1.0 / det;
+	float3x3 minv;
+	
+	minv[0][0] = (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * invDet;
+	minv[0][1] = (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invDet;
+	minv[0][2] = (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invDet;
+	minv[1][0] = (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invDet;
+	minv[1][1] = (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invDet;
+	minv[1][2] = (m[1][0] * m[0][2] - m[0][0] * m[1][2]) * invDet;
+	minv[2][0] = (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invDet;
+	minv[2][1] = (m[2][0] * m[0][1] - m[0][0] * m[2][1]) * invDet;
+	minv[2][2] = (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invDet;
+
+	return minv;
 }
 
 
@@ -23,9 +47,18 @@ float3x3 inverse(float3x3 m)
 VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
-	
-	output.WorldPosition.xyz = input.Position;
 
+
+//	output.WorldPosition = float4(input.Position.xyz, 1);
+
+    output.WorldPosition.xyz = input.Position;
+	output.WorldPosition.w = 1.0f;
+	float4 temp = mul(modelMatrix, projViewMatrix);
+	float4 temp2 = float4(input.Position.xyz, 1.0f);
+	output.WorldPosition = mul((float4)temp ,(column_major float4x1)temp2);
+//	output.UV = input.UV;
+//	output.Normal = mul(transpose(inverse(float3x3(modelMatrix))),  normalize(input.Normal));
+	//output.Normal = input.Normal;
 	
 	return output;
 }
