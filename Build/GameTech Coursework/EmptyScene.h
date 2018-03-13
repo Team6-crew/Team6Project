@@ -26,7 +26,6 @@
 #include <nclgl\Audio\AudioEngineBase.h>
 #include "MainMenu.h"
 #include <nclgl\ResourceManager.h>
-#include "../nclgl/LevelLoader.h"
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -93,11 +92,15 @@ public:
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
-		//GameLogic::Instance()->setnumAI(1);
-		//BallAI::addBallAIPlayers();
+		num_p = GameLogic::Instance()->getnumAI();
+		if (num_p & 0b0001) BallAI::addBallAIPlayers(0);
+		if (num_p & 0b0010) BallAI::addBallAIPlayers(1);
+		if (num_p & 0b0100) BallAI::addBallAIPlayers(2);
+		if (num_p & 0b1000) BallAI::addBallAIPlayers(3);
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
+			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
 		
 		//Who doesn't love finding some common ground?
@@ -127,7 +130,7 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup1->SetPhysics(pickup1->Physics());
 		this->AddGameObject(pickup1);
-		pickup1->y = pickup1->physicsNode->GetPosition().y;
+		
 
 		RandomPickup* pickup2 = new RandomPickup("pickup",
 			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
@@ -138,7 +141,7 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup2->SetPhysics(pickup2->Physics());
 		this->AddGameObject(pickup2);
-		pickup2->y = pickup2->physicsNode->GetPosition().y;
+		
 
 		RandomPickup* pickup3 = new RandomPickup("pickup",
 			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
@@ -149,7 +152,18 @@ public:
 			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup3->SetPhysics(pickup3->Physics());
 		this->AddGameObject(pickup3);
-		pickup3->y = pickup3->physicsNode->GetPosition().y;
+		
+		//testcube- test the texture
+		Washingzone* wz = new Washingzone("washingzone",
+			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		wz->SetPhysics(wz->Physics());
+		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
+		this->AddGameObject(wz);
 		//frame += step;
 		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
@@ -172,24 +186,72 @@ public:
 		}
 		else scene_iterator = 1;
 
+		if (GameLogic::Instance()->spawnPickup()) {
+			RandomPickup* pickup = new RandomPickup("pickup",
+				GameLogic::Instance()->getLastPickupPosition(),
+				1.0f,
+				true,
+				0.5f,
+				true,
+				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			pickup->SetPhysics(pickup->Physics());
+			pickup->Physics()->SetElasticity(0.0f);
+			this->AddGameObject(pickup);
+
+		}
+
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
+			if ((GameLogic::Instance()->getSoftPlayer(i)) && (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false))
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
-		//GameObject * pickup = FindGameObject("pickup");
-		//updown((RandomPickup*)(pickup));
+		/*if (softplayer) {
+			softplayer->getBall()->RemoveRender();
+		}*/
+
 		Scene::OnUpdateScene(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
+				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
+				GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			}
 		}
+		/*if (softplayer) {
+			softplayer->getBall()->RenderSoftbody();
+			softplayer->move(dt);
+		}*/
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move();
+			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
+		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i) {
+			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
+				if ((GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetPosition().y - GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->GetPosition().y > 5)
+					|| GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetPosition().z - GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->GetPosition().z > 5) {
+					GameLogic::Instance()->getSoftPlayer(i)->setIsBroken(true);
+					GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
+					//delete GameLogic::Instance()->getSoftPlayer(i);
+					GameLogic::Instance()->repairSoftPlayer(i);
+					/*softplayer = new PlayerSoftBody("SoftPlayer_" + i,
+						nclgl::Maths::Vector3(3.0f * i, 10.f, 3.0f * i),
+						1.0f,
+						1.0f,
+						GameLogic::Instance()->getColours(i),
+						i);
+					for (int j = 0; j < 182; ++j)
+						softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+					softplayer->setControls(GameLogic::Instance()->getControls(i, 0), GameLogic::Instance()->getControls(i, 1), GameLogic::Instance()->getControls(i, 2), 
+						GameLogic::Instance()->getControls(i, 3), GameLogic::Instance()->getControls(i, 4), GameLogic::Instance()->getControls(i, 5));
+					softplayer->setCamera(GraphicsPipeline::Instance()->GetCameras(i));
+					*GameLogic::Instance()->getSoftPlayer(i) = *softplayer;*/
+					this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
+					this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
+				}
+			}
+		}
+		
 		// Pause Menu
 
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
@@ -284,17 +346,6 @@ public:
 	}
 
 
-
-
-	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
-		{
-			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
-			PhysicsEngine::Instance()->DeleteAfter(kill_ob, 0.0f);
-		}
-		return true;
-	}
 
 	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
@@ -580,6 +631,7 @@ private:
 	Menu * activeMenu;
 	Menu * activeSubmenu;
 	Menu * soundMenu;
+	PlayerSoftBody* softplayer;
 
 	float Score = 0.0f;
 

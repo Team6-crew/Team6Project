@@ -20,7 +20,7 @@ LevelLoader::~LevelLoader()
 bool LevelLoader::Load(const std::string& filename)
 {
 	string info;
-	ifstream levelfile("SimpleLevel.txt");
+	ifstream levelfile("Level1.txt");
 	if (levelfile.is_open()) {
 		cout << "File opened" << endl;
 

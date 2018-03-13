@@ -326,12 +326,13 @@ public:
 
 						}
 						else if (humanOrAi[i] == 2) {
-							numOfAi++;
+							numOfAi += pow(2, i);
 						}
 					}
 					if (numOfPlayers != 0) {
 						getControls();
 						GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
+						GameLogic::Instance()->setnumAI(numOfAi);
 						GraphicsPipeline::Instance()->ChangeScene();
 						SceneManager::Instance()->JumpToScene("Team Project");
 						GameLogic::Instance()->setSeconds(seconds);

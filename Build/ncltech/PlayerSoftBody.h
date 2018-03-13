@@ -22,6 +22,7 @@ public:
 	GameObject* getTop();
 	GameObject* getBottom();
 	GameObject* getFront();
+	GameObject* getBack();
 
 	
 	void setRadius(float radius) { rad = radius; }
@@ -90,6 +91,9 @@ public:
 	void setCurrentBuff(Tags tag);
 	Tags getCurrentBuff() { return currentBuff; }
 
+	void setIsBroken(bool broken) { isbroken = broken; }
+	bool getIsBroken() { return isbroken; }
+
 
 	void move(float dt);
 
@@ -148,5 +152,7 @@ private:
 	Tags currentBuff;
 
 	nclgl::Maths::Vector4 colour;
+
+	bool isbroken = false;
 	int index;
 };

@@ -204,7 +204,10 @@ int main()
 		else
 		{
 			if (GameLogic::Instance()->levelIsLoaded())
-			{
+			{   
+				if (GameLogic::Instance()->gameHasStarted()) {
+					GameLogic::Instance()->increaseActualGameTime(dt);
+				}
 				GameLogic::Instance()->increaseTotalTime(dt);
 				GraphicsPipeline::Instance()->RenderScene(dt);
 

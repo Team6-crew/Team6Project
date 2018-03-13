@@ -14,7 +14,6 @@
 class GameObject;
 class StateMachine;
 
-
 class RoamingState : public State
 {
 	public:
@@ -35,7 +34,6 @@ public:
 	nclgl::Maths::Vector3 followPath(StateMachine* sOwner);
 
 private:
-	//std::vector<nclgl::Maths::Vector3> nodesList;
 	State * chasingState;
 };
 

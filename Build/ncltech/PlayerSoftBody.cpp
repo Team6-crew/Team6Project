@@ -73,9 +73,7 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
 
-	camera = new Camera();
-	camera->SetYaw(0.f);
-	camera->SetPitch(-20.0f);
+	
 
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
@@ -83,8 +81,8 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
 
-	tempPitch = camera->GetPitch();
-	tempYaw = camera->GetYaw();
+	tempPitch = -20.f;
+	tempYaw = 0.0f;
 	colour = color;
 }
 
@@ -140,6 +138,11 @@ GameObject* PlayerSoftBody::getFront() {
 		back = ball->softball[k + 9];
 
 	return front;
+}
+
+GameObject* PlayerSoftBody::getBack() {
+	getFront();
+	return back;
 }
 
 void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
@@ -206,6 +209,7 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 			otherRenderNode->SetColourFromPlayer((*thisNode->GetParent()->Render()->GetChildIteratorStart())->GetColour());
 			otherRenderNode->SetBeingPainted(true);
 			otherRenderNode->SetPaintPercentage(0.0f);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"paintbomb.wav", false);
 		}
 	}
 	else if (otherNode->GetParent()->HasTag(Tags::TWash)) {
@@ -238,6 +242,7 @@ void PlayerSoftBody::unequipStunWeapon() {
 
 void PlayerSoftBody::shoot() {
 	if (equippedStunWeapon) {
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
@@ -247,6 +252,7 @@ void PlayerSoftBody::shoot() {
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
 	else if (equippedPaintWeapon) {
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
 		nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getTop()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f - forward * 2.0f;
@@ -374,6 +380,7 @@ void PlayerSoftBody::handleInput(float dt) {
 		if ((Window::GetKeyboard()->KeyTriggered(move_jump)))
 		{
 			if (canjump == true) {
+				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"jump2.wav", false);
 				for (int i = 0; i < 182; ++i) {
 					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
 				}
@@ -475,7 +482,7 @@ void PlayerSoftBody::speedLimit() {
 }
 
 void PlayerSoftBody::wallLimit() {
-	if (WORLD_SIZE - front->Physics()->GetPosition().x < 3) {
+	if (WORLD_SIZE - front->Physics()->GetPosition().x < 4) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
@@ -487,7 +494,7 @@ void PlayerSoftBody::wallLimit() {
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
 		}
 	}
-	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 3) {
+	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 5.5) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);

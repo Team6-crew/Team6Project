@@ -15,12 +15,8 @@ public:
 	~RandomPickup();
 	
 	virtual void Effect(PlayerSoftBody* player);
-
-
-	bool updown = true;
-	float y;
-	virtual void setupdowm(bool ud) { updown = ud; }
-	virtual bool getupdown() { return updown; }
-	void Updown();
+	virtual void Effect(BallAI* AIBall);
+private:
+	bool enabled;
 };
 

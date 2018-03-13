@@ -25,7 +25,7 @@ public:
 	int getNumNetPlayers() { return netPlayers.size(); }
 	int getNumSoftPlayers() { return softplayers.size(); }
 	int getNumAIPlayers() { return aiPlayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size(); }
+	int getTotalPlayers() { return players.size() + softplayers.size();}
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
 	bool gameHasStarted() { return gameStarted; }
@@ -33,7 +33,14 @@ public:
 	void setLevelIsLoaded(bool l) { levelLoaded = l; }
 	void setGameHasStarted(bool l) { gameStarted = l; }
 	
+	float getActualGameTime() { return actualGameTime; }
+	void increaseActualGameTime(float dt) { actualGameTime +=dt; }
+	
+	bool isServer() { return server; }
+	void setIsServer(bool s) { server = s; }
 
+	bool spawnPickup();
+	nclgl::Maths::Vector3 getLastPickupPosition() { return lastPickupPosition; }
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
 	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
@@ -49,6 +56,7 @@ public:
 	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
 	};
 
+	void repairSoftPlayer(int num_splayers);
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
 	void setnumAI(int nAI) { numAI = nAI; };
@@ -68,6 +76,7 @@ public:
 
 	int getSeconds() { return seconds; }
 	void setSeconds(int sec) { seconds = sec; }
+	nclgl::Maths::Vector4 getColours(int col) { return colours[col]; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
@@ -94,6 +103,13 @@ private:
 	bool levelLoaded;
 	float totalTime;
 	bool gameStarted;
+	float actualGameTime;
+
+	bool server;
+
+	nclgl::Maths::Vector3 lastPickupPosition;
+	bool canspawn;
+	int pickupnum;
 	map <GameObject * , int> PlayerCapturedObject;
 	int seconds;
 };
