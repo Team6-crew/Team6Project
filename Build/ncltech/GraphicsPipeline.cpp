@@ -305,7 +305,18 @@ void GraphicsPipeline::StartCounter() {
 }
 
 void GraphicsPipeline::BuffHUD(int i) {
+	std::cout << "i:" << i << std::endl;
+	if (GameLogic::Instance()->getNumSoftPlayers() < (i - 1)){
+		return;
+	}
+
+	if (!GameLogic::Instance()->getSoftPlayer(i))
+	{
+		return;
+	}
+
 	if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BPaint) {
+		std::cout << "Reached" << std::endl;
 		paintQuad->ReplaceTexture(buff_paint_tex, 0);
 	}
 	else if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BStun) {
@@ -592,6 +603,8 @@ void GraphicsPipeline::RenderScene(float dt)
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
+		std::cout << i << std::endl;
+		std::cout << GameLogic::Instance()->getNumSoftPlayers() << std::endl;
 		BuffHUD(i);
 	
 

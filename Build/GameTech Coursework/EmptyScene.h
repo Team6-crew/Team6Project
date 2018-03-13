@@ -329,6 +329,7 @@ public:
 				levelLoader.DeleteMapObjects();
 				this->DeleteAllGameObjects();
 				GraphicsPipeline::Instance()->ClearPaintableObjects();
+				GameLogic::Instance()->clearPlayers();
 
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))

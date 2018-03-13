@@ -218,6 +218,7 @@ void GameLogic::clearGameLogic()
 	netPlayers.clear();
 	softplayers.clear();
 	paint_perc.clear();	
+	
 }
 
 void GameLogic::SwitchLevels(int idx)

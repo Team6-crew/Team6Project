@@ -243,14 +243,17 @@ int main()
 					LevelLoader levelLoader;
 					levelLoader.DeleteMapObjects();
 					GraphicsPipeline::Instance()->ClearPaintableObjects();
+					GameLogic::Instance()->clearPlayers();
 					std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
 					SceneManager::Instance()->JumpToScene("Team Project");
+
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
 					LevelLoader levelLoader;
 					levelLoader.DeleteMapObjects();
 					GraphicsPipeline::Instance()->ClearPaintableObjects();
+					GameLogic::Instance()->clearPlayers();
 					std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
 					SceneManager::Instance()->JumpToScene("Main Menu");
 				}
