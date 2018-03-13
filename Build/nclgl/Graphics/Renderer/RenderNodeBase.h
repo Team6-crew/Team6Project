@@ -45,7 +45,7 @@ public:
 	// Children
 	void	AddChild(RenderNodeBase* s);
 	bool	RemoveChild(RenderNodeBase* s, bool recursive = true);
-
+	void	RemoveChildren();
 	std::vector<RenderNodeBase*>::const_iterator GetChildIteratorStart() { return children.begin(); }
 	std::vector<RenderNodeBase*>::const_iterator GetChildIteratorEnd() { return children.end(); }
 

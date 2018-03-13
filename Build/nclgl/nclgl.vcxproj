@@ -137,7 +137,6 @@
     <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="RenderNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Launchpad.h" />
     <ClInclude Include="TSingleton.h" />

@@ -15,12 +15,13 @@ enum Tags {
 	TPortal_A,
 	TPortal_B,	 
 	TWash,
-	TRamp,
 	BPaint,
 	BStun,
 	BSpeed,
 	BNothing,
 	TWeapon,
 	TRandomPickup,
-	TAIPlayer
+	TAIPlayer,
+	TCubes,
+	TRotCubes
 };

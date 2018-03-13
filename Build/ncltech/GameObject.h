@@ -54,7 +54,11 @@ public:
 
 	virtual ~GameObject()
 	{
-		if (renderNode)  GraphicsPipeline::Instance()->RemoveRenderNode(renderNode);
+		if (renderNode)
+		{
+			renderNode->RemoveChildren();
+			GraphicsPipeline::Instance()->RemoveRenderNode(renderNode);
+		}
 		if (physicsNode) PhysicsEngine::Instance()->RemovePhysicsObject(physicsNode);
 
 		SAFE_DELETE(renderNode);

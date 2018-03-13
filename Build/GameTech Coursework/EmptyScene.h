@@ -327,7 +327,8 @@ public:
 				//Delete objects from the scene
 				LevelLoader levelLoader;
 				levelLoader.DeleteMapObjects();
-				std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
+				this->DeleteAllGameObjects();
+				GraphicsPipeline::Instance()->ClearPaintableObjects();
 
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))

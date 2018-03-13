@@ -198,8 +198,7 @@ protected:
 
 		for (auto obj : m_vpObjects) {
 			if (obj->physicsNode != NULL){				
-					SAFE_DELETE(obj);			
-				
+					SAFE_DELETE(obj);	
 			}			
 		}
 				 

@@ -153,6 +153,8 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				false,
 				object.colour);
 			scene->AddGameObject(geometry);
+			geometry->SetTag(Tags::TCubes);
+			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TCubes);
 			break;
 
 		case GEOMETRY_ROTATABLE_CUBOID:
@@ -168,6 +170,8 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.rotAxis,
 				object.rotationDegrees);
 			scene->AddGameObject(geometry);
+			geometry->SetTag(Tags::TRotCubes);
+			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TRotCubes);
 			break;
 
 		case PAINTABLE_CUBE:
