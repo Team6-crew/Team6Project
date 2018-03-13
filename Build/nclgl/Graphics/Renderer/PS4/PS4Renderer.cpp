@@ -117,8 +117,9 @@ void	PS4Renderer::SetDefaultSettings()
 
 	// Setup depth testing
 	depthControlSetup.init();
-	depthControlSetup.setDepthEnable(true);
+	depthControlSetup.setDepthEnable(false);
 	depthControlSetup.setDepthControl(kDepthControlZWriteEnable, sce::Gnm::kCompareFuncLessEqual);
+	depthControlSetup.setDepthControl(kDepthControlZWriteDisable, sce::Gnm::kCompareFuncLessEqual);
 	////Screen Access State
 	if (currentGFXContext)
 	{
@@ -129,7 +130,7 @@ void	PS4Renderer::SetDefaultSettings()
 	}
 	// Set up alpha blending
 	blendControlSetup.init();
-	blendControlSetup.setBlendEnable(true);
+	blendControlSetup.setBlendEnable(false);
 	blendControlSetup.setAlphaEquation(kBlendMultiplierSrcAlpha, kBlendFuncAdd, kBlendMultiplierOneMinusSrcAlpha);
 	if (currentGFXContext)
 	{
@@ -496,15 +497,15 @@ void		PS4Renderer::RegisterBuffer(FrameBufferBase* s)
 
 }
 
-void*		PS4Renderer::AllocateMemory(MemoryLocation location, uint sizeBytes)
+void*		PS4Renderer::AllocateMemory(MemoryLocation location, uint sizeBytes, uint aligninbytes)
 {
 	switch (location)
 	{
 	case GARLIC:
-		return stackAllocators[GARLIC].allocate(sce::Gnm::SizeAlign(sizeBytes, sce::Gnm::kAlignmentOfShaderInBytes));
+		return stackAllocators[GARLIC].allocate(sce::Gnm::SizeAlign(sizeBytes, aligninbytes));
 		break;
 	case ONION:
-		return stackAllocators[ONION].allocate(sce::Gnm::SizeAlign(sizeBytes, sce::Gnm::kAlignmentOfShaderInBytes
+		return stackAllocators[ONION].allocate(sce::Gnm::SizeAlign(sizeBytes, aligninbytes
 		));
 		break;
 	default:

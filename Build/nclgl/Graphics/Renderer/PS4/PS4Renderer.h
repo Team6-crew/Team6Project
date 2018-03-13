@@ -67,7 +67,7 @@ public:
 	void					RegisterBuffer(FrameBufferBase* s) override;
 	void					RegisterMesh(MeshBase* s) override;
 
-	void*					AllocateMemory(MemoryLocation location, uint sizeBytes);
+	void*					AllocateMemory(MemoryLocation location, uint sizeBytes, uint aligninbytes = 256);
 protected:// Setup functions 
 	void			 InitialiseMemoryAllocators();
 	void			 InitialiseVideoSystem();

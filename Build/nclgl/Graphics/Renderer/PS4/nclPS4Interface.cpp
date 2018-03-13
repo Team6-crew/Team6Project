@@ -14,6 +14,7 @@ sce::Vectormath::Scalar::Aos::Matrix4 nclToPS4(const nclgl::Maths::Matrix4& mat)
 	outMat.setCol3(sce::Vectormath::Scalar::Aos::Vector4(mat.values[3], mat.values[7], mat.values[11], mat.values[15]));
 
 
+
 	return outMat;
 }
 

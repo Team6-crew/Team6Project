@@ -113,6 +113,9 @@ void PS4FrameBuffer::Activate()
 	}
 	else {
 		currentGFXContext->setRenderTargetMask(0xF);
+
+		//currentGFXContext->setRenderTargetMask(0x0);
+
 		// Not every FBO has a CT/DT
 		if (hasColor) {
 			currentGFXContext->setRenderTarget(0, &this->colourTarget.at(0));

@@ -18,14 +18,18 @@
 //const float NORMAL_BIAS = 0.003f;
 //const float RAW_BIAS 	= 0.00025f;
 // .....................End of shadow stuff...........................
+SamplerState samp0 : register(s0);
+Texture2D uDiffuseTex : register( t0 );
+
 struct VS_OUTPUT
 {
 	float4 WorldPosition  : S_POSITION;
+	float2 UV			: TEXCOORD0;
 };
 
 float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 {
-
-	float4 OutFrag = float4(0.0, 1.0, 0.0, 1.0);
+	float4 texColour 	= uDiffuseTex.Sample(samp0, In.UV.xy);
+	float4 OutFrag = texColour;
 	return OutFrag;
 }

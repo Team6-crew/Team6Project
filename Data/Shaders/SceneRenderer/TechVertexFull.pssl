@@ -20,8 +20,9 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
 	float4 WorldPosition  : S_POSITION;
+	float2 UV			: TEXCOORD0;
 };
-
+/*
 // To implement
 float3x3 inverse(float3x3 m)
 {
@@ -41,7 +42,7 @@ float3x3 inverse(float3x3 m)
 
 	return minv;
 }
-
+*/
 
 
 VS_OUTPUT main(VS_INPUT input)
@@ -51,12 +52,60 @@ VS_OUTPUT main(VS_INPUT input)
 
 //	output.WorldPosition = float4(input.Position.xyz, 1);
 
-    output.WorldPosition.xyz = input.Position;
-	output.WorldPosition.w = 1.0f;
-	float4 temp = mul(modelMatrix, projViewMatrix);
-	float4 temp2 = float4(input.Position.xyz, 1.0f);
-	output.WorldPosition = mul((float4)temp ,(column_major float4x1)temp2);
-//	output.UV = input.UV;
+    // output.WorldPosition.xyz = input.Position;
+
+	 //output.WorldPosition.z = 0.001f;
+	//output.WorldPosition.w  = 0.1f;
+
+	//if(output.WorldPosition.y < 0.0f) {
+	//	output.WorldPosition.y *= 100.1;
+	//}
+	//
+	//if(output.WorldPosition.y > 0.0f) {
+	//	output.WorldPosition.y *= 100000.1;
+	//}
+
+
+	//output.WorldPosition = float4(output.WorldPosition.x * 100.0, output.WorldPosition.y, 0.0, 1.0035);
+
+
+	output.WorldPosition = mul(mul(projViewMatrix, modelMatrix), float4(input.Position.xyz, 1.0f));
+
+	//float4 pos = float4(input.Position.xyz, 1.0f);
+
+	//pos = mul(modelMatrix, pos);
+//	pos = mul(projViewMatrix, pos);
+
+	//pos = mul(mul(projViewMatrix, modelMatrix), pos);
+
+	//output.WorldPosition = pos;
+
+	//output.WorldPosition = mul(projViewMatrix, float4(input.Position.xyz, 1.0f));
+	//output.WorldPosition.z = 0.0f;
+
+	//output.WorldPosition.xyz /= output.WorldPosition.w;
+	//
+	//output.WorldPosition.w = 1.0f;
+
+	//output.WorldPosition.x = clamp(output.WorldPosition.x, -0.999f, 0.999f);
+	//output.WorldPosition.y = clamp(output.WorldPosition.y, -0.999f, 0.999f);
+	//output.WorldPosition.z = clamp(output.WorldPosition.z, -0.999f, 0.999f);
+
+	//output.WorldPosition.x = clamp(output.WorldPosition.x, -0.99f, 0.99f);
+	//
+	//output.WorldPosition.y = clamp(output.WorldPosition.y, -0.99f, 0.99f);
+	//
+	//
+	//output.WorldPosition.z = clamp(output.WorldPosition.z, -0.99f, 0.99f);
+	//
+	//output.WorldPosition.z = 0.0f;
+	//
+	//output.WorldPosition.w = clamp(output.WorldPosition.w, -0.99f, 0.99f);
+	//
+	//
+	//output.WorldPosition.w = 1.1f;
+
+	output.UV = input.UV;
 //	output.Normal = mul(transpose(inverse(float3x3(modelMatrix))),  normalize(input.Normal));
 	//output.Normal = input.Normal;
 	
