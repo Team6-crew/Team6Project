@@ -363,6 +363,7 @@ void PlayerSoftBody::handleInput(float dt) {
 				for (int i = 0; i < 182; ++i) {
 					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
 				}
+
 				canjump = false;
 			}
 		}
