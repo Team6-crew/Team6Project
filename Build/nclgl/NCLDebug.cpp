@@ -969,6 +969,8 @@ void NCLDebug::_RenderDrawlist(uint* offsets)
 {
 	float aspectRatio = Window::GetWindow().GetScreenSize().y / Window::GetWindow().GetScreenSize().x;
 
+	glViewport(0, 0, Window::GetWindow().GetScreenSize().x, Window::GetWindow().GetScreenSize().y);
+
 	uint n_points = (offsets[1] - offsets[0]) >> 1;
 	uint n_tlines = (offsets[2] - offsets[1]) >> 1;
 	uint n_hlines = (offsets[3] - offsets[2]) >> 1;
@@ -1031,6 +1033,9 @@ void NCLDebug::_RenderDebugClipSpace()
 {
 	//All text data already updated in main DebugDrawLists
 	// - we just need to rebind and draw it
+
+	glViewport(0, 0, Window::GetWindow().GetScreenSize().x, Window::GetWindow().GetScreenSize().y);
+
 
 	if (g_pShaderText && g_vChars.size() > 0)
 	{

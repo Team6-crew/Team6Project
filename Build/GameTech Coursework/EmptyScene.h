@@ -370,6 +370,8 @@ public:
 				DeleteAllGameObjects();
 				m_UpdateCallbacks.clear();
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+				GameLogic::Instance()->setIsGamePaused(false);
+				isPaused = false;
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
