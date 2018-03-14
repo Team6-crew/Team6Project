@@ -2,9 +2,8 @@
 #pragma once
 
 #include <nclgl\GameTimerBase.h>
-//#include <texture_tool\raw\timer.h>
 
-//#include <chrono>
+#include <chrono>
 
 
 class PS4GameTimer: public GameTimerBase {
@@ -19,11 +18,11 @@ public:
 	float	GetTimedMS();
 
 protected:
-	float	start;			//Start of timer
-	float	frequency ;		//Ticks Per Second
+	std::chrono::time_point<std::chrono::system_clock> 	start;			//Start of timer
+	std::chrono::time_point<std::chrono::system_clock> 	frequency ;		//Ticks Per Second
 
 	float lastTime = 0;					//Last time GetTimedMS was called
-	//sce::TextureTool::Raw::Timer t;
+	
 };
 
 #endif

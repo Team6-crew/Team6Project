@@ -132,14 +132,15 @@ bool PS4Input::IsAction(InputToken action)
 		return (GetAxis(LEFT_STICK).y > 0.5);
 		break;
 	case LEFT:
-		return (GetAxis(LEFT_STICK).x  > 0.5);
+		return (GetAxis(LEFT_STICK).x  < -0.5);
 		break;
 	case RIGHT:
-		return (GetAxis(LEFT_STICK).x <  -0.5);
+		return (GetAxis(LEFT_STICK).x > 0.5);
 		break;
 	case ACTION_A:
 		return GetButtonDown(TRIANGLE);
 		break;
+
 	default:
 		return false;
 	}

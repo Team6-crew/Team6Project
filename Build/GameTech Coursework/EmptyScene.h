@@ -48,7 +48,7 @@ public:
 		player1->SetPhysics(player1->Physics());*/
 
 		player1 = new Player("player",
-			nclgl::Maths::Vector3(0.0f, 1.f, 0.0f),
+			nclgl::Maths::Vector3(0.0f, 10.f, 0.0f),
 			1.0f,
 			true,
 			1.0f,

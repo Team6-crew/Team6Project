@@ -3,8 +3,8 @@
 
 enum Button {
 	TRIANGLE = 0,
- CIRCLE,
- CROSS,
+     CIRCLE,
+    CROSS,
 	SQUARE
 };
 

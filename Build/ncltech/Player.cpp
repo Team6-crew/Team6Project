@@ -153,9 +153,7 @@ void Player::move() {
 	}
 
 	bodyRenderNode->SetTransform(Matrix4::Rotation(rotation, Vector3(0, 1, 0))*bodyRenderNode->GetTransform());
-	std::cout << "Before:" << camera->GetPosition() << std::endl;
 	camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
-	std::cout << "After:" << camera->GetPosition() << std::endl;
 }
 
 bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
