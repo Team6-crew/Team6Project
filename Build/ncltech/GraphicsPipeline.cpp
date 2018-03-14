@@ -146,8 +146,9 @@ void GraphicsPipeline::UpdateScene(float dt)
 //	if (!ScreenPicker::Instance()->HandleMouseClicks(dt))
 	//	camera->HandleMouse(dt);
 
-	camera->HandleKeyboard(dt);
 	renderer->SetViewMatrix(camera->BuildViewMatrix());
+	nclgl::Maths::Matrix4 gotProjMat = renderer->GetProjMatrix();
+	nclgl::Maths::Matrix4 gotViewMat = renderer->GetViewMatrix();
 	projViewMatrix = renderer->GetProjMatrix() * renderer->GetViewMatrix();
 
 	//NCLDebug::_SetDebugDrawData(
@@ -189,7 +190,7 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
 		shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
 
-
+		renderer->SetDefaultDepthState();
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
 			{
@@ -210,7 +211,7 @@ void GraphicsPipeline::RenderScene()
 		shaderPresentToWindow->SetUniform("uColorTex", 0);
 		shaderPresentToWindow->SetUniform("uGammaCorrection", gammaCorrection);
 		shaderPresentToWindow->SetUniform("uNumSuperSamples", superSamples);
-		shaderPresentToWindow->SetUniform("ShaderConstants", nclgl::Maths::Matrix4());
+		//shaderPresentToWindow->SetUniform("ShaderConstants", nclgl::Maths::Matrix4());
 		shaderPresentToWindow->SetUniform("uSinglepixel", Vector2(1.f / screenTexWidth, 1.f / screenTexHeight));
 		fullscreenQuad->SetTexture(screenTexColor);
 		fullscreenQuad->Draw();

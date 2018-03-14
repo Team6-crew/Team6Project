@@ -10,6 +10,10 @@ PS4RenderNode::PS4RenderNode(MeshBase* m, OBJMeshBase* objm, nclgl::Maths::Vecto
 	objMesh = (PS4OBJMesh*)objm;
 	psMesh = (PS4Mesh*)m;
 	this->colour = nclToPS4(colour);
+	modelScale = Vector3(1, 1, 1);
+
+	worldTransform = Matrix4::identity();
+	transform = Matrix4::identity();
 }
 
 

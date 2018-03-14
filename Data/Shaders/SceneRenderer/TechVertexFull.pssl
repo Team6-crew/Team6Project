@@ -1,11 +1,11 @@
 ConstantBuffer uProjViewMtx
 {
-	column_major matrix projViewMatrix;
+	row_major matrix projViewMatrix;
 };
 
 ConstantBuffer uModelMtx
 {
-	column_major matrix modelMatrix;
+	row_major matrix modelMatrix;
 };
 
 struct VS_INPUT
@@ -49,65 +49,13 @@ VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
 
-
-//	output.WorldPosition = float4(input.Position.xyz, 1);
-
-    // output.WorldPosition.xyz = input.Position;
-
-	 //output.WorldPosition.z = 0.001f;
-	//output.WorldPosition.w  = 0.1f;
-
-	//if(output.WorldPosition.y < 0.0f) {
-	//	output.WorldPosition.y *= 100.1;
-	//}
-	//
-	//if(output.WorldPosition.y > 0.0f) {
-	//	output.WorldPosition.y *= 100000.1;
-	//}
-
-
-	//output.WorldPosition = float4(output.WorldPosition.x * 100.0, output.WorldPosition.y, 0.0, 1.0035);
-
-
-	output.WorldPosition = mul(mul(projViewMatrix, modelMatrix), float4(input.Position.xyz, 1.0f));
-
-	//float4 pos = float4(input.Position.xyz, 1.0f);
-
-	//pos = mul(modelMatrix, pos);
-//	pos = mul(projViewMatrix, pos);
-
-	//pos = mul(mul(projViewMatrix, modelMatrix), pos);
-
-	//output.WorldPosition = pos;
-
-	//output.WorldPosition = mul(projViewMatrix, float4(input.Position.xyz, 1.0f));
-	//output.WorldPosition.z = 0.0f;
-
-	//output.WorldPosition.xyz /= output.WorldPosition.w;
-	//
-	//output.WorldPosition.w = 1.0f;
-
-	//output.WorldPosition.x = clamp(output.WorldPosition.x, -0.999f, 0.999f);
-	//output.WorldPosition.y = clamp(output.WorldPosition.y, -0.999f, 0.999f);
-	//output.WorldPosition.z = clamp(output.WorldPosition.z, -0.999f, 0.999f);
-
-	//output.WorldPosition.x = clamp(output.WorldPosition.x, -0.99f, 0.99f);
-	//
-	//output.WorldPosition.y = clamp(output.WorldPosition.y, -0.99f, 0.99f);
-	//
-	//
-	//output.WorldPosition.z = clamp(output.WorldPosition.z, -0.99f, 0.99f);
-	//
-	//output.WorldPosition.z = 0.0f;
-	//
-	//output.WorldPosition.w = clamp(output.WorldPosition.w, -0.99f, 0.99f);
-	//
-	//
-	//output.WorldPosition.w = 1.1f;
-
+  //  output.WorldPosition = mul(projViewMatrix, mul(modelMatrix,float4(input.Position, 1)));
+	//output.WorldPosition = mul(mul(modelMatrix,projViewMatrix), float4(input.Position.xyz, 1));
+	output.WorldPosition = mul(mul(projViewMatrix,modelMatrix), float4(input.Position.xyz, 1));
+  // output.WorldPosition = mul(projViewMatrix,float4(input.Position, 1));
 	output.UV = input.UV;
 //	output.Normal = mul(transpose(inverse(float3x3(modelMatrix))),  normalize(input.Normal));
-	//output.Normal = input.Normal;
+
 	
 	return output;
 }

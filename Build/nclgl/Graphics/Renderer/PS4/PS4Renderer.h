@@ -38,6 +38,8 @@ public:
 	PS4Renderer();
 	~PS4Renderer();
 
+	void SetDefaultDepthState();
+
 	// Make override when integrate
 	void	SwapBuffers() override;
 

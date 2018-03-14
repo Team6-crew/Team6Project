@@ -48,4 +48,5 @@ protected:
 	static OBJMeshBase* m_pSphere;
 
 	static TextureBase* m_pCheckerboardTex;
+	static TextureBase* m_pDogeTex;
 };

@@ -42,6 +42,8 @@ public:
 	virtual void	PostRender() = 0;
 
 
+	virtual void	SetDefaultDepthState() {}
+
 	virtual void	RegisterShader(ShaderBase* s) = 0;
 	virtual void	RegisterTexture(TextureBase* s) = 0;
 	virtual void	RegisterNode(RenderNodeBase* s) = 0;

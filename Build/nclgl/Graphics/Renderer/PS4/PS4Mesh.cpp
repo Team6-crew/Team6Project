@@ -121,8 +121,13 @@ void PS4Mesh::SetupQuadVectors()
 	for (int i = 0; i < numVertices; ++i) {
 		normals[i] = Vector3(0, 0, 1);
 		tangents[i] = Vector3(1, 0, 0);
-		indices[i] = i;
+		
 	}
+
+	indices[0] = 0;
+	indices[1] = 2;
+	indices[2] = 1;
+	indices[3] = 3;
 
 }
 void PS4Mesh::InitAttributeBuffer(sce::Gnm::Buffer &buffer, sce::Gnm::DataFormat format, void*offset)

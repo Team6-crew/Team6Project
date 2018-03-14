@@ -108,8 +108,8 @@ void	PS4Renderer::SetDefaultSettings()
 {
 	// Turn on face culling
 	primitiveSetup.init();
-	primitiveSetup.setCullFace(kPrimitiveSetupCullFaceFront);
-	primitiveSetup.setFrontFace(kPrimitiveSetupFrontFaceCcw);
+	primitiveSetup.setCullFace(kPrimitiveSetupCullFaceBack);
+	primitiveSetup.setFrontFace(kPrimitiveSetupFrontFaceCw);
 	if (currentGFXContext)
 	{
 		currentGFXContext->setPrimitiveSetup(primitiveSetup);
@@ -117,9 +117,9 @@ void	PS4Renderer::SetDefaultSettings()
 
 	// Setup depth testing
 	depthControlSetup.init();
-	depthControlSetup.setDepthEnable(false);
+	depthControlSetup.setDepthEnable(true);
 	depthControlSetup.setDepthControl(kDepthControlZWriteEnable, sce::Gnm::kCompareFuncLessEqual);
-	depthControlSetup.setDepthControl(kDepthControlZWriteDisable, sce::Gnm::kCompareFuncLessEqual);
+
 	////Screen Access State
 	if (currentGFXContext)
 	{
@@ -510,6 +510,31 @@ void*		PS4Renderer::AllocateMemory(MemoryLocation location, uint sizeBytes, uint
 		break;
 	default:
 		std::cout << "Invalid location" << std::endl;
+	}
+}
+
+
+
+void PS4Renderer::SetDefaultDepthState()
+{
+	depthControlSetup.init();
+	depthControlSetup.setDepthEnable(true);
+	depthControlSetup.setDepthControl(kDepthControlZWriteEnable, sce::Gnm::kCompareFuncLessEqual);
+
+	////Screen Access State
+	if (currentGFXContext)
+	{
+
+		currentGFXContext->setDepthStencilControl(depthControlSetup);
+		//currentGFXContext->setBlendControl(blendControlSetup);
+
+	}
+	primitiveSetup.init();
+	primitiveSetup.setCullFace(kPrimitiveSetupCullFaceBack);
+	primitiveSetup.setFrontFace(kPrimitiveSetupFrontFaceCcw);
+	if (currentGFXContext)
+	{
+		currentGFXContext->setPrimitiveSetup(primitiveSetup);
 	}
 }
 #endif
