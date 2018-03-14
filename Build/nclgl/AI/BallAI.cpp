@@ -373,7 +373,8 @@ void BallAI::shoot() {
 
 	BallAI * owner = dynamic_cast<BallAI*>(AIStateMachine->getOwner()); // cannot get nodes list any other way
 	nclgl::Maths::Vector3 goal = owner->getNode(owner->getCurrentNode());
-	forward = goal - getBall()->Physics()->GetPosition();
+	forward = getBall()->Physics()->GetLinearVelocity();
+	forward.Normalise();
 
 	if (equippedStunWeapon) {
 		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"shoot.wav", false);
@@ -381,7 +382,7 @@ void BallAI::shoot() {
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f;
 		StunProjectile* projectile = new StunProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
-		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 4.0f, 0.f, -forward.z * 5.0f));
+		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 40.0f, 0.f, -forward.z * 40.0f));
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
@@ -391,7 +392,7 @@ void BallAI::shoot() {
 		nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
 		nclgl::Maths::Vector3 pos = getBall()->Physics()->GetPosition() + nclgl::Maths::Vector3(0, 3, 0) - right * 1.5f;
 		PaintProjectile* projectile = new PaintProjectile("p", pos, 0.3f, true, 0.5f, true, colour);
-		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 4.0f, 0.f, -forward.z * 5.0f));
+		projectile->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(-forward.x * 40.0f, 0.f, -forward.z * 40.0f));
 		SceneManager::Instance()->GetCurrentScene()->AddGameObject(projectile);
 		PhysicsEngine::Instance()->DeleteAfter(projectile, 3.0f);
 	}
