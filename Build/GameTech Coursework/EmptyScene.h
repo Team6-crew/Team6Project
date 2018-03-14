@@ -252,58 +252,34 @@ public:
 		}
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			if ((GameLogic::Instance()->getSoftPlayer(i)) && (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false))
+			if (GameLogic::Instance()->getSoftPlayer(i))
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
-		/*if (softplayer) {
-			softplayer->getBall()->RemoveRender();
-		}*/
 
 		Scene::OnUpdateScene(dt);
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
+
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
-				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-				GameLogic::Instance()->getSoftPlayer(i)->move(dt);
-				for (int j = 0; j < 4; j++) {
-					GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
-				}
-				
+			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
+			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			for (int j = 0; j < 4; j++) {
+				GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
 			}
 		}
-		/*if (softplayer) {
-			softplayer->getBall()->RenderSoftbody();
-			softplayer->move(dt);
-		}*/
+	
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
 			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i) {
-			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
 				if ((GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetPosition().y - GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->GetPosition().y > 5)
 					|| GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetPosition().z - GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->GetPosition().z > 5) {
-					GameLogic::Instance()->getSoftPlayer(i)->setIsBroken(true);
 					GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
-					//delete GameLogic::Instance()->getSoftPlayer(i);
 					GameLogic::Instance()->repairSoftPlayer(i);
-					/*softplayer = new PlayerSoftBody("SoftPlayer_" + i,
-						nclgl::Maths::Vector3(3.0f * i, 10.f, 3.0f * i),
-						1.0f,
-						1.0f,
-						GameLogic::Instance()->getColours(i),
-						i);
-					for (int j = 0; j < 182; ++j)
-						softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
-					softplayer->setControls(GameLogic::Instance()->getControls(i, 0), GameLogic::Instance()->getControls(i, 1), GameLogic::Instance()->getControls(i, 2), 
-						GameLogic::Instance()->getControls(i, 3), GameLogic::Instance()->getControls(i, 4), GameLogic::Instance()->getControls(i, 5));
-					softplayer->setCamera(GraphicsPipeline::Instance()->GetCameras(i));
-					*GameLogic::Instance()->getSoftPlayer(i) = *softplayer;*/
 					this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 					this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 				}
-			}
 		}
 		
 		// Pause Menu
