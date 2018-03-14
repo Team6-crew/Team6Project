@@ -208,7 +208,7 @@ public:
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
-			GameLogic::Instance()->getSoftPlayer(i)->serverMove(dt);
+			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
 		}
 
 

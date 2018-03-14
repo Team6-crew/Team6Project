@@ -243,6 +243,7 @@ public:
 		}
 		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
 			GameLogic::Instance()->getNetPlayer(i)->getBall()->RenderSoftbody();
+			GameLogic::Instance()->getNetPlayer(i)->serverMove(dt);
 		}
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
 			GameLogic::Instance()->getAIPlayer(j)->move(dt);
