@@ -51,6 +51,8 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 			ball->softball[i]->SetTag(TSoftPlayer4);
 		else
 			ball->softball[i]->SetTag(TSoftPlayer1);
+
+		ball->softball[i]->Physics()->SetIsSoft(true);
 	}
 	tag = tg;
 

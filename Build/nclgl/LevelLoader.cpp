@@ -141,6 +141,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				true,
 				false,
 				object.colour);
+			geometry->SetTag(Tags::TCubes);
 			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"wall.jpg"), 0);
 			scene->AddGameObject(geometry);
 			break;

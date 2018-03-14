@@ -285,12 +285,18 @@ public:
 			}
 			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			tempvolumelevel = 0;
-			if (!isPaused)
+			if (isPaused)
+			{
+				
+				GameLogic::Instance()->setIsGamePaused(true);
+			}
+			else
 			{
 				tempvolumelevel = volumelevel;
+				GameLogic::Instance()->setIsGamePaused(false);
 			}
 			AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
-
+			
 
 			//if (pauseMenu->visible == false) {
 			//	pauseMenu->setSelection(0);

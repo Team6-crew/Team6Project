@@ -204,7 +204,7 @@ int main()
 		{
 			if (GameLogic::Instance()->levelIsLoaded())
 			{   
-				if (GameLogic::Instance()->gameHasStarted()) {
+				if (GameLogic::Instance()->gameHasStarted() && !GameLogic::Instance()->getIsGamePaused()) {
 					GameLogic::Instance()->increaseActualGameTime(dt);
 				}
 				GameLogic::Instance()->increaseTotalTime(dt);

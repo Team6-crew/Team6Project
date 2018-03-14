@@ -23,6 +23,7 @@ GameLogic::GameLogic() {
 	server = true;
 	canspawn = true;
 	pickupnum = 0;
+	isGamePaused = false;
 
 	increment = 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 }
