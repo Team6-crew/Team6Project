@@ -265,10 +265,10 @@ bool GameLogic::spawnPickup() {
 				/*float pos_x = 3;
 				float pos_z = -48;*/
 
-				/*float pos_x = rand() % 200 - 100;
-				float pos_z = rand() % 200 - 100;*/
-				float pos_x = -5.f;
-				float pos_z = -50.f;
+				float pos_x = rand() % 200 - 100;
+				float pos_z = rand() % 200 - 100;
+				/*float pos_x = -5.f;
+				float pos_z = -50.f;*/
 
 				pickupnum = pickupnum + 1;
 				lastPickupPosition = Vector3(pos_x, 20.f, pos_z);
