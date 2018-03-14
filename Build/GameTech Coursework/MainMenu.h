@@ -258,12 +258,12 @@ public:
 			else if (humanOrAi[activeMenu->getSelection()] == 2) { activeMenu->replaceMenuItem(activeMenu->getSelection(), "< CPU Player " + std::to_string(activeMenu->getSelection() + 1) + " "); }
 		}
 		else if (activeMenu->get_id() == 6 && activeMenu->getSelection() == 0) {
-			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_MINUS) && volumelevel > 0) {
 				volumelevel -= 1;
 				AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
 				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg",false);
 			}
-			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PLUS) && volumelevel < 10) {
 				volumelevel += 1;
 				AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
 				AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);

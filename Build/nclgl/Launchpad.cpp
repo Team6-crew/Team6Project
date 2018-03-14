@@ -14,6 +14,7 @@ Launchpad::Launchpad(const std::string& name,
 	RenderNodeBase * rnode = RenderNodeFactory::Instance()->MakeRenderNode();
 	
 	RenderNodeBase * dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Sphere(), color);
+	//dummy->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"launchpad.jpg"), 0);
 	dummy->SetTransform(nclgl::Maths::Matrix4::Scale(scale));
 	rnode->AddChild(dummy);
 	rnode->SetTransform(nclgl::Maths::Matrix4::Translation(pos));
@@ -55,17 +56,17 @@ Launchpad::~Launchpad()
 
 void Launchpad::Launch(Player* player)
 {
-	player->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 20.f, 0));
+	player->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 5.0f, 0));
 }
 
 void Launchpad::SoftLaunch(PlayerSoftBody* player)
 {
 	for (int i = 0; i < 182; ++i)
 		player->getBall()->softball[i]->Physics()->SetLinearVelocity(player->getBall()->softball[i]->Physics()->GetLinearVelocity()
-			+ nclgl::Maths::Vector3(0, 20.f, 0));
+			+ nclgl::Maths::Vector3(0, 100.f, 0));
 }
 void Launchpad::AILaunch(BallAI* AIBall)
 {
 		AIBall->Physics()->SetLinearVelocity(AIBall->getBall()->Physics()->GetLinearVelocity()
-			+ nclgl::Maths::Vector3(0, 20.f, 0));
+			+ nclgl::Maths::Vector3(0, 5.f, 0));
 }

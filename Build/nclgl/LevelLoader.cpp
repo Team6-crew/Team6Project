@@ -219,7 +219,9 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 			launchpad->SetTag(Tags::TLaunch);
 			launchpad->SetPhysics(launchpad->Physics());
 			(*launchpad->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"launchpad.jpg"), 0);
+			(*launchpad->Render()->GetChildIteratorStart())->SetTag(Tags::TLaunch);
 			scene->AddGameObject(launchpad);			
+			break;
 
 		case WASHING_ZONE:
 			washingzone = new Washingzone(

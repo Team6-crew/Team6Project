@@ -5,6 +5,7 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 
+
 using namespace nclgl::Maths;
 
 #include <nclgl\LevelLoader.h>
@@ -60,10 +61,63 @@ void GameLogic::addNetPlayer(int num_player) {
 }
 
 
-void GameLogic::addSoftPlayer(int num_splayers) {
+void GameLogic::addSoftPlayer1(int num_splayers) {
 
 	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
-		nclgl::Maths::Vector3(3.0f * num_splayers, 21.f, 3.0f * num_splayers),
+		nclgl::Maths::Vector3(50.0f, 5.0f, 50.0f),
+		1.0f,
+		1.0f,
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+	softplayer->setControls(controls[num_splayers][0], controls[num_splayers][1], controls[num_splayers][2], controls[num_splayers][3], controls[num_splayers][4], controls[num_splayers][5]);
+	softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
+	softplayers.push_back(softplayer);
+	paint_perc.push_back(0.0f);
+	// setting the players name
+	softplayer->setIndex(num_splayers);
+}
+
+void GameLogic::addSoftPlayer2(int num_splayers) {
+
+	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(50.0f, 5.0f, -50.0f),
+		1.0f,
+		1.0f,
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+	softplayer->setControls(controls[num_splayers][0], controls[num_splayers][1], controls[num_splayers][2], controls[num_splayers][3], controls[num_splayers][4], controls[num_splayers][5]);
+	softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
+	softplayers.push_back(softplayer);
+	paint_perc.push_back(0.0f);
+	// setting the players name
+	softplayer->setIndex(num_splayers);
+}
+
+void GameLogic::addSoftPlayer3(int num_splayers) {
+	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(-50.0f, 5.0f, -50.0f),
+		1.0f,
+		1.0f,
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+	softplayer->setControls(controls[num_splayers][0], controls[num_splayers][1], controls[num_splayers][2], controls[num_splayers][3], controls[num_splayers][4], controls[num_splayers][5]);
+	softplayer->setCamera(GraphicsPipeline::Instance()->CreateNewCamera());
+	softplayers.push_back(softplayer);
+	paint_perc.push_back(0.0f);
+	// setting the players name
+	softplayer->setIndex(num_splayers);
+}
+
+void GameLogic::addSoftPlayer4(int num_splayers) {
+
+	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(-50.0f, 5.0f, 50.0f),
 		1.0f,
 		1.0f,
 		colours[num_splayers],

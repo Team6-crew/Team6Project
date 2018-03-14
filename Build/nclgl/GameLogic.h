@@ -16,7 +16,10 @@ public:
 	void calculatePaintPercentage();
 	void addPlayer(int num_players);
 	void addNetPlayer(int num_players);
-	void addSoftPlayer(int num_players);
+	void addSoftPlayer1(int num_players);
+	void addSoftPlayer2(int num_players);
+	void addSoftPlayer3(int num_players);
+	void addSoftPlayer4(int num_players);
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }
 	std::vector<float> * getPaintPerc() { return &paint_perc; }
@@ -59,8 +62,6 @@ public:
 	void repairSoftPlayer(int num_splayers);
 	void clearGameLogic();
 	
-	void SwitchLevels(int idx);
-
 	Scene* scene; 
 
 	// split screen ui integration
@@ -72,7 +73,7 @@ public:
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
 
-	void clearGameLogic();
+	//void clearGameLogic();
 
 	void SetPlayerCapturedObject(GameObject * go, int p) { PlayerCapturedObject[go] = p; }
 	int  GetPlayerCapturedObject(GameObject * go) { return PlayerCapturedObject.at(go); }

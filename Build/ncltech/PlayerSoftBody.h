@@ -103,6 +103,8 @@ public:
 	int getIndex() { return index; }
 	void setIndex(int idx) { index = idx; }
 
+	void ToInfinityAndNotQuiteBeyond();
+
 private:
 	void handleInput(float dt);
 	void unequipPaintWeapon();

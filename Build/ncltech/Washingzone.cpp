@@ -28,7 +28,7 @@ Washingzone::Washingzone(const std::string& name,
 
 	RenderNodeBase* dummy = RenderNodeFactory::Instance()->MakeRenderNode(CommonMeshes::Cube(), color);
 	dummy->SetTransform(Matrix4::Scale(Vector3(scale.x, scale.y, scale.z)));
-	dummy->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
+	//dummy->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
 	rnode->AddChild(dummy);
 
 	rnode->SetTransform(Matrix4::Translation(pos));

@@ -42,7 +42,7 @@ public:
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
-	EmptyScene(const std::string& friendly_name, int sceneIndex)
+	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
 
@@ -77,10 +77,10 @@ public:
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
-		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
-		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
-		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
-		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
+		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer1(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer2(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer3(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer4(3);
 		//Add player to scene
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
@@ -193,25 +193,25 @@ public:
 		portal2B->SetPhysics(portal2B->Physics());
 		portal2B->SetTag(Tags::TPortal_B);
 		portal2B->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a2,
+			std::bind(&EmptyScene::collisionCallback_b2,
 				this,
 				std::placeholders::_1,
 				std::placeholders::_2)
 		);
 		this->AddGameObject(portal2B);
 
-			//testcube- test the texture
-			Washingzone* wz = new Washingzone("washingzone",
-				nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
-				nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-				true,
-				0.0f,
-				true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		wz->SetPhysics(wz->Physics());
-		this->AddGameObject(wz);
+		//	//testcube- test the texture
+		//	Washingzone* wz = new Washingzone("washingzone",
+		//		nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+		//		nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+		//		true,
+		//		0.0f,
+		//		true,
+		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		//wz->SetPhysics(wz->Physics());
+		//this->AddGameObject(wz);
 
-		Launchpad* lp = new Launchpad("launchpad",
+	/*	Launchpad* lp = new Launchpad("launchpad",
 			nclgl::Maths::Vector3(0.0f, 1.5f, -30.0f),
 			nclgl::Maths::Vector3(1.5f, 0.5f, 1.5f),
 			true,
@@ -219,7 +219,7 @@ public:
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		lp->SetPhysics(lp->Physics());
-		this->AddGameObject(lp);
+		this->AddGameObject(lp);*/
 
 	}
 
@@ -352,13 +352,13 @@ public:
 				}
 			}
 			else if (activeMenu->getSelection() == 0 && activeMenu == soundMenu) {
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_MINUS) && volumelevel > 0) {
 					volumelevel -= 1;
 					//AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
 					//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
 					tempvolumelevel = volumelevel;
 				}
-				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
+				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PLUS) && volumelevel < 10) {
 					volumelevel += 1;
 
 					tempvolumelevel = volumelevel;

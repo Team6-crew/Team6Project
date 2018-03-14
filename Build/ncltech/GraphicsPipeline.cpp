@@ -305,7 +305,6 @@ void GraphicsPipeline::StartCounter() {
 }
 
 void GraphicsPipeline::BuffHUD(int i) {
-	std::cout << "i:" << i << std::endl;
 	if (GameLogic::Instance()->getNumSoftPlayers() < (i - 1)){
 		return;
 	}
