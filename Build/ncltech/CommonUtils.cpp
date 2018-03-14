@@ -6,6 +6,7 @@
 #include <nclgl\OBJMesh.h>
 #include <nclgl\Graphics\Renderer\RenderNodeFactory.h>
 #include <functional>
+#include <nclgl\GameLogic.h>
 
 using namespace nclgl::Maths;
 
@@ -428,6 +429,8 @@ GameObject* CommonUtils::BuildPaintableCube(
 			pnode->SetInverseInertia(pColshape->BuildInverseInertia(inverse_mass));
 		}
 	}
+	float PaintableObjectSurface = 8 * (halfdims.y *halfdims.z+ halfdims.x *halfdims.z + halfdims.y *halfdims.x);
+	dummy->SetCost(PaintableObjectSurface/(WORLD_SIZE*2) );
 
 	GameObject* obj = new GameObject(name, rnode, pnode);
 	if (pnode)
@@ -443,6 +446,7 @@ GameObject* CommonUtils::BuildPaintableCube(
 		);
 	}
 	GraphicsPipeline::Instance()->pushPaintableObject(obj);
+	
 	return obj;
 }
 GameObject* CommonUtils::BuildCuboidObjectNoTexture(

@@ -67,7 +67,7 @@ public:
 
 	virtual ~EmptyScene()
 	{
-
+		
 	}
 
 	//WorldPartition *wsp;
@@ -124,7 +124,7 @@ public:
 
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 		
 		backgroundSoundPlaying = false;
@@ -135,8 +135,9 @@ public:
 			true,
 			0.0f,
 			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		pickup1->SetPhysics(pickup1->Physics());
+		(*pickup1->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
 		this->AddGameObject(pickup1);
 		
 
@@ -146,7 +147,7 @@ public:
 			true,
 			0.0f,
 			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		pickup2->SetPhysics(pickup2->Physics());
 		this->AddGameObject(pickup2);
 		
@@ -157,7 +158,7 @@ public:
 			true,
 			0.0f,
 			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		pickup3->SetPhysics(pickup3->Physics());
 		this->AddGameObject(pickup3);
 		
@@ -170,15 +171,57 @@ public:
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		wz->SetPhysics(wz->Physics());
-		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
 		this->AddGameObject(wz);
-		//frame += step;
-		//GraphicsPipeline::Instance()->LoadingScreen(frame);
+
+		Launchpad* lp = new Launchpad("launchpad",
+			nclgl::Maths::Vector3(0.0f, 1.5f, -30.0f),
+			nclgl::Maths::Vector3(1.5f, 0.5f, 1.5f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		lp->SetPhysics(lp->Physics());
+		this->AddGameObject(lp);
+
+		Portal* a1  = new Portal("portal_a1",
+			nclgl::Maths::Vector3(10.0f, 2.f, -40.0f),
+			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		a1->SetPhysics(a1->Physics());
+		a1->physicsNode->SetOnCollisionCallback(
+			std::bind(
+				&EmptyScene::collisionCallback_a1,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(a1);
+		
+		Portal* b1 = new Portal("portal_b1",
+			nclgl::Maths::Vector3(-10.0f, 2.f, -40.0f),
+			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		b1->SetPhysics(b1->Physics());
+		b1->physicsNode->SetOnCollisionCallback(
+			std::bind(
+				&EmptyScene::collisionCallback_b1,		// Function to call
+				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
+				std::placeholders::_1,
+				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
+		);
+		this->AddGameObject(b1);
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
+		
 		if (GameLogic::Instance()->getTotalTime() >= 3.0f) {
 			GameLogic::Instance()->setGameHasStarted(true);
 			if (!backgroundSoundPlaying) {
@@ -187,6 +230,7 @@ public:
 			}
 
 		}
+		
 		if (scene_iterator > 0) {
 			GameLogic::Instance()->setLevelIsLoaded(true);
 		}
@@ -199,9 +243,10 @@ public:
 				true,
 				0.5f,
 				true,
-				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+				nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 			pickup->SetPhysics(pickup->Physics());
 			pickup->Physics()->SetElasticity(0.0f);
+			(*pickup->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
 			this->AddGameObject(pickup);
 
 		}
@@ -335,10 +380,14 @@ public:
 			{
 				pauseMenu->visible = false;
 				SceneManager::Instance()->JumpToScene("Main Menu");
-				//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 				activeMenu = NULL;
 
 				//Delete objects from the scene
+				GameLogic::Instance()->clearGameLogic();
+				GraphicsPipeline::Instance()->clearGraphicsPipeline();
+				DeleteAllGameObjects();
+				m_UpdateCallbacks.clear();
+				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
@@ -346,8 +395,8 @@ public:
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
-		}
-		
+			
+		}		
 	}
 
 

@@ -100,6 +100,9 @@ public:
 	void speedLimit();
 	void wallLimit();
 	void jumpSlow();
+	int getIndex() { return index; }
+	void setIndex(int idx) { index = idx; }
+
 
 	void cameraInWall(AABB* wall);
 	
@@ -155,6 +158,7 @@ private:
 
 	float maxCameraY, maxCameraZ, minCameraY, minCameraZ, curCameraY, curCameraZ;
 	bool isbroken = false;
+	int index;
 
 	AABB* wallOfInterest;
 };

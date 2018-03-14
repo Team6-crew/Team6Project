@@ -21,6 +21,10 @@ TextureBase * ResourceManager::MakeTexture(std::string name, Texture::Type type,
 	return textureManager.makeTexture(name, type, a, b);
 }
 
+TextureBase * ResourceManager::ReplaceTexture(std::string name, Texture::Type type, int a, int b)
+{
+	return textureManager.ReplaceTexture(name, type, a, b);
+}
 
 TextureBase* ResourceManager::MakeTexture(std::string name)
 {
