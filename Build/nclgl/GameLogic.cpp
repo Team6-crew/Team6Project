@@ -23,6 +23,7 @@ GameLogic::GameLogic() {
 	server = true;
 	canspawn = true;
 	pickupnum = 0;
+	isGamePaused = false;
 
 	increment = 100.0f / (GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
 }
@@ -131,7 +132,6 @@ void GameLogic::calculatePaintPercentage() {
 
 	for (int k = 0; k < softplayers.size(); k++)
 	{
-		if (softplayers[k]->getIsBroken() == false) {
 			nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
 			if (position.y > 2.5f)
 			{
@@ -182,7 +182,6 @@ void GameLogic::calculatePaintPercentage() {
 					}
 					softplayers[k]->setadd_rad(0.0f);
 				}
-		}
 	}
 
 		for (int l = 0; l < aiPlayers.size(); l++)

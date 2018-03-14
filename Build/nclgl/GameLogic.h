@@ -79,6 +79,9 @@ public:
 
 	void setCurrentTime(int cSec) { cSeconds = cSec; };
 	int getCurrentTime() { return cSeconds; }
+
+	bool getIsGamePaused() { return isGamePaused; }
+	void setIsGamePaused(bool gamePaused) { isGamePaused = gamePaused; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
@@ -115,4 +118,5 @@ private:
 	map <GameObject * , int> PlayerCapturedObject;
 	int seconds;
 	int cSeconds;
+	bool isGamePaused;
 };

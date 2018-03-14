@@ -166,7 +166,7 @@ int main()
 		timer_physics.UpdateRealElapsedTime(dt);
 		timer_update.UpdateRealElapsedTime(dt);
 		timer_render.UpdateRealElapsedTime(dt);
-		//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
+		std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
 		//Print Status Entries
 		//PrintStatusEntries();
 
@@ -204,7 +204,7 @@ int main()
 		{
 			if (GameLogic::Instance()->levelIsLoaded())
 			{   
-				if (GameLogic::Instance()->gameHasStarted()) {
+				if (GameLogic::Instance()->gameHasStarted() && !GameLogic::Instance()->getIsGamePaused()) {
 					GameLogic::Instance()->increaseActualGameTime(dt);
 				}
 				GameLogic::Instance()->increaseTotalTime(dt);
