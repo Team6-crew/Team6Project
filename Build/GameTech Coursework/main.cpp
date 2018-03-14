@@ -230,7 +230,7 @@ int main()
 				gameEnded = true;
 				
 				int j = GameLogic::Instance()->getNumSoftPlayers();
-				int l = GameLogic::Instance()->getnumAI() + GameLogic::Instance()->getNumSoftPlayers();
+				int l = GameLogic::Instance()->getNumAIPlayers()+ GameLogic::Instance()->getNumSoftPlayers();
 
 				int winningPlayer = 0;
 				int aiWinningPlayer = 0;
@@ -250,7 +250,7 @@ int main()
 				else
 				{
 					aiWinningPlayer = winningPlayer -j;
-					NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer) + " WINS!");
+					NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer +1) + " WINS!");
 				}
 				
 
