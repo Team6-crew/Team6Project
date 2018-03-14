@@ -132,77 +132,79 @@ void GameLogic::calculatePaintPercentage() {
 
 	for (int k = 0; k < softplayers.size(); k++)
 	{
-			nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
-			if (position.y > 2.5f)
+		if (!softplayers[k]->getBottom())
+		{
+			continue;
+		}
+		nclgl::Maths::Vector3 position = softplayers[k]->getBottom()->Physics()->GetPosition();
+		if (position.y > 2.5f)
+		{
+			continue;
+		}
+		else
+			if (softplayers[k]->getcanpaint() == false)
 			{
+				softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
+				if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
+				{
+					softplayers[k]->setcanpaint(true);
+				}
 				continue;
 			}
 			else
-				if (softplayers[k]->getcanpaint() == false)
-				{
-					softplayers[k]->settime((softplayers[k]->gettime()) + 1.0f);
-					if (softplayers[k]->gettime() > softplayers[k]->getDebuffTime())
-					{
-						softplayers[k]->setcanpaint(true);
-					}
-					continue;
-				}
-			/*else if (position.y < -3.0f)
 			{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
-			continue;
-			}*/
-				else
-				{
 
-					add_rad = softplayers[k]->getadd_rad();
-					rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
+				add_rad = softplayers[k]->getadd_rad();
+				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
-					softplayers[k]->setRadius(rad);
-					posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
-					posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+				softplayers[k]->setRadius(rad);
+				posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
-					softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
-					for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-						for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
-							float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
-							if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
-								if (world_paint[i][j] == 0) {
-									paint_perc[k] += increment;
-								}
-								else if (world_paint[i][j] != k + 1) {
-									paint_perc[k] += increment;
-									paint_perc[world_paint[i][j] - 1] -= increment;
-								}
-								world_paint[i][j] = k + 1;
+						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+							if (world_paint[i][j] == 0) {
+								paint_perc[k] += increment;
 							}
+							else if (world_paint[i][j] != k + 1) {
+								paint_perc[k] += increment;
+								paint_perc[world_paint[i][j] - 1] -= increment;
+							}
+							world_paint[i][j] = k + 1;
 						}
 					}
-					softplayers[k]->setadd_rad(0.0f);
 				}
+				softplayers[k]->setadd_rad(0.0f);
+				softplayers[k]->setscore(paint_perc[k]);
+				cout << paint_perc[k] << endl;
+			}
 	}
 
-		for (int l = 0; l < aiPlayers.size(); l++)
-		{
-			nclgl::Maths::Vector3 position = aiPlayers[l]->Physics()->GetPosition();
+	for (int l = 0; l < aiPlayers.size(); l++)
+	{
+		nclgl::Maths::Vector3 position = aiPlayers[l]->Physics()->GetPosition();
 
-			if (position.y > 2.5f)
+		if (position.y > 2.5f)
+		{
+			continue;
+		}
+		else {
+			if (aiPlayers[l]->getcanpaint() == false)
 			{
+				aiPlayers[l]->settime((aiPlayers[l]->gettime()) + 1.0f);
+				if (aiPlayers[l]->gettime() > aiPlayers[l]->getDebuffTime())
+				{
+					aiPlayers[l]->setcanpaint(true);
+				}
 				continue;
 			}
-			else {
-				if (aiPlayers[l]->getcanpaint() == false)
-				{
-					aiPlayers[l]->settime((aiPlayers[l]->gettime()) + 1.0f);
-					if (aiPlayers[l]->gettime() > aiPlayers[l]->getDebuffTime())
-					{
-						aiPlayers[l]->setcanpaint(true);
-					}
-					continue;
-				}
-				else
+			else
+			{
 				add_rad = aiPlayers[l]->getadd_rad();
 				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
@@ -229,7 +231,9 @@ void GameLogic::calculatePaintPercentage() {
 					}
 				}
 				aiPlayers[l]->setadd_rad(0.0f);
+				aiPlayers[l]->setscore(paint_perc[l + softplayers.size()]);
 			}
+		}
 	}
 }
 
@@ -261,9 +265,11 @@ bool GameLogic::spawnPickup() {
 				/*float pos_x = 3;
 				float pos_z = -48;*/
 
-				float pos_x = rand() % 200 - 100;
-				float pos_z = rand() % 200 - 100;
-				
+				/*float pos_x = rand() % 200 - 100;
+				float pos_z = rand() % 200 - 100;*/
+				float pos_x = -5.f;
+				float pos_z = -50.f;
+
 				pickupnum = pickupnum + 1;
 				lastPickupPosition = Vector3(pos_x, 20.f, pos_z);
 				canspawn = false;
