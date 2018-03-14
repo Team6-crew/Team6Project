@@ -21,8 +21,9 @@ struct VS_OUTPUT
 {
 	float4 WorldPosition  : S_POSITION;
 	float2 UV			: TEXCOORD0;
+	float3 Normal 		  : TEXCOORD1;
 };
-/*
+
 // To implement
 float3x3 inverse(float3x3 m)
 {
@@ -42,7 +43,7 @@ float3x3 inverse(float3x3 m)
 
 	return minv;
 }
-*/
+
 
 
 VS_OUTPUT main(VS_INPUT input)
@@ -54,7 +55,7 @@ VS_OUTPUT main(VS_INPUT input)
 	output.WorldPosition = mul(mul(projViewMatrix,modelMatrix), float4(input.Position.xyz, 1));
   // output.WorldPosition = mul(projViewMatrix,float4(input.Position, 1));
 	output.UV = input.UV;
-//	output.Normal = mul(transpose(inverse(float3x3(modelMatrix))),  normalize(input.Normal));
+	output.Normal = mul(transpose(inverse(float3x3(modelMatrix))),  normalize(input.Normal));
 
 	
 	return output;

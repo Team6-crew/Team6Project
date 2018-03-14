@@ -150,7 +150,7 @@ if (hasColor) {
 	}
 
 
-	Vector4 defaultClearColour(1.0, 1.0f, 0.1f, 1.0f);
+	Vector4 defaultClearColour(0.9f, 0.9f, 0.9f, 1.0f);
 
 	SurfaceUtil::clearRenderTarget(*currentGFXContext, &this->colourTarget.at(0), defaultClearColour);
 }

@@ -21,15 +21,11 @@ void CommonMeshes::InitializeMeshes()
 		m_pCheckerboardTex->SetTextureFiltering(true);
 		m_pCheckerboardTex->SetTextureWrapping(true);
 
-		m_pDogeTex = TextureFactory::Instance()->MakeTexture(std::string("doge"));
-		m_pDogeTex->SetTextureFiltering(true);
-		m_pDogeTex->SetTextureWrapping(true);
-
 		m_pCube = MeshFactory::Instance()->MakeOBJMesh("cube.obj");
 		m_pCube->SetTexture(m_pCheckerboardTex);
 
 		m_pSphere = MeshFactory::Instance()->MakeOBJMesh("sphere.obj");
-		m_pSphere->SetTexture(m_pDogeTex);
+		m_pSphere->SetTexture(m_pCheckerboardTex);
 	}
 }
 
