@@ -19,10 +19,12 @@ public:
 
 	GameObject* getBody() { return body; }
 	Softbody* getBall() { return ball; }
-	GameObject* getTop();
-	GameObject* getBottom();
-	GameObject* getFront();
-	GameObject* getBack();
+	void setAxisSpheres();
+	void getOppositeSphere(int sph);
+	GameObject* getTop() { return top; }
+	GameObject* getBottom() { return bottom; }
+	GameObject* getFront() { return front; }
+	GameObject* getBack() { return back; }
 
 	
 	void setRadius(float radius) { rad = radius; }
@@ -91,10 +93,6 @@ public:
 	void setCurrentBuff(Tags tag);
 	Tags getCurrentBuff() { return currentBuff; }
 
-	void setIsBroken(bool broken) { isbroken = broken; }
-	bool getIsBroken() { return isbroken; }
-
-
 	void move(float dt);
 
 	void speedLimit();
@@ -119,6 +117,8 @@ private:
 	GameObject* bottom; // Bottom most sphere for movement and painting
 	GameObject* front; // Front sphere
 	GameObject* back; // You get the idea
+
+	GameObject* opposite;
 
 	Camera* camera;
 	RenderNodeBase* camera_transform;
@@ -152,7 +152,5 @@ private:
 	Tags currentBuff;
 
 	nclgl::Maths::Vector4 colour;
-
-	bool isbroken = false;
 	int index;
 };
