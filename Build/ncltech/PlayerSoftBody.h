@@ -101,7 +101,8 @@ public:
 	int getIndex() { return index; }
 	void setIndex(int idx) { index = idx; }
 
-
+	float getscore() { return score; }
+	void setscore(float s) { score = s; }
 	void cameraInWall(AABB* wall);
 	
 private:
@@ -140,7 +141,7 @@ private:
 
 	float time;
 	int tag;
-
+	float score;
 	float sensitivity;
 	bool canpaint;
 
