@@ -35,12 +35,12 @@ vector <ENetPeer *> PlayerMap;
 std::map <ENetPeer *, bool> ReadyMap;
 const Vector4 status_colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 const Vector4 status_colour_header = Vector4(0.8f, 0.9f, 1.0f, 1.0f);
-
+vector <vector<nclgl::Maths::Vector3>> forces;
 bool show_perf_metrics = false;
 PerfTimer timer_total, timer_physics, timer_update, timer_render;
 uint shadowCycleKey = 4;
 void Win32_PrintAllAdapterIPAddresses();
-
+float lTimer = 0.0f;
 // Program Deconstructor
 //  - Releases all global components and memory
 //  - Optionally prints out an error message and
@@ -175,6 +175,7 @@ void HandleKeyboardInputs()
 // Program Entry Point
 int main()
 {
+	GameTimer lockTimer;
 	GameLogic::Instance()->setIsServer(true);
 	bool show_status_menu = false;
 	bool showEndScreen = false;
@@ -186,7 +187,7 @@ int main()
 	GameLogic::Instance()->setLevelIsLoaded(false);
 	GameLogic::Instance()->setGameHasStarted(false);
 	//Create main game-loop
-	
+	lockTimer.GetTimedMS();
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
 
@@ -237,7 +238,19 @@ int main()
 			GraphicsPipeline::Instance()->RenderScene(dt);
 
 		}
+		if (gameStarted) {
+			for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 
+
+				GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->SetForce(forces[i][0]);
+				GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->SetForce(forces[i][1]);
+				GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->SetForce(forces[i][2]);
+				GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->SetForce(forces[i][3]);
+				printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetForce().x);
+				printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetForce().y);
+				printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetForce().z);
+			}
+		}
 		//Print Status Entries
 		if (show_status_menu)
 		{
@@ -280,8 +293,47 @@ int main()
 		}
 		timer_render.EndTimingSection();
 
+		if (bucket == PlayerMap.size() || lTimer>100.0f) {
+			lTimer = 0.0f;
+			fixTimer++;
+			bucket = 0;
+			//if (fixTimer < 100) {
+			MySocket NextPacket("NEXT");
+			//for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+			//printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().x);
+			//printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().y);
+			//printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().z);
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().x));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().y));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().z));
+			//}
+			NextPacket.BroadcastPacket(server.m_pNetwork);
+			//}
+			//else {
+			//	fixTimer = 0;
 
+			//	MySocket NextPacket("FIXX");
+			//for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
 
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().x));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().y));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().z));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().x));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().y));
+			//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().z));
+			//}
+			//	NextPacket.BroadcastPacket(server.m_pNetwork);
+			//}
+		}
+		else {
+			lTimer += lockTimer.GetTimedMS();
+			MySocket SendFix("SDFX");
+			SendFix.BroadcastPacket(server.m_pNetwork);
+		}
+		if (fixTimer == 100) {
+			fixTimer = 0;
+
+		}
 		//Finish Timing
 		timer_total.EndTimingSection();
 		server.ServiceNetwork(dt, [&](const ENetEvent& evnt)
@@ -291,6 +343,10 @@ int main()
 				printf("- New Client Connected\n");
 				MySocket LobbyConnection("LBCN");
 				PlayerMap.push_back(evnt.peer);
+				vector<nclgl::Maths::Vector3> tempForce;
+				for (int i = 0; i < 4; ++i)
+					tempForce.push_back(nclgl::Maths::Vector3(.0f, .0f, .0f));
+				forces.push_back(tempForce);
 				bin_players += pow(2, PlayerMap.size() - 1);
 				ReadyMap[evnt.peer] = FALSE;
 				LobbyConnection.AddVar(to_string(PlayerMap.size() - 1));
@@ -331,48 +387,18 @@ int main()
 					bucket++;
 					for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 						if (PlayerMap[i] == evnt.peer) {
-							
-							GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->SetForce(nclgl::Maths::Vector3(stof(Received.TruncPacket(0)), stof(Received.TruncPacket(1)), stof(Received.TruncPacket(2))));
-							GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->SetForce(nclgl::Maths::Vector3(stof(Received.TruncPacket(3)), stof(Received.TruncPacket(4)), stof(Received.TruncPacket(5))));
-							GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->SetForce(nclgl::Maths::Vector3(stof(Received.TruncPacket(6)), stof(Received.TruncPacket(7)), stof(Received.TruncPacket(8))));
-							GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->SetForce(nclgl::Maths::Vector3(stof(Received.TruncPacket(9)), stof(Received.TruncPacket(10)), stof(Received.TruncPacket(11))));
+
+							forces[i][0] = nclgl::Maths::Vector3(stof(Received.TruncPacket(0)), stof(Received.TruncPacket(1)), stof(Received.TruncPacket(2)));
+							forces[i][1] = nclgl::Maths::Vector3(stof(Received.TruncPacket(3)), stof(Received.TruncPacket(4)), stof(Received.TruncPacket(5)));
+							forces[i][2] = nclgl::Maths::Vector3(stof(Received.TruncPacket(6)), stof(Received.TruncPacket(7)), stof(Received.TruncPacket(8)));
+							forces[i][3] = nclgl::Maths::Vector3(stof(Received.TruncPacket(9)), stof(Received.TruncPacket(10)), stof(Received.TruncPacket(11)));
 							printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetForce().x);
 							printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetForce().y);
 							printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetForce().z);
 						}
 					}
 					// Here it applies all the variables to the appropriate balls
-					if (bucket == PlayerMap.size()) {
-						fixTimer++;
-						bucket = 0;
-						//if (fixTimer < 100) {
-							MySocket NextPacket("NEXT");
-							//for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-								//printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().x);
-								//printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().y);
-								//printf("%f\n", GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().z);
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().x));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().y));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().z));
-							//}
-							NextPacket.BroadcastPacket(server.m_pNetwork);
-						//}
-						//else {
-						//	fixTimer = 0;
-
-						//	MySocket NextPacket("FIXX");
-							//for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {
-
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().x));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().y));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetLinearVelocity().z));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().x));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().y));
-								//NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->Physics()->GetPosition().z));
-							//}
-						//	NextPacket.BroadcastPacket(server.m_pNetwork);
-						//}
-					}
+	
 				}
 				else if (SocketId == "JUMP") {
 					for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {

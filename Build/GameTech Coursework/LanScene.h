@@ -165,8 +165,10 @@ public:
 		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 		LevelLoader loader;
 		loader.BuildLevel("SimpleLevel.txt", this);
+		
 		sendVelocityUpdate();
 		myPlayerNum = GameLogic::Instance()->getMyNetNum();
+
 	}
 
 
