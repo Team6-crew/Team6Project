@@ -22,7 +22,7 @@ LevelLoader::~LevelLoader()
 bool LevelLoader::Load(const std::string& filename)
 {
 	string info;
-		ifstream levelfile("Level1.txt");
+		ifstream levelfile(filename);
 		if (levelfile.is_open()) {
 			cout << "File opened" << endl;
 
@@ -154,6 +154,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.colour);
 			scene->AddGameObject(geometry);
 			geometry->SetTag(Tags::TCubes);
+			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"wall.jpg"), 0);
 			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TCubes);
 			break;
 
@@ -216,6 +217,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				object.colour);
 			launchpad->SetTag(Tags::TLaunch);
 			launchpad->SetPhysics(launchpad->Physics());
+			(*launchpad->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"launchpad.jpg"), 0);
 			scene->AddGameObject(launchpad);			
 
 		case WASHING_ZONE:

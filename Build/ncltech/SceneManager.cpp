@@ -82,21 +82,18 @@ void SceneManager::JumpToScene(int idx)
 	{
 		LevelLoader loader;
 		loader.BuildLevel("Level1.txt", scene);
-		
 	}
 	
 	else if (idx == 2)
 	{
 		LevelLoader loader;
 		loader.BuildLevel("Level2.txt", scene);
-		
 	}
 
 	else if (idx == 3)
 	{
 		LevelLoader loader;
 		loader.BuildLevel("Level3.txt", scene);
-
 	}
 
 	scene->OnInitializeScene();

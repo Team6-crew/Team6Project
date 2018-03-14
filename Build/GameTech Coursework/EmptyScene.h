@@ -115,7 +115,7 @@ public:
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);	
 			
 		// ---------------------------------------- portal1 ----------------------------------------
@@ -127,7 +127,7 @@ public:
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // red
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
 		portal1A->setDynamic(false);
 		portal1A->SetPhysics(portal1A->Physics());
 		portal1A->SetTag(Tags::TPortal_A);
@@ -147,7 +147,7 @@ public:
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // red
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		portal1B->setDynamic(false);
 		portal1B->SetPhysics(portal1B->Physics());
 		portal1B->SetTag(Tags::TPortal_B);
@@ -168,7 +168,7 @@ public:
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(0.0f, 0.0f, 1.0f, 1.0f)); // blue
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
 		portal2A->setDynamic(false);
 		portal2A->SetPhysics(portal2A->Physics());
 		portal2A->SetTag(Tags::TPortal_A);
@@ -188,6 +188,17 @@ public:
 			true,
 			100.0f,
 			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
+		portal2B->setDynamic(false);
+		portal2B->SetPhysics(portal2B->Physics());
+		portal2B->SetTag(Tags::TPortal_B);
+		portal2B->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a2,
+				this,
+				std::placeholders::_1,
+				std::placeholders::_2)
+		);
+		this->AddGameObject(portal2B);
 
 			//testcube- test the texture
 			Washingzone* wz = new Washingzone("washingzone",
@@ -210,39 +221,6 @@ public:
 		lp->SetPhysics(lp->Physics());
 		this->AddGameObject(lp);
 
-		Portal* a1  = new Portal("portal_a1",
-			nclgl::Maths::Vector3(10.0f, 2.f, -40.0f),
-			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		a1->SetPhysics(a1->Physics());
-		a1->physicsNode->SetOnCollisionCallback(
-			std::bind(
-				&EmptyScene::collisionCallback_a1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(a1);
-		
-		Portal* b1 = new Portal("portal_b1",
-			nclgl::Maths::Vector3(-10.0f, 2.f, -40.0f),
-			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		b1->SetPhysics(b1->Physics());
-		b1->physicsNode->SetOnCollisionCallback(
-			std::bind(
-				&EmptyScene::collisionCallback_b1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(b1);
 	}
 
 	virtual void OnUpdateScene(float dt) override
