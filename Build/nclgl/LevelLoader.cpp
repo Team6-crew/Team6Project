@@ -123,7 +123,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 		Washingzone* washingzone;
 		
 		switch (object.type)
-		{
+		{			
 		case GEOMETRY_GROUND_CUBOID:
 			geometry = CommonUtils::BuildGroundCuboidObject(
 				object.name,
