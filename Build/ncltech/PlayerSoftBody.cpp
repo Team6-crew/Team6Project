@@ -91,58 +91,38 @@ PlayerSoftBody::~PlayerSoftBody()
 {
 }
 
-GameObject* PlayerSoftBody::getTop() {
-	int k = 0;
+void PlayerSoftBody::setAxisSpheres() {
+	int i = 0;
+	int j = 0;
 	top = ball->softball[0];
-	for (int i = 1; i < 182; ++i) {
-		if (ball->softball[i]->Physics()->GetPosition().y > top->Physics()->GetPosition().y) {
-			top = ball->softball[i];
-			++k;
-		}
-	}
-
-	if (k == 0)
-		bottom = ball->softball[181];
-	else if (k == 181)
-		bottom = ball->softball[0];
-	else if (((k % 18) > 9) || (k % 18) == 0)
-		bottom = ball->softball[k - 9];
-	else
-		bottom = ball->softball[k + 9];
-
-	return top;
-}
-
-GameObject* PlayerSoftBody::getBottom() {
-	getTop();
-	return bottom;
-}
-
-GameObject* PlayerSoftBody::getFront() {
-	int k = 0;
 	front = ball->softball[0];
-	for (int i = 1; i < 182; ++i) {
-		if (ball->softball[i]->Physics()->GetPosition().z < top->Physics()->GetPosition().z) {
-			front = ball->softball[i];
-			++k;
+	for (int k = 1; k < 182; ++k) {
+		if (ball->softball[k]->Physics()->GetPosition().y > top->Physics()->GetPosition().y) {
+			top = ball->softball[k];
+			++i;
+		}
+		if (ball->softball[k]->Physics()->GetPosition().z < top->Physics()->GetPosition().z) {
+			front = ball->softball[k];
+			++j;
 		}
 	}
 
-	if (k == 0)
-		back = ball->softball[181];
-	else if (k == 181)
-		back = ball->softball[0];
-	else if (((k % 18) > 9) || (k % 18) == 0)
-		back = ball->softball[k - 9];
-	else
-		back = ball->softball[k + 9];
+	getOppositeSphere(i);
+	bottom = opposite;
 
-	return front;
+	getOppositeSphere(j);
+	back = opposite;
 }
 
-GameObject* PlayerSoftBody::getBack() {
-	getFront();
-	return back;
+void PlayerSoftBody::getOppositeSphere(int sph) {
+	if (sph == 0)
+		opposite = ball->softball[181];
+	else if (sph == 181)
+		opposite = ball->softball[0];
+	else if (((sph % 18) > 9) || (sph % 18) == 0)
+		opposite = ball->softball[sph - 9];
+	else
+		opposite = ball->softball[sph + 9];
 }
 
 void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
@@ -309,15 +289,14 @@ void PlayerSoftBody::equipPaintWeapon(nclgl::Maths::Vector4 colour) {
 }
 
 void PlayerSoftBody::handleInput(float dt) {
-	nclgl::Maths::Vector3 jump(0, 20, 0);
+	nclgl::Maths::Vector3 jump(0, 10, 0);
 	float rotation = 0.0f;
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
 	nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 	nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
+	setAxisSpheres();
 
-	getTop();
-	getFront();
 	if (GameLogic::Instance()->gameHasStarted()) {
 		if (Window::GetKeyboard()->KeyDown(move_up))
 		{
