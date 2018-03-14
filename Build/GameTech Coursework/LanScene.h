@@ -35,6 +35,7 @@ class LanScene : public Scene
 {
 
 private:
+	vector <vector<nclgl::Maths::Vector3>> forces;
 	int scene_iterator;
 	bool backgroundSoundPlaying;
 public:
@@ -90,12 +91,17 @@ public:
 			this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
 		}
+		
 		num_p = GameLogic::Instance()->getnumOfNetPlayers();
 		if (num_p & 0b0001) GameLogic::Instance()->addNetPlayer(0);
 		if (num_p & 0b0010) GameLogic::Instance()->addNetPlayer(1);
 		if (num_p & 0b0100) GameLogic::Instance()->addNetPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addNetPlayer(3);
 		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
+			vector<nclgl::Maths::Vector3> tempForce;
+			for (int i = 0; i < 4; ++i)
+				tempForce.push_back(nclgl::Maths::Vector3(.0f, .0f, .0f));
+			forces.push_back(tempForce);
 			this->AddSoftBody(GameLogic::Instance()->getNetPlayer(i)->getBall());
 			this->AddGameObject(GameLogic::Instance()->getNetPlayer(i)->getBody());
 		}
@@ -164,16 +170,24 @@ public:
 		//frame += step;
 		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 		LevelLoader loader;
-		loader.BuildLevel("SimpleLevel.txt", this);
+		loader.BuildLevel("Level1.txt", this);
 		
 		
 		myPlayerNum = GameLogic::Instance()->getMyNetNum();
-
+		
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
+
+		for (int i = 0; i < GameLogic::Instance()->getNumNetPlayers(); i++) {
+			GameLogic::Instance()->getNetPlayer(i)->setAxisSpheres();
+			GameLogic::Instance()->getNetPlayer(i)->getTop()->Physics()->SetForce(forces[i][0]);
+			GameLogic::Instance()->getNetPlayer(i)->getBottom()->Physics()->SetForce(forces[i][1]);
+			GameLogic::Instance()->getNetPlayer(i)->getFront()->Physics()->SetForce(forces[i][2]);
+			GameLogic::Instance()->getNetPlayer(i)->getBack()->Physics()->SetForce(forces[i][3]);
+		}
 		auto callback = std::bind(
 			&LanScene::ProcessNetworkEvent,	// Function to call
 			this,								// Associated class instance
@@ -327,6 +341,7 @@ public:
 
 	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
+
 		if (otherNode->GetParent()->HasTag(Tags::TPlayer))
 		{
 			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
@@ -604,9 +619,6 @@ private:
 	void sendVelocityUpdate() {
 
 		MySocket velocity("INFO");
-		printf("%f\n", GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetForce().x);
-		printf("%f\n", GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetForce().y);
-		printf("%f\n", GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetForce().z);
 		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetForce().x));
 		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetForce().y));
 		velocity.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getTop()->Physics()->GetForce().z));
@@ -669,27 +681,77 @@ private:
 				//}
 				sendVelocityUpdate();
 			}
-			if (Received.GetPacketId() == "NEXT") {
-				//vector <float> updates;
-				//for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
-				//	for (int j = 0; j < 3; j++) {
-				//		updates.push_back(stof(Received.TruncPacket(i * 3 + j)));
-				//	}
-				//}
-				//int cntNet = 0;
-				//for (int i = 0; i < GameLogic::Instance()->getNumAllPlayers(); i++) {
-				//	if (i == myPlayerNum) {
+			if (Received.GetPacketId() == "NEXT" && GameLogic::Instance()->gameHasStarted()) {
+				vector <float> updates;
+				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+					for (int j = 0; j < 12; j++) {
+						updates.push_back(stof(Received.TruncPacket(i * 12 + j)));
+					}
+				}
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+					if (i == myPlayerNum) {
 				//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
 				//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
-				//	}
-				//	else {
-				//		//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 3], updates[i * 3 + 1], updates[i * 3 + 2]));
-				//		//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
-				//		cntNet++;
-				//	}
+					}
+					else {
+						
+						forces[cntNet][0] = nclgl::Maths::Vector3(updates[i * 12], updates[i * 12 + 1], updates[i * 12 + 2]);
+						forces[cntNet][1] = nclgl::Maths::Vector3(updates[i * 12 + 3], updates[i * 12 + 4], updates[i * 12 + 5]);
+						forces[cntNet][2] = nclgl::Maths::Vector3(updates[i * 12 + 6], updates[i * 12 + 7], updates[i * 12 + 8]);
+						forces[cntNet][3] = nclgl::Maths::Vector3(updates[i * 12 + 9], updates[i * 12 + 10], updates[i * 12 + 11]);
+						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
+						cntNet++;
+					}
 
-				//}
+				}
 				sendVelocityUpdate();
+			}
+			else if (Received.GetPacketId() == "JMPP") {
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+					if (i == myPlayerNum) {
+						//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+					}
+					else {
+						if (i == stoi(Received.TruncPacket(0))) {
+							nclgl::Maths::Vector3 jump(0, 10, 0);
+							for (int j = 0; j < 182; ++j) {
+								GameLogic::Instance()->getNetPlayer(cntNet)->getBall()->softball[j]->Physics()->SetLinearVelocity(GameLogic::Instance()->getNetPlayer(cntNet)->getBall()->softball[j]->Physics()->GetLinearVelocity() + jump);
+							}
+						}
+						cntNet++;
+					}
+
+				}
+			}
+			else if (Received.GetPacketId() == "SDFX") {
+				MySocket positionUpdate("PSUD");
+				positionUpdate.AddVar(to_string(myPlayerNum));
+				positionUpdate.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetPosition().x));
+				positionUpdate.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetPosition().y));
+				positionUpdate.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetPosition().z));
+				positionUpdate.BroadcastPacket(listen->m_pNetwork);
+			}
+			else if (Received.GetPacketId() == "SVUD") {
+				int cntNet = 0;
+				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+					if (i == myPlayerNum) {
+						//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+						//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
+					}
+					else {
+						if (i == stoi(Received.TruncPacket(0))) {
+							nclgl::Maths::Vector3 posDifference = nclgl::Maths::Vector3(stof(Received.TruncPacket(1)), stof(Received.TruncPacket(2)), stof(Received.TruncPacket(3))) - GameLogic::Instance()->getNetPlayer(cntNet)->getBottom()->Physics()->GetPosition();
+							for (int i = 0; i < 182; ++i) {
+								GameLogic::Instance()->getNetPlayer(cntNet)->getBall()->softball[i]->Physics()->SetPosition(GameLogic::Instance()->getNetPlayer(cntNet)->getBall()->softball[i]->Physics()->GetPosition() + posDifference);
+							}
+						}
+						cntNet++;
+					}
+
+				}
 			}
 			enet_packet_destroy(evnt.packet);
 		}

@@ -164,7 +164,7 @@ public:
 		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
 		this->AddGameObject(wz);
 		LevelLoader loader;
-		loader.BuildLevel("SimpleLevel.txt", this);
+		loader.BuildLevel("Level1.txt", this);
 		
 	}
 
