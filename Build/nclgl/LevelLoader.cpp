@@ -191,6 +191,7 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);		
 			scene->AddGameObject(geometry);
 			++paintable_counter;
+			GameLogic::Instance()->SetPlayerCapturedObject(geometry, -1);
 			break;
 
 		case GEOMETRY_SPHERE:

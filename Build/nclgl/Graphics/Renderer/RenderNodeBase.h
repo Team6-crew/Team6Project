@@ -70,6 +70,9 @@ public:
 
 	bool			GetBeingPainted() const { return beingPainted; }
 	void			SetBeingPainted(bool p) { beingPainted = p; }
+
+	float			GetCost() { return cost; }
+	void			SetCost(float c) { cost = c; }
 protected:
 	std::vector<RenderNodeBase*> children;
 	RenderNodeBase*	parent = nullptr;
@@ -81,5 +84,6 @@ protected:
 	nclgl::Maths::Vector3 halfDims;
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;
+	float		cost;
 };
 
