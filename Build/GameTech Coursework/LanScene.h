@@ -166,7 +166,7 @@ public:
 		LevelLoader loader;
 		loader.BuildLevel("SimpleLevel.txt", this);
 		
-		sendVelocityUpdate();
+		
 		myPlayerNum = GameLogic::Instance()->getMyNetNum();
 
 	}

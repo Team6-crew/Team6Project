@@ -403,7 +403,7 @@ int main()
 				else if (SocketId == "JUMP") {
 					for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 						if (PlayerMap[i] == evnt.peer) {
-							nclgl::Maths::Vector3 jump(0, 20, 0);
+							nclgl::Maths::Vector3 jump(0, 10, 0);
 							for (int j = 0; j < 182; ++j) {
 								GameLogic::Instance()->getSoftPlayer(i)->getBall()->softball[j]->Physics()->SetLinearVelocity(GameLogic::Instance()->getSoftPlayer(i)->getBall()->softball[j]->Physics()->GetLinearVelocity() + jump);
 							}

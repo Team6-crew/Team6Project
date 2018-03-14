@@ -233,6 +233,7 @@ public:
 				GraphicsPipeline::Instance()->ChangeScene();
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+				GameLogic::Instance()->setSeconds(seconds);
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 			{
@@ -241,6 +242,7 @@ public:
 				GraphicsPipeline::Instance()->ChangeScene();
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+				GameLogic::Instance()->setSeconds(seconds);
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
 			{
@@ -249,6 +251,7 @@ public:
 				GraphicsPipeline::Instance()->ChangeScene();
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+				GameLogic::Instance()->setSeconds(seconds);
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
 			{
@@ -257,6 +260,7 @@ public:
 				GraphicsPipeline::Instance()->ChangeScene();
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
+				GameLogic::Instance()->setSeconds(seconds);
 			}
 		}
 		else {
@@ -374,6 +378,7 @@ public:
 					}
 					if (numOfPlayers != 0) {
 						getControls();
+						GameLogic::Instance()->setSeconds(seconds);
 						GameLogic::Instance()->setnumOfPlayersMp(numOfPlayers);
 						GameLogic::Instance()->setnumAI(numOfAi);
 						GraphicsPipeline::Instance()->ChangeScene();
@@ -721,6 +726,7 @@ private:
 				}
 				GameLogic::Instance()->setnumOfNetPlayers(numEnemies);
 				GraphicsPipeline::Instance()->ChangeScene();
+				GameLogic::Instance()->setSeconds(seconds);
 				SceneManager::Instance()->JumpToScene("Lan Project");
 			}
 			enet_packet_destroy(evnt.packet);
