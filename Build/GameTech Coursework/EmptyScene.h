@@ -116,8 +116,9 @@ public:
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
-		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);	
-			
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);		
+		
+
 		// ---------------------------------------- portal1 ----------------------------------------
 		//portal1A
 		Portal* portal1A = new Portal(
@@ -288,7 +289,7 @@ public:
 					GameLogic::Instance()->getSoftPlayer(i)->setIsBroken(true);
 					GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 					//delete GameLogic::Instance()->getSoftPlayer(i);
-					GameLogic::Instance()->repairSoftPlayer(i);
+					GameLogic::Instance()->repairSoftPlayer(i);					
 					/*softplayer = new PlayerSoftBody("SoftPlayer_" + i,
 						nclgl::Maths::Vector3(3.0f * i, 10.f, 3.0f * i),
 						1.0f,

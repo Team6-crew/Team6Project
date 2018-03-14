@@ -443,6 +443,7 @@ void PlayerSoftBody::move(float dt) {
 		speedLimit();
 		wallLimit();
 		jumpSlow();
+		ToInfinityAndNotQuiteBeyond();
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
@@ -517,9 +518,12 @@ void PlayerSoftBody::jumpSlow() {
 }
 
 void PlayerSoftBody::ToInfinityAndNotQuiteBeyond() {
-	if (top->Physics()->GetPosition().y > 20.0f) {
+	if (top->Physics()->GetPosition().y > 150.0f) {
 		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetLinearVelocity(getBall()->softball[i]->Physics()->GetLinearVelocity()*-100.0);
+			PhysicsNode* node = getBall()->softball[i]->Physics();
+			node->SetLinearVelocity(nclgl::Maths::Vector3(0.0, -1.0f * node->GetLinearVelocity().y, 0.0));
+			//getBall()->softball[i]->Physics()->SetPosition(nclgl::Maths::Vector3(0.0, 5.0, 0.0));
+			
 		}
 	}
 }

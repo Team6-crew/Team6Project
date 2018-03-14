@@ -114,6 +114,7 @@ namespace CommonUtils
 	GameObject* BuildNonRenderObject(
 		const std::string& name,
 		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& halfdims,
 		float radius,
 		bool physics_enabled = false,
 		float inverse_mass = 0.0f,			//requires physics_enabled = true

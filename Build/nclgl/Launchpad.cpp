@@ -63,7 +63,7 @@ void Launchpad::SoftLaunch(PlayerSoftBody* player)
 {
 	for (int i = 0; i < 182; ++i)
 		player->getBall()->softball[i]->Physics()->SetLinearVelocity(player->getBall()->softball[i]->Physics()->GetLinearVelocity()
-			+ nclgl::Maths::Vector3(0, 100.f, 0));
+			+ nclgl::Maths::Vector3(0, 100.0f, 0));
 }
 void Launchpad::AILaunch(BallAI* AIBall)
 {

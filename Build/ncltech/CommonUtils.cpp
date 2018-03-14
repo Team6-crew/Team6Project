@@ -224,13 +224,14 @@ GameObject* CommonUtils::BuildSphereObject(
 
 GameObject* CommonUtils::BuildNonRenderObject(
 	const std::string& name,
-	const Vector3& pos,
+	const nclgl::Maths::Vector3& pos,
+	const nclgl::Maths::Vector3& halfdims,
 	float radius,
 	bool physics_enabled,
 	float inverse_mass,
 	bool collidable,
 	bool dragable,
-	const Vector4& color)
+	const nclgl::Maths::Vector4& color)
 {
 
 	PhysicsNode* pnode = NULL;
