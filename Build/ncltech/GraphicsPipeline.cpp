@@ -405,7 +405,7 @@ void GraphicsPipeline::RenderScene(float dt)
 	TrailBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderTrail->Activate();
-	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers() + GameLogic::Instance()->getNumAIPlayers());
+	shaderTrail->SetUniform("num_players", GameLogic::Instance()->getTotalPlayers() + GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumNetPlayers());
 	int splatSoftPlayer = -1;
 	int splatAIPlayer = -1;
 	for (int i = 0; i < GameLogic::Instance()->getTotalPlayers(); i++) {
@@ -450,6 +450,24 @@ void GraphicsPipeline::RenderScene(float dt)
 
 		}	
 
+	}
+	for (int i = GameLogic::Instance()->getTotalPlayers(); i < GameLogic::Instance()->getNumNetPlayers() + GameLogic::Instance()->getTotalPlayers(); i++)
+	{
+		int j = i - GameLogic::Instance()->getTotalPlayers();
+		std::string arr = "players[" + std::to_string(i) + "].";
+		float pos_x = GameLogic::Instance()->getNetPlayer(j)->getRelativePosition().x;
+		float pos_z = GameLogic::Instance()->getNetPlayer(j)->getRelativePosition().z;
+		float rad = GameLogic::Instance()->getNetPlayer(j)->getRadius();
+		Vector4 temp_col = (*GameLogic::Instance()->getNetPlayer(j)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
+		Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
+		shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
+		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
+		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
+		if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
+		else {
+			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
+			splatSoftPlayer = j;
+		}
 	}
 	for (int i = GameLogic::Instance()->getTotalPlayers(); i < GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getTotalPlayers(); i++)
 	{
@@ -501,10 +519,10 @@ void GraphicsPipeline::RenderScene(float dt)
 	CircleBuffer->Activate();
 	renderer->SetViewPort(2048, 2048);
 	shaderCircle->Activate();
-	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers());
+	shaderCircle->SetUniform("num_players", GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumNetPlayers());
 	float sum_score = 0.0f;
 	float angle = 0.0f;
-	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers()+ GameLogic::Instance()->getNumAIPlayers(); i++) {
+	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
 		sum_score += (*GameLogic::Instance()->getPaintPerc())[i];
 	}
 	int max_score = 0;
@@ -522,6 +540,17 @@ void GraphicsPipeline::RenderScene(float dt)
 			shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 		}
 		
+	}
+	for (int i = GameLogic::Instance()->getNumSoftPlayers(); i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+		int j = i - GameLogic::Instance()->getNumNetPlayers();
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
+		std::string arr = "players[" + std::to_string(i) + "].";
+		angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
+		shaderCircle->SetUniform((arr + "angle").c_str(), angle);
+		shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getNetPlayer(j)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 	}
 	for (int i = GameLogic::Instance()->getNumSoftPlayers(); i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers(); i++) {
 		int j = i - GameLogic::Instance()->getNumSoftPlayers();
@@ -696,8 +725,8 @@ void GraphicsPipeline::RenderScene(float dt)
 }
 
 void GraphicsPipeline::AdjustViewport(int i, int j) {
-	float width = renderer->GetWidth();
-	float height = renderer->GetHeight();
+	int width = renderer->GetWidth();
+	int height = renderer->GetHeight();
 	int num_p = GameLogic::Instance()->getTotalPlayers();
 	if (j == 0) {
 		if (num_p == 1) {
@@ -706,83 +735,83 @@ void GraphicsPipeline::AdjustViewport(int i, int j) {
 		else if (num_p == 2) {
 			renderer->SetProjMatrix(Matrix4::Perspective(PROJ_NEAR, PROJ_FAR, ((float)width) / ((float)height / 2.0f), PROJ_FOV));
 			if (i == 0) {
-				renderer->SetViewPort(0, height / 2, width, height / 2);
-				renderer->Scissor(0, height / 2, width, height / 2);
+				renderer->SetViewPort(0, (int)(height * 0.5f), (int)width, (int)(height * 0.5f));
+				renderer->Scissor(0, (int)(height * 0.5f), (int)width, (int)(height * 0.5f));
 			}
 			else {
-				renderer->SetViewPort(0, 0, width, height / 2);
-				renderer->Scissor(0, 0, width, height / 2);
+				renderer->SetViewPort(0, 0, (int)width, (int)(height * 0.5f));
+				renderer->Scissor(0, 0, (int)width, (int)(height * 0.5f));
 			}
 		}
 		else if (num_p == 3) {
 			if (i == 0) {
-				renderer->SetViewPort(width / 4, height / 2, width / 2, height / 2);
-				renderer->Scissor(width / 4, height / 2, width / 2, height / 2);
+				renderer->SetViewPort((int)(width * 0.25f), (int)(height * 0.5f), (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor((int)(width * 0.25f), (int)(height * 0.5f), (int)(width * 0.5f), (int)(height * 0.5f));
 			}
 			else if (i == 1) {
-				renderer->SetViewPort(0, 0, width / 2, height / 2);
-				renderer->Scissor(0, 0, width / 2, height / 2);
+				renderer->SetViewPort(0, 0, (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor(0, 0, (int)(width * 0.5f), (int)(height * 0.5f));
 			}
 			else {
-				renderer->SetViewPort(width / 2, 0, width / 2, height / 2);
-				renderer->Scissor(width / 2, 0, width / 2, height / 2);
+				renderer->SetViewPort((int)(width * 0.5f), 0, (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor((int)(width * 0.5f), 0, (int)(width * 0.5f), (int)(height * 0.5f));
 			}
 		}
 		else if (num_p == 4) {
 			if (i == 0) {
-				renderer->SetViewPort(0, height / 2, width / 2, height / 2);
-				renderer->Scissor(0, height / 2, width / 2, height / 2);
+				renderer->SetViewPort(0, (int)(height * 0.5f), (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor(0, (int)(height * 0.5f), (int)(width * 0.5f), (int)(height * 0.5f));
 			}
 			else if (i == 1) {
-				renderer->SetViewPort(width / 2, height / 2, width / 2, height / 2);
-				renderer->Scissor(width / 2, height / 2, width / 2, height / 2);
+				renderer->SetViewPort((int)(width * 0.5f), (int)(height * 0.5f), (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor((int)(width * 0.5f), int(height * 0.5f), int(width * 0.5f), int(height * 0.5f));
 			}
 			else if (i == 2) {
-				renderer->SetViewPort(0, 0, width / 2, height / 2);
-				renderer->Scissor(0, 0, width / 2, height / 2);
+				renderer->SetViewPort(0, 0, (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor(0, 0, (int)(width * 0.5f), (int)(height * 0.5f));
 			}
 			else {
-				renderer->SetViewPort(width / 2, 0, width / 2, height / 2);
-				renderer->Scissor(width / 2, 0, width / 2, height / 2);
+				renderer->SetViewPort((int)(width * 0.5f), 0, (int)(width * 0.5f), (int)(height * 0.5f));
+				renderer->Scissor((int)(width * 0.5f), 0, (int)(width * 0.5f), (int)(height * 0.5f));
 			}
 		}
 	}
 	else if (j == 1) {
 		if (num_p == 1) {
-			renderer->Scissor(4 * width / 5, height - width / 5, width / 5, width / 5);
-			renderer->SetViewPort(4 * width / 5, height - width / 5, width / 5, width / 5);
+			renderer->Scissor((int)(4 * width * 0.2f), (int)(height - width * 0.2f), (int)(width * 0.2f), (int)(width * 0.2f));
+			renderer->SetViewPort((int)(4 * width * 0.2f), (int)(height - width * 0.2f), (int)(width * 0.2f), (int)(width * 0.2f));
 		}
 		else if (num_p == 2) {
-			renderer->Scissor(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
-			renderer->SetViewPort(4 * width / 5, height / 2 - width / 10, width / 5, width / 5);
+			renderer->Scissor((int)(4 * width* 0.2f), (int)(height * 0.5f - width * 0.1f), (int)(width * 0.2f), (int)(width * 0.2f));
+			renderer->SetViewPort((int)(4 * width * 0.2f), (int)(height * 0.5f - width * 0.1f), (int)(width * 0.2f), (int)(width * 0.2f));
 		}
 		else if (num_p == 3) {
 			float size = width / 4.0f;
-			renderer->SetViewPort(0, height / 2 + size / 8, size, size);
-			renderer->Scissor(0, height / 2 + size / 8, size, size);
+			renderer->SetViewPort(0, (int)(height * 0.5f + size * 0.125f), (int)size, (int)size);
+			renderer->Scissor(0, (int)(height * 0.5f + size * 0.125f), (int)size, (int)size);
 		}
 		else if (num_p == 4) {
-			renderer->Scissor(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
-			renderer->SetViewPort(9 * width / 10, height / 2 - width / 20, width / 10, width / 10);
+			renderer->Scissor((int)(9 * width * 0.1f), (int)(height * 0.5f - width * 0.05f), (int)(width * 0.1f), (int)(width * 0.1f));
+			renderer->SetViewPort((int)(9 * width * 0.1f), (int)(height * 0.5f - width * 0.05f), (int)(width * 0.1f), (int)(width * 0.1f));
 		}
 	}
 	else {
 		if (num_p == 1) {
-			renderer->Scissor(0, height - width / 5, width / 5, width / 5);
-			renderer->SetViewPort(0, height - width / 5, width / 5, width / 5);
+			renderer->Scissor(0, (int)(height - width * 0.2f), (int)(width * 0.2f), (int)(width * 0.2f));
+			renderer->SetViewPort(0, (int)(height - width * 0.2f), (int)(width * 0.2f), (int)(width * 0.2f));
 		}
 		else if (num_p == 2) {
-			renderer->Scissor(0, height / 2 - width / 10, width / 5, width / 5);
-			renderer->SetViewPort(0, height / 2 - width / 10, width / 5, width / 5);
+			renderer->Scissor(0, (int)(height * 0.5f - width * 0.1f), (int)(width * 0.2f), (int)(width * 0.2f));
+			renderer->SetViewPort(0, (int)(height * 0.5f - width * 0.1f), (int)(width * 0.2f), (int)(width * 0.2f));
 		}
 		else if (num_p == 3) {
 			float size = width / 4.0f;
-			renderer->SetViewPort(3 * width / 4, height / 2 + size / 8, size, size);
-			renderer->Scissor(3 * width / 4, height / 2 + size / 8, size, size);
+			renderer->SetViewPort((int)(3 * width * 0.25f), (int)(height * 0.5f + size * 0.125f), (int)size, (int)size);
+			renderer->Scissor((int)(3 * width * 0.25f), (int)(height * 0.5f + size * 0.125f), (int)size, (int)size);
 		}
 		else if (num_p == 4) {
-			renderer->Scissor(0, height / 2 - width / 20, width / 10, width / 10);
-			renderer->SetViewPort(0, height / 2 - width / 20, width / 10, width / 10);
+			renderer->Scissor(0, (int)(height * 0.5f - width * 0.05f), (int)(width * 0.1f), (int)(width * 0.1f));
+			renderer->SetViewPort(0, (int)(height * 0.5f - width * 0.05f), (int)(width * 0.1f), (int)(width * 0.1f));
 		}
 
 	}

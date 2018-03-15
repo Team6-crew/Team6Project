@@ -8,7 +8,6 @@
 #include <omp.h>
 #include <algorithm>
 #include <ncltech\Scene.h>
-#include <GameTech Coursework\EmptyScene.h>
 #include <ncltech/Pickup.h>
 #include "Tags.h"
 
@@ -33,8 +32,8 @@ PhysicsEngine::PhysicsEngine()
 	//Variables set here will /not/ be reset with each scene
 	isPaused = false;  
 	debugDrawFlags = DEBUGDRAW_FLAGS_MANIFOLD | DEBUGDRAW_FLAGS_CONSTRAINT;
-	octree = new OcTree(new AABB(Vector3(0, worldSize, 0), worldSize));
-	worldPartition = new WorldPartition(new AABB(Vector3(0, worldSize, 0), worldSize), 4);
+	octree = new OcTree(new AABB(Vector3(0, (float)worldSize, 0), (float)worldSize));
+	worldPartition = new WorldPartition(new AABB(Vector3(0, (float)worldSize, 0), (float)worldSize), 4);
 	SetDefaults();
 }
 
@@ -165,7 +164,7 @@ void PhysicsEngine::UpdatePhysics()
 		OcTree::leaves.clear();
 		OcTree::draw(PhysicsEngine::GetOcTree());
 		OcTree::deleteTree(PhysicsEngine::GetOcTree());
-		octree = new OcTree(new AABB(Vector3(0, worldSize, 0),worldSize));
+		octree = new OcTree(new AABB(Vector3(0, (float)worldSize, 0),(float)worldSize));
 		OcTree::setCapacity(40);
 		for (int i = 0; i < physicsNodes.size(); i++) {
 			octree->insert(physicsNodes[i]);

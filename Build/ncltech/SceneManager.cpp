@@ -80,7 +80,7 @@ void SceneManager::JumpToScene(int idx)
 	if (idx == 1)
 	{
 		LevelLoader loader;
-		loader.BuildLevel("SimpleLevel.txt", scene);
+		loader.BuildLevel("Level1.txt", scene);
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 		{
 			scene->AddGameObject(GameLogic::Instance()->getPlayer(i));

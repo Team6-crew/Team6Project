@@ -152,7 +152,26 @@ void Player::move(float dt) {
 
 
 }
+void Player::moveServer(float dt) {
+	if (!stun(dt)) {
+		Vector3 ball_pos = physicsNode->GetPosition();
+		forward = (camera->GetPosition() - ball_pos).Normalise();
+		forward = Vector3(forward.x, 0.0f, forward.z);
 
+
+		Matrix4 worldTr = bodyRenderNode->GetWorldTransform();
+		worldTr.SetPositionVector(ball_pos + Vector3(0, 2, 0));
+		bodyRenderNode->SetTransform(worldTr);
+
+		//physicsNode->SetForce(Vector3(0, 0, 0));
+		handleInput(dt);
+
+		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*Matrix4::Rotation(sensitivity, Vector3(0, 1, 0)));
+		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
+	}
+
+
+}
 void Player::handleInput(float dt) {
 	Vector3 jump(0, 15, 0);
 	float yaw = camera->GetYaw();
