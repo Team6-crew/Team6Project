@@ -72,9 +72,7 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	stunDuration = 0.0f;
 
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
-
 	
-
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
 	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
 

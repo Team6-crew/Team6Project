@@ -110,8 +110,7 @@ Type LevelLoader::StringToType(const std::string& line)
 
 void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 {
-	Load(filename);
-	
+	Load(filename);	
 
 	float step = mapObjects.size()/100.0f;
 	float frame = 0.0f;
