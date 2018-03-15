@@ -22,6 +22,11 @@ enum Tags {
 	TWeapon,
 	TRandomPickup,
 	TAIPlayer,
+	TAIPlayer1,
+	TAIPlayer2,
+	TAIPlayer3,
+	TAIPlayer4,
+	TCubes
 	TCubes,
 	TRotCubes
 };

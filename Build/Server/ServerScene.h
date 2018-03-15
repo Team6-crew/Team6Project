@@ -26,25 +26,21 @@
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <ncltech/Menu.h>
 #include <nclgl\ResourceManager.h>
-#include <ncltech\AABB.h>
-
 #include <nclgl\LevelLoader.h>
-
 //Fully striped back scene to use as a template for new scenes.
-class EmptyScene : public Scene
+class ServerScene : public Scene
 {
 
 private:
 	int scene_iterator;
 	bool backgroundSoundPlaying;
 public:
-	
+
 	float rotation = 0.0f;
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
-	AABB* walls[4];
-	EmptyScene(const std::string& friendly_name)
+	ServerScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
 
@@ -67,25 +63,20 @@ public:
 		soundMenu->set_id(2);
 	}
 
-	virtual ~EmptyScene()
+	virtual ~ServerScene()
 	{
+
 	}
 
 	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
-	{   
-		
-		walls[0] = new AABB(nclgl::Maths::Vector3(200, 0, 0), 100);
-		walls[1] = new AABB(nclgl::Maths::Vector3(-200, 0, 0), 100);
-		walls[2] = new AABB(nclgl::Maths::Vector3(0, 0, 200), 100);
-		walls[3] = new AABB(nclgl::Maths::Vector3(0, 0, -200), 100);
-
+	{
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
-		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
+		if (num_p & 0b0001)GameLogic::Instance()->addSoftPlayer(0);
 		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
 		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
@@ -109,9 +100,9 @@ public:
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
-			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
 
+		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f),
@@ -121,120 +112,65 @@ public:
 			true,
 			false,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
-		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);		
-		
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 
-		// ---------------------------------------- portal1 ----------------------------------------
-		//portal1A
-		Portal* portal1A = new Portal(
-			"portal_a1",
-			nclgl::Maths::Vector3(70.0f, 2.0f, 0.0f),
-			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
-		//portal1A->setDynamic(false);
-		portal1A->SetPhysics(portal1A->Physics());
-		portal1A->SetTag(Tags::TPortal_A);
-		portal1A->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a1,		
-				this,					
-				std::placeholders::_1,
-				std::placeholders::_2)			
-		);
-		this->AddGameObject(portal1A);
-		
-		//portal1B
-		Portal* portal1B = new Portal(
-			"portal_b1",
-			nclgl::Maths::Vector3(-70.0f, 2.0f, 0.0f),
-			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//portal1B->setDynamic(false);
-		portal1B->SetPhysics(portal1B->Physics());
-		portal1B->SetTag(Tags::TPortal_B);
-		portal1B->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b1,
-				this,
-				std::placeholders::_1,
-				std::placeholders::_2)
-		);
-		this->AddGameObject(portal1B);
-		
-		// ---------------------------------------- portal2 ----------------------------------------
-		//portal2A
-		Portal* portal2A = new Portal(
-			"portal_a2",
-			nclgl::Maths::Vector3(0.0f, 2.0f, 70.0f),
-			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
-		//portal2A->setDynamic(false);
-		portal2A->SetPhysics(portal2A->Physics());
-		portal2A->SetTag(Tags::TPortal_A);
-		portal2A->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_a2,		
-				this,					
-				std::placeholders::_1,
-				std::placeholders::_2)			
-		);
-		this->AddGameObject(portal2A);
-		
-		//portal2B
-		Portal* portal2B = new Portal(
-			"portal_b2",
-			nclgl::Maths::Vector3(0.0f, 2.0f, -70.0f),
-			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
-			true,
-			100.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//portal2B->setDynamic(false);
-		portal2B->SetPhysics(portal2B->Physics());
-		portal2B->SetTag(Tags::TPortal_B);
-		portal2B->Physics()->SetOnCollisionCallback(
-			std::bind(&EmptyScene::collisionCallback_b2,
-				this,
-				std::placeholders::_1,
-				std::placeholders::_2)
-		);
-		this->AddGameObject(portal2B);
+		backgroundSoundPlaying = false;
 
-		//	//testcube- test the texture
-		//	Washingzone* wz = new Washingzone("washingzone",
-		//		nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
-		//		nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-		//		true,
-		//		0.0f,
-		//		true,
-		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//wz->SetPhysics(wz->Physics());
-		//this->AddGameObject(wz);
+		RandomPickup* pickup1 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup1->SetPhysics(pickup1->Physics());
+		this->AddGameObject(pickup1);
 
-	/*	Launchpad* lp = new Launchpad("launchpad",
-			nclgl::Maths::Vector3(0.0f, 1.5f, -30.0f),
-			nclgl::Maths::Vector3(1.5f, 0.5f, 1.5f),
+
+		RandomPickup* pickup2 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup2->SetPhysics(pickup2->Physics());
+		this->AddGameObject(pickup2);
+
+
+		RandomPickup* pickup3 = new RandomPickup("pickup",
+			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
+			1.0f,
+			true,
+			0.0f,
+			true,
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
+		pickup3->SetPhysics(pickup3->Physics());
+		this->AddGameObject(pickup3);
+
+		//testcube- test the texture
+		Washingzone* wz = new Washingzone("washingzone",
+			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
 			true,
 			0.0f,
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		lp->SetPhysics(lp->Physics());
-		this->AddGameObject(lp);*/
-
+		wz->SetPhysics(wz->Physics());
+		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
+		this->AddGameObject(wz);
+		LevelLoader loader;
+		loader.BuildLevel("Level1.txt", this);
+		
 	}
+
 
 	virtual void OnUpdateScene(float dt) override
 	{
-		
 		if (GameLogic::Instance()->getTotalTime() >= 3.0f) {
 			GameLogic::Instance()->setGameHasStarted(true);
 			if (!backgroundSoundPlaying) {
@@ -243,7 +179,6 @@ public:
 			}
 
 		}
-		
 		if (scene_iterator > 0) {
 			GameLogic::Instance()->setLevelIsLoaded(true);
 		}
@@ -256,45 +191,27 @@ public:
 				true,
 				0.5f,
 				true,
-				nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 			pickup->SetPhysics(pickup->Physics());
 			pickup->Physics()->SetElasticity(0.0f);
-			(*pickup->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
 			this->AddGameObject(pickup);
 
 		}
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			if (GameLogic::Instance()->getSoftPlayer(i))
+			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
 
 		Scene::OnUpdateScene(dt);
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
-			GameLogic::Instance()->getPlayer(i)->move(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
-			for (int j = 0; j < 4; j++) {
-				GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
-			}
 		}
-	
-		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
-		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i) {
-				if ((GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetPosition().y - GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->GetPosition().y > 5)
-					|| GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetPosition().z - GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->GetPosition().z > 5) {
-					GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
-					GameLogic::Instance()->repairSoftPlayer(i);
-					this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
-					this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
-				}
-		}
-		
+
 		// Pause Menu
 
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
@@ -308,18 +225,12 @@ public:
 			}
 			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			tempvolumelevel = 0;
-			if (isPaused)
-			{
-				
-				GameLogic::Instance()->setIsGamePaused(true);
-			}
-			else
+			if (!isPaused)
 			{
 				tempvolumelevel = volumelevel;
-				GameLogic::Instance()->setIsGamePaused(false);
 			}
 			AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
-			
+
 
 			//if (pauseMenu->visible == false) {
 			//	pauseMenu->setSelection(0);
@@ -346,13 +257,13 @@ public:
 				}
 			}
 			else if (activeMenu->getSelection() == 0 && activeMenu == soundMenu) {
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_MINUS) && volumelevel > 0) {
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
 					volumelevel -= 1;
 					//AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
 					//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
 					tempvolumelevel = volumelevel;
 				}
-				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PLUS) && volumelevel < 10) {
+				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
 					volumelevel += 1;
 
 					tempvolumelevel = volumelevel;
@@ -375,20 +286,10 @@ public:
 			{
 				pauseMenu->visible = false;
 				SceneManager::Instance()->JumpToScene("Main Menu");
+				//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 				activeMenu = NULL;
 
 				//Delete objects from the scene
-				GameLogic::Instance()->clearGameLogic();
-				GraphicsPipeline::Instance()->clearGraphicsPipeline();
-				DeleteAllGameObjects();
-				m_UpdateCallbacks.clear();
-				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-				LevelLoader levelLoader;
-				levelLoader.DeleteMapObjects();
-				this->DeleteAllGameObjects();
-				GraphicsPipeline::Instance()->ClearPaintableObjects();
-				GameLogic::Instance()->clearPlayers();
-
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
@@ -396,19 +297,11 @@ public:
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
-			
-		}		
+		}
+
 	}
 
-	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
-	{
-		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
-		{
-			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
-			PhysicsEngine::Instance()->DeleteAfter(kill_ob, 0.0f);
-		}
-		return true;
-	}
+
 
 	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
@@ -475,15 +368,6 @@ public:
 					- FindGameObject("portal_a1")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
-		}
-
-		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_b1");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 		}
 		return true;
 	}
@@ -554,14 +438,6 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
 		}
-		 if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_b2");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
-		}
 		return true;
 	}
 
@@ -630,14 +506,6 @@ public:
 					- FindGameObject("portal_b1")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
-		}
-		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_a1");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
 		return true;
 	};
@@ -708,14 +576,6 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
 		}
-		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_a2");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
-		}
 		return true;
 	};
 private:
@@ -727,7 +587,6 @@ private:
 	Menu * activeMenu;
 	Menu * activeSubmenu;
 	Menu * soundMenu;
-	PlayerSoftBody* softplayer;
 
 	float Score = 0.0f;
 

@@ -1,3 +1,5 @@
+#pragma once
+#define WIN32_LEAN_AND_MEAN
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\SceneManager.h>
 
@@ -7,10 +9,11 @@
 #include "EmptyScene.h"
 #include "iostream"
 #include "fstream"
+#include "LanScene.h"
+#include "MainMenu.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
-#include "MainMenu.h"
 
 #include <nclgl\GameLogic.h>
 
@@ -59,7 +62,8 @@ void Initialize()
 	//Enqueue All Scenes
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
-		
+
+	SceneManager::Instance()->EnqueueScene(new LanScene("Lan Project"));
 	// Move this once main menu is hooked up
 	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
@@ -158,6 +162,7 @@ int main()
 	GameLogic::Instance()->setLevelIsLoaded(false);
 	GameLogic::Instance()->setGameHasStarted(false);
 	//Create main game-loop
+	
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
 
@@ -214,6 +219,8 @@ int main()
 			}
 			NCLDebug::_ClearDebugLists();
 			if (GameLogic::Instance()->getCurrentTime() > 0) {
+				//std::cout << GameLogic::Instance()->getCurrentTime() << endl;
+				//std::cout << GameLogic::Instance()->getSeconds() << endl;
 				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds() - GameLogic::Instance()->getActualGameTime());
 				NCLDebug::AddTimer(nclgl::Maths::Vector4(1.f, 1.f, 1.f, 1.f), std::to_string(GameLogic::Instance()->getCurrentTime() / 60) + ":" + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) / 10) + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) % 10));
 			}
@@ -245,12 +252,46 @@ int main()
 				}
 				NCLDebug::_ClearDebugLists();
 
-				if(winningPlayer < j)
-				NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player " + to_string(winningPlayer + 1) + " WINS!");
-
+				if (winningPlayer < j)
+				{
+					int tag = GameLogic::Instance()->getSoftPlayer(winningPlayer)->getBall()->softball[winningPlayer]->GetTag();
+					if (tag == 2)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player1 WINS!");
+					}
+					else if (tag == 3)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player2 WINS!");
+					}
+					else if (tag == 4)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player3 WINS!");
+					}
+					else if (tag == 5)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player4 WINS!");
+					}
+				}
 				else
 				{
 					aiWinningPlayer = winningPlayer -j;
+					int tag = GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->GetTag();
+					if (tag == 2)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer1 WINS!");
+					}
+					else if (tag == 3)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer2 WINS!");
+					}
+					else if (tag == 4)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer3 WINS!");
+					}
+					else if (tag == 5)
+					{
+						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer4 WINS!");
+					}
 					NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer +1) + " WINS!");
 				}
 				

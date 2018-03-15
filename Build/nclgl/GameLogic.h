@@ -43,7 +43,7 @@ public:
 	nclgl::Maths::Vector3 getLastPickupPosition() { return lastPickupPosition; }
 	int getNumAllPlayers() { return allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
-	Player* getNetPlayer(int num_player) { return netPlayers[num_player]; }
+	PlayerSoftBody* getNetPlayer(int num_player) { return netPlayers[num_player]; }
 	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }
 
 	Player* getPlayer(int num_player) { return players[num_player]; }
@@ -62,9 +62,11 @@ public:
 
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
+	void setnumOfNetPlayers(int nMp) { numOfNetPlayers = nMp; };
 	void setnumAI(int nAI) { numAI = nAI; };
 	void updateControls();
 	int getnumOfPlayersMp(void) { return numOfPlayersMp; };
+	int getnumOfNetPlayers(void) { return numOfNetPlayers; };
 	int getnumAI(void) { return numAI; };
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
@@ -86,7 +88,16 @@ public:
 
 	bool getIsGamePaused() { return isGamePaused; }
 	void setIsGamePaused(bool gamePaused) { isGamePaused = gamePaused; }
+
+	void setMyNetNum(int k) { myNetPlayerNum = k; }
+	int getMyNetNum() { return myNetPlayerNum; }
+
+	bool getJustJumped() { return justJumped; }
+	void setJustJumped(bool k) { justJumped = k; }
+
 private:
+	bool justJumped = false;
+	int myNetPlayerNum = 0;
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
 	float posX, posZ;
@@ -94,13 +105,13 @@ private:
 	float add_rad;
 	std::vector <Player*> players;
 	std::vector <Player*> allPlayers;
-	std::vector <Player*> netPlayers;
+	std::vector <PlayerSoftBody*> netPlayers;
 	std::vector <PlayerSoftBody*> softplayers;
 	std::vector <BallAI*> aiPlayers;
 	nclgl::Maths::Vector4 colours[4];
-
 	// split screen ui integration
 	int numOfPlayersMp;
+	int numOfNetPlayers;
 	int numAI;
 	KeyboardKeys controls[4][6] = {
 	{ KEYBOARD_W, KEYBOARD_S, KEYBOARD_A, KEYBOARD_D, KEYBOARD_SPACE, KEYBOARD_Q },
@@ -123,4 +134,6 @@ private:
 	int seconds;
 	int cSeconds;
 	bool isGamePaused;
+
+	float totalscore;
 };
