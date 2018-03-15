@@ -184,7 +184,7 @@ public:
 		//this->AddGameObject(lp);
 
 		Portal* a1  = new Portal("portal_a1",
-			nclgl::Maths::Vector3(10.0f, 2.f, -40.0f),
+			nclgl::Maths::Vector3(0.0f, 2.f, 70.0f),
 			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
 			true,
 			0.0f,
@@ -201,7 +201,7 @@ public:
 		this->AddGameObject(a1);
 		
 		Portal* b1 = new Portal("portal_b1",
-			nclgl::Maths::Vector3(-10.0f, 2.f, -40.0f),
+			nclgl::Maths::Vector3(0.0f, 2.f, -70.0f),
 			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
 			true,
 			0.0f,
