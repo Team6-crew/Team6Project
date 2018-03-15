@@ -179,8 +179,6 @@ void GameLogic::calculatePaintPercentage() {
 					}
 				}
 				softplayers[k]->setadd_rad(0.0f);
-				softplayers[k]->setscore(paint_perc[k]);
-				cout << paint_perc[k] << endl;
 			}
 	}
 	for (int k = 0; k < netPlayers.size(); k++)
@@ -282,9 +280,25 @@ void GameLogic::calculatePaintPercentage() {
 					}
 				}
 				aiPlayers[l]->setadd_rad(0.0f);
-				aiPlayers[l]->setscore(paint_perc[l + softplayers.size()]);
 			}
 		}
+	}
+
+	totalscore = 0.0f;
+	for (int i = 0; i < paint_perc.size(); i++)
+	{
+		totalscore = paint_perc[i] + totalscore;
+	}
+
+	for (int k = 0; k < softplayers.size(); k++)
+	{
+		softplayers[k]->setscore(paint_perc[k] / totalscore);
+		//cout << softplayers[k]->getscore() << endl;
+	}
+
+	for (int l = 0; l < aiPlayers.size(); l++)
+	{
+		aiPlayers[l]->setscore(paint_perc[l + softplayers.size()] / totalscore);
 	}
 }
 
