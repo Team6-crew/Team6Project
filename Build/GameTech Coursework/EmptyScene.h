@@ -330,6 +330,7 @@ public:
 						tempvolumelevel = volumelevel;
 					}
 					AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
+					GameLogic::Instance()->setIsGamePaused(false);
 				}
 			}
 			else if (activeMenu->getSelection() == 0 && activeMenu == soundMenu) {

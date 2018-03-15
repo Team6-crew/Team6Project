@@ -260,19 +260,19 @@ int main()
 						int tag = GameLogic::Instance()->getSoftPlayer(winningPlayer)->getBall()->softball[winningPlayer]->GetTag();
 						if (tag == 2)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player1 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player 1 WINS!");
 						}
 						else if (tag == 3)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player2 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player 2 WINS!");
 						}
 						else if (tag == 4)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player3 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player 3 WINS!");
 						}
 						else if (tag == 5)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player4 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player 4 WINS!");
 						}
 					}
 					else
@@ -281,21 +281,21 @@ int main()
 						int tag = GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->GetTag();
 						if (tag == 2)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer1 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AI Player 1 WINS!");
 						}
 						else if (tag == 3)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer2 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AI Player 2 WINS!");
 						}
 						else if (tag == 4)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer3 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AI Player 3 WINS!");
 						}
 						else if (tag == 5)
 						{
-							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer4 WINS!");
+							NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AI Player 4 WINS!");
 						}
-						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer + 1) + " WINS!");
+						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AI Player " + to_string(aiWinningPlayer + 1) + " WINS!");
 					}
 				}
 
