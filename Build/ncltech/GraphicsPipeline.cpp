@@ -633,8 +633,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
-		std::cout << i << std::endl;
-		std::cout << GameLogic::Instance()->getNumSoftPlayers() << std::endl;
+
 		BuffHUD(i);
 
 
