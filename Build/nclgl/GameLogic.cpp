@@ -162,7 +162,7 @@ void GameLogic::calculatePaintPercentage() {
 				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
 				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
-				if (server) {
+				if (numOfNetPlayers == 0) {
 					for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
 						for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
