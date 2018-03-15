@@ -740,115 +740,115 @@ void NCLDebug::_BuildTextBackgrounds()
 
 	g_vCharsLogStart = (uint)g_vChars.size();
 
-	if (g_LogVisible)
-	{
-		//Draw log text
-		size_t log_len = g_vLogEntries.size();
+	//if (g_LogVisible)
+	//{
+	//	//Draw log text
+	//	size_t log_len = g_vLogEntries.size();
 
-		float max_x = 0.0f;
-		int i_min = max(g_vLogOffsetIdx - MAX_LOG_SIZE + 1, 0);
+	//	float max_x = 0.0f;
+	//	int i_min = max(g_vLogOffsetIdx - MAX_LOG_SIZE + 1, 0);
 
-		float start_x = (g_vLogEntries.size() > MAX_LOG_SIZE) ? -0.99f : -1.0f;
-		for (int i = g_vLogOffsetIdx; i >= i_min; --i)
-		{
-			int base_i = i - g_vLogOffsetIdx;
-			LogEntry& e = g_vLogEntries[i];
+	//	float start_x = (g_vLogEntries.size() > MAX_LOG_SIZE) ? -0.99f : -1.0f;
+	//	for (int i = g_vLogOffsetIdx; i >= i_min; --i)
+	//	{
+	//		int base_i = i - g_vLogOffsetIdx;
+	//		LogEntry& e = g_vLogEntries[i];
 
-			max_x = max(max_x, e.text.length() * cs_size_x * 0.6f);
+	//		max_x = max(max_x, e.text.length() * cs_size_x * 0.6f);
 
-			float alpha = ((g_vLogEntries.size() - base_i) / (float(MAX_LOG_SIZE)));
-			alpha = 1.0f - (alpha * alpha);
+	//		float alpha = ((g_vLogEntries.size() - base_i) / (float(MAX_LOG_SIZE)));
+	//		alpha = 1.0f - (alpha * alpha);
 
-			DrawTextCs(Vector4(start_x + cs_size_x * 0.5f, -1.0f + ((-base_i - 0.25f) * cs_size_y) + cs_size_y, 0.0f, 1.0f), LOG_TEXT_SIZE, e.text, TEXTALIGN_LEFT, e.color);
-		}
-
-
-		//Draw Log Background
-		if (g_vLogEntries.size() > 0)
-		{
-			float top_y = -1 + min(g_vLogEntries.size(), MAX_LOG_SIZE) * cs_size_y + cs_size_y;
-			max_x = 1.f;// max_x - 1 + cs_size_x;
+	//		DrawTextCs(Vector4(start_x + cs_size_x * 0.5f, -1.0f + ((-base_i - 0.25f) * cs_size_y) + cs_size_y, 0.0f, 1.0f), LOG_TEXT_SIZE, e.text, TEXTALIGN_LEFT, e.color);
+	//	}
 
 
-			DrawBox_log(
-				Vector3(-1, top_y, 0),
-				Vector3(max_x, top_y, 0),
-				Vector3(-1, -1, 0),
-				Vector3(max_x, -1, 0),
-				log_background_col
-			);
+	//	//Draw Log Background
+	//	if (g_vLogEntries.size() > 0)
+	//	{
+	//		float top_y = -1 + min(g_vLogEntries.size(), MAX_LOG_SIZE) * cs_size_y + cs_size_y;
+	//		max_x = 1.f;// max_x - 1 + cs_size_x;
 
 
-			//Is MouseOver?
-			Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//		DrawBox_log(
+	//			Vector3(-1, top_y, 0),
+	//			Vector3(max_x, top_y, 0),
+	//			Vector3(-1, -1, 0),
+	//			Vector3(max_x, -1, 0),
+	//			log_background_col
+	//		);
 
-			if (cs_mouse.x >= 1.f - cs_size.x * 1.2 &&
-				cs_mouse.y >= top_y - cs_size.y * 2.f && cs_mouse.y <= top_y)
-			{
-				if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-					g_LogVisible = false;
 
-				DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
-			}
-			else
-			{
-				DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
-			}
+	//		//Is MouseOver?
+	//		Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (g_vLogEntries.size() > MAX_LOG_SIZE)
-			{
-				//Scroll bar
-				DrawThickLine(
-					invProjView* Vector3(-0.992f, top_y - 0.01f, -0.995f),
-					invProjView* Vector3(-0.992f, -0.99f, -0.995f),
-					0.0002f,
-					Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+	//		if (cs_mouse.x >= 1.f - cs_size.x * 1.2 &&
+	//			cs_mouse.y >= top_y - cs_size.y * 2.f && cs_mouse.y <= top_y)
+	//		{
+	//			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//				g_LogVisible = false;
 
-				float total_size = top_y + 1.f - 0.02f;
-				float size = max(total_size * float(MAX_LOG_SIZE) / float(g_vLogEntries.size()), 0.03f);
-				float offset = (g_vLogOffsetIdx - MAX_LOG_SIZE + 1) / float(g_vLogEntries.size() - MAX_LOG_SIZE) * (total_size - size);
+	//			DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
+	//		}
+	//		else
+	//		{
+	//			DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
+	//		}
 
-				DrawThickLine(
-					invProjView* Vector3(-0.992f, top_y - 0.01f - offset, -1.00f),
-					invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
-					0.0002f);
+	//		if (g_vLogEntries.size() > MAX_LOG_SIZE)
+	//		{
+	//			//Scroll bar
+	//			DrawThickLine(
+	//				invProjView* Vector3(-0.992f, top_y - 0.01f, -0.995f),
+	//				invProjView* Vector3(-0.992f, -0.99f, -0.995f),
+	//				0.0002f,
+	//				Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 
-				g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
+	//			float total_size = top_y + 1.f - 0.02f;
+	//			float size = max(total_size * float(MAX_LOG_SIZE) / float(g_vLogEntries.size()), 0.03f);
+	//			float offset = (g_vLogOffsetIdx - MAX_LOG_SIZE + 1) / float(g_vLogEntries.size() - MAX_LOG_SIZE) * (total_size - size);
 
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);
-			}
-		}
-	}
-	else
-	{
-		Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x * 3.f, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//			DrawThickLine(
+	//				invProjView* Vector3(-0.992f, top_y - 0.01f - offset, -1.00f),
+	//				invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
+	//				0.0002f);
 
-		Vector4 col = log_background_col;
+	//			g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
 
-		//Is MouseOver?
-		if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
-			cs_mouse.y >= -1.f && cs_mouse.y <= -1 + cs_size.y * 1.2)
-		{
-			col = log_background_highlight;
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x * 3.f, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-				g_LogVisible = true;
-		}
+	//	Vector4 col = log_background_col;
 
-		DrawBox_log(
-			Vector3(-1, -1 + cs_size.y * 1.2f, 0),
-			Vector3(-1 + cs_size.x * 1.2f, -1 + cs_size.y * 1.2f, 0),
-			Vector3(-1, -1, 0),
-			Vector3(-1 + cs_size.x * 1.2f, -1, 0),
-			col
-		);
+	//	//Is MouseOver?
+	//	if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
+	//		cs_mouse.y >= -1.f && cs_mouse.y <= -1 + cs_size.y * 1.2)
+	//	{
+	//		col = log_background_highlight;
 
-		DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, -1.f + cs_size.y * 0.5f, -1.f, 1.f), LOG_TEXT_SIZE, "Log");
+	//		if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//			g_LogVisible = true;
+	//	}
 
-	}
+	//	DrawBox_log(
+	//		Vector3(-1, -1 + cs_size.y * 1.2f, 0),
+	//		Vector3(-1 + cs_size.x * 1.2f, -1 + cs_size.y * 1.2f, 0),
+	//		Vector3(-1, -1, 0),
+	//		Vector3(-1 + cs_size.x * 1.2f, -1, 0),
+	//		col
+	//	);
+
+	//	DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, -1.f + cs_size.y * 0.5f, -1.f, 1.f), LOG_TEXT_SIZE, "Log");
+
+	//}
 
 
 }
@@ -969,6 +969,8 @@ void NCLDebug::_RenderDrawlist(uint* offsets)
 {
 	float aspectRatio = Window::GetWindow().GetScreenSize().y / Window::GetWindow().GetScreenSize().x;
 
+	glViewport(0, 0, Window::GetWindow().GetScreenSize().x, Window::GetWindow().GetScreenSize().y);
+
 	uint n_points = (offsets[1] - offsets[0]) >> 1;
 	uint n_tlines = (offsets[2] - offsets[1]) >> 1;
 	uint n_hlines = (offsets[3] - offsets[2]) >> 1;
@@ -1031,6 +1033,9 @@ void NCLDebug::_RenderDebugClipSpace()
 {
 	//All text data already updated in main DebugDrawLists
 	// - we just need to rebind and draw it
+
+	glViewport(0, 0, Window::GetWindow().GetScreenSize().x, Window::GetWindow().GetScreenSize().y);
+
 
 	if (g_pShaderText && g_vChars.size() > 0)
 	{
