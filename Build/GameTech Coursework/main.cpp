@@ -201,7 +201,7 @@ int main()
 		AudioFactory::Instance()->GetAudioEngine()->Update(dt);
 		
 		// Remove this once main menu is hooked up
-		//GameLogic::Instance()->setSeconds(GameLogic::Instance()->getCurrentTime());
+		
 		if (SceneManager::Instance()->GetCurrentSceneIndex() == 0)
 		{
 			GraphicsPipeline::Instance()->RenderMenu();
@@ -215,7 +215,6 @@ int main()
 				}
 				GameLogic::Instance()->increaseTotalTime(dt);
 				GraphicsPipeline::Instance()->RenderScene(dt);
-
 			}
 			NCLDebug::_ClearDebugLists();
 			if (GameLogic::Instance()->getCurrentTime() > 0) {
@@ -294,7 +293,7 @@ int main()
 				}
 				
 
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Restart");
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
@@ -305,10 +304,29 @@ int main()
 					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Team Project");
 					
+					GameLogic::Instance()->setIsGamePaused(false);
+					GameLogic::Instance()->setLevelIsLoaded(false);
+					GameLogic::Instance()->setGameHasStarted(false);
+					GameLogic::Instance()->setTotalTime(0.0f);
+					GameLogic::Instance()->setActualGameTime(0.0f);
+					GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
+					gameEnded = false;
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
+					showEndScreen = !showEndScreen;
+					GameLogic::Instance()->clearGameLogic();
+					GraphicsPipeline::Instance()->clearGraphicsPipeline();
+					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Main Menu");
+					
+					GameLogic::Instance()->setIsGamePaused(false);
+					GameLogic::Instance()->setLevelIsLoaded(false);
+					GameLogic::Instance()->setGameHasStarted(false);
+					GameLogic::Instance()->setTotalTime(0.0f);
+					GameLogic::Instance()->setActualGameTime(0.0f);
+					GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
+					gameEnded = false;
 				}
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {
