@@ -157,7 +157,7 @@ void BallAI::addBallAIPlayers(int i)
 		AIBall->AIStateMachine->setCurrentState(AIBall->AIStateMachine, RoamingState::GetInstance());
 		AIBall->setStateMachine(AIBall->AIStateMachine);
 
-		//	MapNavigation *mp = new MapNavigation();
+		//	MapNavigation *mp = new MapNavigation(); //will be used for A* path
 		//AIBall->setMapNavigation(mp);
 
 		cout << "AI Player " << i << " created \n";
