@@ -26,23 +26,21 @@
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <ncltech/Menu.h>
 #include <nclgl\ResourceManager.h>
-#include <ncltech\AABB.h>
-
+#include <nclgl\LevelLoader.h>
 //Fully striped back scene to use as a template for new scenes.
-class EmptyScene : public Scene
+class ServerScene : public Scene
 {
 
 private:
 	int scene_iterator;
 	bool backgroundSoundPlaying;
 public:
-	
+
 	float rotation = 0.0f;
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
-	AABB* walls[4];
-	EmptyScene(const std::string& friendly_name)
+	ServerScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
 
@@ -65,26 +63,20 @@ public:
 		soundMenu->set_id(2);
 	}
 
-	virtual ~EmptyScene()
+	virtual ~ServerScene()
 	{
-		
+
 	}
 
 	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
-	{   
-		
-		walls[0] = new AABB(nclgl::Maths::Vector3(200, 0, 0), 100);
-		walls[1] = new AABB(nclgl::Maths::Vector3(-200, 0, 0), 100);
-		walls[2] = new AABB(nclgl::Maths::Vector3(0, 0, 200), 100);
-		walls[3] = new AABB(nclgl::Maths::Vector3(0, 0, -200), 100);
-
+	{
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
-		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
+		if (num_p & 0b0001)GameLogic::Instance()->addSoftPlayer(0);
 		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
 		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
 		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
@@ -108,9 +100,8 @@ public:
 
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); j++) {
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
-			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
-		
+
 		//Who doesn't love finding some common ground?
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
@@ -124,9 +115,9 @@ public:
 
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-		
+
 		backgroundSoundPlaying = false;
 
 		RandomPickup* pickup1 = new RandomPickup("pickup",
@@ -135,11 +126,10 @@ public:
 			true,
 			0.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup1->SetPhysics(pickup1->Physics());
-		(*pickup1->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
 		this->AddGameObject(pickup1);
-		
+
 
 		RandomPickup* pickup2 = new RandomPickup("pickup",
 			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
@@ -147,10 +137,10 @@ public:
 			true,
 			0.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup2->SetPhysics(pickup2->Physics());
 		this->AddGameObject(pickup2);
-		
+
 
 		RandomPickup* pickup3 = new RandomPickup("pickup",
 			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
@@ -158,10 +148,10 @@ public:
 			true,
 			0.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 		pickup3->SetPhysics(pickup3->Physics());
 		this->AddGameObject(pickup3);
-		
+
 		//testcube- test the texture
 		Washingzone* wz = new Washingzone("washingzone",
 			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
@@ -171,57 +161,16 @@ public:
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		wz->SetPhysics(wz->Physics());
+		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
 		this->AddGameObject(wz);
-
-		Launchpad* lp = new Launchpad("launchpad",
-			nclgl::Maths::Vector3(0.0f, 1.5f, -30.0f),
-			nclgl::Maths::Vector3(1.5f, 0.5f, 1.5f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		lp->SetPhysics(lp->Physics());
-		this->AddGameObject(lp);
-
-		Portal* a1  = new Portal("portal_a1",
-			nclgl::Maths::Vector3(10.0f, 2.f, -40.0f),
-			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		a1->SetPhysics(a1->Physics());
-		a1->physicsNode->SetOnCollisionCallback(
-			std::bind(
-				&EmptyScene::collisionCallback_a1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(a1);
+		LevelLoader loader;
+		loader.BuildLevel("Level1.txt", this);
 		
-		Portal* b1 = new Portal("portal_b1",
-			nclgl::Maths::Vector3(-10.0f, 2.f, -40.0f),
-			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		b1->SetPhysics(b1->Physics());
-		b1->physicsNode->SetOnCollisionCallback(
-			std::bind(
-				&EmptyScene::collisionCallback_b1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(b1);
 	}
 
 
 	virtual void OnUpdateScene(float dt) override
 	{
-		
 		if (GameLogic::Instance()->getTotalTime() >= 3.0f) {
 			GameLogic::Instance()->setGameHasStarted(true);
 			if (!backgroundSoundPlaying) {
@@ -230,7 +179,6 @@ public:
 			}
 
 		}
-		
 		if (scene_iterator > 0) {
 			GameLogic::Instance()->setLevelIsLoaded(true);
 		}
@@ -243,45 +191,27 @@ public:
 				true,
 				0.5f,
 				true,
-				nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+				nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
 			pickup->SetPhysics(pickup->Physics());
 			pickup->Physics()->SetElasticity(0.0f);
-			(*pickup->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
 			this->AddGameObject(pickup);
 
 		}
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-			if (GameLogic::Instance()->getSoftPlayer(i))
+			if (GameLogic::Instance()->getSoftPlayer(i)->getBall())
 				GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
 		}
 
 
 		Scene::OnUpdateScene(dt);
-		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
-			GameLogic::Instance()->getPlayer(i)->move(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
-			for (int j = 0; j < 4; j++) {
-				GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
-			}
 		}
-	
-		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
-			GameLogic::Instance()->getAIPlayer(j)->move(dt);
 
-		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); ++i) {
-				if ((GameLogic::Instance()->getSoftPlayer(i)->getTop()->Physics()->GetPosition().y - GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Physics()->GetPosition().y > 5)
-					|| GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetPosition().z - GameLogic::Instance()->getSoftPlayer(i)->getFront()->Physics()->GetPosition().z > 5) {
-					GameLogic::Instance()->getSoftPlayer(i)->getBall()->RemoveRender();
-					GameLogic::Instance()->repairSoftPlayer(i);
-					this->AddSoftBody(GameLogic::Instance()->getSoftPlayer(i)->getBall());
-					this->AddGameObject(GameLogic::Instance()->getSoftPlayer(i)->getBody());
-				}
-		}
-		
+
 		// Pause Menu
 
 		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P))
@@ -295,18 +225,12 @@ public:
 			}
 			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			tempvolumelevel = 0;
-			if (isPaused)
-			{
-				
-				GameLogic::Instance()->setIsGamePaused(true);
-			}
-			else
+			if (!isPaused)
 			{
 				tempvolumelevel = volumelevel;
-				GameLogic::Instance()->setIsGamePaused(false);
 			}
 			AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
-			
+
 
 			//if (pauseMenu->visible == false) {
 			//	pauseMenu->setSelection(0);
@@ -362,20 +286,10 @@ public:
 			{
 				pauseMenu->visible = false;
 				SceneManager::Instance()->JumpToScene("Main Menu");
+				//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 				activeMenu = NULL;
 
 				//Delete objects from the scene
-				GameLogic::Instance()->clearGameLogic();
-				GraphicsPipeline::Instance()->clearGraphicsPipeline();
-				DeleteAllGameObjects();
-				m_UpdateCallbacks.clear();
-				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
-				GameLogic::Instance()->setIsGamePaused(false);
-				GameLogic::Instance()->setLevelIsLoaded(false);
-				GameLogic::Instance()->setGameHasStarted(false);
-				GameLogic::Instance()->setTotalTime(0.0f);
-				GameLogic::Instance()->setActualGameTime(0.0f);
-				isPaused = false;
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
@@ -383,8 +297,8 @@ public:
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_UP)) { activeMenu->MoveUp(); }
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_DOWN)) { activeMenu->MoveDown(); }
-			
-		}		
+		}
+
 	}
 
 
@@ -455,15 +369,6 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
 		}
-
-		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_b1");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
-		}
 		return true;
 	}
 
@@ -532,14 +437,6 @@ public:
 					- FindGameObject("portal_a2")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
-		}
-		 if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_b2");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
 		return true;
 	}
@@ -610,14 +507,6 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
 		}
-		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_a1");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
-		}
 		return true;
 	};
 
@@ -687,14 +576,6 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
 		}
-		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
-		{
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
-			GameObject *portal = FindGameObject("portal_a2");
-			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
-			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
-		}
 		return true;
 	};
 private:
@@ -706,7 +587,6 @@ private:
 	Menu * activeMenu;
 	Menu * activeSubmenu;
 	Menu * soundMenu;
-	PlayerSoftBody* softplayer;
 
 	float Score = 0.0f;
 

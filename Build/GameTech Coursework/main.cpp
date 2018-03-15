@@ -1,3 +1,5 @@
+#pragma once
+#define WIN32_LEAN_AND_MEAN
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\SceneManager.h>
 
@@ -7,10 +9,12 @@
 #include "EmptyScene.h"
 #include "iostream"
 #include "fstream"
+#include "LanScene.h"
+#include "MainMenu.h"
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
-#include "MainMenu.h"
+
 
 #include <ncltech\Memory Management\HeapFactory.h>
 using namespace nclgl::Maths;
@@ -58,6 +62,7 @@ void Initialize()
 	SceneManager::Instance()->EnqueueScene(new MainMenu("Main Menu"));
 	SceneManager::Instance()->EnqueueScene(new EmptyScene("Team Project"));
 
+	SceneManager::Instance()->EnqueueScene(new LanScene("Lan Project"));
 	// Move this once main menu is hooked up
 	//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Intro.wav", false);
 }
@@ -157,6 +162,7 @@ int main()
 	GameLogic::Instance()->setLevelIsLoaded(false);
 	GameLogic::Instance()->setGameHasStarted(false);
 	//Create main game-loop
+	
 	while (Window::GetWindow().UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
 		//Start Timing
 
@@ -213,6 +219,8 @@ int main()
 			}
 			NCLDebug::_ClearDebugLists();
 			if (GameLogic::Instance()->getCurrentTime() > 0) {
+				//std::cout << GameLogic::Instance()->getCurrentTime() << endl;
+				//std::cout << GameLogic::Instance()->getSeconds() << endl;
 				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds() - GameLogic::Instance()->getActualGameTime());
 				NCLDebug::AddTimer(nclgl::Maths::Vector4(1.f, 1.f, 1.f, 1.f), std::to_string(GameLogic::Instance()->getCurrentTime() / 60) + ":" + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) / 10) + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) % 10));
 			}

@@ -135,8 +135,14 @@
     <ClInclude Include="Washingzone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Paintbomb.h" />
     <ClInclude Include="RandomPickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Paintbomb.h" />
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -235,6 +241,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Paintbomp.cpp" />
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="RandomPickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -44,17 +44,16 @@ void GameLogic::addPlayer(int num_player) {
 	paint_perc.push_back(0.0f);
 }
 
-void GameLogic::addNetPlayer(int num_player) {
-	Player * player = new Player("Player_" + num_player,
-		nclgl::Maths::Vector3(3.0f*num_player, 1.f, 3.0f*num_player),
+void GameLogic::addNetPlayer(int num_splayers) {
+	PlayerSoftBody* softplayer = new PlayerSoftBody("NetPlayer_" + num_splayers,
+		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
 		1.0f,
-		true,
 		1.0f,
-		true,
-		colours[num_player]);
-	player->SetPhysics(player->Physics());
-	netPlayers.push_back(player);
-	allPlayers.push_back(player);
+		colours[num_splayers],
+		num_splayers);
+	for (int j = 0; j < 182; ++j)
+		softplayer->getBall()->softball[j]->SetPhysics(softplayer->getBall()->softball[j]->Physics());
+	netPlayers.push_back(softplayer);
 	paint_perc.push_back(0.0f);
 }
 
@@ -182,10 +181,62 @@ void GameLogic::calculatePaintPercentage() {
 				softplayers[k]->setadd_rad(0.0f);
 			}
 	}
-
-	for (int l = 0; l < aiPlayers.size(); l++)
+	for (int k = 0; k < netPlayers.size(); k++)
 	{
-		nclgl::Maths::Vector3 position = aiPlayers[l]->Physics()->GetPosition();
+		nclgl::Maths::Vector3 position = netPlayers[k]->getBottom()->Physics()->GetPosition();
+		if (position.y > 2.5f)
+		{
+			continue;
+		}
+		else
+			if (netPlayers[k]->getcanpaint() == false)
+			{
+				netPlayers[k]->settime((netPlayers[k]->gettime()) + 1.0f);
+				if (netPlayers[k]->gettime() > netPlayers[k]->getDebuffTime())
+				{
+					netPlayers[k]->setcanpaint(true);
+				}
+				continue;
+			}
+		/*else if (position.y < -3.0f)
+		{
+		AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"gameover.wav", false);
+		continue;
+		}*/
+			else
+			{
+
+				add_rad = netPlayers[k]->getadd_rad();
+				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
+
+				netPlayers[k]->setRadius(rad);
+				posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+
+				netPlayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+
+				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+
+						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+							if (world_paint[i][j] == 0) {
+								paint_perc[k] += increment;
+							}
+							else if (world_paint[i][j] != k + 1) {
+								paint_perc[k] += increment;
+								paint_perc[world_paint[i][j] - 1] -= increment;
+							}
+							world_paint[i][j] = k + 1;
+						}
+					}
+				}
+				netPlayers[k]->setadd_rad(0.0f);
+			}
+	}
+		for (int l = 0; l < aiPlayers.size(); l++)
+		{
+			nclgl::Maths::Vector3 position = aiPlayers[l]->Physics()->GetPosition();
 
 		if (position.y > 2.5f)
 		{

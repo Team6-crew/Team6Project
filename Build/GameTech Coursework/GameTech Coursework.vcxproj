@@ -20,12 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EmptyScene.h" />
+    <ClInclude Include="LanScene.h" />
     <ClInclude Include="MainMenu.h" />
-    <ClInclude Include="Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nclgl\nclgl.vcxproj">
