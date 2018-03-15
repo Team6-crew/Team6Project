@@ -88,11 +88,10 @@ void SceneManager::JumpToScene(int idx)
 			scene->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 
 		}
-
-	
-
-	scene->OnInitializeScene();
-	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
+		
+		scene->OnInitializeScene();
+		NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
+	}
 }
 
 void SceneManager::JumpToScene(const std::string& friendly_name)

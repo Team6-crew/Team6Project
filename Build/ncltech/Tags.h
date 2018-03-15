@@ -26,7 +26,6 @@ enum Tags {
 	TAIPlayer2,
 	TAIPlayer3,
 	TAIPlayer4,
-	TCubes
 	TCubes,
 	TRotCubes
 };
