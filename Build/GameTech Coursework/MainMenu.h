@@ -235,6 +235,7 @@ public:
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 				GameLogic::Instance()->setSeconds(seconds);
+				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 			{
@@ -244,6 +245,7 @@ public:
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 				GameLogic::Instance()->setSeconds(seconds);
+				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_3))
 			{
@@ -253,6 +255,7 @@ public:
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 				GameLogic::Instance()->setSeconds(seconds);
+				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_4))
 			{
@@ -262,6 +265,7 @@ public:
 				SceneManager::Instance()->JumpToScene("Team Project");
 				AudioFactory::Instance()->GetAudioEngine()->SetBackgroundSound(SOUNDSDIR"WonderfulLights.ogg");
 				GameLogic::Instance()->setSeconds(seconds);
+				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
 			}
 		}
 		else {

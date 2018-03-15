@@ -375,6 +375,7 @@ public:
 				GameLogic::Instance()->setGameHasStarted(false);
 				GameLogic::Instance()->setTotalTime(0.0f);
 				GameLogic::Instance()->setActualGameTime(0.0f);
+				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds());
 				isPaused = false;
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
