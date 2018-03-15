@@ -78,7 +78,7 @@ public:
 
 			float jn = -(abnVel + b) / constraintMass;
 
-			float force = 902.f * distance_offset - 0.5 * abnVel;
+			float force = 902.f * distance_offset - 0.5f * abnVel;
 			float vel = force * dt;
 
 			pnodeA->SetLinearVelocity(pnodeA->GetLinearVelocity()

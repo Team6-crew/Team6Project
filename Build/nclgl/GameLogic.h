@@ -21,11 +21,11 @@ public:
 	float getPosZ() { return posZ; }
 	std::vector<float> * getPaintPerc() { return &paint_perc; }
 	float getRadius() { return rad;  }
-	int getNumPlayers() { return players.size(); }
-	int getNumNetPlayers() { return netPlayers.size(); }
-	int getNumSoftPlayers() { return softplayers.size(); }
-	int getNumAIPlayers() { return aiPlayers.size(); }
-	int getTotalPlayers() { return players.size() + softplayers.size();}
+	int getNumPlayers() { return (int)players.size(); }
+	int getNumNetPlayers() { return (int)netPlayers.size(); }
+	int getNumSoftPlayers() { return (int)softplayers.size(); }
+	int getNumAIPlayers() { return (int)aiPlayers.size(); }
+	int getTotalPlayers() { return (int)(players.size() + softplayers.size());}
 	float getTotalTime() { return totalTime; }
 	bool levelIsLoaded() { return levelLoaded; }
 	bool gameHasStarted() { return gameStarted; }
@@ -43,7 +43,7 @@ public:
 
 	bool spawnPickup();
 	nclgl::Maths::Vector3 getLastPickupPosition() { return lastPickupPosition; }
-	int getNumAllPlayers() { return allPlayers.size(); }
+	int getNumAllPlayers() { return (int)allPlayers.size(); }
 	Player* getAllPlayer(int num_player) { return allPlayers[num_player]; }
 	PlayerSoftBody* getNetPlayer(int num_player) { return netPlayers[num_player]; }
 	BallAI* getAIPlayer(int num_player) { return aiPlayers[num_player]; }

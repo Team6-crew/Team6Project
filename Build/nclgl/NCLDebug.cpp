@@ -1103,7 +1103,7 @@ void NCLDebug::_LoadShaders()
 
 	//Load Font Texture
 	g_glLogFontTex = _GenerateFontBitmap(LOG_TEXT_FONT, LOG_TEXT_SIZE, false, false, false);
-	g_glDefaultFontTex = _GenerateFontBitmap(STATUS_TEXT_FONT, 60.f, true, true, false);
+	g_glDefaultFontTex = _GenerateFontBitmap(STATUS_TEXT_FONT, 60, true, true, false);
 }
 
 
