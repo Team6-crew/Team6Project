@@ -121,4 +121,6 @@ private:
 	int seconds;
 	int cSeconds;
 	bool isGamePaused;
+
+	float totalscore;
 };
