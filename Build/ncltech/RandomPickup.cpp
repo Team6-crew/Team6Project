@@ -70,8 +70,26 @@ RandomPickup::~RandomPickup()
 
 void RandomPickup::Effect(PlayerSoftBody* player) {
 	float prob = (rand() % 100);
-	float time = GameLogic::Instance()->getSeconds() / 60.0f;
-	float temp = (player->getscore()) / time;
+	float temp;
+	float tempscore = player->getscore();
+
+	if (tempscore == 1)
+	{
+		temp = 0;
+	}
+	else if (tempscore < 0.4f)
+	{
+		temp = tempscore * 4;
+	}
+	else if (tempscore > 0.7f)
+	{
+		temp = tempscore * 10;
+	}
+	else
+	{
+		temp = tempscore * 7;
+	}
+	cout << temp << endl;
 	if (enabled) {
 		if (prob < (20-temp))
 		{
@@ -105,7 +123,7 @@ void RandomPickup::Effect(PlayerSoftBody* player) {
 		{
 			player->setStunDuration(3.0f);
 			//player->stun(0.2f);
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"behit.wav", false);
 		}
 		enabled = false;
 	}
@@ -113,8 +131,26 @@ void RandomPickup::Effect(PlayerSoftBody* player) {
 
 void RandomPickup::Effect(BallAI* AIBall) {
 	float prob = (rand() % 100);
-	float time = GameLogic::Instance()->getSeconds() / 60.0f;
-	float temp = (AIBall->getscore()) / time;
+	float temp;
+	float tempscore = AIBall->getscore();
+
+	if (tempscore == 1)
+	{
+		temp = 0;
+	}
+	else if (tempscore < 0.4f)
+	{
+		temp = tempscore * 4;
+	}
+	else if (tempscore > 0.7f)
+	{
+		temp = tempscore * 10;
+	}
+	else
+	{
+		temp = tempscore * 7;
+	}
+
 	if (enabled) {
 		if (prob < (20-temp))
 		{
@@ -145,8 +181,8 @@ void RandomPickup::Effect(BallAI* AIBall) {
 		else
 		{
 			AIBall->setStunDuration(3.0f);
-			AIBall->stun(0.2f);
-			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"stun.wav", false);
+			//AIBall->stun(0.2f);
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"behit.wav", false);
 		}
 		enabled = false;
 	}
