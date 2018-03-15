@@ -24,7 +24,7 @@ void Hull::Clear()
 int Hull::AddVertex(const Vector3& v)
 {
 	HullVertex new_vertex;
-	new_vertex._idx = m_vVertices.size();
+	new_vertex._idx = (int)m_vVertices.size();
 	new_vertex._pos = v;
 
 	m_vVertices.push_back(new_vertex);
@@ -54,10 +54,10 @@ int Hull::ConstructNewEdge(int parent_face_idx, int vert_start, int vert_end)
 	//Edge not already within the Hull, 
 	if (out_idx == -1)
 	{
-		out_idx = m_vEdges.size();
+		out_idx = (int)m_vEdges.size();
 
 		HullEdge new_edge;
-		new_edge._idx = m_vEdges.size();
+		new_edge._idx = (int)m_vEdges.size();
 		new_edge._vStart = vert_start;
 		new_edge._vEnd = vert_end;
 		m_vEdges.push_back(new_edge);
@@ -89,7 +89,7 @@ int Hull::ConstructNewEdge(int parent_face_idx, int vert_start, int vert_end)
 int Hull::AddFace(const Vector3& _normal, int nVerts, const int* verts)
 {
 	HullFace new_face;
-	new_face._idx = m_vFaces.size();
+	new_face._idx = (int)m_vFaces.size();
 	new_face._normal = _normal;
 	new_face._normal.Normalise();
 
@@ -204,13 +204,13 @@ void Hull::GetMinMaxVerticesInAxis(const Vector3& local_axis, int* out_min_vert,
 		if (cCorrelation > maxCorrelation)
 		{
 			maxCorrelation = cCorrelation;
-			maxVertex = i;
+			maxVertex = (int)i;
 		}
 
 		if (cCorrelation <= minCorrelation)
 		{
 			minCorrelation = cCorrelation;
-			minVertex = i;
+			minVertex = (int)i;
 		}
 	}
 

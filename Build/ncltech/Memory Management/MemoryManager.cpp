@@ -31,7 +31,7 @@ void* operator new(std::size_t size, Heap* heap)
 	// Setup header
 	AllocHeader* header = (AllocHeader*)memory;
 	header->heap = heap;
-	header->sizeBytes = size;
+	header->sizeBytes = (int)size;
 	header->signature = MEMORY_SIGNATURE;
 
 	// Setup memory
@@ -83,7 +83,7 @@ void * operator new[](std::size_t size, Heap* heap)
 	// Setup header
 	AllocHeader* header = (AllocHeader*)memory;
 	header->heap = heap;
-	header->sizeBytes = size;
+	header->sizeBytes = (int)size;
 	header->signature = MEMORY_SIGNATURE;
 
 	// Setup memory
