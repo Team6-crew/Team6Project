@@ -217,7 +217,7 @@ void GameLogic::calculatePaintPercentage() {
 				netPlayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
 				for (int i = max((int)((posX - rad) * GROUND_TEXTURE_SIZE), 0); i < min((int)((posX + rad) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); i++) {
-					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+					for (int j = max((int)((posZ - rad) * GROUND_TEXTURE_SIZE), 0); j < min((int)((posZ + rad) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); j++) {
 
 						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
