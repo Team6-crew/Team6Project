@@ -79,7 +79,7 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	maxCameraY = 6.0f;
 	maxCameraZ = 15.0f;
 	minCameraY = 0.8f;
-	minCameraZ = 4.0f;
+	minCameraZ = 1.5f;
 	curCameraY = maxCameraY;
 	curCameraZ = maxCameraZ;
 
