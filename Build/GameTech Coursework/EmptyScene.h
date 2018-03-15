@@ -131,13 +131,13 @@ public:
 		//portal1A
 		Portal* portal1A = new Portal(
 			"portal_a1",
-			nclgl::Maths::Vector3(80.0f, 2.0f, 0.0f),
+			nclgl::Maths::Vector3(70.0f, 2.0f, 0.0f),
 			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
-		portal1A->setDynamic(false);
+		//portal1A->setDynamic(false);
 		portal1A->SetPhysics(portal1A->Physics());
 		portal1A->SetTag(Tags::TPortal_A);
 		portal1A->Physics()->SetOnCollisionCallback(
@@ -151,13 +151,13 @@ public:
 		//portal1B
 		Portal* portal1B = new Portal(
 			"portal_b1",
-			nclgl::Maths::Vector3(-80.0f, 2.0f, 0.0f),
+			nclgl::Maths::Vector3(-70.0f, 2.0f, 0.0f),
 			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		portal1B->setDynamic(false);
+		//portal1B->setDynamic(false);
 		portal1B->SetPhysics(portal1B->Physics());
 		portal1B->SetTag(Tags::TPortal_B);
 		portal1B->Physics()->SetOnCollisionCallback(
@@ -172,13 +172,13 @@ public:
 		//portal2A
 		Portal* portal2A = new Portal(
 			"portal_a2",
-			nclgl::Maths::Vector3(0.0f, 2.0f, 80.0f),
+			nclgl::Maths::Vector3(0.0f, 2.0f, 70.0f),
 			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
-		portal2A->setDynamic(false);
+		//portal2A->setDynamic(false);
 		portal2A->SetPhysics(portal2A->Physics());
 		portal2A->SetTag(Tags::TPortal_A);
 		portal2A->Physics()->SetOnCollisionCallback(
@@ -192,13 +192,13 @@ public:
 		//portal2B
 		Portal* portal2B = new Portal(
 			"portal_b2",
-			nclgl::Maths::Vector3(0.0f, 2.0f, -80.0f),
+			nclgl::Maths::Vector3(0.0f, 2.0f, -70.0f),
 			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
 			100.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
-		portal2B->setDynamic(false);
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		//portal2B->setDynamic(false);
 		portal2B->SetPhysics(portal2B->Physics());
 		portal2B->SetTag(Tags::TPortal_B);
 		portal2B->Physics()->SetOnCollisionCallback(

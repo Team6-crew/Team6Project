@@ -109,11 +109,11 @@ void HandleKeyboardInputs()
 	uint sceneIdx = SceneManager::Instance()->GetCurrentSceneIndex();
 	uint sceneMax = SceneManager::Instance()->SceneCount();
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Y))
+	/*if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_Y))
 	SceneManager::Instance()->JumpToScene((sceneIdx + 1) % sceneMax);
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_T))
-	SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);
+	SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);*/
 
 	/*if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_R))
 	SceneManager::Instance()->JumpToScene(sceneIdx);
@@ -256,7 +256,7 @@ int main()
 				}
 				
 
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Play Again");
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
@@ -288,7 +288,7 @@ int main()
 			}
 			
 
-			/*else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
+		/*	else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
 				showEndScreen = !showEndScreen;
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			}*/
