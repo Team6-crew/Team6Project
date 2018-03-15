@@ -30,6 +30,7 @@
 #include <ncltech/Menu.h>
 #include <nclgl\ResourceManager.h>
 #include <nclgl\LevelLoader.h>
+#include <ncltech\AABB.h>
 //Fully striped back scene to use as a template for new scenes.
 class LanScene : public Scene
 {
@@ -44,6 +45,7 @@ public:
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
+	AABB* walls[4];
 	LanScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
@@ -77,6 +79,11 @@ public:
 
 	virtual void OnInitializeScene() override
 	{   
+		walls[0] = new AABB(nclgl::Maths::Vector3(200, 0, 0), 100);
+		walls[1] = new AABB(nclgl::Maths::Vector3(-200, 0, 0), 100);
+		walls[2] = new AABB(nclgl::Maths::Vector3(0, 0, 200), 100);
+		walls[3] = new AABB(nclgl::Maths::Vector3(0, 0, -200), 100);
+
 		GameLogic::Instance()->setIsServer(false);
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
@@ -120,54 +127,12 @@ public:
 
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
-		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"dirt.jpg"), 0);
+		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
 		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
 
 		backgroundSoundPlaying = false;
 
-		RandomPickup* pickup1 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup1->SetPhysics(pickup1->Physics());
-		this->AddGameObject(pickup1);
-
-
-		RandomPickup* pickup2 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup2->SetPhysics(pickup2->Physics());
-		this->AddGameObject(pickup2);
-
-
-		RandomPickup* pickup3 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup3->SetPhysics(pickup3->Physics());
-		this->AddGameObject(pickup3);
-
-		//testcube- test the texture
-		Washingzone* wz = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
-			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		wz->SetPhysics(wz->Physics());
-		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
-		this->AddGameObject(wz);
+		
 		//frame += step;
 		//GraphicsPipeline::Instance()->LoadingScreen(frame);
 		LevelLoader loader;
@@ -237,6 +202,9 @@ public:
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			for (int j = 0; j < 4; j++) {
+				GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
+			}
 		}
 		if (GameLogic::Instance()->getJustJumped()) {
 			GameLogic::Instance()->setJustJumped(false);

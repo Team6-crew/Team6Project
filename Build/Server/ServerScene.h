@@ -120,49 +120,7 @@ public:
 
 		backgroundSoundPlaying = false;
 
-		RandomPickup* pickup1 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup1->SetPhysics(pickup1->Physics());
-		this->AddGameObject(pickup1);
-
-
-		RandomPickup* pickup2 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup2->SetPhysics(pickup2->Physics());
-		this->AddGameObject(pickup2);
-
-
-		RandomPickup* pickup3 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(0.2f, 0.5f, 1.0f, 1.0f));
-		pickup3->SetPhysics(pickup3->Physics());
-		this->AddGameObject(pickup3);
-
-		//testcube- test the texture
-		Washingzone* wz = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
-			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		wz->SetPhysics(wz->Physics());
-		(*wz->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
-		this->AddGameObject(wz);
+		
 		LevelLoader loader;
 		loader.BuildLevel("Level1.txt", this);
 		

@@ -79,7 +79,7 @@ public:
 		walls[1] = new AABB(nclgl::Maths::Vector3(-200, 0, 0), 100);
 		walls[2] = new AABB(nclgl::Maths::Vector3(0, 0, 200), 100);
 		walls[3] = new AABB(nclgl::Maths::Vector3(0, 0, -200), 100);
-
+		GameLogic::Instance()->setIsServer(false);
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 

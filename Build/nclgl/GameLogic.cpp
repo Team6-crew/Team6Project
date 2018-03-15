@@ -313,7 +313,7 @@ void GameLogic::updateControls() {
 
 bool GameLogic::spawnPickup() {
 	//spawn pickup
-	if (GameLogic::Instance()->gameHasStarted())
+	if (GameLogic::Instance()->gameHasStarted() && !server && netPlayers.size() == 0) 
 	{
 		int spawntime = 8;
 
