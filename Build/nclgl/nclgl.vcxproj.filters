@@ -92,6 +92,11 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="AI\BallAI.cpp" />
+    <ClCompile Include="AI\ChasingState.cpp" />
+    <ClCompile Include="AI\RoamingState.cpp" />
+    <ClCompile Include="CollectandUsePickupState.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -202,11 +207,19 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Launchpad.h" />
     <ClInclude Include="Portal.h" />
-    <ClInclude Include="RenderNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="MySocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="AI\AIObject.h" />
+    <ClInclude Include="AI\BallAI.h" />
+    <ClInclude Include="AI\ChasingState.h" />
+    <ClInclude Include="AI\Messenger.h" />
+    <ClInclude Include="AI\RoamingState.h" />
+    <ClInclude Include="AI\State.h" />
+    <ClInclude Include="AI\StateMachine.h" />
+    <ClInclude Include="CollectandUsePickupState.h" />
+    <ClInclude Include="MapNavigation.h" />
   </ItemGroup>
 </Project>

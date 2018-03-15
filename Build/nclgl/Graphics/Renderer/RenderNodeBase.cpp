@@ -63,3 +63,15 @@ bool	RenderNodeBase::CompareByCameraDistance(RenderNodeBase*a, RenderNodeBase*b)
 bool	RenderNodeBase::CompareByZ(RenderNodeBase*a, RenderNodeBase*b) {
 	return (a->GetWorldTransform().GetPositionVector().z < b->GetWorldTransform().GetPositionVector().z) ? true : false;
 }
+
+void	RenderNodeBase::RemoveChildren()
+{
+	for (auto i = children.begin(); i != children.end(); ++i) {
+		if (*i)
+		{ 
+			(*i)->RemoveChildren();
+			SAFE_DELETE(*i);
+		}
+	}
+
+}

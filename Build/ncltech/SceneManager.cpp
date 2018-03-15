@@ -66,6 +66,7 @@ void SceneManager::JumpToScene(int idx)
 		scene->OnCleanupScene();
 		PhysicsEngine::Instance()->RemoveAllPhysicsObjects();	
 		GameLogic::Instance()->clearPlayers();
+		//levelLoader.DeleteMapObects();
 	}
 
 	m_SceneIdx = idx;
@@ -87,13 +88,10 @@ void SceneManager::JumpToScene(int idx)
 			scene->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
 
 		}
-
+		
+		scene->OnInitializeScene();
+		NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
 	}
-
-
-
-	scene->OnInitializeScene();
-	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
 }
 
 void SceneManager::JumpToScene(const std::string& friendly_name)
@@ -111,8 +109,9 @@ void SceneManager::JumpToScene(const std::string& friendly_name)
 	}
 
 	if (found)
-	{
+	{		
 		JumpToScene(idx);
+		std::cout << "Index number: " << idx << std:: endl;
 	}
 	else
 	{

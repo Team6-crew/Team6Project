@@ -12,12 +12,9 @@ enum Tags {
 	TGround,
 	TCanKiLL,
 	TLaunch,
-	TPortal_A1,
-	TPortal_B1 ,
-	TPortal_A2 ,
-	TPortal_B2 ,
+	TPortal_A,
+	TPortal_B,	 
 	TWash,
-	TRamp,
 	BPaint,
 	BStun,
 	BSpeed,
@@ -28,5 +25,6 @@ enum Tags {
 	TAIPlayer2,
 	TAIPlayer3,
 	TAIPlayer4,
-	TCubes
+	TCubes,
+	TRotCubes
 };

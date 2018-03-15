@@ -16,7 +16,7 @@ public:
 	void calculatePaintPercentage();
 	void addPlayer(int num_players);
 	void addNetPlayer(int num_players);
-	void addSoftPlayer(int num_players);
+	void addSoftPlayer(int num_players);	
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }
 	std::vector<float> * getPaintPerc() { return &paint_perc; }
@@ -48,7 +48,7 @@ public:
 
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
-	
+
 	void clearPlayers() { players.clear();	softplayers.clear(); }
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
 	
@@ -56,6 +56,10 @@ public:
 	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);};
 
 	void repairSoftPlayer(int num_splayers);
+	void clearGameLogic();
+	
+	Scene* scene; 
+
 	// split screen ui integration
 	void setnumOfPlayersMp(int nMp) { numOfPlayersMp = nMp; };
 	void setnumOfNetPlayers(int nMp) { numOfNetPlayers = nMp; };
@@ -67,7 +71,7 @@ public:
 	void setControls(int x, int y, KeyboardKeys key);
 	KeyboardKeys getControls(int x, int y) { return controls[x][y]; }
 
-	void clearGameLogic();
+	//void clearGameLogic();
 
 	void SetPlayerCapturedObject(GameObject * go, int p) { PlayerCapturedObject[go] = p; }
 	int  GetPlayerCapturedObject(GameObject * go) { return PlayerCapturedObject.at(go); }

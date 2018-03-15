@@ -11,6 +11,7 @@ public:
 	Portal(
 		const std::string& name,
 		const nclgl::Maths::Vector3& pos,
+		const nclgl::Maths::Vector3& halfdims,
 		bool physics_enabled,
 		float inverse_mass,
 		bool collidable,

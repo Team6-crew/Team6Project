@@ -196,12 +196,14 @@ protected:
 	{
 		m_UpdateCallbacks.clear();
 
-		for (auto obj : m_vpObjects)
-			if (obj->physicsNode != NULL) {
-				SAFE_DELETE(obj);
-			}
+		for (auto obj : m_vpObjects) {
+			if (obj->physicsNode != NULL){				
+					SAFE_DELETE(obj);	
+			}			
+		}
+				 
 		m_vpObjects.clear();
-
+			
 	
 	}
 

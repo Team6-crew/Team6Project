@@ -15,6 +15,7 @@
 #include <nclgl\Audio\AudioEngineBase.h>
 #include <nclgl\ResourceManager.h>
 
+#include <nclgl\GameLogic.h>
 
 #include <ncltech\Memory Management\HeapFactory.h>
 using namespace nclgl::Maths;
@@ -116,9 +117,9 @@ void HandleKeyboardInputs()
 	SceneManager::Instance()->JumpToScene((sceneIdx + 1) % sceneMax);
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_T))
-	SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);
+	SceneManager::Instance()->JumpToScene((sceneIdx == 0 ? sceneMax : sceneIdx) - 1);*/
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_R))
+	/*if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_R))
 	SceneManager::Instance()->JumpToScene(sceneIdx);
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
@@ -146,7 +147,6 @@ void HandleKeyboardInputs()
 		}
 	}
 }
-
 
 // Program Entry Point
 int main()
@@ -294,7 +294,7 @@ int main()
 				}
 				
 
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Play Again");
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
@@ -303,11 +303,21 @@ int main()
 					GameLogic::Instance()->clearGameLogic();
 					GraphicsPipeline::Instance()->clearGraphicsPipeline();
 					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+					LevelLoader levelLoader;
+					levelLoader.DeleteMapObjects();
+					GraphicsPipeline::Instance()->ClearPaintableObjects();
+					GameLogic::Instance()->clearPlayers();
+					std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
 					SceneManager::Instance()->JumpToScene("Team Project");
-					
+
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
+					LevelLoader levelLoader;
+					levelLoader.DeleteMapObjects();
+					GraphicsPipeline::Instance()->ClearPaintableObjects();
+					GameLogic::Instance()->clearPlayers();
+					std::cout << "DELETED!!!!!!!!!!!!!!!!!!!!" << std::endl;
 					SceneManager::Instance()->JumpToScene("Main Menu");
 				}
 			}
@@ -316,7 +326,7 @@ int main()
 			}
 			
 
-			/*else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
+		/*	else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_5)) {
 				showEndScreen = !showEndScreen;
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			}*/

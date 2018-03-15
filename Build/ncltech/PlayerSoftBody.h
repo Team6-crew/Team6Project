@@ -106,6 +106,8 @@ public:
 	void setscore(float s) { score = s; }
 	void cameraInWall(AABB* wall);
 	
+	void ToInfinityAndNotQuiteBeyond();
+
 private:
 	void handleInput(float dt);
 	void unequipPaintWeapon();

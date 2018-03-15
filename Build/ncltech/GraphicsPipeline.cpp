@@ -305,7 +305,17 @@ void GraphicsPipeline::StartCounter() {
 }
 
 void GraphicsPipeline::BuffHUD(int i) {
+	if (GameLogic::Instance()->getNumSoftPlayers() < (i - 1)){
+		return;
+	}
+
+	if (!GameLogic::Instance()->getSoftPlayer(i))
+	{
+		return;
+	}
+
 	if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BPaint) {
+		std::cout << "Reached" << std::endl;
 		paintQuad->ReplaceTexture(buff_paint_tex, 0);
 	}
 	else if (GameLogic::Instance()->getSoftPlayer(i)->getCurrentBuff() == Tags::BStun) {
@@ -387,17 +397,20 @@ void GraphicsPipeline::RenderScene(float dt)
 		int i = 0;
 		for (std::vector<GameObject*>::iterator it = paintableObjects.begin(); it != paintableObjects.end(); it++) {
 			std::string arr = "objects[" + std::to_string(i) + "].";
-			nclgl::Maths::Vector3 halfDims = (*(*it)->Render()->GetChildIteratorStart())->GetHalfDims();
-
-			nclgl::Maths::Vector3 position = (*it)->Physics()->GetPosition();
-			float posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
-			float posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
-			nclgl::Maths::Vector4 objectColor = (*(*it)->Render()->GetChildIteratorStart())->GetColourFromPlayer();
-			shaderPaintable->SetUniform((arr + "pos_x").c_str(), posX);
-			shaderPaintable->SetUniform((arr + "pos_z").c_str(), posZ);
-			shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x / WORLD_SIZE, halfDims.z / WORLD_SIZE));
-			shaderPaintable->SetUniform((arr + "objColor").c_str(), objectColor);
-			i++;
+			if (*it)
+			{
+				nclgl::Maths::Vector3 halfDims = (*(*it)->Render()->GetChildIteratorStart())->GetHalfDims();
+				nclgl::Maths::Vector3 position = (*it)->Physics()->GetPosition();
+				float posX = (position.x - gr_pos.x + WORLD_SIZE) / (WORLD_SIZE * 2);
+				float posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
+				nclgl::Maths::Vector4 objectColor = (*(*it)->Render()->GetChildIteratorStart())->GetColourFromPlayer();
+				shaderPaintable->SetUniform((arr + "pos_x").c_str(), posX);
+				shaderPaintable->SetUniform((arr + "pos_z").c_str(), posZ);
+				shaderPaintable->SetUniform((arr + "halfdims").c_str(), nclgl::Maths::Vector2(halfDims.x / WORLD_SIZE, halfDims.z / WORLD_SIZE));
+				shaderPaintable->SetUniform((arr + "objColor").c_str(), objectColor);
+				i++;
+			}
+			
 		}
 		shaderPaintable->SetUniform("num_objects", i);
 		paintQuad->Draw();
@@ -649,6 +662,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		//NCLDEBUG - World Debug Data (anti-aliased)		
 		NCLDebug::_RenderDebugDepthTested();
 		NCLDebug::_RenderDebugNonDepthTested();
+
 		BuffHUD(i);
 
 

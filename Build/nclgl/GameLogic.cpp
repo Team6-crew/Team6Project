@@ -5,7 +5,10 @@
 #include <nclgl\Audio\AudioFactory.h>
 #include <nclgl\Audio\AudioEngineBase.h>
 
+
 using namespace nclgl::Maths;
+
+#include <nclgl\LevelLoader.h>
 
 GameLogic::GameLogic() {
 	memset(world_paint, 0, sizeof(world_paint[0][0]) * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE);
@@ -61,7 +64,7 @@ void GameLogic::addNetPlayer(int num_splayers) {
 void GameLogic::addSoftPlayer(int num_splayers) {
 
 	PlayerSoftBody* softplayer = new PlayerSoftBody("SoftPlayer_" + num_splayers,
-		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
+		nclgl::Maths::Vector3((3.0f * num_splayers)-10.0, 5.0f, 3.0f),
 		1.0f,
 		1.0f,
 		colours[num_splayers],
@@ -351,12 +354,14 @@ bool GameLogic::spawnPickup() {
 	return false;
 }
 
+
 void GameLogic::clearGameLogic()
 {
 	players.clear();
 	allPlayers.clear();
 	netPlayers.clear();
 	softplayers.clear();
-	paint_perc.clear();
-	aiPlayers.clear();
+	paint_perc.clear();	
+	
 }
+

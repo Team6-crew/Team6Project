@@ -205,7 +205,7 @@ bool PlayerSoftBody::collisionCallback(PhysicsNode* thisNode, PhysicsNode* other
 		wash->SoftEffect(this);
 		return false;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TGround))
+	else if (otherNode->GetParent()->HasTag(Tags::TGround) || otherNode->GetParent()->HasTag(Tags::TCubes) || otherNode->GetParent()->HasTag(Tags::TRotCubes))
 	{
 		canjump = true;
 	}
@@ -432,6 +432,7 @@ void PlayerSoftBody::move(float dt) {
 		speedLimit();
 		wallLimit();
 		jumpSlow();
+		ToInfinityAndNotQuiteBeyond();
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
@@ -537,13 +538,24 @@ void PlayerSoftBody::wallLimit() {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
 				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95f);
 		}
-	}
+	}	
 }
 
 void PlayerSoftBody::jumpSlow() {
 	if (bottom->Physics()->GetLinearVelocity().y < 0 && top->Physics()->GetLinearVelocity().y < 0) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(getBall()->softball[i]->Physics()->GetLinearVelocity()*0.99f);
+		}
+	}
+}
+
+void PlayerSoftBody::ToInfinityAndNotQuiteBeyond() {
+	if (top->Physics()->GetPosition().y > 150.0f) {
+		for (int i = 0; i < 182; ++i) {
+			PhysicsNode* node = getBall()->softball[i]->Physics();
+			node->SetLinearVelocity(nclgl::Maths::Vector3(0.0, -1.0f * node->GetLinearVelocity().y, 0.0));
+			//getBall()->softball[i]->Physics()->SetPosition(nclgl::Maths::Vector3(0.0, 5.0, 0.0));
+			
 		}
 	}
 }

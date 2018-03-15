@@ -53,6 +53,7 @@ public:
 	void ChangeScene();
 
 	void clearGraphicsPipeline();
+	inline void ClearPaintableObjects() { paintableObjects.clear(); }
 protected:
 	GraphicsPipeline();
 	virtual ~GraphicsPipeline();

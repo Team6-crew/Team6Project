@@ -28,6 +28,8 @@
 #include <nclgl\ResourceManager.h>
 #include <ncltech\AABB.h>
 
+#include <nclgl\LevelLoader.h>
+
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
@@ -67,7 +69,6 @@ public:
 
 	virtual ~EmptyScene()
 	{
-		
 	}
 
 	//WorldPartition *wsp;
@@ -110,8 +111,7 @@ public:
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j));
 			this->AddGameObject(GameLogic::Instance()->getAIPlayer(j)->getBody());
 		}
-		
-		//Who doesn't love finding some common ground?
+
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, 0.0f, 0.0f),
@@ -121,59 +121,106 @@ public:
 			true,
 			false,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
 		this->AddGameObject(ground);
 		ground->SetTag(Tags::TGround);
 		(*ground->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ground.jpg"), 0);
-		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);
-		
-		backgroundSoundPlaying = false;
-
-		RandomPickup* pickup1 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(-5.0f, 3.f, -50.0f),
-			1.0f,
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		pickup1->SetPhysics(pickup1->Physics());
-		(*pickup1->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"randompick.jpg"), 0);
-		this->AddGameObject(pickup1);
+		(*ground->Render()->GetChildIteratorStart())->SetTag(Tags::TGround);		
 		
 
-		RandomPickup* pickup2 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(0.0f, 3.f, -50.0f),
-			1.0f,
+		// ---------------------------------------- portal1 ----------------------------------------
+		//portal1A
+		Portal* portal1A = new Portal(
+			"portal_a1",
+			nclgl::Maths::Vector3(70.0f, 2.0f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
-			0.0f,
+			100.0f,
 			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		pickup2->SetPhysics(pickup2->Physics());
-		this->AddGameObject(pickup2);
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
+		//portal1A->setDynamic(false);
+		portal1A->SetPhysics(portal1A->Physics());
+		portal1A->SetTag(Tags::TPortal_A);
+		portal1A->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a1,		
+				this,					
+				std::placeholders::_1,
+				std::placeholders::_2)			
+		);
+		this->AddGameObject(portal1A);
 		
-
-		RandomPickup* pickup3 = new RandomPickup("pickup",
-			nclgl::Maths::Vector3(5.0f, 3.f, -50.0f),
-			1.0f,
+		//portal1B
+		Portal* portal1B = new Portal(
+			"portal_b1",
+			nclgl::Maths::Vector3(-70.0f, 2.0f, 0.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
-			0.0f,
+			100.0f,
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		pickup3->SetPhysics(pickup3->Physics());
-		this->AddGameObject(pickup3);
+		//portal1B->setDynamic(false);
+		portal1B->SetPhysics(portal1B->Physics());
+		portal1B->SetTag(Tags::TPortal_B);
+		portal1B->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_b1,
+				this,
+				std::placeholders::_1,
+				std::placeholders::_2)
+		);
+		this->AddGameObject(portal1B);
 		
-		//testcube- test the texture
-		Washingzone* wz = new Washingzone("washingzone",
-			nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
-			nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+		// ---------------------------------------- portal2 ----------------------------------------
+		//portal2A
+		Portal* portal2A = new Portal(
+			"portal_a2",
+			nclgl::Maths::Vector3(0.0f, 2.0f, 70.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
 			true,
-			0.0f,
+			100.0f,
+			true,
+			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f)); 
+		//portal2A->setDynamic(false);
+		portal2A->SetPhysics(portal2A->Physics());
+		portal2A->SetTag(Tags::TPortal_A);
+		portal2A->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_a2,		
+				this,					
+				std::placeholders::_1,
+				std::placeholders::_2)			
+		);
+		this->AddGameObject(portal2A);
+		
+		//portal2B
+		Portal* portal2B = new Portal(
+			"portal_b2",
+			nclgl::Maths::Vector3(0.0f, 2.0f, -70.0f),
+			nclgl::Maths::Vector3(1.0f, 1.0f, 1.0f),
+			true,
+			100.0f,
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		wz->SetPhysics(wz->Physics());
-		this->AddGameObject(wz);
+		//portal2B->setDynamic(false);
+		portal2B->SetPhysics(portal2B->Physics());
+		portal2B->SetTag(Tags::TPortal_B);
+		portal2B->Physics()->SetOnCollisionCallback(
+			std::bind(&EmptyScene::collisionCallback_b2,
+				this,
+				std::placeholders::_1,
+				std::placeholders::_2)
+		);
+		this->AddGameObject(portal2B);
 
-		Launchpad* lp = new Launchpad("launchpad",
+		//	//testcube- test the texture
+		//	Washingzone* wz = new Washingzone("washingzone",
+		//		nclgl::Maths::Vector3(0.0f, 3.f, -40.0f),
+		//		nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
+		//		true,
+		//		0.0f,
+		//		true,
+		//	nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		//wz->SetPhysics(wz->Physics());
+		//this->AddGameObject(wz);
+
+	/*	Launchpad* lp = new Launchpad("launchpad",
 			nclgl::Maths::Vector3(0.0f, 1.5f, -30.0f),
 			nclgl::Maths::Vector3(1.5f, 0.5f, 1.5f),
 			true,
@@ -181,43 +228,9 @@ public:
 			true,
 			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		lp->SetPhysics(lp->Physics());
-		this->AddGameObject(lp);
+		this->AddGameObject(lp);*/
 
-		Portal* a1  = new Portal("portal_a1",
-			nclgl::Maths::Vector3(10.0f, 2.f, -40.0f),
-			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		a1->SetPhysics(a1->Physics());
-		a1->physicsNode->SetOnCollisionCallback(
-			std::bind(
-				&EmptyScene::collisionCallback_a1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(a1);
-		
-		Portal* b1 = new Portal("portal_b1",
-			nclgl::Maths::Vector3(-10.0f, 2.f, -40.0f),
-			//nclgl::Maths::Vector3(2.0f, 2.f, 1.0f),
-			true,
-			0.0f,
-			true,
-			nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		b1->SetPhysics(b1->Physics());
-		b1->physicsNode->SetOnCollisionCallback(
-			std::bind(
-				&EmptyScene::collisionCallback_b1,		// Function to call
-				this,					// Constant parameter (in this case, as a member function, we need a 'this' parameter to know which class it is)
-				std::placeholders::_1,
-				std::placeholders::_2)			// Variable parameter(s) that will be set by the callback function
-		);
-		this->AddGameObject(b1);
 	}
-
 
 	virtual void OnUpdateScene(float dt) override
 	{
@@ -333,13 +346,13 @@ public:
 				}
 			}
 			else if (activeMenu->getSelection() == 0 && activeMenu == soundMenu) {
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && volumelevel > 0) {
+				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_MINUS) && volumelevel > 0) {
 					volumelevel -= 1;
 					//AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(volumelevel) / 10.0f);
 					//AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"SmallScream.ogg", false);
 					tempvolumelevel = volumelevel;
 				}
-				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && volumelevel < 10) {
+				else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PLUS) && volumelevel < 10) {
 					volumelevel += 1;
 
 					tempvolumelevel = volumelevel;
@@ -370,6 +383,12 @@ public:
 				DeleteAllGameObjects();
 				m_UpdateCallbacks.clear();
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
+				LevelLoader levelLoader;
+				levelLoader.DeleteMapObjects();
+				this->DeleteAllGameObjects();
+				GraphicsPipeline::Instance()->ClearPaintableObjects();
+				GameLogic::Instance()->clearPlayers();
+
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))
 			{
@@ -381,7 +400,15 @@ public:
 		}		
 	}
 
-
+	bool collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode)
+	{
+		if (otherNode->GetParent()->HasTag(Tags::TCanKiLL))
+		{
+			GameObject *kill_ob = (GameObject*)otherNode->GetParent();
+			PhysicsEngine::Instance()->DeleteAfter(kill_ob, 0.0f);
+		}
+		return true;
+	}
 
 	bool collisionCallback_a1(PhysicsNode* thisNode, PhysicsNode* otherNode)
 	{
