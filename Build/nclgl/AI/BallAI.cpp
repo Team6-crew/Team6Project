@@ -142,6 +142,17 @@ void BallAI::addBallAIPlayers(int i)
 		AIBall->setColour(colours[i]);
 		AIBall->SetPhysics(AIBall->Physics());
 
+		if (i == 0)
+		{
+			AIBall->getBall()->SetTag(TAIPlayer1);}
+		else if (i == 1){
+			AIBall->getBall()->SetTag(TAIPlayer2);
+		}
+		else if (i == 2) {
+			AIBall->getBall()->SetTag(TAIPlayer3);
+		}
+		else AIBall->getBall()->SetTag(TAIPlayer4);
+
 		GameLogic::Instance()->addAIPlayer(AIBall);
 	
 		AIBall->AIStateMachine = new StateMachine(AIBall);
