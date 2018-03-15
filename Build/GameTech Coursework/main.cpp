@@ -291,7 +291,7 @@ int main()
 						NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(winningPlayer)->getColour(), "AIPlayer4 WINS!");
 					}
 					NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer +1) + " WINS!");
-				}*/
+				}
 				
 
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
