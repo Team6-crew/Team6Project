@@ -76,7 +76,8 @@ public:
 	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
-	{
+	{   
+		GameLogic::Instance()->setIsServer(false);
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
@@ -684,13 +685,14 @@ private:
 			}
 			if (Received.GetPacketId() == "NEXT" && GameLogic::Instance()->gameHasStarted()) {
 				vector <float> updates;
-				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+				int numTotal = GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers();
+				for (int i = 0; i < numTotal; i++) {
 					for (int j = 0; j < 12; j++) {
 						updates.push_back(stof(Received.TruncPacket(i * 12 + j)));
 					}
 				}
 				int cntNet = 0;
-				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
+				for (int i = 0; i < numTotal; i++) {
 					if (i == myPlayerNum) {
 				//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
 				//		//GameLogic::Instance()->getPlayer(0)->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(updates[i * 6], updates[i * 6 + 1], updates[i * 6 + 2]));
@@ -704,7 +706,21 @@ private:
 						//GameLogic::Instance()->getNetPlayer(cntNet)->Physics()->SetPosition(nclgl::Maths::Vector3(updates[i * 6 + 3], updates[i * 6 + 4], updates[i * 6 + 5]));
 						cntNet++;
 					}
-
+				}
+				/*for (int i = 0; i < numTotal; i++) {
+					cout << stof(Received.TruncPacket((numTotal) * 12 + i )) << " perc " << i << endl;
+					GameLogic::Instance()->setPaintPerc(i, stof(Received.TruncPacket((numTotal) * 12 + i )));
+				}*/
+				cntNet = 0;
+				for (int i = 0; i < numTotal; i++) {
+					if (i == myPlayerNum) {
+						GameLogic::Instance()->setPaintPerc(0, stof(Received.TruncPacket((numTotal) * 12 + i)));
+					}
+					else {
+						cntNet++;
+						
+						GameLogic::Instance()->setPaintPerc(cntNet, stof(Received.TruncPacket((numTotal) * 12 + i)));
+					}
 				}
 				sendVelocityUpdate();
 			}

@@ -161,20 +161,21 @@ void GameLogic::calculatePaintPercentage() {
 				posZ = 1 - (position.z - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 
 				softplayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
+				if (server) {
+					for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+						for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
-				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
-
-						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
-						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
-							if (world_paint[i][j] == 0) {
-								paint_perc[k] += increment;
+							float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
+							if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
+								if (world_paint[i][j] == 0) {
+									paint_perc[k] += increment;
+								}
+								else if (world_paint[i][j] != k + 1) {
+									paint_perc[k] += increment;
+									paint_perc[world_paint[i][j] - 1] -= increment;
+								}
+								world_paint[i][j] = k + 1;
 							}
-							else if (world_paint[i][j] != k + 1) {
-								paint_perc[k] += increment;
-								paint_perc[world_paint[i][j] - 1] -= increment;
-							}
-							world_paint[i][j] = k + 1;
 						}
 					}
 				}
@@ -207,8 +208,7 @@ void GameLogic::calculatePaintPercentage() {
 		}*/
 			else
 			{
-
-				add_rad = netPlayers[k]->getadd_rad();
+				
 				rad = (rand() % 100) / (WORLD_SIZE*100.0f) + add_rad;
 
 				netPlayers[k]->setRadius(rad);
@@ -222,14 +222,7 @@ void GameLogic::calculatePaintPercentage() {
 
 						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
-							if (world_paint[i][j] == 0) {
-								paint_perc[k] += increment;
-							}
-							else if (world_paint[i][j] != k + 1) {
-								paint_perc[k] += increment;
-								paint_perc[world_paint[i][j] - 1] -= increment;
-							}
-							world_paint[i][j] = k + 1;
+							world_paint[i][j] = k + softplayers.size() + 1;
 						}
 					}
 				}

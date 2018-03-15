@@ -464,10 +464,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		shaderTrail->SetUniform((arr + "pos_x").c_str(), pos_x);
 		shaderTrail->SetUniform((arr + "pos_z").c_str(), pos_z);
 		if (rad <= 0.01f) shaderTrail->SetUniform((arr + "rad").c_str(), rad);
-		else {
-			shaderTrail->SetUniform((arr + "rad").c_str(), 0);
-			splatSoftPlayer = j;
-		}
+
 	}
 	for (int i = GameLogic::Instance()->getTotalPlayers(); i < GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getTotalPlayers(); i++)
 	{
@@ -542,7 +539,7 @@ void GraphicsPipeline::RenderScene(float dt)
 		
 	}
 	for (int i = GameLogic::Instance()->getNumSoftPlayers(); i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers(); i++) {
-		int j = i - GameLogic::Instance()->getNumNetPlayers();
+		int j = i - GameLogic::Instance()->getNumSoftPlayers();
 		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
 			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
 			max_score = i;

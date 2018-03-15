@@ -237,8 +237,8 @@ int main()
 			if (showEndScreen) {
 				gameEnded = true;
 				
-				int j = GameLogic::Instance()->getNumSoftPlayers();
-				int l = GameLogic::Instance()->getNumAIPlayers()+ GameLogic::Instance()->getNumSoftPlayers();
+				int j = GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers();
+				int l = GameLogic::Instance()->getNumAIPlayers()+ GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumNetPlayers();
 
 				int winningPlayer = 0;
 				int aiWinningPlayer = 0;
@@ -252,14 +252,14 @@ int main()
 				}
 				NCLDebug::_ClearDebugLists();
 
-				if(winningPlayer < j)
+				/*if(winningPlayer < j)
 				NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player " + to_string(winningPlayer + 1) + " WINS!");
 
 				else
 				{
 					aiWinningPlayer = winningPlayer -j;
 					NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer +1) + " WINS!");
-				}
+				}*/
 				
 
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");

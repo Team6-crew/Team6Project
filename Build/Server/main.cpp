@@ -312,6 +312,11 @@ int main()
 				NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetForce().y));
 				NextPacket.AddVar(to_string(GameLogic::Instance()->getSoftPlayer(i)->getBack()->Physics()->GetForce().z));
 			}
+			vector<float>* percentages = GameLogic::Instance()->getPaintPerc();
+			for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+				std::cout << (*percentages)[i] << " perc " << i << std::endl;
+				NextPacket.AddVar(to_string((*percentages)[i]));
+			}
 			NextPacket.BroadcastPacket(server.m_pNetwork);
 		}
 		else {
