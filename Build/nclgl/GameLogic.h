@@ -53,8 +53,7 @@ public:
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
 	
 	
-	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
-	};
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);};
 
 	void repairSoftPlayer(int num_splayers);
 	// split screen ui integration
@@ -82,6 +81,9 @@ public:
 
 	void setCurrentTime(int cSec) { cSeconds = cSec; };
 	int getCurrentTime() { return cSeconds; }
+
+	bool getIsGamePaused() { return isGamePaused; }
+	void setIsGamePaused(bool gamePaused) { isGamePaused = gamePaused; }
 
 	void setMyNetNum(int k) { myNetPlayerNum = k; }
 	int getMyNetNum() { return myNetPlayerNum; }
@@ -127,4 +129,5 @@ private:
 	map <GameObject * , int> PlayerCapturedObject;
 	int seconds;
 	int cSeconds;
+	bool isGamePaused;
 };

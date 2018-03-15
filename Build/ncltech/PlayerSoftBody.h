@@ -102,6 +102,10 @@ public:
 	int getIndex() { return index; }
 	void setIndex(int idx) { index = idx; }
 
+	float getscore() { return score; }
+	void setscore(float s) { score = s; }
+	void cameraInWall(AABB* wall);
+	
 private:
 	void handleInput(float dt);
 	void unequipPaintWeapon();
@@ -138,7 +142,7 @@ private:
 
 	float time;
 	int tag;
-
+	float score;
 	float sensitivity;
 	bool canpaint;
 
@@ -153,5 +157,10 @@ private:
 	Tags currentBuff;
 
 	nclgl::Maths::Vector4 colour;
+
+	float maxCameraY, maxCameraZ, minCameraY, minCameraZ, curCameraY, curCameraZ;
+	bool isbroken = false;
 	int index;
+
+	AABB* wallOfInterest;
 };
