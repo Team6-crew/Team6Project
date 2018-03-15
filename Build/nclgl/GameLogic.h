@@ -53,8 +53,7 @@ public:
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
 	
 	
-	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
-	};
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);};
 
 	void repairSoftPlayer(int num_splayers);
 	// split screen ui integration

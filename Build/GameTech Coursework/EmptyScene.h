@@ -451,6 +451,15 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
 		}
+
+		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+		}
 		return true;
 	}
 
@@ -519,6 +528,14 @@ public:
 					- FindGameObject("portal_a2")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
+		}
+		 if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
 		return true;
 	}
@@ -589,6 +606,14 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
 		}
+		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+		}
 		return true;
 	};
 
@@ -657,6 +682,14 @@ public:
 					- FindGameObject("portal_b2")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
+		}
+		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 		}
 		return true;
 	};
