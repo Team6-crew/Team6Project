@@ -457,8 +457,7 @@ void PlayerSoftBody::cameraInWall(AABB* wall) {
 
 }
 		
-	}
-}
+
 void PlayerSoftBody::serverMove(float dt) {
 	updateBuffTime(dt);
 	if (!stun(dt)) {
