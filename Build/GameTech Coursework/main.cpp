@@ -301,6 +301,8 @@ int main()
 					showEndScreen = !showEndScreen;
 					GameLogic::Instance()->clearGameLogic();
 					GraphicsPipeline::Instance()->clearGraphicsPipeline();
+					LevelLoader levelLoader;
+					levelLoader.DeleteMapObjects();
 					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Team Project");
 					
@@ -317,6 +319,8 @@ int main()
 					showEndScreen = !showEndScreen;
 					GameLogic::Instance()->clearGameLogic();
 					GraphicsPipeline::Instance()->clearGraphicsPipeline();
+					LevelLoader levelLoader;
+					levelLoader.DeleteMapObjects();
 					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Main Menu");
 					

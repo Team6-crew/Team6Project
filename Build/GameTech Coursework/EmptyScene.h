@@ -28,6 +28,8 @@
 #include <nclgl\ResourceManager.h>
 #include <ncltech\AABB.h>
 
+#include <nclgl\LevelLoader.h>
+
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
 {
@@ -367,6 +369,8 @@ public:
 				//Delete objects from the scene
 				GameLogic::Instance()->clearGameLogic();
 				GraphicsPipeline::Instance()->clearGraphicsPipeline();
+				LevelLoader levelLoader;
+				levelLoader.DeleteMapObjects();
 				DeleteAllGameObjects();
 				m_UpdateCallbacks.clear();
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
