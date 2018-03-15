@@ -28,10 +28,16 @@ public:
 	// e.g RenderNode* cube_copy = new RenderNode(*CommonMeshes::Cube());
 
 	//Cube
-	static MeshBase* Cube()			{ return m_pCube; }
+	static MeshBase* Cube()			{ return NewCube(); }
+
+	static MeshBase* PaintableCube() { return NewPaintableCube(); }
 
 	//Sphere
-	static MeshBase* Sphere()		{ return m_pSphere; }
+	static MeshBase* Sphere()		{ return NewSphere(); }
+
+	static MeshBase* StaticSphere() { return m_pSphere; }
+
+	static MeshBase* StaticCube() { return m_pCube; }
 
 
 
@@ -43,10 +49,12 @@ protected:
 	//Called by SceneRenderer
 	static void InitializeMeshes();
 	static void ReleaseMeshes();
-
+	static MeshBase * NewCube();
+	static MeshBase * NewPaintableCube();
+	static MeshBase * NewSphere();
 protected:
 	static MeshBase* m_pCube;
 	static MeshBase* m_pSphere;
 
-	static TextureBase* m_pCheckerboardTex;
+	
 };

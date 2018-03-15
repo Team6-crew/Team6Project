@@ -20,6 +20,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LanScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="EmptyScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>

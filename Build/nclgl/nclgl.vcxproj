@@ -22,22 +22,29 @@
     <Text Include="CHANGELIST.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI\BallAI.cpp" />
+    <ClCompile Include="AI\ChasingState.cpp" />
+    <ClCompile Include="AI\RoamingState.cpp" />
+    <ClCompile Include="Audio\AudioEngineBase.cpp" />
+    <ClCompile Include="Audio\AudioFactory.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CollectandUsePickupState.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
     <ClCompile Include="Graphics\FrameBufferBase.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Graphics\RenderConstants.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Keyboard.cpp" />
-
     <ClCompile Include="Launchpad.cpp" />
-
+    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLMesh.cpp" />
     <ClCompile Include="Graphics\MeshBase.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="MySocket.cpp" />
     <ClCompile Include="NCLDebug.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.cpp" />
@@ -50,6 +57,7 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Shader.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4TextureArray.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Graphics\Renderer\RenderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\OpenGL\OGLRenderer.cpp" />
@@ -62,28 +70,45 @@
     <ClCompile Include="Graphics\ShaderBase.cpp" />
     <ClCompile Include="Graphics\Renderer\ShaderFactory.cpp" />
     <ClCompile Include="Graphics\Renderer\TextureFactory.cpp" />
+    <ClCompile Include="Audio\Windows\WinAudio.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AIObject.h" />
+    <ClInclude Include="AI\BallAI.h" />
+    <ClInclude Include="AI\ChasingState.h" />
+    <ClInclude Include="AI\Messenger.h" />
+    <ClInclude Include="AI\RoamingState.h" />
+    <ClInclude Include="AI\State.h" />
+    <ClInclude Include="AI\StateMachine.h" />
+    <ClInclude Include="Audio\AudioEngineBase.h" />
+    <ClInclude Include="Audio\AudioFactory.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChildMeshInterface.h" />
+    <ClInclude Include="CollectandUsePickupState.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Definitions.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
     <ClInclude Include="Graphics\FrameBufferBase.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics\RenderConstants.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="LevelWriter.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MapNavigation.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLMesh.h" />
     <ClInclude Include="Graphics\MeshBase.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="MySocket.h" />
     <ClInclude Include="NCLDebug.h" />
     <ClInclude Include="OBJMesh.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLFrameBuffer.h" />
@@ -97,12 +122,8 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4RenderNode.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Shader.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4TextureArray.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="Quaternion.h" />
-
-    <ClInclude Include="RenderNode.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Launchpad.h" />
-
     <ClInclude Include="Graphics\Renderer\RenderBase.h" />
     <ClInclude Include="Graphics\Renderer\OpenGL\OGLRenderer.h" />
     <ClInclude Include="Graphics\Renderer\RenderFactory.h" />
@@ -114,11 +135,16 @@
     <ClInclude Include="Graphics\ShaderBase.h" />
     <ClInclude Include="Graphics\Renderer\ShaderFactory.h" />
     <ClInclude Include="Graphics\Renderer\TextureFactory.h" />
-
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Launchpad.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
+    <ClInclude Include="Audio\Windows\WinAudio.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -174,15 +200,15 @@
     <LibraryPath>$(SolutionDir)x64\$(Configuration);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)\ExternalLibs;$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)x64\$(Configuration);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)ExternalLibs\;$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)ExternalLibs\;$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\$(SolutionDir);$(SolutionDir)ExternalLibs\GLEW\include;$(SolutionDir)ExternalLibs\SOIL\include;$(SolutionDir)ExternalLibs\ENET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -206,7 +232,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN_OGL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN_OGL;_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ExternalLibs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -236,7 +263,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN_OGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN_OGL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

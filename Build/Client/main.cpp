@@ -1,5 +1,5 @@
 
-
+#define _WINSOCKAPI_ 
 #include <enet\enet.h>  //<-- MUST include this before "<nclgl\Window.h>"
 
 #include <nclgl\Window.h>
@@ -10,13 +10,11 @@
 
 #include "Net1_Client.h"
 
-void Quit(bool error = false, const string &reason = "");
+void Quit(bool error = false, const std::string &reason = "");
 
 void Initialize()
 {
 	//Initialise the Window
-	if (!Window::Initialise("Game Technologies - Collision Resolution", 1280, 800, false))
-		Quit(true, "Window failed to initialise!");
 
 	//Initialise ENET for networking  //!!!!!!NEW!!!!!!!!
 	if (enet_initialize() != 0)
@@ -37,16 +35,16 @@ void Initialize()
 }
 
 
-void Quit(bool error, const string &reason) {
+void Quit(bool error, const std::string &reason) {
 	//Release Singletons
 	SceneManager::Release();
 	GraphicsPipeline::Release();
 	PhysicsEngine::Release();
 	enet_deinitialize();  //!!!!!!!!!!!!!!!!!NEW!!!!!!!!!!!!!!
 	Window::Destroy();
-	
 
-						  //Show console reason before exit
+
+	//Show console reason before exit
 	if (error) {
 		std::cout << reason << std::endl;
 		system("PAUSE");
@@ -75,7 +73,7 @@ void Quit(bool error, const string &reason) {
 
 void PrintStatusEntries()
 {
-	const Vector4 status_color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	const nclgl::Maths::Vector4 status_color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//Print Current Scene Name
 	NCLDebug::AddStatusEntry(status_color, "[%d/%d]: %s ([T]/[Y] to cycle or [R] to reload)",
@@ -114,7 +112,7 @@ int main()
 		//Start Timing
 		float dt = Window::GetWindow().GetTimer()->GetTimedMS() * 0.001f;	//How many milliseconds since last update?
 
-		//Print Status Entries
+																			//Print Status Entries
 		PrintStatusEntries();
 
 		//Handle Keyboard Inputs
@@ -130,7 +128,7 @@ int main()
 		//Render Scene
 
 		GraphicsPipeline::Instance()->UpdateScene(dt);
-		GraphicsPipeline::Instance()->RenderScene();				 //Finish Timing
+		GraphicsPipeline::Instance()->RenderScene(dt);				 //Finish Timing
 	}
 
 	//Cleanup

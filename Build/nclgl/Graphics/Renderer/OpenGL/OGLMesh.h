@@ -48,8 +48,10 @@ namespace nclgl
 	}
 }
 
+#include <ncltech\Memory Management\HeapMemory.h>
 
 class OGLMesh	: public MeshBase {
+	DECLARE_HEAP;
 public:
 	friend class MD5Mesh;
 	OGLMesh(void);
@@ -71,8 +73,9 @@ public:
 
 	//Sets the Mesh's diffuse map. Takes an OpenGL texture 'name'
 	void	SetTexture(TextureBase* texture)	override;
+	void	ReplaceTexture(TextureBase* texture, int pos)	override;
 	//Gets the Mesh's diffuse map. Returns an OpenGL texture 'name'
-	GLuint  GetTexture()			{return texture;}
+	
 
 	//Sets the Mesh's bump map. Takes an OpenGL texture 'name'
 	void	SetBumpMap(GLuint tex)	{bumpTexture = tex;}
@@ -111,7 +114,7 @@ public:
 	//Primitive type for this mesh (GL_TRIANGLES...etc)
 	GLuint	type;
 	//OpenGL texture name for the diffuse map
-	GLuint	texture;
+	std::vector<GLuint>	texture;
 
 	//Stuff introduced later on in the tutorials!!
 

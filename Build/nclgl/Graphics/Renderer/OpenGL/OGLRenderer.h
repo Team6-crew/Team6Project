@@ -8,9 +8,12 @@ class Window;
 
 #include "../../../Matrix4.h"
 
+#include <ncltech\Memory Management\MemoryManager.h>
+
 
 class OGLRenderer : public RenderBase
 {
+	DECLARE_HEAP;
 public:
 	OGLRenderer(Window& window);
 	~OGLRenderer();
@@ -26,12 +29,14 @@ public:
 	void	SetProjMatrix(nclgl::Maths::Matrix4& mat) override;
 
 	void	SetViewPort(int width, int height) override;
+
 	void	Clear(Renderer::Clear clearType) override;
 	void	SetClearColour(nclgl::Maths::Vector3& vec) override;
 
 	void	BindScreenFramebuffer() override;
-
-
+	void	SetViewPort(int startx, int starty, int width, int height) override;
+	void	Scissor(int startx, int starty, int width, int height) override;
+	void    SetScissor(bool on) override;
 	void	SetScreenCulling(Renderer::Culling type) override;
 	void	SetDefaultSettings() override;
 protected:

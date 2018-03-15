@@ -85,6 +85,17 @@
     <ClCompile Include="Graphics\Renderer\PS4\PS4RenderNode.cpp" />
     <ClCompile Include="Graphics\Renderer\PS4\PS4Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer\FrameBufferFactory.cpp" />
+    <ClCompile Include="Audio\AudioFactory.cpp" />
+    <ClCompile Include="Audio\AudioEngineBase.cpp" />
+    <ClCompile Include="Audio\Windows\WinAudio.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Launchpad.cpp" />
+    <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="MySocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LevelWriter.cpp" />
 
@@ -188,6 +199,24 @@
     <ClInclude Include="Graphics\Renderer\PS4\PS4FrameBuffer.h" />
     <ClInclude Include="Graphics\Renderer\PS4\PS4Mesh.h" />
     <ClInclude Include="Graphics\Renderer\FrameBufferFactory.h" />
+    <ClInclude Include="Audio\AudioFactory.h" />
+    <ClInclude Include="Audio\AudioEngineBase.h" />
+    <ClInclude Include="Audio\Windows\WinAudio.h" />
+    <ClInclude Include="Definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Launchpad.h" />
+    <ClInclude Include="Portal.h" />
+    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="MySocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LevelWriter.h" />
 

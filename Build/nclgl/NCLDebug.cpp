@@ -7,6 +7,7 @@
 #include <nclgl\Graphics\ShaderBase.h>
 #include <nclgl\Graphics\Renderer\ShaderFactory.h>
 using namespace std;
+#include <ncltech\SceneManager.h>
 
 using namespace nclgl::Maths;
 
@@ -15,14 +16,16 @@ Matrix4	NCLDebug::g_ProjMtx;
 Matrix4	NCLDebug::g_ViewMtx;
 Matrix4	NCLDebug::g_ProjViewMtx;
 
-int		NCLDebug::g_NumStatusEntries			= 0;
-float	NCLDebug::g_MaxStatusEntryWidth			= 0.0f;
+int		NCLDebug::g_NumStatusEntries = 0;
+float	NCLDebug::g_MaxStatusEntryWidth = 0.0f;
 
-bool  NCLDebug::g_StatusVisible		= true;
-bool  NCLDebug::g_LogVisible		= false;
-FILE* NCLDebug::g_vOutLogFile		= NULL;
+int		NCLDebug::pauseEntries = 0;
 
-std::deque<LogEntry> NCLDebug::g_vLogEntries; 
+bool  NCLDebug::g_StatusVisible = true;
+bool  NCLDebug::g_LogVisible = false;
+FILE* NCLDebug::g_vOutLogFile = NULL;
+
+std::deque<LogEntry> NCLDebug::g_vLogEntries;
 int NCLDebug::g_vLogOffsetIdx = -1;
 
 std::vector<Vector4> NCLDebug::g_vChars;
@@ -31,19 +34,19 @@ uint NCLDebug::g_vCharsLogStart = 0;
 DebugDrawList NCLDebug::g_DrawList[2];
 DebugDrawList NCLDebug::g_DrawListNDT[2];
 
-ShaderBase*	NCLDebug::g_pShaderPoints		= NULL;
-ShaderBase*	NCLDebug::g_pShaderLines		= NULL;
-ShaderBase*	NCLDebug::g_pShaderHairLines	= NULL;
-ShaderBase*	NCLDebug::g_pShaderText			= NULL;
+ShaderBase*	NCLDebug::g_pShaderPoints = NULL;
+ShaderBase*	NCLDebug::g_pShaderLines = NULL;
+ShaderBase*	NCLDebug::g_pShaderHairLines = NULL;
+ShaderBase*	NCLDebug::g_pShaderText = NULL;
 
-GLuint	 NCLDebug::g_glArr				= NULL;
-GLuint	 NCLDebug::g_glBuf				= NULL;
-GLuint	 NCLDebug::g_glBufCapacity		= NULL;
-Vector4* NCLDebug::g_glBufPtr			= NULL;
+GLuint	 NCLDebug::g_glArr = NULL;
+GLuint	 NCLDebug::g_glBuf = NULL;
+GLuint	 NCLDebug::g_glBufCapacity = NULL;
+Vector4* NCLDebug::g_glBufPtr = NULL;
 uint	 NCLDebug::g_glBufOffsets[9];
 
-GLuint NCLDebug::g_glLogFontTex			= NULL;
-GLuint NCLDebug::g_glDefaultFontTex		= NULL;
+GLuint NCLDebug::g_glLogFontTex = NULL;
+GLuint NCLDebug::g_glDefaultFontTex = NULL;
 
 
 int IsOpaque(const Vector4& col)
@@ -55,7 +58,7 @@ int IsOpaque(const Vector4& col)
 void NCLDebug::GenDrawPoint(bool ndt, const Vector3& pos, float point_radius, const Vector4& color)
 {
 	int idx = IsOpaque(color);
-	auto list = ndt ? &g_DrawListNDT[idx]: &g_DrawList[idx];
+	auto list = ndt ? &g_DrawListNDT[idx] : &g_DrawList[idx];
 	list->_vPoints.push_back(Vector4(pos.x, pos.y, pos.z, point_radius));
 	list->_vPoints.push_back(color);
 }
@@ -332,6 +335,78 @@ void NCLDebug::AddStatusEntry(const Vector4& color, const std::string text, ...)
 	}
 }
 
+void NCLDebug::AddHUD(const Vector4& color, const std::string text, ...)
+{
+	if (g_StatusVisible)
+	{
+		const Vector2 ss = Window::GetWindow().GetScreenSize();
+		float cs_size_x = 30 / ss.x * 2.0f;
+		float cs_size_y = 30 / ss.y * 2.0f;
+
+		va_list args;
+		va_start(args, text);
+
+		char buf[1024];
+		int needed = vsnprintf_s(buf, 1023, _TRUNCATE, text.c_str(), args);
+		va_end(args);
+
+		int length = (needed < 0) ? 1024 : needed;
+
+		std::string formatted_text = std::string(buf, (size_t)length);
+
+		DrawTextCs(Vector4(cs_size_x , -0.25f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
+		g_NumStatusEntries++;
+		g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
+	}
+}
+
+void NCLDebug::AddHUD2(const Vector4& color, const std::string text, ...)
+{
+	if (g_StatusVisible)
+	{
+		const Vector2 ss = Window::GetWindow().GetScreenSize();
+		float cs_size_x = 100 / ss.x * 2.0f;
+		float cs_size_y = 100 / ss.y * 2.0f;
+
+		va_list args;
+		va_start(args, text);
+
+		char buf[1024];
+		int needed = vsnprintf_s(buf, 1023, _TRUNCATE, text.c_str(), args);
+		va_end(args);
+
+		int length = (needed < 0) ? 1024 : needed;
+
+		std::string formatted_text = std::string(buf, (size_t)length);
+
+		DrawTextCs(Vector4(cs_size_x, 0.5f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 100, formatted_text, TEXTALIGN_CENTRE, color);
+		g_NumStatusEntries++;
+		g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
+	}
+}
+
+void NCLDebug::AddTimer(const Vector4& color, const std::string text, ...)
+{
+	const Vector2 ss = Window::GetWindow().GetScreenSize();
+	float cs_size_x = 30 / ss.x * 2.0f;
+	float cs_size_y = 30 / ss.y * 2.0f;
+
+	va_list args;
+	va_start(args, text);
+
+	char buf[1024];
+	int needed = vsnprintf_s(buf, 1023, _TRUNCATE, text.c_str(), args);
+	va_end(args);
+
+	int length = (needed < 0) ? 1024 : needed;
+
+	std::string formatted_text = std::string(buf, (size_t)length);
+
+	DrawTextCs(Vector4(cs_size_x, 1.0f - (g_NumStatusEntries * cs_size_y) - cs_size_y, -1.0f, 1.0f), 30, formatted_text, TEXTALIGN_CENTRE, color);
+	g_NumStatusEntries++;
+	g_MaxStatusEntryWidth = max(g_MaxStatusEntryWidth, cs_size_x * 0.6f * length);
+}
+
 
 //Log
 void NCLDebug::AddLogEntry(const Vector3& color, const std::string& text)
@@ -354,7 +429,7 @@ void NCLDebug::AddLogEntry(const Vector3& color, const std::string& text)
 	le.text = prepend + text;
 	le.color = Vector4(color.x, color.y, color.z, 1.0f);
 
-	g_vLogEntries.push_back(le);	
+	g_vLogEntries.push_back(le);
 	if (g_vLogOffsetIdx == int(g_vLogEntries.size()) - 2)
 	{
 		g_vLogOffsetIdx++;
@@ -444,6 +519,7 @@ void NCLDebug::_ClearDebugLists()
 	clear_list(g_DrawListNDT[1]);
 
 	g_NumStatusEntries = 0;
+	pauseEntries = 0;
 	g_MaxStatusEntryWidth = 0.0f;
 }
 
@@ -572,12 +648,12 @@ void NCLDebug::_BuildTextBackgrounds()
 		}
 		NextTri(invProjView * A, col);
 	};
-	
 
-	auto DrawBox_status = [&](Vector3 A, Vector3 B, Vector3 C, Vector3 D, Vector4 col)
+
+	/*auto DrawBox_status = [&](Vector3 A, Vector3 B, Vector3 C, Vector3 D, Vector4 col)
 	{
-		centre = invProjView * C;
-		last = invProjView * D;
+	centre = invProjView * C;
+	last = invProjView * D;
 
 		NextTri(invProjView * Vector3(B.x - rounded_offset_x, B.y, 0.0f), col);
 		for (int i = 0; i < 5; ++i)
@@ -587,194 +663,194 @@ void NCLDebug::_BuildTextBackgrounds()
 				cosf((float)DegToRad(i * 22.5f)) * rounded_offset_y,
 				0.0f);
 
-			NextTri(invProjView * Vector3(B.x + round_offset.x - rounded_offset_x, B.y - round_offset.y + rounded_offset_y, 0.0f), col);
-		}
-		NextTri(invProjView * A, col);
-	};
+	NextTri(invProjView * Vector3(B.x + round_offset.x - rounded_offset_x, B.y - round_offset.y + rounded_offset_y, 0.0f), col);
+	}
+	NextTri(invProjView * A, col);
+	};*/
 
 	const float minimise_size = 0.05f;
 	Vector4 log_background_col(0.1f, 0.1f, 0.1f, 0.5f);
 	const Vector4 log_background_highlight(0.3f, 0.2f, 0.1f, 0.5f);
 
 
-	if (g_StatusVisible)
-	{
-		//Draw Status Background
-		if (g_NumStatusEntries > 0)
-		{
-			float cs_size_x = STATUS_TEXT_SIZE / ss.x * 2.0f;
-			float cs_size_y = STATUS_TEXT_SIZE / ss.y * 2.0f;
+	//if (g_StatusVisible)
+	//{
+	//	//Draw Status Background
+	//	if (g_NumStatusEntries > 0)
+	//	{
+	//		float cs_size_x = STATUS_TEXT_SIZE / ss.x * 2.0f;
+	//		float cs_size_y = STATUS_TEXT_SIZE / ss.y * 2.0f;
 
-			float btm_y = 1 - g_NumStatusEntries * cs_size_y - cs_size_y;
-			float max_x = -1 + cs_size_x + g_MaxStatusEntryWidth;
+	//		float btm_y = 1 - g_NumStatusEntries * cs_size_y - cs_size_y;
+	//		float max_x = -1 + cs_size_x + g_MaxStatusEntryWidth;
 
-			DrawBox_status(
-				Vector3(max_x, 1, 0.0f),
-				Vector3(max_x, btm_y, 0.0f),
-				Vector3(-1, 1, 0),
-				Vector3(-1, btm_y, 0),
-				log_background_col
-			);
+	/*DrawBox_status(
+	Vector3(max_x, 1, 0.0f),
+	Vector3(max_x, btm_y, 0.0f),
+	Vector3(-1, 1, 0),
+	Vector3(-1, btm_y, 0),
+	log_background_col
+	);*/
 
 
-			//Is MouseOver?
-			Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//		//Is MouseOver?
+	//		/*Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (cs_mouse.x >= max_x - cs_size.x * 1.2 && cs_mouse.x <= max_x &&
-				cs_mouse.y >= 1.f - cs_size.y * 1.2)
-			{
-				if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-					g_StatusVisible = false;
+	//		if (cs_mouse.x >= max_x - cs_size.x * 1.2 && cs_mouse.x <= max_x &&
+	//			cs_mouse.y >= 1.f - cs_size.y * 1.2)
+	//		{
+	//			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//				SceneManager::Instance()->JumpToScene("Team Project");
 
-				DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
-			}
-			else
-			{
-				DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
-			}
+	//			DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "New Game", TEXTALIGN_RIGHT, log_background_highlight);
+	//		}
+	//		else
+	//		{
+	//			DrawTextCs(Vector4(max_x, 1.f - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "New Game", TEXTALIGN_RIGHT);
+	//		}*/
 
-		}
-	}
-	else
-	{
-		Vector3 cs_size = Vector3(STATUS_TEXT_SIZE / ss.x * 5.f, STATUS_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//	}
+	//}
+	//else
+	//{
+	//	Vector3 cs_size = Vector3(STATUS_TEXT_SIZE / ss.x * 5.f, STATUS_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-		Vector4 col = log_background_col;
+	//	Vector4 col = log_background_col;
 
-		//Is MouseOver?
-		if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
-			cs_mouse.y >= 1.f - cs_size.y * 1.2 && cs_mouse.y <= 1)
-		{
-			col = log_background_highlight;
+	//	//Is MouseOver?
+	//	if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
+	//		cs_mouse.y >= 1.f - cs_size.y * 1.2 && cs_mouse.y <= 1)
+	//	{
+	//		col = log_background_highlight;
 
-			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-				g_StatusVisible = true;
-		}
+	//		if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//			g_StatusVisible = true;
+	//	}
 
-		DrawBox_status(
-			Vector3(-1.f + cs_size.x * 1.2f, 1, 0.0f),
-			Vector3(-1.f + cs_size.x * 1.2f, 1.f - cs_size.y * 1.2f, 0.0f),
-			Vector3(-1, 1, 0),
-			Vector3(-1, 1.f - cs_size.y * 1.2f, 0),
-			col
-		);
+	/*DrawBox_status(
+	Vector3(-1.f + cs_size.x * 1.2f, 1, 0.0f),
+	Vector3(-1.f + cs_size.x * 1.2f, 1.f - cs_size.y * 1.2f, 0.0f),
+	Vector3(-1, 1, 0),
+	Vector3(-1, 1.f - cs_size.y * 1.2f, 0),
+	col
+	);*/
 
-		DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, 1.f - cs_size.y * 0.6f, -1.f, 1.f), STATUS_TEXT_SIZE, "Status");
-	}
+	//	DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, 1.f - cs_size.y * 0.6f, -1.f, 1.f), STATUS_TEXT_SIZE, "Status");
+	//}
 
 	g_vCharsLogStart = (uint)g_vChars.size();
 
-	if (g_LogVisible)
-	{
-		//Draw log text
-		size_t log_len = g_vLogEntries.size();
+	//if (g_LogVisible)
+	//{
+	//	//Draw log text
+	//	size_t log_len = g_vLogEntries.size();
 
-		float max_x = 0.0f;
-		int i_min = max(g_vLogOffsetIdx - MAX_LOG_SIZE + 1, 0);
+	//	float max_x = 0.0f;
+	//	int i_min = max(g_vLogOffsetIdx - MAX_LOG_SIZE + 1, 0);
 
-		float start_x = (g_vLogEntries.size() > MAX_LOG_SIZE) ? -0.99f : -1.0f;
-		for (int i = g_vLogOffsetIdx; i >= i_min; --i)
-		{
-			int base_i = i - g_vLogOffsetIdx;
-			LogEntry& e = g_vLogEntries[i];
+	//	float start_x = (g_vLogEntries.size() > MAX_LOG_SIZE) ? -0.99f : -1.0f;
+	//	for (int i = g_vLogOffsetIdx; i >= i_min; --i)
+	//	{
+	//		int base_i = i - g_vLogOffsetIdx;
+	//		LogEntry& e = g_vLogEntries[i];
 
-			max_x = max(max_x, e.text.length() * cs_size_x * 0.6f);
+	//		max_x = max(max_x, e.text.length() * cs_size_x * 0.6f);
 
-			float alpha = ((g_vLogEntries.size() - base_i) / (float(MAX_LOG_SIZE)));
-			alpha = 1.0f - (alpha * alpha);
+	//		float alpha = ((g_vLogEntries.size() - base_i) / (float(MAX_LOG_SIZE)));
+	//		alpha = 1.0f - (alpha * alpha);
 
-			DrawTextCs(Vector4(start_x + cs_size_x * 0.5f, -1.0f + ((-base_i - 0.25f) * cs_size_y) + cs_size_y, 0.0f, 1.0f), LOG_TEXT_SIZE, e.text, TEXTALIGN_LEFT, e.color);
-		}
-
-		
-		//Draw Log Background
-		if (g_vLogEntries.size() > 0)
-		{
-			float top_y = -1 + min(g_vLogEntries.size(), MAX_LOG_SIZE) * cs_size_y + cs_size_y;
-			max_x = 1.f;// max_x - 1 + cs_size_x;
+	//		DrawTextCs(Vector4(start_x + cs_size_x * 0.5f, -1.0f + ((-base_i - 0.25f) * cs_size_y) + cs_size_y, 0.0f, 1.0f), LOG_TEXT_SIZE, e.text, TEXTALIGN_LEFT, e.color);
+	//	}
 
 
-			DrawBox_log(
-				Vector3(-1, top_y, 0),
-				Vector3(max_x, top_y, 0),
-				Vector3(-1, -1, 0),
-				Vector3(max_x, -1, 0),
-				log_background_col
-			);
+	//	//Draw Log Background
+	//	if (g_vLogEntries.size() > 0)
+	//	{
+	//		float top_y = -1 + min(g_vLogEntries.size(), MAX_LOG_SIZE) * cs_size_y + cs_size_y;
+	//		max_x = 1.f;// max_x - 1 + cs_size_x;
 
 
-			//Is MouseOver?
-			Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//		DrawBox_log(
+	//			Vector3(-1, top_y, 0),
+	//			Vector3(max_x, top_y, 0),
+	//			Vector3(-1, -1, 0),
+	//			Vector3(max_x, -1, 0),
+	//			log_background_col
+	//		);
 
-			if (cs_mouse.x >= 1.f - cs_size.x * 1.2 &&
-				cs_mouse.y >= top_y - cs_size.y * 2.f && cs_mouse.y <= top_y)
-			{
-				if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-					g_LogVisible = false;
 
-				DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
-			}
-			else
-			{
-				DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
-			}
+	//		//Is MouseOver?
+	//		Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (g_vLogEntries.size() > MAX_LOG_SIZE)
-			{
-				//Scroll bar
-				DrawThickLine(
-					invProjView* Vector3(-0.992f, top_y - 0.01f, -0.995f),
-					invProjView* Vector3(-0.992f, -0.99f, -0.995f),
-					0.0002f,
-					Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+	//		if (cs_mouse.x >= 1.f - cs_size.x * 1.2 &&
+	//			cs_mouse.y >= top_y - cs_size.y * 2.f && cs_mouse.y <= top_y)
+	//		{
+	//			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//				g_LogVisible = false;
 
-				float total_size = top_y + 1.f - 0.02f;
-				float size = max(total_size * float(MAX_LOG_SIZE) / float(g_vLogEntries.size()), 0.03f);
-				float offset = (g_vLogOffsetIdx - MAX_LOG_SIZE + 1) / float(g_vLogEntries.size() - MAX_LOG_SIZE) * (total_size - size);
+	//			DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT, log_background_highlight);
+	//		}
+	//		else
+	//		{
+	//			DrawTextCs(Vector4(max_x, top_y - cs_size.y, -1.f, 1.f), LOG_TEXT_SIZE, "X", TEXTALIGN_RIGHT);
+	//		}
 
-				DrawThickLine(
-					invProjView* Vector3(-0.992f, top_y - 0.01f - offset, -1.00f),
-					invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
-					0.0002f);
+	//		if (g_vLogEntries.size() > MAX_LOG_SIZE)
+	//		{
+	//			//Scroll bar
+	//			DrawThickLine(
+	//				invProjView* Vector3(-0.992f, top_y - 0.01f, -0.995f),
+	//				invProjView* Vector3(-0.992f, -0.99f, -0.995f),
+	//				0.0002f,
+	//				Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 
-				g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
+	//			float total_size = top_y + 1.f - 0.02f;
+	//			float size = max(total_size * float(MAX_LOG_SIZE) / float(g_vLogEntries.size()), 0.03f);
+	//			float offset = (g_vLogOffsetIdx - MAX_LOG_SIZE + 1) / float(g_vLogEntries.size() - MAX_LOG_SIZE) * (total_size - size);
 
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
-				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);
-			}
-		}
-	}
-	else
-	{
-		Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x * 3.f, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
+	//			DrawThickLine(
+	//				invProjView* Vector3(-0.992f, top_y - 0.01f - offset, -1.00f),
+	//				invProjView* Vector3(-0.992f, top_y - 0.01f - offset - size, -1.00f),
+	//				0.0002f);
 
-		Vector4 col = log_background_col;
+	//			g_vLogOffsetIdx = min(max(g_vLogOffsetIdx - Window::GetMouse()->GetWheelMovement(), MAX_LOG_SIZE - 1), (int)g_vLogEntries.size() - 1);
 
-		//Is MouseOver?
-		if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
-			cs_mouse.y >= -1.f && cs_mouse.y <= -1 + cs_size.y * 1.2)
-		{
-			col = log_background_highlight;
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_HOME)) g_vLogOffsetIdx = -1;
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_END)) g_vLogOffsetIdx = (int)g_vLogEntries.size() - 1;
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PRIOR)) g_vLogOffsetIdx = max(g_vLogOffsetIdx - MAX_LOG_SIZE, -1);
+	//			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_NEXT)) g_vLogOffsetIdx = min(g_vLogOffsetIdx + MAX_LOG_SIZE, (int)g_vLogEntries.size() - 1);
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	Vector3 cs_size = Vector3(LOG_TEXT_SIZE / ss.x * 3.f, LOG_TEXT_SIZE / ss.y, 0.0f) * 2.f;
 
-			if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
-				g_LogVisible = true;
-		}
+	//	Vector4 col = log_background_col;
 
-		DrawBox_log(
-			Vector3(-1, -1 + cs_size.y * 1.2f, 0),
-			Vector3(-1 + cs_size.x * 1.2f, -1 + cs_size.y * 1.2f, 0),
-			Vector3(-1, -1, 0),
-			Vector3(-1 + cs_size.x * 1.2f, -1, 0),
-			col
-		);
+	//	//Is MouseOver?
+	//	if (cs_mouse.x >= -1.f && cs_mouse.x <= -1 + cs_size.x * 1.2 &&
+	//		cs_mouse.y >= -1.f && cs_mouse.y <= -1 + cs_size.y * 1.2)
+	//	{
+	//		col = log_background_highlight;
 
-		DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, -1.f + cs_size.y * 0.5f, -1.f, 1.f), LOG_TEXT_SIZE, "Log");
+	//		if (Window::GetMouse()->ButtonDown(MOUSE_LEFT))
+	//			g_LogVisible = true;
+	//	}
 
-	}
+	//	DrawBox_log(
+	//		Vector3(-1, -1 + cs_size.y * 1.2f, 0),
+	//		Vector3(-1 + cs_size.x * 1.2f, -1 + cs_size.y * 1.2f, 0),
+	//		Vector3(-1, -1, 0),
+	//		Vector3(-1 + cs_size.x * 1.2f, -1, 0),
+	//		col
+	//	);
 
-	
+	//	DrawTextCs(Vector4(-1.f + cs_size.x * 0.25f, -1.f + cs_size.y * 0.5f, -1.f, 1.f), LOG_TEXT_SIZE, "Log");
+
+	//}
+
+
 }
 
 size_t GetDrawSize(const DebugDrawList& list)
@@ -820,8 +896,8 @@ void NCLDebug::_BuildRenderVBO()
 
 	//Cram offset data down into draw start, draw end 
 	for (int i = 0; i < 8; ++i)
-		g_glBufOffsets[i] = offsets[i*2];
-	
+		g_glBufOffsets[i] = offsets[i * 2];
+
 	g_glBufOffsets[8] = offsets[16];
 
 
@@ -885,7 +961,7 @@ void NCLDebug::_BuildRenderVBO()
 
 	if (!g_vChars.empty())
 		glBufferSubData(GL_ARRAY_BUFFER, offsets[16] * sizeof(Vector4), g_vChars.size() * sizeof(Vector4), &g_vChars[0]);
-		//memcpy(g_glBufPtr + g_glBufOffsets[8], &g_vChars[0], g_vChars.size() * sizeof(Vector4));
+	//memcpy(g_glBufPtr + g_glBufOffsets[8], &g_vChars[0], g_vChars.size() * sizeof(Vector4));
 }
 
 
@@ -893,10 +969,12 @@ void NCLDebug::_RenderDrawlist(uint* offsets)
 {
 	float aspectRatio = Window::GetWindow().GetScreenSize().y / Window::GetWindow().GetScreenSize().x;
 
+	glViewport(0, 0, Window::GetWindow().GetScreenSize().x, Window::GetWindow().GetScreenSize().y);
+
 	uint n_points = (offsets[1] - offsets[0]) >> 1;
 	uint n_tlines = (offsets[2] - offsets[1]) >> 1;
 	uint n_hlines = (offsets[3] - offsets[2]) >> 1;
-	uint n_tris   = (offsets[4] - offsets[3]) >> 1;
+	uint n_tris = (offsets[4] - offsets[3]) >> 1;
 
 	if (g_pShaderPoints && n_points > 0)
 	{
@@ -956,6 +1034,9 @@ void NCLDebug::_RenderDebugClipSpace()
 	//All text data already updated in main DebugDrawLists
 	// - we just need to rebind and draw it
 
+	glViewport(0, 0, Window::GetWindow().GetScreenSize().x, Window::GetWindow().GetScreenSize().y);
+
+
 	if (g_pShaderText && g_vChars.size() > 0)
 	{
 		glBindVertexArray(g_glArr);
@@ -963,13 +1044,13 @@ void NCLDebug::_RenderDebugClipSpace()
 		g_pShaderText->SetUniform("uFontTex", 5);
 
 		glActiveTexture(GL_TEXTURE5);
-		
+
 		glBindTexture(GL_TEXTURE_2D, g_glDefaultFontTex);
 		glDrawArrays(GL_LINES, g_glBufOffsets[8] >> 1, g_vCharsLogStart >> 1);
 
 		glBindTexture(GL_TEXTURE_2D, g_glLogFontTex);
-		glDrawArrays(GL_LINES, (g_glBufOffsets[8] + g_vCharsLogStart) >> 1, ((uint)g_vChars.size()-g_vCharsLogStart) >> 1);
-		
+		glDrawArrays(GL_LINES, (g_glBufOffsets[8] + g_vCharsLogStart) >> 1, ((uint)g_vChars.size() - g_vCharsLogStart) >> 1);
+
 		glBindVertexArray(0);
 	}
 }
@@ -985,7 +1066,7 @@ void NCLDebug::_LoadShaders()
 	//	NCLERROR("NCLDebug Point shader could not be loaded");
 	//	return;
 	//}
-	
+
 	g_pShaderLines = ShaderFactory::Instance()->MakeShader(
 		SHADERDIR"DebugShaders/Vertex.glsl",
 		SHADERDIR"DebugShaders/Fragment.glsl",
@@ -1022,7 +1103,7 @@ void NCLDebug::_LoadShaders()
 
 	//Load Font Texture
 	g_glLogFontTex = _GenerateFontBitmap(LOG_TEXT_FONT, LOG_TEXT_SIZE, false, false, false);
-	g_glDefaultFontTex = _GenerateFontBitmap(STATUS_TEXT_FONT, STATUS_TEXT_SIZE, false, false, false);
+	g_glDefaultFontTex = _GenerateFontBitmap(STATUS_TEXT_FONT, 60, true, true, false);
 }
 
 
@@ -1081,7 +1162,7 @@ GLuint NCLDebug::_GenerateFontBitmap(const char* font_name, int font_size, bool 
 		OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY,
 		DEFAULT_PITCH, font_name);
 	RECT r = { 0, 0, tex_size, tex_size };
-	
+
 
 	SelectObject(mdc, bm);
 	FillRect(mdc, &r, (HBRUSH)GetStockObject(BLACK_BRUSH));
@@ -1139,7 +1220,7 @@ GLuint NCLDebug::_GenerateFontBitmap(const char* font_name, int font_size, bool 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 	delete[] pixels;
 
 	return texid;

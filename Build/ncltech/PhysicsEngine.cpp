@@ -8,13 +8,12 @@
 #include <omp.h>
 #include <algorithm>
 #include <ncltech\Scene.h>
-#include <GameTech Coursework\EmptyScene.h>
 #include <ncltech/Pickup.h>
 #include "Tags.h"
 
 using namespace nclgl::Maths;
 
-OcTree* PhysicsEngine::octree = NULL;
+OcTree* PhysicsEngine::octree = nullptr;
 WorldPartition* PhysicsEngine::worldPartition = NULL;
 
 using namespace std;
@@ -33,8 +32,8 @@ PhysicsEngine::PhysicsEngine()
 	//Variables set here will /not/ be reset with each scene
 	isPaused = false;  
 	debugDrawFlags = DEBUGDRAW_FLAGS_MANIFOLD | DEBUGDRAW_FLAGS_CONSTRAINT;
-	octree = new OcTree(new AABB(Vector3(0, worldSize, 0), worldSize));
-	worldPartition = new WorldPartition(new AABB(Vector3(0, worldSize, 0), worldSize), 4);
+	octree = new OcTree(new AABB(Vector3(0, (float)worldSize, 0), (float)worldSize));
+	worldPartition = new WorldPartition(new AABB(Vector3(0, (float)worldSize, 0), (float)worldSize), 4);
 	SetDefaults();
 }
 
@@ -106,6 +105,21 @@ void PhysicsEngine::Update(float deltaTime)
 		{
 			updateRealTimeAccum -= updateTimestep;
 
+			//Objects to be deleted before this frame's collision check starts
+			//This is because we cannot delete the pickup object in player collision callback, 
+			//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
+			std::map<GameObject*, float>::iterator it = objectsToDelete.begin();
+
+			for (it = objectsToDelete.begin(); it != objectsToDelete.end();) {
+				if (it->second <= 0.0f) {
+					delete it->first;
+					objectsToDelete.erase(it++);
+				}
+				else {
+					it->second -= deltaTime;
+					it++;
+				}
+			}
 			//Additional IsPaused check here incase physics was paused inside one of it's components for debugging or otherwise
 			if (!isPaused) UpdatePhysics(); 
 		}
@@ -123,13 +137,9 @@ void PhysicsEngine::Update(float deltaTime)
 void PhysicsEngine::UpdatePhysics()
 {   
 
-	//Objects to be deleted before this frame's collision check starts
-	//This is because we cannot delete the pickup object in player collision callback, 
-	//as the collision shape will be needed for other collisions. So we delete it at the start of next frame.
-	for (int i = 0; i < objectsToDelete.size(); i++) {
-		delete objectsToDelete[i];
-	}
-	objectsToDelete.clear();
+
+	
+
 
 	for (Manifold* m : manifolds)
 	{
@@ -154,7 +164,7 @@ void PhysicsEngine::UpdatePhysics()
 		OcTree::leaves.clear();
 		OcTree::draw(PhysicsEngine::GetOcTree());
 		OcTree::deleteTree(PhysicsEngine::GetOcTree());
-		octree = new OcTree(new AABB(Vector3(0, worldSize, 0),worldSize));
+		octree = new OcTree(new AABB(Vector3(0, (float)worldSize, 0),(float)worldSize));
 		OcTree::setCapacity(40);
 		for (int i = 0; i < physicsNodes.size(); i++) {
 			octree->insert(physicsNodes[i]);
@@ -163,34 +173,34 @@ void PhysicsEngine::UpdatePhysics()
 		BroadPhaseCollisionsOcTree();
 	}
 	//creates collision pairs when using world partitioning
-	else if (worldPartition->isEnabled()) {
-		broadphaseColPairs.clear();
-		for (int i = 0; i < physicsNodes.size(); i++) {
-			PhysicsNode *pnodeA, *pnodeB;
-			if (physicsNodes[i]->getDynamic()) {
-				vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
-				for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
-					pnodeA = physicsNodes[i];
-					pnodeB = possibleColliders.at(k);
+	//else if (worldPartition->isEnabled()) {
+	//	broadphaseColPairs.clear();
+	//	for (int i = 0; i < physicsNodes.size(); i++) {
+	//		PhysicsNode *pnodeA, *pnodeB;
+	//		if (physicsNodes[i]->getDynamic()) {
+	//			vector<PhysicsNode*> possibleColliders =  worldPartition->getPossibleCollisions(physicsNodes[i]);
+	//			for (uint k = 0; k < (uint)possibleColliders.size(); ++k) {
+	//				pnodeA = physicsNodes[i];
+	//				pnodeB = possibleColliders.at(k);
 
-					if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
+	//				if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
 
-					//Check they both atleast have collision shapes
-					if (pnodeA->GetCollisionShape() != NULL
-						&& pnodeB->GetCollisionShape() != NULL)
-					{
-						if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
-							CollisionPair cp;
-							cp.pObjectA = pnodeA;
-							cp.pObjectB = pnodeB;
-							broadphaseColPairs.push_back(cp);
-						}
-					}
+	//				//Check they both atleast have collision shapes
+	//				if (pnodeA->GetCollisionShape() != NULL
+	//					&& pnodeB->GetCollisionShape() != NULL)
+	//				{
+	//					if (SphereSphereInterface(pnodeA, pnodeB, pnodeA->GetCollisionShape(), pnodeB->GetCollisionShape())) {
+	//						CollisionPair cp;
+	//						cp.pObjectA = pnodeA;
+	//						cp.pObjectB = pnodeB;
+	//						broadphaseColPairs.push_back(cp);
+	//					}
+	//				}
 
-				}
-			}
-		}
-	}
+	//			}
+	//		}
+	//	}
+	//}
 
 	//vector<PhysicsNode*> possibleCollisions = wsp->getPossibleCollisions(this->FindGameObject("object that is moving")->physicsNode);
 	else {
@@ -277,7 +287,11 @@ void PhysicsEngine::BroadPhaseCollisions()
 			{
 				pnodeA = physicsNodes[i];
 				pnodeB = physicsNodes[j];
-				if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
+				if (pnodeA->isSoft() && pnodeB->isSoft()) 
+					continue;
+				else if (pnodeA->GetParent()->GetTag() == Tags::TCubes && pnodeB->GetParent()->GetTag() == Tags::TCubes)
+					continue;
+
 
 				//Check they both atleast have collision shapes
 				if (pnodeA->GetCollisionShape() != NULL
@@ -287,6 +301,10 @@ void PhysicsEngine::BroadPhaseCollisions()
 						CollisionPair cp;
 						cp.pObjectA = pnodeA;
 						cp.pObjectB = pnodeB;
+
+				
+
+
 						broadphaseColPairs.push_back(cp);
 					}
 				}

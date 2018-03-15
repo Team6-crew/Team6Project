@@ -37,6 +37,7 @@ public:
 	static void Destroy();
 	static Window& GetWindow() { return *window; }
 
+	void	ResizeWindow(int x, int y);
 
 	void	SetWindowTitle(std::string title, ...);
 
@@ -63,7 +64,7 @@ public:
 	void SetCursorStyle(CursorStyle style);
 
 	GameTimer*   GetTimer() { return timer; }
-
+	~Window(void);
 
 protected:
 	void	CheckMessages(MSG &msg);
@@ -95,5 +96,5 @@ protected:
 
 private:
 	Window(std::string title = "OpenGL Framework", int sizeX = 800, int sizeY = 600, bool fullScreen = false);
-	~Window(void);
+	
 };

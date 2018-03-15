@@ -35,7 +35,9 @@ Description:
 #include <functional>
 #include <algorithm>
 #include <unordered_map>
-
+#include "Player.h"
+#include <nclgl\AI\BallAI.h>
+#include "Softbody.h"
 //Callback function called whenever the scene is updated
 // - Should be used to register Update(dt) functions for AI/Game Logic
 //Params:
@@ -54,8 +56,12 @@ typedef std::unordered_map<void*, SceneUpdateCallback> SceneUpdateMap;
 class Scene
 {
 public:
+	Player * getPlayer() { return player1; }
+	BallAI * getAIPlayer() { return AIBall; }
+
+	float Score = 0.0f;
 	Scene(const std::string& friendly_name)	//Called once at program start - all scene initialization should be done in 'OnInitializeScene'
-		: m_SceneName(friendly_name)
+		: m_SceneName(friendly_name),  loading(false), loaded (0)
 	{}; 
 
 	~Scene()
@@ -101,8 +107,9 @@ public:
 	{
 		if (game_object)
 		{
-			if (game_object->scene) game_object->scene->RemoveGameObject(game_object);				
-
+			if (game_object->scene) {
+				//game_object->scene->RemoveGameObject(game_object);
+			}
 			m_vpObjects.push_back(game_object);
 			game_object->scene = this;
 			game_object->OnAttachedToScene();
@@ -110,6 +117,12 @@ public:
 			if (game_object->renderNode) GraphicsPipeline::Instance()->AddRenderNode(game_object->renderNode);
 			if (game_object->physicsNode) PhysicsEngine::Instance()->AddPhysicsObject(game_object->physicsNode);
 		}
+	}
+
+	void AddSoftBody(Softbody* soft_body)
+	{
+		for (int i = 0; i < 182; ++i)
+			AddGameObject(soft_body->softball[i]);
 	}
 
 	// Remove GameObject from the scene list
@@ -173,7 +186,8 @@ public:
 		}
 	}
 
-	
+	bool isLoading() { return loading; }
+	int hasLoaded() { return loaded; }
 
 protected:
 	// Delete all contained Objects
@@ -183,15 +197,22 @@ protected:
 		m_UpdateCallbacks.clear();
 
 		for (auto obj : m_vpObjects)
-			delete obj;
-		
+			if (obj->physicsNode != NULL) {
+				SAFE_DELETE(obj);
+			}
 		m_vpObjects.clear();
+
+	
 	}
 
 
 protected:
+	bool loading;
+	int loaded;
 	std::string					m_SceneName;
 	std::vector<GameObject*>	m_vpObjects;
 	SceneUpdateMap				m_UpdateCallbacks;
-
+	Player * player1;
+	BallAI * AIBall;
+	
 };

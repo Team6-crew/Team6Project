@@ -78,9 +78,9 @@ function as it will include the filename and linenumber it was triggered on with
 #define LOG_TEXT_FONT       "Verdana"
 
 #define STATUS_TEXT_SIZE	16
-#define STATUS_TEXT_FONT    "Calibri"
+#define STATUS_TEXT_FONT    "Bariol Bold"
 
-#define LOG_OUTPUT_FILE_ENABLED
+#define LOG_OUTPUT_FILE_DISABLED
 #define LOG_OUTPUT_FILE     "program_output.txt"
 
 enum TextAlignment
@@ -108,7 +108,7 @@ typedef struct
 	std::string text;
 } LogEntry;
 
-typedef struct 
+typedef struct
 {
 	std::vector<nclgl::Maths::Vector4> _vPoints;
 	std::vector<nclgl::Maths::Vector4> _vThickLines;
@@ -161,13 +161,15 @@ public:
 	static void DrawTextWs(const nclgl::Maths::Vector3& pos, const float font_size, const TextAlignment alignment, const nclgl::Maths::Vector4 color, const std::string text, ...); ///See "printf" for usage manual
 	static void DrawTextWsNDT(const nclgl::Maths::Vector3& pos, const float font_size, const TextAlignment alignment, const nclgl::Maths::Vector4 color, const std::string text, ...); ///See "printf" for usage manual
 
-																																							//Draw Text (pos is assumed to be pre-multiplied by projMtx * viewMtx at this point)
+																																													   //Draw Text (pos is assumed to be pre-multiplied by projMtx * viewMtx at this point)
 	static void DrawTextCs(const nclgl::Maths::Vector4& pos, const float font_size, const std::string& text, const TextAlignment alignment = TEXTALIGN_LEFT, const nclgl::Maths::Vector4 color = nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//Add a status entry at the top left of the screen (Cleared each frame)
 	static void AddStatusEntry(const nclgl::Maths::Vector4& color, const std::string text, ...); ///See "printf" for usuage manual
-
-																					//Add a log entry at the bottom left - persistent until scene reset
+	static void AddHUD(const nclgl::Maths::Vector4& color, const std::string text, ...);
+	static void AddHUD2(const nclgl::Maths::Vector4& color, const std::string text, ...);
+	static void AddTimer(const nclgl::Maths::Vector4& color, const std::string text, ...);
+	//Add a log entry at the bottom left - persistent until scene reset
 	static void Log(const nclgl::Maths::Vector3& color, const std::string text, ...); ///See "printf" for usuage manual
 	static void Log(const std::string text, ...); //Default Text Color
 
@@ -203,8 +205,6 @@ public:
 	static void _LoadShaders();
 	static void _ReleaseShaders();
 
-	
-
 
 protected:
 	//Actual functions managing data parsing to save code bloat - called by public functions
@@ -233,6 +233,8 @@ protected:
 	static float g_MaxStatusEntryWidth;
 	static std::deque<LogEntry> g_vLogEntries;
 	static int g_vLogOffsetIdx;
+	static int pauseEntries;
+
 
 	static bool g_StatusVisible;
 	static bool g_LogVisible;
@@ -256,4 +258,6 @@ protected:
 
 	static GLuint	g_glLogFontTex;
 	static GLuint	g_glDefaultFontTex;
+
+
 };

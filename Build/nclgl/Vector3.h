@@ -14,6 +14,8 @@ _-_-_-_-_-_-_-""  ""
 #include <cmath>
 #include <iostream>
 
+
+
 namespace nclgl
 {
 	namespace Maths

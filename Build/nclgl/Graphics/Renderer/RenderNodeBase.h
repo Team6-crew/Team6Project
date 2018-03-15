@@ -1,6 +1,7 @@
 #pragma once
-
+#include <ncltech\Tags.h>
 #include <vector>
+#include <nclgl\Vector4.h>
 
 namespace nclgl
 {
@@ -22,7 +23,8 @@ public:
 
 	virtual void	Update(float msec);
 	virtual void	Draw() = 0;
-
+	inline bool     HasTag(Tags t) { return t == tag; }
+	void SetTag(Tags t) { tag = t; }
 	// Transforms
 	virtual void							SetTransform(const nclgl::Maths::Matrix4 &matrix) = 0;
 	virtual const nclgl::Maths::Matrix4&	GetTransform() const = 0;
@@ -34,7 +36,6 @@ public:
 
 	virtual nclgl::Maths::Vector4&			GetColour() = 0;
 	virtual void							SetColour(const nclgl::Maths::Vector4 &c) = 0;
-
 	// Mesh
 	inline MeshBase*						GetMesh() { return mesh; }
 	inline void								SetMesh(MeshBase* newMesh) { mesh = newMesh; } 
@@ -57,13 +58,32 @@ public:
 
 	float			GetCameraDistance() const { return distanceFromCamera; }
 	void			SetCameraDistance(float f) { distanceFromCamera = f; }
+
+	float			GetPaintPercentage() const { return paintPercentage; }
+	void			SetPaintPercentage(float p) { paintPercentage = p; }
+
+	nclgl::Maths::Vector4	GetColourFromPlayer() const { return colourFromPlayer; }
+	void			SetColourFromPlayer(nclgl::Maths::Vector4 c) { colourFromPlayer = c; }
+
+	nclgl::Maths::Vector3	GetHalfDims() const { return halfDims; }
+	void			SetHalfDims(nclgl::Maths::Vector3 c) { halfDims = c; }
+
+	bool			GetBeingPainted() const { return beingPainted; }
+	void			SetBeingPainted(bool p) { beingPainted = p; }
+
+	float			GetCost() { return cost; }
+	void			SetCost(float c) { cost = c; }
 protected:
 	std::vector<RenderNodeBase*> children;
 	RenderNodeBase*	parent = nullptr;
-
+	Tags tag;
 	MeshBase*	mesh;
-
+	float paintPercentage;
+	bool beingPainted;
+	nclgl::Maths::Vector4 colourFromPlayer;
+	nclgl::Maths::Vector3 halfDims;
 	float		boundingRadius = 100.0f;
 	float		distanceFromCamera = 0.0f;
+	float		cost;
 };
 

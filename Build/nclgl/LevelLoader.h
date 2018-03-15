@@ -9,16 +9,20 @@ class Scene;
 
 enum Type {
 	GEOMETRY_CUBOID,
+	GEOMETRY_GROUND_CUBOID,
+	PAINTABLE_CUBE,
 	GEOMETRY_SPHERE,
 	GEOMETRY_RAMP,
+	PLAYER_SPAWN
 };
+
 
 
 class LevelLoader
 {
 	struct MapObject
 	{
-		std::string name;		
+		std::string name;
 		Type		type;
 		nclgl::Maths::Vector3		position;
 		nclgl::Maths::Vector3		scale;
@@ -26,6 +30,8 @@ class LevelLoader
 		nclgl::Maths::Vector3 rotAxis;
 		float		rotationDegrees;
 		nclgl::Maths::Vector4       colour;
+		nclgl::Maths::Vector3 ramprotaxis;
+		float ramprotdeg;
 	};
 
 public:
@@ -36,11 +42,13 @@ public:
 
 protected:
 	void AddMapObject(const std::string& line);
+	void AddPlayers(const std::string& line);
 	bool Load(const std::string& filename);
 
 	std::vector<MapObject> mapObjects;
 
 protected:
 	Type StringToType(const std::string& line);
+	void HandleInput(const std::string& line);
 };
 

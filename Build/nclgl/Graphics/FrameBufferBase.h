@@ -10,6 +10,7 @@ public:
 	FrameBufferBase();
 	~FrameBufferBase();
 
+	virtual void ChangeColourAttachment(TextureBase* attachment) = 0;
 	virtual uint GetWidth() = 0;
 	virtual uint GetHeight() = 0;
 

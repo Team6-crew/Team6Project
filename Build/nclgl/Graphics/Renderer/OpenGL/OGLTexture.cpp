@@ -6,6 +6,7 @@
 
 using namespace Texture;
 
+DEFINE_HEAP(OGLTexture, "Graphics");
 OGLTexture::OGLTexture(const std::string& filepath)
 {
 	LoadTexture(filepath);
@@ -25,12 +26,9 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	SetTextureFiltering();
-	SetTextureWrapping();
-
 	if (type == COLOUR)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	}
 	else if (type == DEPTH)
 	{
@@ -41,6 +39,9 @@ OGLTexture::OGLTexture(Type type, int width, int height)
 		std::cout << "Inappropriate texture type" << std::endl;
 		assert(false);
 	}
+
+	SetTextureFiltering();
+	SetTextureWrapping();
 }
 
 OGLTexture::~OGLTexture()
@@ -63,6 +64,7 @@ void OGLTexture::LoadTexture(const std::string& filepath)
 		std::cout << filepath << " " << SOIL_last_result() << std::endl;
 	}
 	loadSuccess = bool(textureID);
+
 }
 
 void OGLTexture::SetTextureFiltering(bool nearest)

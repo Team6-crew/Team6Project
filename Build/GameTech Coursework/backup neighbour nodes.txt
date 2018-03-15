@@ -1,0 +1,51 @@
+if (i > 0)
+			{						// not the bottom left boarders
+				if (j > 1)
+				{
+					if (i > 1)
+					{
+						if (getGrid(i - 1, j)->type == 0) // left
+						{
+							getGrid(i, j)->addConnectedNodes(getGrid(i - 1, j));
+						}
+						cout << i << " " << j << " neighbours " << i - 1 << " " << j << "\n";
+					}
+					
+					if (getGrid(i, j - 1)->type == 0) //down
+					{
+						getGrid(i, j)->addConnectedNodes(getGrid(i, j - 1));
+						cout << i << " " << j << " neighbours" << i << " " << j - 1 << "\n";
+					}
+				}
+				
+				if (i != 19) 
+				{					//not the top right corners
+					if (j != 19)
+					{
+						if (i > 0)
+						{
+							if (j > 0)
+							{
+								if (getGrid(i + 1, j)->type == 0) //right
+								{
+									getGrid(i, j)->addConnectedNodes(getGrid(i + 1, j));
+									cout << i << " " << j << " neighbours" << i + 1 << " " << j << "\n";
+								}
+								if (getGrid(i, j + 1)->type == 0) //up
+								{
+									getGrid(i, j)->addConnectedNodes(getGrid(i, j + 1));
+									cout << i << " " << j << " neighbours" << i + 1 << " " << j << "\n";
+								}
+							}
+							
+						}
+						
+					}
+				}
+
+
+
+			}
+		}
+			
+	}

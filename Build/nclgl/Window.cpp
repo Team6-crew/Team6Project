@@ -25,6 +25,44 @@ void Window::Destroy() {
 	window = NULL;
 }
 
+void Window::ResizeWindow(int x, int y)
+{
+	HWND hWnd = windowHandle;
+	HWND hWndInsertAfter = nullptr;
+	UINT uFlags = NULL;
+
+	size.x = x;
+	size.y = y;
+
+	if (fullScreen) {
+		DEVMODE dmScreenSettings;								// Device Mode
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));	// Makes Sure Memory's Cleared
+
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);		// Size Of The Devmode Structure
+		dmScreenSettings.dmPelsWidth = size.x;				// Selected Screen Width
+		dmScreenSettings.dmPelsHeight = size.y;				// Selected Screen Height
+		dmScreenSettings.dmBitsPerPel = 32;					// Selected Bits Per Pixel
+		dmScreenSettings.dmDisplayFrequency = 60;
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY;
+
+		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
+			std::cout << "Window::Window(): Failed to switch to fullscreen!" << std::endl;
+			return;
+		}
+	}
+
+
+	SetWindowPos(
+		_In_     hWnd,
+		_In_opt_ hWndInsertAfter,
+		_In_     position.x,
+		_In_     position.y,
+		_In_     size.x,
+		_In_     size.y,
+		_In_     uFlags
+	);
+}
+
 Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen) {
 	renderer = NULL;
 	window = this;

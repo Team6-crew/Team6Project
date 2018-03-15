@@ -3,6 +3,7 @@
 #include "CommonMeshes.h"
 #include <nclgl\NCLDebug.h>
 #include "GraphicsPipeline.h"
+#include "../nclgl/GameLogic.h"
 #include <nclgl\LevelLoader.h>
 
 SceneManager::SceneManager() 
@@ -13,7 +14,7 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-	NCLLOG("[SceneManager] Closing scene manager");
+	//NCLLOG("[SceneManager] Closing scene manager");
 	m_SceneIdx = 0;
 	for (Scene* scene : m_vpAllScenes)
 	{
@@ -38,7 +39,7 @@ void SceneManager::EnqueueScene(Scene* scene)
 	}
 
 	m_vpAllScenes.push_back(scene);
-	NCLLOG("[SceneManager] - Enqueued scene: \"%s\"", scene->GetSceneName().c_str());
+	//NCLLOG("[SceneManager] - Enqueued scene: \"%s\"", scene->GetSceneName().c_str());
 
 	//If this was the first scene, activate it immediately
 	if (m_vpAllScenes.size() == 1)
@@ -61,25 +62,37 @@ void SceneManager::JumpToScene(int idx)
 	//Clear up old scene
 	if (scene)
 	{
-		NCLLOG("[SceneManager] - Exiting scene -");
+		//NCLLOG("[SceneManager] - Exiting scene -");
 		scene->OnCleanupScene();
 		PhysicsEngine::Instance()->RemoveAllPhysicsObjects();	
+		GameLogic::Instance()->clearPlayers();
 	}
 
 	m_SceneIdx = idx;
 	scene = m_vpAllScenes[idx];
-	NCLLOG("");
+	//NCLLOG("");
 
 	//Initialize new scene
 	PhysicsEngine::Instance()->SetDefaults();
 	GraphicsPipeline::Instance()->InitializeDefaults();
+
+
 	if (idx == 1)
 	{
 		LevelLoader loader;
-		loader.BuildLevel("SimpleLevel.txt", scene);
+		loader.BuildLevel("Level1.txt", scene);
+		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
+		{
+			scene->AddGameObject(GameLogic::Instance()->getPlayer(i));
+			scene->AddGameObject(GameLogic::Instance()->getPlayer(i)->getBody());
+
+		}
+
 	}
 
-	scene->OnInitializeScene();	
+
+
+	scene->OnInitializeScene();
 	NCLLOG("[SceneManager] - Scene switched to: \"%s\"", scene->GetSceneName().c_str());
 }
 

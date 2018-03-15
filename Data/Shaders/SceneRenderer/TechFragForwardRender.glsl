@@ -2,8 +2,13 @@
 #define SHADOWMAP_NUM  4
 
 //Per object
-uniform sampler2D  	uDiffuseTex;
+uniform sampler2D  	uDiffuseTex0;
+uniform sampler2D  	uDiffuseTex1;
+
 uniform vec4		uColor;
+
+
+
 
 //Constant Per Frame
 uniform vec3  		uCameraPos;
@@ -26,7 +31,7 @@ in Vertex	{
 out vec4 OutFrag;
 
 const float NORMAL_BIAS = 0.003f;
-const float RAW_BIAS 	= 0.00025f;
+const float RAW_BIAS 	= 0.0025f;
 
 float DoShadowTest(vec3 tsShadow, int tsLayer, vec2 pix)
 {	
@@ -61,8 +66,11 @@ float DoShadowTest(vec3 tsShadow, int tsLayer, vec2 pix)
 
 void main(void)	{
 	vec3 normal 	= normalize(IN.normal);
-	vec4 texColor  	= texture(uDiffuseTex, IN.texCoord);
-	vec4 color 		= uColor * texColor;
+	vec4 tex1Color 	= texture(uDiffuseTex0, IN.texCoord);
+	vec4 tex2Color  = texture(uDiffuseTex1, IN.texCoord);
+	vec4 color 		= uColor * tex1Color;
+	color  			= tex2Color*tex2Color.a + color*(1-tex2Color.a);
+	color.a			= 1.0f;
 
 //Shadow Calculations
 	vec4 shadowWsPos = vec4(IN.worldPos + normal * NORMAL_BIAS, 1.0f);
@@ -82,6 +90,8 @@ void main(void)	{
 			break;
 		}
 	}
+
+//shadow = 1.0f;
 	
 //Lighting Calculations
 	vec3 viewDir 		= normalize(uCameraPos - IN.worldPos);
