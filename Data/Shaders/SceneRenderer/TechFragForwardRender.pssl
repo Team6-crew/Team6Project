@@ -50,7 +50,7 @@ ConstantBuffer CameraData
 
 SamplerState samp0 : register(s0);
 Texture2D uDiffuseTex : register( t0 );
-
+Texture2D uFloorTex : register( t1 );
 
 ConstantBuffer uColor
 {
@@ -78,28 +78,11 @@ ConstantBuffer uSpecularFactor
 	float specularFactor;
 };
 
+ConstantBuffer isFloor
+{
+	float floorXXXX;
+};
 
-
-//Shadow (not sure if will be optimised)
-//uniform sampler2DArrayShadow uShadowTex;
-//SamplerState samp1 : register(s1);
-//Texture2D_Array uShadowTex : register( t3 );
-//
-//
-//
-//ConstantBuffer uShadowSinglePixel
-//{
-//	float2 shadowSinglePixel;
-//};
-//
-//ConstantBuffer uShadowTransform[SHADOWMAP_NUM]
-//{
-//column_major matrix shadowTransform;
-//};
-//
-//const float NORMAL_BIAS = 0.003f;
-//const float RAW_BIAS 	= 0.00025f;
-// .....................End of shadow stuff...........................
 struct VS_OUTPUT
 {
 	float4 WorldPosition  : S_POSITION;
@@ -134,8 +117,16 @@ float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
 	
 	//Combine lighting
 	float4 OutFrag;
+
 	OutFrag.xyz 	= diffuse + specular + colour.rgb* ambientColour;
 	OutFrag.a 	= fragColour.a;
+
+	float4 floorColour 	= uFloorTex.Sample(samp0, In.UV.xy);
+	if (5 > floorXXXX)
+	{
+	   OutFrag.xyz 	= floorColour.xyz;
+	}
 	
+
 	return OutFrag;
 }

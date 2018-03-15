@@ -81,6 +81,34 @@
       <SdbCache Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">CacheAst</SdbCache>
       <SdbCacheDir Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">$(SolutionDir)..\Data\Shaders\SceneRenderer\</SdbCacheDir>
     </OrbisWavePsslc>
+    <OrbisWavePsslc Include="Data\Shaders\SceneRenderer\PixelShader.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_ps_orbis</Profile>
+    </OrbisWavePsslc>
+    <OrbisWavePsslc Include="Data\Shaders\SceneRenderer\testfrag.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_ps_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_ps_orbis</Profile>
+    </OrbisWavePsslc>
+    <OrbisWavePsslc Include="Data\Shaders\SceneRenderer\testvertex.pssl">
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sce_vs_vs_orbis</Profile>
+      <Profile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sce_vs_vs_orbis</Profile>
+    </OrbisWavePsslc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\TexturedFragment.glsl" />
+    <None Include="Data\Shaders\TexturedVertex.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1A5C2647-CADD-49B7-861E-4B1339EDCD84}</ProjectGuid>

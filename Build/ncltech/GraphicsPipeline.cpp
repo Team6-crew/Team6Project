@@ -24,10 +24,14 @@ GraphicsPipeline::GraphicsPipeline()
 	, screenFBO(NULL)
 	, screenTexColor(NULL)
 	, screenTexDepth(NULL)
+	, trailFBO(NULL)
+	, trailTexColor(NULL)
+	, trailTexDepth(NULL)
 	, shaderPresentToWindow(NULL)
 	, shaderShadow(NULL)
 	, shaderForwardLighting(NULL)
 	, fullscreenQuad(NULL)
+	, trailQuad(NULL)
 	, shadowFBO(NULL)
 	, shadowTex(NULL)
 {
@@ -40,6 +44,8 @@ GraphicsPipeline::GraphicsPipeline()
 	renderer->RegisterMesh(fullscreenQuad);
 
 
+	trailQuad = MeshFactory::Instance()->GenerateQuad();
+	renderer->RegisterMesh(trailQuad);
 
 	sceneBoundingRadius = 30.f; ///Approx based on scene contents
 
@@ -96,15 +102,18 @@ void GraphicsPipeline::RemoveRenderNode(RenderNodeBase* node)
 
 void GraphicsPipeline::LoadShaders()
 {
+	shaderTrail = ShaderFactory::Instance()->MakeShader(
+		"SceneRenderer/testvertex",
+		"SceneRenderer/testfrag");
+	renderer->RegisterShader(shaderTrail);
+
+
+
 	shaderPresentToWindow = ShaderFactory::Instance()->MakeShader(
 		"SceneRenderer/TechVertexBasic",
 		"SceneRenderer/TechFragSuperSample");
 	renderer->RegisterShader(shaderPresentToWindow);
-	//shaderShadow = ShaderFactory::Instance()->MakeShader(
-	//	SHADERDIR"SceneRenderer/TechVertexShadow.glsl",
-	//	SHADERDIR"Common/EmptyFragment.glsl",
-	//	SHADERDIR"SceneRenderer/TechGeomShadow.glsl");
-
+	
 	shaderForwardLighting = ShaderFactory::Instance()->MakeShader(
 		"SceneRenderer/TechVertexFull",
 		"SceneRenderer/TechFragForwardRender");
@@ -130,6 +139,22 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 		screenFBO = FrameBufferFactory::Instance()->MakeFramebuffer(screenTexColor, screenTexDepth);
 		
 		renderer->RegisterBuffer(screenFBO);
+
+
+		//create trail buffer
+		//Color Texture
+		trailTexColor = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::COLOUR, 2048, 2048);
+		renderer->RegisterTexture(trailTexColor);
+
+		trailTexColorOld = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::COLOUR, 2048, 2048);
+		renderer->RegisterTexture(trailTexColorOld);
+		//Depth Texture
+		trailTexDepth = TextureFactory::Instance()->MakeTexture(TextureTypeNamespace::DEPTH, 2048, 2048);
+		renderer->RegisterTexture(trailTexDepth);
+		//Generate our Framebuffer
+		trailFBO = FrameBufferFactory::Instance()->MakeFramebuffer(trailTexColor, trailTexDepth);
+
+		renderer->RegisterBuffer(trailFBO);
 	}
 
 	//Construct our Shadow Maps and Shadow UBO
@@ -170,8 +195,22 @@ void GraphicsPipeline::RenderScene()
 	//Build Transparent/Opaque Renderlists
 	BuildAndSortRenderLists();
 
+	//draw sshaderTrail to trail buffer
+	trailFBO->Activate();
+	renderer->SetViewPort(2048, 2048);
+	
+	shaderTrail->Activate();
+	
+	shaderTrail->SetUniform("pos_x", ((renderlistOpaque.at(0)->GetWorldTransform().GetPositionVector().x
+		- renderlistOpaque.at(1)->GetWorldTransform().GetPositionVector().x + 100.0f) / 200.0f));
+	shaderTrail->SetUniform("pos_z", ((renderlistOpaque.at(0)->GetWorldTransform().GetPositionVector().z
+		- renderlistOpaque.at(1)->GetWorldTransform().GetPositionVector().z + 100.0f) / 200.0f));
+	shaderTrail->SetUniform("rad", 0.03f); //renderlistOpaque.at(0)->GetBoundingRadius());
+	shaderTrail->SetUniform("trialColor", renderlistOpaque.at(0)->GetColour());
+	//trailTexColor->Bind(3);
+	trailQuad->SetTexture(trailTexColor);
 
-
+	trailQuad->Draw();
 
 	//Render scene to screen fbo
 	screenFBO->Activate();
@@ -189,13 +228,26 @@ void GraphicsPipeline::RenderScene()
 		shaderForwardLighting->SetUniform("uAmbientColor", ambientColor);
 		shaderForwardLighting->SetUniform("uLightDirection", lightDirection);
 		shaderForwardLighting->SetUniform("uSpecularFactor", specularFactor);
+	
+		trailTexColor->Bind(1);
+
+		int isfloornum = 1;
+		int currentNode = 0;
 
 		renderer->SetDefaultDepthState();
+
 		RenderAllObjects(false,
 			[&](RenderNodeBase* node)
 			{
+			if (currentNode == isfloornum) {
+				shaderForwardLighting->SetUniform("isFloor", 0.0f);
+			}
+			else {
+				shaderForwardLighting->SetUniform("isFloor", 10.0f);
+			}
 				shaderForwardLighting->SetUniform("uModelMtx", node->GetWorldTransform());
 				shaderForwardLighting->SetUniform("uColor", node->GetColour());
+				currentNode++;
 			}
 		);
 

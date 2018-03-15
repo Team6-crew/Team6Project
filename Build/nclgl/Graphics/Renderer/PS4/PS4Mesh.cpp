@@ -9,6 +9,7 @@ PS4Mesh::PS4Mesh()
 {
 	indexType = sce::Gnm::IndexSize::kIndexSize32;
 	primitiveType = sce::Gnm::PrimitiveType::kPrimitiveTypeTriList;
+	texture = nullptr;
 }
 
 
@@ -138,11 +139,13 @@ void PS4Mesh::InitAttributeBuffer(sce::Gnm::Buffer &buffer, sce::Gnm::DataFormat
 
 void PS4Mesh::Draw()
 {
-	std::cout << "PS4Mesh::Draw() on context " << currentGfxContext << std::endl;
 	if (currentGfxContext)
 	{
-		texture->SetCurrentGFXContext(currentGfxContext);
-		texture->Bind(0);
+		if (texture) {
+			texture->SetCurrentGFXContext(currentGfxContext);
+			texture->Bind(0);
+		}
+
 		//bumpTexture->Bind(1);
 		currentGfxContext->setVertexBuffers(sce::Gnm::ShaderStage::kShaderStageVs, 0, numAttributes, attributeBuffers);
 		currentGfxContext->setPrimitiveType(primitiveType);

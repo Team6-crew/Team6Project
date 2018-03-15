@@ -77,7 +77,6 @@ straight to the shader...it's already an 'inverse camera' matrix.
 Matrix4 Camera::BuildViewMatrix() {
 	//Why do a complicated matrix inversion, when we can just generate the matrix
 	//using the negative values ;). The matrix multiplication order is important!
-	std::cout  << "Yaw: " << yaw << ".    Pitch: " << pitch << ".   Position: " << position << ". \n";
 	return	Matrix4::Rotation(-pitch, Vector3(1, 0, 0)) *
 		Matrix4::Rotation(-yaw, Vector3(0, 1, 0)) *
 		Matrix4::Translation(-position);

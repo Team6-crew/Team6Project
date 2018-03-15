@@ -32,5 +32,12 @@
     <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechVertexFull.pssl" />
     <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragSuperSample.pssl" />
     <OrbisWavePsslc Include="..\..\Data\Shaders\SceneRenderer\TechFragForwardRender.pssl" />
+    <OrbisWavePsslc Include="Data\Shaders\SceneRenderer\PixelShader.pssl" />
+    <OrbisWavePsslc Include="Data\Shaders\SceneRenderer\testfrag.pssl" />
+    <OrbisWavePsslc Include="Data\Shaders\SceneRenderer\testvertex.pssl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\TexturedVertex.glsl" />
+    <None Include="Data\Shaders\TexturedFragment.glsl" />
   </ItemGroup>
 </Project>

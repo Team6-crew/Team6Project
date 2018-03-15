@@ -174,7 +174,6 @@ void PS4Shader::Activate()
 {
 	if (currentGFXContext)
 	{
-		std::cout << "Activating shader on context " << currentGFXContext << std::endl;
 		currentGFXContext->setActiveShaderStages(sce::Gnm::kActiveShaderStagesVsPs);
 
 		currentGFXContext->setVsShader(vertexShader, 0, fetchShader, &vertexCache);

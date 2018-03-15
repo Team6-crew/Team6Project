@@ -62,7 +62,14 @@ protected:
 	TextureBase*		screenTexColor;
 	TextureBase*		screenTexDepth;
 
+	FrameBufferBase*	trailFBO;
+	TextureBase*		trailTexColor;
+	TextureBase*		trailTexColorOld;
+	TextureBase*		trailTexDepth;
+
+
 	//Shaders
+	ShaderBase* shaderTrail;
 	ShaderBase* shaderPresentToWindow;
 	ShaderBase* shaderShadow;
 	ShaderBase* shaderForwardLighting;
@@ -87,6 +94,7 @@ protected:
 
 	//Common
 	MeshBase* fullscreenQuad;
+	MeshBase* trailQuad;
 	Camera* camera;
 	bool isVsyncEnabled;
 	std::vector<RenderNodeBase*> allNodes;

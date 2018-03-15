@@ -1,0 +1,46 @@
+ConstantBuffer pos_x
+{
+	float  posX;
+};
+
+ConstantBuffer pos_z
+{
+	float  posZ;
+};
+
+ConstantBuffer rad
+{
+	float  radius;
+};
+
+ConstantBuffer trialColor
+{
+	float3  trailCol;
+};
+
+
+SamplerState samp0 : register(s0);
+Texture2D uColorTex : register( t0 );
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+};
+
+
+float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
+{
+
+	//float4  color 	= trailTex.Sample(samp0, In.UV.xy);
+	float4 color = uColorTex.Sample(samp0, In.UV.xy);
+  //  float4 color = float4 (0.0f, 0.0f, 0.0f, 0.0f);
+	float in_circle = (In.UV.x-posX)*(In.UV.x-posX) + (In.UV.y-posZ)*(In.UV.y-posZ);
+	if (in_circle<(radius*radius) ){
+			color = float4(trailCol.xyz, 1.0f);	
+	}
+
+	float4 OutFrag = color;
+
+	return OutFrag;
+}
