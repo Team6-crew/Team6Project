@@ -5,6 +5,8 @@
 #include <ncltech\CommonUtils.h>
 #include <nclgl\GameLogic.h>
 #include <nclgl\ResourceManager.h>
+#include "Launchpad.h"
+#include <ncltech/Washingzone.h>
 
 using namespace std;
 using namespace nclgl::Maths;
@@ -26,7 +28,6 @@ bool LevelLoader::Load(const std::string& filename)
 
 		while (getline(levelfile, info)) {
 			HandleInput(info);
-			//AddMapObject(info);
 		}
 		levelfile.close();
 		return true;
@@ -35,6 +36,7 @@ bool LevelLoader::Load(const std::string& filename)
 		cout << "File failed to be read" << endl;
 		return false;
 	}
+
 }
 
 void LevelLoader::AddMapObject(const std::string& line)
@@ -76,11 +78,11 @@ Type LevelLoader::StringToType(const std::string& line)
 	{
 		return GEOMETRY_CUBOID;
 	}
-	if (line == "GEOMETRY_GROUND_CUBOID")
+	else if (line == "GEOMETRY_GROUND_CUBOID")
 	{
 		return GEOMETRY_GROUND_CUBOID;
 	}
-	if (line == "PAINTABLE_CUBE")
+	else if (line == "PAINTABLE_CUBE")
 	{
 		return PAINTABLE_CUBE;
 	}
@@ -88,9 +90,13 @@ Type LevelLoader::StringToType(const std::string& line)
 	{
 		return GEOMETRY_SPHERE;
 	}
-	else if (line == "GEOMETRY_RAMP")
+	else if (line == "LAUNCH_PAD")
 	{
-		return GEOMETRY_RAMP;
+		return LAUNCH_PAD;
+	}
+	else if (line == "WASHING_ZONE")
+	{
+		return WASHING_ZONE;
 	}
 	else if (line == "PLAYER_SPAWN")
 	{
@@ -98,18 +104,19 @@ Type LevelLoader::StringToType(const std::string& line)
 	}
 }
 
-
-
 void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 {
 	Load(filename);
 
-	float step = mapObjects.size()/100.0f;
+	float step = mapObjects.size() / 100.0f;
 	float frame = 0.0f;
 	int paintable_counter = 0;
 	for (auto& object : mapObjects)
 	{
 		GameObject * geometry;
+		Launchpad* launchpad;
+		Washingzone* washingzone;
+
 		switch (object.type)
 		{
 		case GEOMETRY_GROUND_CUBOID:
@@ -122,7 +129,6 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				true,
 				false,
 				object.colour);
-
 			scene->AddGameObject(geometry);
 			if (object.name == "Ground")
 			{
@@ -141,11 +147,12 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				true,
 				false,
 				object.colour);
+			scene->AddGameObject(geometry);
 			geometry->SetTag(Tags::TCubes);
 			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"wall.jpg"), 0);
-			scene->AddGameObject(geometry);
+			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TCubes);
 			break;
-
+			
 		case PAINTABLE_CUBE:
 			geometry = CommonUtils::BuildPaintableCube(
 				object.name,
@@ -156,17 +163,14 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				true,
 				false,
 				object.colour);
-
 			geometry->SetTag(Tags::TPaintable);
 			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"paintbox1.jpg"), 0);
 			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->MakeTexture("transparent_" + std::to_string(paintable_counter), Texture::COLOUR, 1024, 1024), 1); // increment 'transparent number1' number by 1
 			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TPaintable);
-		
 			scene->AddGameObject(geometry);
 			++paintable_counter;
 			GameLogic::Instance()->SetPlayerCapturedObject(geometry, -1);
 			break;
-
 
 		case GEOMETRY_SPHERE:
 			geometry = CommonUtils::BuildSphereObject(
@@ -178,39 +182,45 @@ void  LevelLoader::BuildLevel(const std::string& filename, Scene* scene)
 				true,
 				false,
 				object.colour);
-
 			scene->AddGameObject(geometry);
 			break;
 
-		case GEOMETRY_RAMP:
-			geometry = CommonUtils::BuildRampObject(
+		case LAUNCH_PAD:
+			launchpad = new Launchpad(
 				object.name,
 				object.position,
 				object.scale,
 				true,
 				object.inverseMass,
 				true,
-				false,
-				object.colour,
-				object.rotAxis,
-				object.rotationDegrees);
+				object.colour);
+			launchpad->SetTag(Tags::TLaunch);
+			launchpad->SetPhysics(launchpad->Physics());
+			(*launchpad->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"launchpad.jpg"), 0);
+			(*launchpad->Render()->GetChildIteratorStart())->SetTag(Tags::TLaunch);
+			scene->AddGameObject(launchpad);
+			break;
 
-			geometry->SetTag(Tags::TRamp);
-			(*geometry->Render()->GetChildIteratorStart())->SetTag(Tags::TRamp);
-			(*geometry->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"ramp.jpg"), 0);
-			//geometry->Physics()->SetOrientation(Quaternion::AxisAngleToQuaterion(nclgl::Maths::Vector3(1.0f, 0.0f, 0.0f), 45.0));
-
-			scene->AddGameObject(geometry);
+		case WASHING_ZONE:
+			washingzone = new Washingzone(
+				object.name,
+				object.position,
+				object.scale,
+				true,
+				object.inverseMass,
+				true,
+				object.colour);
+			washingzone->SetTag(Tags::TWash);
+			washingzone->SetPhysics(washingzone->Physics());
+			(*washingzone->Render()->GetChildIteratorStart())->GetMesh()->ReplaceTexture(ResourceManager::Instance()->getTexture(TEXTUREDIR"washingzone.jpg"), 0);
+			scene->AddGameObject(washingzone);
 			break;
 		}
+
 		frame += step;
 		GraphicsPipeline::Instance()->LoadingScreen(frame);
 	}
-
-
-	//scene->OnInitializeScene();
 	mapObjects.clear();
-	
 }
 
 
@@ -252,11 +262,5 @@ void LevelLoader::AddPlayers(const std::string& line)
 		ss >> x >> y >> z;
 		spawnPoint[i] = Vector3(x, y, z);
 	}
-
-
-	//GameLogic::Instance()->addPlayer(numPlayers, spawnPoint);
-	
 	delete[] spawnPoint;
-	
-
 }

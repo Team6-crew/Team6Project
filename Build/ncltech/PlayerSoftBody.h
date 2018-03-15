@@ -102,6 +102,8 @@ public:
 	int getIndex() { return index; }
 	void setIndex(int idx) { index = idx; }
 
+	void InvisRoof();
+
 	float getscore() { return score; }
 	void setscore(float s) { score = s; }
 	void cameraInWall(AABB* wall);
