@@ -25,7 +25,7 @@ void Window::Destroy() {
 	window = NULL;
 }
 
-void Window::ResizeWindow(int x, int y)
+void Window::ResizeWindow(float x, float y)
 {
 	HWND hWnd = windowHandle;
 	HWND hWndInsertAfter = nullptr;

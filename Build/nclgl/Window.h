@@ -37,7 +37,7 @@ public:
 	static void Destroy();
 	static Window& GetWindow() { return *window; }
 
-	void	ResizeWindow(int x, int y);
+	void	ResizeWindow(float x, float y);
 
 	void	SetWindowTitle(std::string title, ...);
 

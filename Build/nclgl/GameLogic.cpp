@@ -362,6 +362,7 @@ void GameLogic::clearGameLogic()
 	netPlayers.clear();
 	softplayers.clear();
 	paint_perc.clear();	
+	aiPlayers.clear();
 	
 }
 

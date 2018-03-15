@@ -49,7 +49,7 @@ public:
 	Player* getPlayer(int num_player) { return players[num_player]; }
 	PlayerSoftBody* getSoftPlayer(int num_splayer) { return softplayers[num_splayer]; }
 
-	void clearPlayers() { players.clear();	softplayers.clear(); }
+	void clearPlayers() { players.clear();	softplayers.clear(); aiPlayers.clear(); }
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
 	
 	
