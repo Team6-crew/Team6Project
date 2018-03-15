@@ -319,7 +319,19 @@ bool Player::collisionCallback(PhysicsNode* thisNode, PhysicsNode* otherNode) {
 	{   
 		if(!justJumped) canjump = true;
 	}
-	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer1))
+	{
+		canjump = true;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer2))
+	{
+		canjump = true;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer3))
+	{
+		canjump = true;
+	}
+	else if (otherNode->GetParent()->HasTag(Tags::TAIPlayer4))
 	{
 		canjump = true;
 	}

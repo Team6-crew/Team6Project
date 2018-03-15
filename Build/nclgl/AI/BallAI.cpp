@@ -76,8 +76,6 @@ BallAI::BallAI(const std::string& name,
 		}
 	}
 
-	tag = Tags::TAIPlayer;
-
 	pnode->SetOnCollisionCallback(
 		std::bind(
 			&BallAI::collisionCallback,		// Function to call
@@ -415,10 +413,7 @@ bool BallAI::stun(float dt) {
 		time += dt;
 		stunDuration -= dt;
 		getBall()->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-		if(stunDuration > 10.0f)
 		return true;
 	}
-	else {
-		return false;
-	}
+	else { return false; }
 }
