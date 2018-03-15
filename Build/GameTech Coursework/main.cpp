@@ -126,7 +126,7 @@ void HandleKeyboardInputs()
 	Vector3 pos;
 	std::vector<Vector3> posList;
 
-	/*if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_M))
+	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_M))
 	{
 		
 		pos = GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetPosition();
@@ -139,7 +139,7 @@ void HandleKeyboardInputs()
 			myfile << pos << "\n";
 			myfile.close();
 		}
-	}*/
+	}
 }
 
 
