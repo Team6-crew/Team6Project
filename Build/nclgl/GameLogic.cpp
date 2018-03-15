@@ -80,6 +80,7 @@ void GameLogic::repairSoftPlayer(int num_splayers) {
 	Camera* temp = getSoftPlayer(num_splayers)->getCamera();
 	temp->SetYaw(0.0f);
 	temp->SetPitch(-20.f);
+	temp->SetPosition(temp->GetPosition() + nclgl::Maths::Vector3(0, 6, 15));
 	delete softplayers[num_splayers];
 	softplayers[num_splayers] = new PlayerSoftBody("SoftPlayer_" + num_splayers,
 		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
@@ -108,8 +109,8 @@ void GameLogic::calculateProjectilePaint(float posX, float posZ, float radius, f
 	posZ = 1 - (posZ - gr_pos.z + WORLD_SIZE) / (WORLD_SIZE * 2);
 	radius = radius / WORLD_SIZE;
 
-	for (int i = max((posX - radius) * GROUND_TEXTURE_SIZE, 0); i < min((posX + radius) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-		for (int j = max((posZ - radius) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + radius) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+	for (int i = max((int)((posX - radius) * GROUND_TEXTURE_SIZE), 0); i < min((int)((posX + radius) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); i++) {
+		for (int j = max((int)((posZ - radius) * GROUND_TEXTURE_SIZE), 0); j < min((int)((posZ + radius) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); j++) {
 
 			float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 			if (in_circle < radius*radius * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
@@ -180,8 +181,6 @@ void GameLogic::calculatePaintPercentage() {
 					}
 				}
 				softplayers[k]->setadd_rad(0.0f);
-				softplayers[k]->setscore(paint_perc[k]);
-				cout << paint_perc[k] << endl;
 			}
 	}
 	for (int k = 0; k < netPlayers.size(); k++)
@@ -217,7 +216,7 @@ void GameLogic::calculatePaintPercentage() {
 
 				netPlayers[k]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
-				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
+				for (int i = max((int)((posX - rad) * GROUND_TEXTURE_SIZE), 0); i < min((int)((posX + rad) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); i++) {
 					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
 
 						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
@@ -258,8 +257,8 @@ void GameLogic::calculatePaintPercentage() {
 
 				aiPlayers[l]->setRelativePosition(nclgl::Maths::Vector3(posX, position.y, posZ));
 
-				for (int i = max((posX - rad) * GROUND_TEXTURE_SIZE, 0); i < min((posX + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); i++) {
-					for (int j = max((posZ - rad) * GROUND_TEXTURE_SIZE, 0); j < min((posZ + rad) * GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE - 1); j++) {
+				for (int i = max((int)((posX - rad) * GROUND_TEXTURE_SIZE), 0); i < min((int)((posX + rad) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); i++) {
+					for (int j = max((int)((posZ - rad) * GROUND_TEXTURE_SIZE), 0); j < min((int)((posZ + rad) * GROUND_TEXTURE_SIZE), GROUND_TEXTURE_SIZE - 1); j++) {
 
 						float in_circle = (i - posX * GROUND_TEXTURE_SIZE)*(i - posX * GROUND_TEXTURE_SIZE) + (j - posZ * GROUND_TEXTURE_SIZE)*(j - posZ * GROUND_TEXTURE_SIZE);
 						if (in_circle < rad*rad * GROUND_TEXTURE_SIZE * GROUND_TEXTURE_SIZE) {
@@ -270,14 +269,30 @@ void GameLogic::calculatePaintPercentage() {
 								paint_perc[l + softplayers.size()] += increment;
 								paint_perc[world_paint[i][j] - 1] -= increment;
 							}
-							world_paint[i][j] = l + softplayers.size() + 1;
+							world_paint[i][j] = l + (int)softplayers.size() + 1;
 						}
 					}
 				}
 				aiPlayers[l]->setadd_rad(0.0f);
-				aiPlayers[l]->setscore(paint_perc[l + softplayers.size()]);
 			}
 		}
+	}
+
+	totalscore = 0.0f;
+	for (int i = 0; i < paint_perc.size(); i++)
+	{
+		totalscore = paint_perc[i] + totalscore;
+	}
+
+	for (int k = 0; k < softplayers.size(); k++)
+	{
+		softplayers[k]->setscore(paint_perc[k] / totalscore);
+		//cout << softplayers[k]->getscore() << endl;
+	}
+
+	for (int l = 0; l < aiPlayers.size(); l++)
+	{
+		aiPlayers[l]->setscore(paint_perc[l + softplayers.size()] / totalscore);
 	}
 }
 
@@ -309,8 +324,8 @@ bool GameLogic::spawnPickup() {
 				/*float pos_x = 3;
 				float pos_z = -48;*/
 
-				float pos_x = rand() % 200 - 100;
-				float pos_z = rand() % 200 - 100;
+				float pos_x = rand() % 200 - 100.f;
+				float pos_z = rand() % 200 - 100.f;
 				/*float pos_x = -5.f;
 				float pos_z = -50.f;*/
 

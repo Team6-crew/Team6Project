@@ -22,7 +22,7 @@ void Menu::AddMenuItem(string item) {
 void Menu::MoveUp() {
 	selection--;
 	if (selection < 0) {
-		selection = Items.size() - 1;
+		selection = (int)Items.size() - 1;
 	}
 }
 
@@ -33,7 +33,7 @@ void Menu::MoveDown() {
 	}
 }
 int Menu::lastElement() {
-	return Items.size() - 1;
+	return (int)Items.size() - 1;
 }
 
 void Menu::ShowMenu()

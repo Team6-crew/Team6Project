@@ -317,12 +317,12 @@ public:
 		}
 		else if (activeMenu->get_id() == 9 && activeMenu->getSelection() == 0) {
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && tempAi > 0) {
-				numOfAi -= pow(2, tempAi);
+				numOfAi -= (int)pow(2, tempAi);
 				tempAi -= 1;
 				
 			}
 			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && tempAi < 3) {
-				numOfAi += pow(2, tempAi+1);
+				numOfAi += (int)pow(2, tempAi+1);
 				tempAi += 1;
 				
 			}
@@ -375,11 +375,11 @@ public:
 					numOfPlayers = 0;
 					for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
 						if (humanOrAi[i] == 1) {
-							numOfPlayers += pow (2,i);
+							numOfPlayers += (int)pow (2,i);
 
 						}
 						else if (humanOrAi[i] == 2) {
-							numOfAi += pow(2, i);
+							numOfAi += (int)pow(2, i);
 						}
 					}
 					if (numOfPlayers != 0) {
@@ -521,15 +521,15 @@ private:
 	std::map <int, std::string> KEYS;
 	void scanServers() {
 		int ipPrefix[5] = { 0 };
-		int dotPos = string_IP.find(".");
+		int dotPos = (int)string_IP.find(".");
 		ipPrefix[0] = stoi(string_IP.substr(0, dotPos));
-		int dotPos2 = string_IP.find(".", dotPos + 1);
+		int dotPos2 = (int)string_IP.find(".", dotPos + 1);
 		ipPrefix[1] = stoi(string_IP.substr(dotPos + 1, dotPos2 - dotPos - 1));
-		int dotPos3 = string_IP.find(".", dotPos2 + 1);
+		int dotPos3 = (int)string_IP.find(".", dotPos2 + 1);
 		ipPrefix[2] = stoi(string_IP.substr(dotPos2 + 1, dotPos3 - dotPos2 - 1));
-		int dotPos4 = string_IP.find(":", dotPos3 + 1);
+		int dotPos4 = (int)string_IP.find(":", dotPos3 + 1);
 		ipPrefix[3] = stoi(string_IP.substr(dotPos3 + 1, dotPos4 - dotPos3 - 1));
-		int dotPos5 = string_IP.length();
+		int dotPos5 = (int)string_IP.length();
 		ipPrefix[4] = stoi(string_IP.substr(dotPos4 + 1, dotPos5 - dotPos4 - 1));
 		serverConnection = listen->ConnectPeer(ipPrefix[0], ipPrefix[1], ipPrefix[2], ipPrefix[3], ipPrefix[4]);
 	}
@@ -722,10 +722,10 @@ private:
 			else if (SocketId == "STRT") {
 				getControls();
 				int myPlayerNum = GameLogic::Instance()->getMyNetNum();
-				GameLogic::Instance()->setnumOfPlayersMp(pow (2, GameLogic::Instance()->getMyNetNum()));
+				GameLogic::Instance()->setnumOfPlayersMp((int)pow (2, GameLogic::Instance()->getMyNetNum()));
 				int numEnemies = 0b0000;
 				for (int i = 0; i < players_connected; i++) {
-					if (i != myPlayerNum) numEnemies += pow(2, i);
+					if (i != myPlayerNum) numEnemies += (int)pow(2, i);
 				}
 				for (int i = 0; i < 6; i++) {
 					GameLogic::Instance()->setControls(myPlayerNum, i, GameLogic::Instance()->getControls(0, i));
