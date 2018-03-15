@@ -69,7 +69,7 @@ RandomPickup::~RandomPickup()
 }
 
 void RandomPickup::Effect(PlayerSoftBody* player) {
-	float prob = (rand() % 100);
+	int prob = (rand() % 100);
 	float temp;
 	float tempscore = player->getscore();
 
@@ -130,7 +130,7 @@ void RandomPickup::Effect(PlayerSoftBody* player) {
 }
 
 void RandomPickup::Effect(BallAI* AIBall) {
-	float prob = (rand() % 100);
+	int prob = (rand() % 100);
 	float temp;
 	float tempscore = AIBall->getscore();
 

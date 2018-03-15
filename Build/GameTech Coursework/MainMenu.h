@@ -273,12 +273,12 @@ public:
 		}
 		else if (activeMenu->get_id() == 9 && activeMenu->getSelection() == 0) {
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && tempAi > 0) {
-				numOfAi -= pow(2, tempAi);
+				numOfAi -= (int)pow(2, tempAi);
 				tempAi -= 1;
 				
 			}
 			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && tempAi < 3) {
-				numOfAi += pow(2, tempAi+1);
+				numOfAi += (int)pow(2, tempAi+1);
 				tempAi += 1;
 				
 			}
@@ -328,11 +328,11 @@ public:
 					numOfPlayers = 0;
 					for (int i = 0; i < sizeof(humanOrAi) / sizeof(humanOrAi[0]); ++i) {
 						if (humanOrAi[i] == 1) {
-							numOfPlayers += pow (2,i);
+							numOfPlayers += (int)pow (2,i);
 
 						}
 						else if (humanOrAi[i] == 2) {
-							numOfAi += pow(2, i);
+							numOfAi += (int)pow(2, i);
 						}
 					}
 					if (numOfPlayers != 0) {
