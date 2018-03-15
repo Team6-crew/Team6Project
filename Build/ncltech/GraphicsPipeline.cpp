@@ -1035,5 +1035,4 @@ void GraphicsPipeline::clearGraphicsPipeline()
 	cameras.clear();
 	TrailBuffer->Activate();
 	renderer->Clear(Renderer::COLOUR_DEPTH);
-	
 }
