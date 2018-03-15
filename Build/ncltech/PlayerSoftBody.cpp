@@ -518,25 +518,25 @@ void PlayerSoftBody::wallLimit() {
 	if (WORLD_SIZE - front->Physics()->GetPosition().x < 4) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
-				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95f);
 		}
 	}
 	else if (WORLD_SIZE + front->Physics()->GetPosition().x < 3) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
-				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95f);
 		}
 	}
 	else if (WORLD_SIZE - front->Physics()->GetPosition().z < 5.5) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
-				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95f);
 		}
 	}
 	else if (WORLD_SIZE + front->Physics()->GetPosition().z < 3) {
 		for (int i = 0; i < 182; ++i) {
 			getBall()->softball[i]->Physics()->SetLinearVelocity(
-				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95);
+				getBall()->softball[i]->Physics()->GetLinearVelocity() * 0.95f);
 		}
 	}	
 }
@@ -544,7 +544,7 @@ void PlayerSoftBody::wallLimit() {
 void PlayerSoftBody::jumpSlow() {
 	if (bottom->Physics()->GetLinearVelocity().y < 0 && top->Physics()->GetLinearVelocity().y < 0) {
 		for (int i = 0; i < 182; ++i) {
-			getBall()->softball[i]->Physics()->SetLinearVelocity(getBall()->softball[i]->Physics()->GetLinearVelocity()*0.99);
+			getBall()->softball[i]->Physics()->SetLinearVelocity(getBall()->softball[i]->Physics()->GetLinearVelocity()*0.99f);
 		}
 	}
 }

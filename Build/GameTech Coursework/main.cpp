@@ -104,7 +104,7 @@ void PrintStatusEntries()
 void HandleKeyboardInputs()
 {
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P));
+	//if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_P));
 	//PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 
 	//if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_V))
@@ -219,9 +219,7 @@ int main()
 			}
 			NCLDebug::_ClearDebugLists();
 			if (GameLogic::Instance()->getCurrentTime() > 0) {
-				//std::cout << GameLogic::Instance()->getCurrentTime() << endl;
-				//std::cout << GameLogic::Instance()->getSeconds() << endl;
-				GameLogic::Instance()->setCurrentTime(GameLogic::Instance()->getSeconds() - GameLogic::Instance()->getActualGameTime());
+				GameLogic::Instance()->setCurrentTime((int)(GameLogic::Instance()->getSeconds() - GameLogic::Instance()->getActualGameTime()));
 				NCLDebug::AddTimer(nclgl::Maths::Vector4(1.f, 1.f, 1.f, 1.f), std::to_string(GameLogic::Instance()->getCurrentTime() / 60) + ":" + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) / 10) + std::to_string((GameLogic::Instance()->getCurrentTime() % 60) % 10));
 			}
 			else if (!gameEnded) {

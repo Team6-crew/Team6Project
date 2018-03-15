@@ -40,7 +40,7 @@ public:
 					GameObject* sphere = CommonUtils::BuildSoftSphereObject(
 						"",
 						nclgl::Maths::Vector3(position.x + radius * sin(j * 18 * PI / 180) * cos(i * PI / 180 * 18), position.y + radius * sin(j * PI / 180 * 18) * sin(i * PI / 180 * 18) + 1, position.z + radius * cos(j * PI / 180 * 18)),
-						0.05,
+						0.05f,
 						physics_enabled,
 						inverse_mass,
 						collidable,
@@ -58,7 +58,7 @@ public:
 		GameObject* endsphere1 = CommonUtils::BuildSoftSphereObject(
 			"",
 			nclgl::Maths::Vector3(position.x + radius - 1, position.y + radius, position.z - radius * 1),
-			0.05,
+			0.05f,
 			physics_enabled,
 			inverse_mass,
 			collidable,
@@ -72,7 +72,7 @@ public:
 		GameObject* endsphere2 = CommonUtils::BuildSoftSphereObject(
 			"",
 			nclgl::Maths::Vector3(position.x + radius - 1, position.y + radius, position.z + radius * 1),
-			0.05,
+			0.05f,
 			physics_enabled,
 			inverse_mass,
 			collidable,
@@ -383,7 +383,7 @@ private:
 		m->vertices[773] = softball[181]->Physics()->GetPosition();
 
 
-		for (int i = 0; i < m->numVertices; ++i) {
+		for (uint i = 0; i < m->numVertices; ++i) {
 			m->vertices[i] = m->vertices[i] - position;
 			m->colours[i] = colour;
 		}

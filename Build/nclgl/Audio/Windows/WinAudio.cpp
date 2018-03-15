@@ -68,7 +68,7 @@ void WinAudio::StopAllSounds()
 
 void WinAudio::SetVolume(float volume)
 {
-	volume = min(1.0, max(volume, 0.0f));
+	volume = min(1.0f, max(volume, 0.0f));
 	if (soundEngine)
 	{
 		soundEngine->setSoundVolume(volume);
