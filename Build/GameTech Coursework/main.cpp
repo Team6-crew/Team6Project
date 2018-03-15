@@ -254,7 +254,7 @@ int main()
 				}
 				
 
-				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
+				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Restart");
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
@@ -264,11 +264,26 @@ int main()
 					GraphicsPipeline::Instance()->clearGraphicsPipeline();
 					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Team Project");
-					
+
+					GameLogic::Instance()->setIsGamePaused(false);
+					GameLogic::Instance()->setLevelIsLoaded(false);
+					GameLogic::Instance()->setGameHasStarted(false);
+					GameLogic::Instance()->setTotalTime(0.0f);
+					GameLogic::Instance()->setActualGameTime(0.0f);
 				}
 				if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
 				{
+					GameLogic::Instance()->clearGameLogic();
+					GraphicsPipeline::Instance()->clearGraphicsPipeline();
+					PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 					SceneManager::Instance()->JumpToScene("Main Menu");
+					
+					GameLogic::Instance()->setIsGamePaused(false);
+					GameLogic::Instance()->setLevelIsLoaded(false);
+					GameLogic::Instance()->setGameHasStarted(false);
+					GameLogic::Instance()->setTotalTime(0.0f);
+					GameLogic::Instance()->setActualGameTime(0.0f);
+					GameLogic::Instance()->setIsGamePaused(false);
 				}
 			}
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_0)) {

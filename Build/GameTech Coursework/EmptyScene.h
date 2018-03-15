@@ -371,6 +371,10 @@ public:
 				m_UpdateCallbacks.clear();
 				PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 				GameLogic::Instance()->setIsGamePaused(false);
+				GameLogic::Instance()->setLevelIsLoaded(false);
+				GameLogic::Instance()->setGameHasStarted(false);
+				GameLogic::Instance()->setTotalTime(0.0f);
+				GameLogic::Instance()->setActualGameTime(0.0f);
 				isPaused = false;
 			}
 			else if (pauseMenu->getSelection() == 3 && Window::GetKeyboard()->KeyTriggered(KEYBOARD_RETURN))

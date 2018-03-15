@@ -30,10 +30,12 @@ public:
 	bool levelIsLoaded() { return levelLoaded; }
 	bool gameHasStarted() { return gameStarted; }
 	void increaseTotalTime(float dt) { totalTime += dt; }
+	void setTotalTime(float t) { totalTime = t; }
 	void setLevelIsLoaded(bool l) { levelLoaded = l; }
 	void setGameHasStarted(bool l) { gameStarted = l; }
 	
 	float getActualGameTime() { return actualGameTime; }
+	void setActualGameTime(float t) { actualGameTime = t; }
 	void increaseActualGameTime(float dt) { actualGameTime +=dt; }
 	
 	bool isServer() { return server; }

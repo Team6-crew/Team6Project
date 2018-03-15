@@ -58,11 +58,11 @@ public:
 		multiPlayerMenu = new Menu();
 		multiPlayerMenu->visible = false;
 		multiPlayerMenu->AddMenuItem("Split Screen");
-		multiPlayerMenu->AddMenuItem("Host LAN Server");
+		//multiPlayerMenu->AddMenuItem("Host LAN Server");
 		multiPlayerMenu->AddMenuItem("Join LAN Server");
 		multiPlayerMenu->AddMenuItem("Back");
 		mainMenu->addToMenu(multiPlayerMenu, 1);
-		multiPlayerMenu->addToMenu(mainMenu, 3);
+		multiPlayerMenu->addToMenu(mainMenu, 2);
 		multiPlayerMenu->set_id(2);
 		// Split Screen Menu
 		splitScreenMenu = new Menu();
@@ -154,7 +154,7 @@ public:
 		JoinServerMenu->visible = false;
 		JoinServerMenu->AddMenuItem("Dummy Server");
 		JoinServerMenu->AddMenuItem("Back");
-		multiPlayerMenu->addToMenu(JoinServerMenu, 2);
+		multiPlayerMenu->addToMenu(JoinServerMenu, 1);
 		JoinServerMenu->addToMenu(multiPlayerMenu, 1);
 		JoinServerMenu->set_id(10);
 		// Server List Menu
