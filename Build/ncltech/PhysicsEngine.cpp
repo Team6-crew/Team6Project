@@ -8,7 +8,6 @@
 #include <omp.h>
 #include <algorithm>
 #include <ncltech\Scene.h>
-#include <GameTech Coursework\EmptyScene.h>
 #include <ncltech/Pickup.h>
 #include "Tags.h"
 
