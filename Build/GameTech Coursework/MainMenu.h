@@ -26,7 +26,7 @@ class MainMenu : public Scene
 public:
 	int numOfPlayers;
 	int numOfAi;
-	
+	int tempAi;
 	int volumelevel = 5;
 
 	int humanOrAi[4] = { 0 };
@@ -38,6 +38,7 @@ public:
 	MainMenu(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
+		tempAi = 0;
 		waitsInput = false;
 		mapKeys();
 		//std::cout << glGetError() << std::endl;
@@ -271,13 +272,18 @@ public:
 			activeMenu->replaceMenuItem(activeMenu->getSelection(), "Volume " + std::to_string(volumelevel));
 		}
 		else if (activeMenu->get_id() == 9 && activeMenu->getSelection() == 0) {
-			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && numOfAi > 0) {
-				numOfAi -= 1;
+			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && tempAi > 0) {
+				numOfAi -= pow(2, tempAi);
+				tempAi -= 1;
+				
 			}
-			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && numOfAi < 3) {
-				numOfAi += 1;
+			else if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_RIGHT) && tempAi < 3) {
+				numOfAi += pow(2, tempAi+1);
+				tempAi += 1;
+				
 			}
-			activeMenu->replaceMenuItem(activeMenu->getSelection(), "AI Opponents " + std::to_string(numOfAi));
+			activeMenu->replaceMenuItem(activeMenu->getSelection(), "AI Opponents " + std::to_string(tempAi));
+			GameLogic::Instance()->setnumAI(numOfAi);
 		}
 		else if (activeMenu->get_id() == 4 && activeMenu->getSelection() == 3) {
 			if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_LEFT) && seconds > 60) {

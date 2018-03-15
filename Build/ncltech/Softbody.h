@@ -100,8 +100,7 @@ public:
 					softball[10 + j + (i * 18) + 1]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
 				PhysicsEngine::Instance()->AddConstraint(c1[(i * 20) + j + 80]);
 			}
-		}
-		for (int i = 0; i < 10; ++i) {
+
 			c1[160 + i] = new Spring_Constraint(
 				softball[0]->Physics(),					//Physics Object A
 				softball[1 + (i * 18)]->Physics(),					//Physics Object B
@@ -115,8 +114,8 @@ public:
 				softball[0]->Physics()->GetPosition(),	//Attachment Position on Object A	-> Currently the centre
 				softball[18 + (i * 18)]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
 			PhysicsEngine::Instance()->AddConstraint(c1[170 + i]);
-		}
-		for (int i = 0; i < 10; ++i) {
+
+
 			c1[180 + i] = new Spring_Constraint(
 				softball[9 + (i * 18)]->Physics(),					//Physics Object A
 				softball[181]->Physics(),					//Physics Object B
@@ -131,6 +130,38 @@ public:
 				softball[181]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
 			PhysicsEngine::Instance()->AddConstraint(c1[190 + i]);
 		}
+		//for (int i = 0; i < 10; ++i) {
+		//	c1[160 + i] = new Spring_Constraint(
+		//		softball[0]->Physics(),					//Physics Object A
+		//		softball[1 + (i * 18)]->Physics(),					//Physics Object B
+		//		softball[0]->Physics()->GetPosition(),	//Attachment Position on Object A	-> Currently the centre
+		//		softball[1 + (i * 18)]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
+		//	PhysicsEngine::Instance()->AddConstraint(c1[160 + i]);
+
+		//	c1[170 + i] = new Spring_Constraint(
+		//		softball[0]->Physics(),					//Physics Object A
+		//		softball[18 + (i * 18)]->Physics(),					//Physics Object B
+		//		softball[0]->Physics()->GetPosition(),	//Attachment Position on Object A	-> Currently the centre
+		//		softball[18 + (i * 18)]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
+		//	PhysicsEngine::Instance()->AddConstraint(c1[170 + i]);
+		//}
+
+
+		//for (int i = 0; i < 10; ++i) {
+		//	c1[180 + i] = new Spring_Constraint(
+		//		softball[9 + (i * 18)]->Physics(),					//Physics Object A
+		//		softball[181]->Physics(),					//Physics Object B
+		//		softball[9 + (i * 18)]->Physics()->GetPosition(),	//Attachment Position on Object A	-> Currently the centre
+		//		softball[181]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
+		//	PhysicsEngine::Instance()->AddConstraint(c1[180 + i]);
+
+		//	c1[190 + i] = new Spring_Constraint(
+		//		softball[10 + (i * 18)]->Physics(),					//Physics Object A
+		//		softball[181]->Physics(),					//Physics Object B
+		//		softball[10 + (i * 18)]->Physics()->GetPosition(),	//Attachment Position on Object A	-> Currently the centre
+		//		softball[181]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
+		//	PhysicsEngine::Instance()->AddConstraint(c1[190 + i]);
+		//}
 		//Test
 		k = 0;
 		for (int i = 1; i <= 18; ++i) {
@@ -143,10 +174,7 @@ public:
 				PhysicsEngine::Instance()->AddConstraint(c2[k]);
 				++k;
 			}
-		}
 
-
-		for (int i = 1; i <= 18; ++i) {
 			c2[k] = new Spring_Constraint(
 				softball[i]->Physics(),					//Physics Object A
 				softball[181 - i]->Physics(),					//Physics Object B
@@ -155,6 +183,17 @@ public:
 			PhysicsEngine::Instance()->AddConstraint(c2[k]);
 			++k;
 		}
+
+
+		//for (int i = 1; i <= 18; ++i) {
+		//	c2[k] = new Spring_Constraint(
+		//		softball[i]->Physics(),					//Physics Object A
+		//		softball[181 - i]->Physics(),					//Physics Object B
+		//		softball[i]->Physics()->GetPosition(),	//Attachment Position on Object A	-> Currently the centre
+		//		softball[181 - i]->Physics()->GetPosition());	//Attachment Position on Object B	-> Currently the centre 
+		//	PhysicsEngine::Instance()->AddConstraint(c2[k]);
+		//	++k;
+		//}
 
 		k = 0;
 
@@ -241,17 +280,29 @@ private:
 			m->vertices[3 * i] = softball[0]->Physics()->GetPosition();
 			m->vertices[3 * i + 1] = softball[i * 18 + 1]->Physics()->GetPosition();
 			m->vertices[3 * i + 2] = softball[(i + 1) * 18 + 1]->Physics()->GetPosition();
+
+			m->vertices[3 * i + 30] = softball[0]->Physics()->GetPosition();
+			m->vertices[3 * i + 31] = softball[i * 18 + 18]->Physics()->GetPosition();
+			m->vertices[3 * i + 32] = softball[(i + 1) * 18 + 18]->Physics()->GetPosition();
+
+			m->vertices[716 + 3 * i] = softball[181]->Physics()->GetPosition();
+			m->vertices[716 + 3 * i + 1] = softball[i * 18 + 9]->Physics()->GetPosition();
+			m->vertices[716 + 3 * i + 2] = softball[(i + 1) * 18 + 9]->Physics()->GetPosition();
+
+			m->vertices[3 * i + 746] = softball[181]->Physics()->GetPosition();
+			m->vertices[3 * i + 747] = softball[i * 18 + 10]->Physics()->GetPosition();
+			m->vertices[3 * i + 748] = softball[(i + 1) * 18 + 10]->Physics()->GetPosition();
 		}
 
 		m->vertices[27] = softball[0]->Physics()->GetPosition();
 		m->vertices[28] = softball[163]->Physics()->GetPosition();
 		m->vertices[29] = softball[18]->Physics()->GetPosition();
 
-		for (int i = 0; i < 9; ++i) {
+		/*for (int i = 0; i < 9; ++i) {
 			m->vertices[3 * i + 30] = softball[0]->Physics()->GetPosition();
 			m->vertices[3 * i + 31] = softball[i * 18 + 18]->Physics()->GetPosition();
 			m->vertices[3 * i + 32] = softball[(i + 1) * 18 + 18]->Physics()->GetPosition();
-		}
+		}*/
 
 		m->vertices[57] = softball[0]->Physics()->GetPosition();
 		m->vertices[58] = softball[1]->Physics()->GetPosition();
@@ -264,8 +315,10 @@ private:
 
 
 		int k;
+		int l;
 		for (int i = 1; i < 9; ++i) {
 			k = 1;
+			l = 0;
 			m->vertices[60 + 82 * (i - 1)] = softball[i + 1]->Physics()->GetPosition();
 			m->vertices[62 + 82 * (i - 1)] = softball[i]->Physics()->GetPosition();
 			for (int j = 0; j < 9; ++j) {
@@ -274,21 +327,26 @@ private:
 				m->vertices[61 + (4 * j) + 3 + 82 * (i - 1)] = m->vertices[61 + (4 * j) + 82 * (i - 1)];
 				m->vertices[61 + (4 * j) + 5 + 82 * (i - 1)] = m->vertices[61 + (4 * j) + 2 + 82 * (i - 1)];
 				++k;
+
+				m->vertices[100 + (4 * j) + 82 * (i - 1)] = softball[18 - i + l * 18]->Physics()->GetPosition();
+				m->vertices[100 + (4 * j) + 2 + 82 * (i - 1)] = softball[18 - i + 1 + l * 18]->Physics()->GetPosition();
+				m->vertices[100 + (4 * j) + 3 + 82 * (i - 1)] = m->vertices[100 + (4 * j) + 82 * (i - 1)];
+				m->vertices[100 + (4 * j) + 5 + 82 * (i - 1)] = m->vertices[100 + (4 * j) + 2 + 82 * (i - 1)];
+
+				++l;
 			}
 			m->vertices[97 + 82 * (i - 1)] = softball[18 - i]->Physics()->GetPosition();
 			m->vertices[99 + 82 * (i - 1)] = softball[19 - i]->Physics()->GetPosition();
 			m->vertices[101 + 82 * (i - 1)] = softball[36 - i]->Physics()->GetPosition();
 
-			k = 0;
-
-			for (int j = 0; j < 9; ++j) {
-				m->vertices[100 + (4 * j) + 82 * (i - 1)] = softball[18 - i + k * 18]->Physics()->GetPosition();
-				m->vertices[100 + (4 * j) + 2 + 82 * (i - 1)] = softball[18 - i + 1 + k * 18]->Physics()->GetPosition();
+			/*for (int j = 0; j < 9; ++j) {
+				m->vertices[100 + (4 * j) + 82 * (i - 1)] = softball[18 - i + l * 18]->Physics()->GetPosition();
+				m->vertices[100 + (4 * j) + 2 + 82 * (i - 1)] = softball[18 - i + 1 + l * 18]->Physics()->GetPosition();
 				m->vertices[100 + (4 * j) + 3 + 82 * (i - 1)] = m->vertices[100 + (4 * j) + 82 * (i - 1)];
 				m->vertices[100 + (4 * j) + 5 + 82 * (i - 1)] = m->vertices[100 + (4 * j) + 2 + 82 * (i - 1)];
 
-				++k;
-			}
+				++l;
+			}*/
 			m->vertices[136 + 82 * (i - 1)] = softball[180 - i]->Physics()->GetPosition();
 			m->vertices[138 + 82 * (i - 1)] = softball[180 - i + 1]->Physics()->GetPosition();
 			m->vertices[139 + 82 * (i - 1)] = softball[180 - i]->Physics()->GetPosition();
@@ -303,21 +361,25 @@ private:
 		m->vertices[715] = softball[172]->Physics()->GetPosition();
 
 
-		for (int j = 0; j < 9; ++j) {
+		/*for (int j = 0; j < 9; ++j) {
 			m->vertices[716 + 3 * j] = softball[181]->Physics()->GetPosition();
 			m->vertices[716 + 3 * j + 1] = softball[j * 18 + 9]->Physics()->GetPosition();
 			m->vertices[716 + 3 * j + 2] = softball[(j + 1) * 18 + 9]->Physics()->GetPosition();
-		}
+
+			m->vertices[3 * j + 746] = softball[181]->Physics()->GetPosition();
+			m->vertices[3 * j + 747] = softball[j * 18 + 10]->Physics()->GetPosition();
+			m->vertices[3 * j + 748] = softball[(j + 1) * 18 + 10]->Physics()->GetPosition();
+		}*/
 
 		m->vertices[743] = softball[181]->Physics()->GetPosition();
 		m->vertices[744] = softball[171]->Physics()->GetPosition();
 		m->vertices[745] = softball[10]->Physics()->GetPosition();
 
-		for (int j = 0; j < 9; ++j) {
+		/*for (int j = 0; j < 9; ++j) {
 			m->vertices[3 * j + 746] = softball[181]->Physics()->GetPosition();
 			m->vertices[3 * j + 747] = softball[j * 18 + 10]->Physics()->GetPosition();
 			m->vertices[3 * j + 748] = softball[(j + 1) * 18 + 10]->Physics()->GetPosition();
-		}
+		}*/
 		m->vertices[773] = softball[181]->Physics()->GetPosition();
 
 

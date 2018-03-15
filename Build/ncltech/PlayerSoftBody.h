@@ -19,10 +19,12 @@ public:
 
 	GameObject* getBody() { return body; }
 	Softbody* getBall() { return ball; }
-	GameObject* getTop();
-	GameObject* getBottom();
-	GameObject* getFront();
-	GameObject* getBack();
+	void setAxisSpheres();
+	void getOppositeSphere(int sph);
+	GameObject* getTop() { return top; }
+	GameObject* getBottom() { return bottom; }
+	GameObject* getFront() { return front; }
+	GameObject* getBack() { return back; }
 
 	
 	void setRadius(float radius) { rad = radius; }
@@ -91,10 +93,6 @@ public:
 	void setCurrentBuff(Tags tag);
 	Tags getCurrentBuff() { return currentBuff; }
 
-	void setIsBroken(bool broken) { isbroken = broken; }
-	bool getIsBroken() { return isbroken; }
-
-
 	void move(float dt);
 
 	void speedLimit();
@@ -103,6 +101,10 @@ public:
 	int getIndex() { return index; }
 	void setIndex(int idx) { index = idx; }
 
+	float getscore() { return score; }
+	void setscore(float s) { score = s; }
+	void cameraInWall(AABB* wall);
+	
 	void ToInfinityAndNotQuiteBeyond();
 
 private:
@@ -122,6 +124,8 @@ private:
 	GameObject* front; // Front sphere
 	GameObject* back; // You get the idea
 
+	GameObject* opposite;
+
 	Camera* camera;
 	RenderNodeBase* camera_transform;
 	RenderNodeBase* bodyRenderNode;
@@ -139,7 +143,7 @@ private:
 
 	float time;
 	int tag;
-
+	float score;
 	float sensitivity;
 	bool canpaint;
 
@@ -155,6 +159,9 @@ private:
 
 	nclgl::Maths::Vector4 colour;
 
+	float maxCameraY, maxCameraZ, minCameraY, minCameraZ, curCameraY, curCameraZ;
 	bool isbroken = false;
 	int index;
+
+	AABB* wallOfInterest;
 };

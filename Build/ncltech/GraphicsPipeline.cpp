@@ -441,12 +441,14 @@ void GraphicsPipeline::RenderScene(float dt)
 		
 		}
 		else
+		{
+
+			std::string arr = "players[" + std::to_string(i) + "].";
+			float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
+			float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
+			float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
+			if (GameLogic::Instance()->getSoftPlayer(i)->getBottom())
 			{
-			if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
-				std::string arr = "players[" + std::to_string(i) + "].";
-				float pos_x = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().x;
-				float pos_z = GameLogic::Instance()->getSoftPlayer(i)->getRelativePosition().z;
-				float rad = GameLogic::Instance()->getSoftPlayer(i)->getRadius();
 				Vector4 temp_col = (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour();
 				Vector3 trailColor = Vector3(temp_col.x, temp_col.y, temp_col.z);
 				shaderTrail->SetUniform((arr + "trailColor").c_str(), trailColor);
@@ -458,10 +460,9 @@ void GraphicsPipeline::RenderScene(float dt)
 					splatSoftPlayer = i;
 				}
 			}
-			
-		}
-		
-		
+
+		}	
+
 	}
 	for (int i = GameLogic::Instance()->getTotalPlayers(); i < GameLogic::Instance()->getNumAIPlayers() + GameLogic::Instance()->getTotalPlayers(); i++)
 	{
@@ -522,16 +523,18 @@ void GraphicsPipeline::RenderScene(float dt)
 	int max_score = 0;
 	float max_perc = 0.0f;
 	for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
-		if (GameLogic::Instance()->getSoftPlayer(i)->getIsBroken() == false) {
-			if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
-				max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
-				max_score = i;
-			}
+		if ((*GameLogic::Instance()->getPaintPerc())[i] > max_perc) {
+			max_perc = (*GameLogic::Instance()->getPaintPerc())[i];
+			max_score = i;
+		}
+		if (GameLogic::Instance()->getSoftPlayer(i)->getBottom())
+		{
 			std::string arr = "players[" + std::to_string(i) + "].";
 			angle += 2 * PI*(*GameLogic::Instance()->getPaintPerc())[i] / sum_score;
 			shaderCircle->SetUniform((arr + "angle").c_str(), angle);
 			shaderCircle->SetUniform((arr + "player_colour").c_str(), (*GameLogic::Instance()->getSoftPlayer(i)->getBottom()->Render()->GetChildIteratorStart())->GetColour());
 		}
+		
 	}
 	for (int i = GameLogic::Instance()->getNumSoftPlayers(); i < GameLogic::Instance()->getNumSoftPlayers() + GameLogic::Instance()->getNumAIPlayers(); i++) {
 		int j = i - GameLogic::Instance()->getNumSoftPlayers();

@@ -4,6 +4,7 @@
 #include "Graphics\Renderer\RenderNodeBase.h"
 
 class Player;
+class AIBall;
 class Portal : public GameObject
 {
 public:

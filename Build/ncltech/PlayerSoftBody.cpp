@@ -10,6 +10,7 @@
 #include <ncltech\PaintProjectile.h>
 #include <ncltech\SceneManager.h>
 #include <nclgl\GameLogic.h>
+#include <ncltech\AABB.h>
 
 
 PlayerSoftBody::PlayerSoftBody(const std::string& name,
@@ -51,6 +52,8 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 			ball->softball[i]->SetTag(TSoftPlayer4);
 		else
 			ball->softball[i]->SetTag(TSoftPlayer1);
+
+		ball->softball[i]->Physics()->SetIsSoft(true);
 	}
 	tag = tg;
 
@@ -70,11 +73,18 @@ PlayerSoftBody::PlayerSoftBody(const std::string& name,
 	equippedPaintWeapon = NULL;
 	time = 0.0f;
 	stunDuration = 0.0f;
-
+	wallOfInterest = NULL;
 	bodyRenderNode = (*body->Render()->GetChildIteratorStart());
-	
+
+	maxCameraY = 6.0f;
+	maxCameraZ = 15.0f;
+	minCameraY = 0.8f;
+	minCameraZ = 4.0f;
+	curCameraY = maxCameraY;
+	curCameraZ = maxCameraZ;
+
 	camera_transform = RenderNodeFactory::Instance()->MakeRenderNode();
-	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, 10, 25)));
+	camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, maxCameraY, maxCameraZ)));
 
 	(*body->Render()->GetChildIteratorStart())->AddChild(camera_transform);
 	(*body->Render()->GetChildIteratorStart())->SetMesh(NULL);
@@ -89,58 +99,38 @@ PlayerSoftBody::~PlayerSoftBody()
 {
 }
 
-GameObject* PlayerSoftBody::getTop() {
-	int k = 0;
+void PlayerSoftBody::setAxisSpheres() {
+	int i = 0;
+	int j = 0;
 	top = ball->softball[0];
-	for (int i = 1; i < 182; ++i) {
-		if (ball->softball[i]->Physics()->GetPosition().y > top->Physics()->GetPosition().y) {
-			top = ball->softball[i];
-			++k;
-		}
-	}
-
-	if (k == 0)
-		bottom = ball->softball[181];
-	else if (k == 181)
-		bottom = ball->softball[0];
-	else if (((k % 18) > 9) || (k % 18) == 0)
-		bottom = ball->softball[k - 9];
-	else
-		bottom = ball->softball[k + 9];
-
-	return top;
-}
-
-GameObject* PlayerSoftBody::getBottom() {
-	getTop();
-	return bottom;
-}
-
-GameObject* PlayerSoftBody::getFront() {
-	int k = 0;
 	front = ball->softball[0];
-	for (int i = 1; i < 182; ++i) {
-		if (ball->softball[i]->Physics()->GetPosition().z < top->Physics()->GetPosition().z) {
-			front = ball->softball[i];
-			++k;
+	for (int k = 1; k < 182; ++k) {
+		if (ball->softball[k]->Physics()->GetPosition().y > top->Physics()->GetPosition().y) {
+			top = ball->softball[k];
+			++i;
+		}
+		if (ball->softball[k]->Physics()->GetPosition().z < top->Physics()->GetPosition().z) {
+			front = ball->softball[k];
+			++j;
 		}
 	}
 
-	if (k == 0)
-		back = ball->softball[181];
-	else if (k == 181)
-		back = ball->softball[0];
-	else if (((k % 18) > 9) || (k % 18) == 0)
-		back = ball->softball[k - 9];
-	else
-		back = ball->softball[k + 9];
+	getOppositeSphere(i);
+	bottom = opposite;
 
-	return front;
+	getOppositeSphere(j);
+	back = opposite;
 }
 
-GameObject* PlayerSoftBody::getBack() {
-	getFront();
-	return back;
+void PlayerSoftBody::getOppositeSphere(int sph) {
+	if (sph == 0)
+		opposite = ball->softball[181];
+	else if (sph == 181)
+		opposite = ball->softball[0];
+	else if (((sph % 18) > 9) || (sph % 18) == 0)
+		opposite = ball->softball[sph - 9];
+	else
+		opposite = ball->softball[sph + 9];
 }
 
 void PlayerSoftBody::setControls(KeyboardKeys up, KeyboardKeys down, KeyboardKeys left, KeyboardKeys right, KeyboardKeys jump, KeyboardKeys shoot) {
@@ -307,15 +297,14 @@ void PlayerSoftBody::equipPaintWeapon(nclgl::Maths::Vector4 colour) {
 }
 
 void PlayerSoftBody::handleInput(float dt) {
-	nclgl::Maths::Vector3 jump(0, 20, 0);
+	nclgl::Maths::Vector3 jump(0, 10, 0);
 	float rotation = 0.0f;
 	float yaw = camera->GetYaw();
 	float pitch = camera->GetPitch();
 	nclgl::Maths::Vector3 up = nclgl::Maths::Vector3(0, 1, 0);
 	nclgl::Maths::Vector3 right = nclgl::Maths::Vector3::Cross(forward, up);
+	setAxisSpheres();
 
-	getTop();
-	getFront();
 	if (GameLogic::Instance()->gameHasStarted()) {
 		if (Window::GetKeyboard()->KeyDown(move_up))
 		{
@@ -382,6 +371,7 @@ void PlayerSoftBody::handleInput(float dt) {
 				for (int i = 0; i < 182; ++i) {
 					ball->softball[i]->Physics()->SetLinearVelocity(ball->softball[i]->Physics()->GetLinearVelocity() + jump);
 				}
+
 				canjump = false;
 			}
 		}
@@ -445,10 +435,29 @@ void PlayerSoftBody::move(float dt) {
 		bodyRenderNode->SetTransform(bodyRenderNode->GetTransform()*nclgl::Maths::Matrix4::Rotation(sensitivity, nclgl::Maths::Vector3(0, 1, 0)));
 
 		camera->SetPosition(camera_transform->GetWorldTransform().GetPositionVector());
-
-		
 	}
 }
+
+void PlayerSoftBody::cameraInWall(AABB* wall) {
+	if (wall->containsObject(camera_transform->GetWorldTransform().GetPositionVector(), 3.0f)) {
+		wallOfInterest = wall;
+		curCameraY = max(curCameraY - 0.2f, minCameraY);
+		curCameraZ = max(curCameraZ - 0.4f, minCameraZ);	
+		camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, curCameraY, curCameraZ)));
+	}
+	else {
+		if(wallOfInterest == wall){
+			if(!wall->containsObject(camera_transform->GetWorldTransform()*nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, min(curCameraY + 0.2f, maxCameraY), min(curCameraZ + 0.4f, maxCameraZ))).GetPositionVector(), 3.0f)){
+				camera_transform->SetTransform(nclgl::Maths::Matrix4::Translation(nclgl::Maths::Vector3(0, curCameraY, curCameraZ)));
+				curCameraY = min(curCameraY + 0.2f, maxCameraY);
+				curCameraZ = min(curCameraZ + 0.4f, maxCameraZ);
+			}
+		}
+	}
+
+}
+
+
 
 void PlayerSoftBody::speedLimit() {
 	

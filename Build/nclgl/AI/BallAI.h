@@ -76,6 +76,9 @@ public:
 
 	void settime(float t) { time = t; }
 	float gettime() { return time; }
+
+	void setscore(float s) { score = s; }
+	float getscore() { return score; }
 private:
 	GameObject * AIbody;
 	nclgl::Maths::Vector4 colour;
@@ -110,6 +113,6 @@ private:
 	bool canShoot;
 	bool canPaint;
 	Tags currentBuff;
-	
+	float score;
 };
 

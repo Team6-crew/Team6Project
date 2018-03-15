@@ -14,7 +14,7 @@
 
 using namespace nclgl::Maths;
 
-OcTree* PhysicsEngine::octree = NULL;
+OcTree* PhysicsEngine::octree = nullptr;
 WorldPartition* PhysicsEngine::worldPartition = NULL;
 
 using namespace std;
@@ -283,7 +283,11 @@ void PhysicsEngine::BroadPhaseCollisions()
 			{
 				pnodeA = physicsNodes[i];
 				pnodeB = physicsNodes[j];
-				if (pnodeA->isSoft() && pnodeB->isSoft()) continue;
+				if (pnodeA->isSoft() && pnodeB->isSoft()) 
+					continue;
+				else if (pnodeA->GetParent()->GetTag() == Tags::TCubes && pnodeB->GetParent()->GetTag() == Tags::TCubes)
+					continue;
+
 
 				//Check they both atleast have collision shapes
 				if (pnodeA->GetCollisionShape() != NULL
@@ -293,6 +297,10 @@ void PhysicsEngine::BroadPhaseCollisions()
 						CollisionPair cp;
 						cp.pObjectA = pnodeA;
 						cp.pObjectB = pnodeB;
+
+				
+
+
 						broadphaseColPairs.push_back(cp);
 					}
 				}
