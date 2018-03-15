@@ -76,8 +76,6 @@ BallAI::BallAI(const std::string& name,
 		}
 	}
 
-	tag = Tags::TAIPlayer;
-
 	pnode->SetOnCollisionCallback(
 		std::bind(
 			&BallAI::collisionCallback,		// Function to call
@@ -159,7 +157,7 @@ void BallAI::addBallAIPlayers(int i)
 		AIBall->AIStateMachine->setCurrentState(AIBall->AIStateMachine, RoamingState::GetInstance());
 		AIBall->setStateMachine(AIBall->AIStateMachine);
 
-		//	MapNavigation *mp = new MapNavigation();
+		//	MapNavigation *mp = new MapNavigation(); //will be used for A* path
 		//AIBall->setMapNavigation(mp);
 
 		cout << "AI Player " << i << " created \n";
@@ -415,10 +413,7 @@ bool BallAI::stun(float dt) {
 		time += dt;
 		stunDuration -= dt;
 		getBall()->Physics()->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
-		if(stunDuration > 10.0f)
 		return true;
 	}
-	else {
-		return false;
-	}
+	else { return false; }
 }
