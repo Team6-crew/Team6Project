@@ -215,8 +215,6 @@ int main()
 				}
 				GameLogic::Instance()->increaseTotalTime(dt);
 				GraphicsPipeline::Instance()->RenderScene(dt);
-				GameLogic::Instance()->setSeconds(2);
-				
 			}
 			NCLDebug::_ClearDebugLists();
 			if (GameLogic::Instance()->getCurrentTime() > 0) {
