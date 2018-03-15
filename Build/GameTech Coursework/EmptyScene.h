@@ -85,10 +85,10 @@ public:
 		Scene::OnInitializeScene();
 
 		int num_p = GameLogic::Instance()->getnumOfPlayersMp();
-		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer1(0);
-		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer2(1);
-		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer3(2);
-		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer4(3);
+		if (num_p & 0b0001) GameLogic::Instance()->addSoftPlayer(0);
+		if (num_p & 0b0010) GameLogic::Instance()->addSoftPlayer(1);
+		if (num_p & 0b0100) GameLogic::Instance()->addSoftPlayer(2);
+		if (num_p & 0b1000) GameLogic::Instance()->addSoftPlayer(3);
 		//Add player to scene
 
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); i++) {

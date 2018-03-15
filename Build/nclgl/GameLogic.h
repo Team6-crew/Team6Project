@@ -16,10 +16,7 @@ public:
 	void calculatePaintPercentage();
 	void addPlayer(int num_players);
 	void addNetPlayer(int num_players);
-	void addSoftPlayer1(int num_players);
-	void addSoftPlayer2(int num_players);
-	void addSoftPlayer3(int num_players);
-	void addSoftPlayer4(int num_players);
+	void addSoftPlayer(int num_players);	
 	float getPosX() { return posX; }
 	float getPosZ() { return posZ; }
 	std::vector<float> * getPaintPerc() { return &paint_perc; }

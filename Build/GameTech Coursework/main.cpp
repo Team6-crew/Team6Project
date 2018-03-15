@@ -144,7 +144,6 @@ void HandleKeyboardInputs()
 	}*/
 }
 
-
 // Program Entry Point
 int main()
 {
