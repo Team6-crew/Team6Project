@@ -81,6 +81,7 @@ void GameLogic::repairSoftPlayer(int num_splayers) {
 	Camera* temp = getSoftPlayer(num_splayers)->getCamera();
 	temp->SetYaw(0.0f);
 	temp->SetPitch(-20.f);
+	temp->SetPosition(temp->GetPosition() + nclgl::Maths::Vector3(0, 6, 15));
 	delete softplayers[num_splayers];
 	softplayers[num_splayers] = new PlayerSoftBody("SoftPlayer_" + num_splayers,
 		nclgl::Maths::Vector3(3.0f * num_splayers, 10.f, 3.0f * num_splayers),
