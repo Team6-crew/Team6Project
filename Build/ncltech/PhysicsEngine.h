@@ -173,5 +173,5 @@ protected:
 	PerfTimer perfNarrowphase;
 	PerfTimer perfSolver;
 
-	int worldSize = 30;
+	int worldSize = 200;
 };

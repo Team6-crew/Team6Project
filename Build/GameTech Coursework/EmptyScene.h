@@ -66,7 +66,7 @@ public:
 		GameObject* ground = CommonUtils::BuildCuboidObject(
 			"Ground",
 			nclgl::Maths::Vector3(0.0f, -1.5f, 0.0f),
-			nclgl::Maths::Vector3(20.0f, 1.0f, 20.0f),
+			nclgl::Maths::Vector3(200.0f, 1.0f, 200.0f),
 			true,
 			0.0f,
 			true,
