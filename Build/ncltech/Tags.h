@@ -24,5 +24,6 @@ enum Tags {
 	BNothing,
 	TWeapon,
 	TRandomPickup,
-	TAIPlayer
+	TAIPlayer,
+	TCubes
 };

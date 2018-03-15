@@ -53,8 +53,7 @@ public:
 	void calculateProjectilePaint(float posX, float posZ, float radius, float colourZ );
 	
 	
-	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);
-	};
+	void addAIPlayer(BallAI* a) { aiPlayers.push_back(a); paint_perc.push_back(0.0f);};
 
 	void repairSoftPlayer(int num_splayers);
 	// split screen ui integration
@@ -80,6 +79,9 @@ public:
 
 	void setCurrentTime(int cSec) { cSeconds = cSec; };
 	int getCurrentTime() { return cSeconds; }
+
+	bool getIsGamePaused() { return isGamePaused; }
+	void setIsGamePaused(bool gamePaused) { isGamePaused = gamePaused; }
 private:
 	int world_paint[GROUND_TEXTURE_SIZE][GROUND_TEXTURE_SIZE];
 	std::vector<float> paint_perc;
@@ -116,4 +118,5 @@ private:
 	map <GameObject * , int> PlayerCapturedObject;
 	int seconds;
 	int cSeconds;
+	bool isGamePaused;
 };

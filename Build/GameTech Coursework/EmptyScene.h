@@ -26,6 +26,7 @@
 #include <nclgl\Audio\AudioEngineBase.h>
 #include "MainMenu.h"
 #include <nclgl\ResourceManager.h>
+#include <ncltech\AABB.h>
 
 //Fully striped back scene to use as a template for new scenes.
 class EmptyScene : public Scene
@@ -40,6 +41,7 @@ public:
 	int volumelevel = 5;
 	int tempvolumelevel = 0;
 	bool isPaused = false;
+	AABB* walls[4];
 	EmptyScene(const std::string& friendly_name)
 		: Scene(friendly_name)
 	{
@@ -71,7 +73,13 @@ public:
 	//WorldPartition *wsp;
 
 	virtual void OnInitializeScene() override
-	{
+	{   
+		
+		walls[0] = new AABB(nclgl::Maths::Vector3(200, 0, 0), 100);
+		walls[1] = new AABB(nclgl::Maths::Vector3(-200, 0, 0), 100);
+		walls[2] = new AABB(nclgl::Maths::Vector3(0, 0, 200), 100);
+		walls[3] = new AABB(nclgl::Maths::Vector3(0, 0, -200), 100);
+
 		scene_iterator = 0;
 		Scene::OnInitializeScene();
 
@@ -250,13 +258,15 @@ public:
 
 
 		Scene::OnUpdateScene(dt);
-
 		for (int i = 0; i < GameLogic::Instance()->getNumPlayers(); ++i)
 			GameLogic::Instance()->getPlayer(i)->move(dt);
 
 		for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
 			GameLogic::Instance()->getSoftPlayer(i)->getBall()->RenderSoftbody();
 			GameLogic::Instance()->getSoftPlayer(i)->move(dt);
+			for (int j = 0; j < 4; j++) {
+				GameLogic::Instance()->getSoftPlayer(i)->cameraInWall(walls[j]);
+			}
 		}
 	
 		for (int j = 0; j < GameLogic::Instance()->getNumAIPlayers(); ++j)
@@ -285,12 +295,18 @@ public:
 			}
 			PhysicsEngine::Instance()->SetPaused(!PhysicsEngine::Instance()->IsPaused());
 			tempvolumelevel = 0;
-			if (!isPaused)
+			if (isPaused)
+			{
+				
+				GameLogic::Instance()->setIsGamePaused(true);
+			}
+			else
 			{
 				tempvolumelevel = volumelevel;
+				GameLogic::Instance()->setIsGamePaused(false);
 			}
 			AudioFactory::Instance()->GetAudioEngine()->SetVolume(float(tempvolumelevel) / 10.0f);
-
+			
 
 			//if (pauseMenu->visible == false) {
 			//	pauseMenu->setSelection(0);
@@ -433,6 +449,15 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
 		}
+
+		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
+		}
 		return true;
 	}
 
@@ -501,6 +526,14 @@ public:
 					- FindGameObject("portal_a2")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
+		}
+		 if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_b2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 		}
 		return true;
 	}
@@ -571,6 +604,14 @@ public:
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
 			}
 		}
+		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a1");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(2, 0, 0));
+		}
 		return true;
 	};
 
@@ -639,6 +680,14 @@ public:
 					- FindGameObject("portal_b2")->Physics()->GetPosition()
 					+ portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 			}
+		}
+		if (otherNode->GetParent()->HasTag(Tags::TAIPlayer))
+		{
+			AudioFactory::Instance()->GetAudioEngine()->PlaySound2D(SOUNDSDIR"Portal.wav", false);
+			GameObject *portal = FindGameObject("portal_a2");
+			portal->physicsNode->SetLinearVelocity(nclgl::Maths::Vector3(0, 0, 0));
+			portal->physicsNode->SetForce(nclgl::Maths::Vector3(0, 0, 0));
+			otherNode->SetPosition(portal->physicsNode->GetPosition() + nclgl::Maths::Vector3(-2, 0, 0));
 		}
 		return true;
 	};

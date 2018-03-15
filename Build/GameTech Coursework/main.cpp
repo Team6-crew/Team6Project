@@ -126,7 +126,7 @@ void HandleKeyboardInputs()
 	Vector3 pos;
 	std::vector<Vector3> posList;
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_M))
+	/*if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_M))
 	{
 		
 		pos = GameLogic::Instance()->getSoftPlayer(0)->getBottom()->Physics()->GetPosition();
@@ -139,7 +139,7 @@ void HandleKeyboardInputs()
 			myfile << pos << "\n";
 			myfile.close();
 		}
-	}
+	}*/
 }
 
 
@@ -166,7 +166,7 @@ int main()
 		timer_physics.UpdateRealElapsedTime(dt);
 		timer_update.UpdateRealElapsedTime(dt);
 		timer_render.UpdateRealElapsedTime(dt);
-		std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
+		//std::cout << "\nFPS: " + std::to_string(1000.f / timer_total.GetAvg());
 		//Print Status Entries
 		//PrintStatusEntries();
 
@@ -204,7 +204,7 @@ int main()
 		{
 			if (GameLogic::Instance()->levelIsLoaded())
 			{   
-				if (GameLogic::Instance()->gameHasStarted()) {
+				if (GameLogic::Instance()->gameHasStarted() && !GameLogic::Instance()->getIsGamePaused()) {
 					GameLogic::Instance()->increaseActualGameTime(dt);
 				}
 				GameLogic::Instance()->increaseTotalTime(dt);
@@ -229,16 +229,31 @@ int main()
 			if (showEndScreen) {
 				gameEnded = true;
 				
+				int j = GameLogic::Instance()->getNumSoftPlayers();
+				int l = GameLogic::Instance()->getNumAIPlayers()+ GameLogic::Instance()->getNumSoftPlayers();
+
 				int winningPlayer = 0;
+				int aiWinningPlayer = 0;
+
 				float maxScore = -1.0f;
-				for (int i = 0; i < GameLogic::Instance()->getNumSoftPlayers(); i++) {
+				for (int i = 0; i < l; i++) {
 					if ((*GameLogic::Instance()->getPaintPerc())[i] > maxScore) {
 						maxScore = (*GameLogic::Instance()->getPaintPerc())[i];
 						winningPlayer = i;
 					}
 				}
 				NCLDebug::_ClearDebugLists();
-				NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player " + to_string(winningPlayer+1) + " WINS!");
+
+				if(winningPlayer < j)
+				NCLDebug::AddHUD2(GameLogic::Instance()->getSoftPlayer(winningPlayer)->getColour(), "Player " + to_string(winningPlayer + 1) + " WINS!");
+
+				else
+				{
+					aiWinningPlayer = winningPlayer -j;
+					NCLDebug::AddHUD2(GameLogic::Instance()->getAIPlayer(aiWinningPlayer)->getColour(), "AIPlayer " + to_string(aiWinningPlayer +1) + " WINS!");
+				}
+				
+
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 1 to Go to the Next Level");
 				NCLDebug::AddHUD(nclgl::Maths::Vector4(1.0f, 1.0f, 1.0f, 1.0f), "Press 2 to Exit");
 				//PrintStatusEntries();
